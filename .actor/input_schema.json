@@ -1,0 +1,81 @@
+{
+  "title": "Enriched Google News Actor input",
+  "description": "Search Google News and control result limits and enrichment options.",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "queries": {
+      "title": "Queries",
+      "type": "array",
+      "description": "One to twenty Google News search expressions.",
+      "editor": "stringList",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "maxItems": 20
+    },
+    "maxItemsPerQuery": {
+      "title": "Maximum results per query",
+      "type": "integer",
+      "description": "Maximum number of results returned for each query.",
+      "editor": "number",
+      "default": 20,
+      "minimum": 1,
+      "maximum": 100
+    },
+    "language": {
+      "title": "Language",
+      "type": "string",
+      "description": "Google News language and locale.",
+      "editor": "textfield",
+      "default": "en-GB"
+    },
+    "country": {
+      "title": "Country",
+      "type": "string",
+      "description": "Google News country or edition code.",
+      "editor": "textfield",
+      "default": "GB"
+    },
+    "dateRange": {
+      "title": "Date range",
+      "type": "string",
+      "description": "Limit results by publication recency.",
+      "editor": "select",
+      "default": "7d",
+      "enum": ["any", "1h", "6h", "1d", "7d", "30d"],
+      "enumTitles": [
+        "Any time",
+        "Past hour",
+        "Past 6 hours",
+        "Past day",
+        "Past 7 days",
+        "Past 30 days"
+      ]
+    },
+    "dedupe": {
+      "title": "Deduplicate results",
+      "type": "boolean",
+      "description": "Remove obvious repeated records across queries.",
+      "editor": "checkbox",
+      "default": true
+    },
+    "resolvePublisherUrls": {
+      "title": "Resolve publisher URLs",
+      "type": "boolean",
+      "description": "Attempt to resolve Google News links to publisher URLs.",
+      "editor": "checkbox",
+      "default": true
+    },
+    "includeFullText": {
+      "title": "Include full text",
+      "type": "boolean",
+      "description": "Attempt best-effort article text extraction from publisher pages.",
+      "editor": "checkbox",
+      "default": false
+    }
+  },
+  "required": ["queries"]
+}
