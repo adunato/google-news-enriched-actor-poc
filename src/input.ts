@@ -40,7 +40,7 @@ export function validateActorInput(value: unknown): ActorInput {
   if (!Array.isArray(queries) || queries.length < 1 || queries.length > 20) {
     throw new Error("Input field 'queries' must contain between 1 and 20 non-empty strings.");
   }
-  if (queries.some((query) => typeof query !== "string" || query.length === 0)) {
+  if (queries.some((query) => typeof query !== "string" || query.trim().length === 0)) {
     throw new Error("Input field 'queries' must contain between 1 and 20 non-empty strings.");
   }
 

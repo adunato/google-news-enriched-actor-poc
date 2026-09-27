@@ -34,12 +34,20 @@ describe("Actor input contract", () => {
     ).toHaveLength(20);
   });
 
+  it("preserves valid query text without trimming it", () => {
+    expect(validateActorInput({ queries: [" climate policy "] }).queries).toEqual([
+      " climate policy ",
+    ]);
+  });
+
   it.each([
     undefined,
     {},
     { queries: [] },
     { queries: Array.from({ length: 21 }, (_, index) => `query ${index}`) },
     { queries: [""] },
+    { queries: ["   "] },
+    { queries: ["\t\t"] },
     { queries: ["valid", 1] },
   ])("rejects invalid queries before processing: %o", (input) => {
     expect(() => validateActorInput(input)).toThrow();
