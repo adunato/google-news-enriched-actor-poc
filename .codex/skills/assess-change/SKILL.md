@@ -9,7 +9,7 @@ Determine the minimum change-design and planning path required for a development
 
 Inspect:
 
-- the Issue and acceptance criteria;
+- the Issue, acceptance criteria, and validation expectations;
 - `docs/product.md`;
 - `docs/architecture.md`;
 - relevant source code, tests, configuration and repository patterns;
@@ -30,9 +30,13 @@ Record:
 - material risks;
 - the exact next lifecycle step.
 
-Require an HLD only when a material design decision must be resolved before implementation, such as significant product behaviour, durable architecture, interface/integration, data/state, cross-component, security, reliability, performance, cost, compatibility, or competing-design implications.
+Require an HLD only when a material design decision must be resolved before implementation, such as significant product behaviour, durable architecture, interface/integration, data/state, cross-component, security, reliability, performance, cost, compatibility, competing-design implications, or an unproven external/runtime behaviour on which the proposed capability depends.
 
-Require an Implementation Plan when repository-level sequencing, coordination, migration, validation complexity, or implementation risk warrants planning before editing. A Plan may be required without an HLD.
+When the feature's core value depends on an external system, volatile live data, undocumented protocol, platform behaviour, permission model, or other boundary whose viability is not yet established, treat that uncertainty as a material design risk rather than assuming mocked behaviour proves feasibility.
+
+Require an Implementation Plan when repository-level sequencing, coordination, migration, validation complexity, external/live evidence, feasibility gating, or implementation risk warrants planning before editing. A Plan may be required without an HLD.
+
+A Plan is required when representative acceptance evidence must be deliberately sequenced or when an unproven dependency must be gated before substantial implementation.
 
 Do not infer required artifact depth from the `feature` or `bug` label. A small feature may need no design artifact; a difficult bug may need both HLD and Plan.
 
@@ -42,7 +46,7 @@ If the Issue itself is not ready, return to Issue refinement rather than compens
 
 ## Completion contract
 
-Report the Issue, readiness state, HLD decision and rationale, Implementation Plan decision and rationale, LLD status, likely durable Product/Architecture impact, material risks/dependencies, and the exact next lifecycle step. Confirm that the Issue's `Development Lifecycle Assessment` section has been updated when write access is available.
+Report the Issue, readiness state, HLD decision and rationale, Implementation Plan decision and rationale, LLD status, likely durable Product/Architecture impact, material risks/dependencies including unproven external/runtime assumptions, validation complexity, and the exact next lifecycle step. Confirm that the Issue's `Development Lifecycle Assessment` section has been updated when write access is available.
 
 ## Learning checkpoint
 
