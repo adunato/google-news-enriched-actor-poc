@@ -13,6 +13,16 @@ const sampleFeed = readFileSync(
   "utf8",
 );
 
+function feedWithLinks(...links: string[]): string {
+  const items = links
+    .map(
+      (link) =>
+        `<item><title>Same title</title><link>${link}</link><source>Same source</source></item>`,
+    )
+    .join("");
+  return `<rss><channel>${items}</channel></rss>`;
+}
+
 describe("Google News RSS retrieval and normalization", () => {
   it("normalizes valid entries, preserves the source URL, and skips unusable entries", () => {
     expect(parseGoogleNewsRss(sampleFeed, "climate policy")).toEqual([
@@ -79,12 +89,119 @@ describe("Google News RSS retrieval and normalization", () => {
     const fetchMock = vi
       .fn<typeof fetch>()
       .mockImplementation(async () => new Response(sampleFeed));
-    const input = validateActorInput({ queries: ["first", "second"], maxItemsPerQuery: 1 });
+    const input = validateActorInput({
+      queries: ["first", "second"],
+      maxItemsPerQuery: 1,
+      dedupe: false,
+    });
 
     const records = await retrieveGoogleNewsArticles(input, fetchMock);
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(records.map((record) => record.query)).toEqual(["first", "second"]);
+  });
+
+  it("deduplicates exact Google News URLs across and within queries, keeping the first record", async () => {
+    const fetchMock = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        new Response(feedWithLinks("https://news.google.com/a", "https://news.google.com/a")),
+      )
+      .mockResolvedValueOnce(
+        new Response(feedWithLinks("https://news.google.com/a", "https://news.google.com/b")),
+      );
+    const input = validateActorInput({ queries: ["first", "second"] });
+
+    const records = await retrieveGoogleNewsArticles(input, fetchMock);
+
+    expect(records.map(({ query, googleNewsUrl }) => [query, googleNewsUrl])).toEqual([
+      ["first", "https://news.google.com/a"],
+      ["second", "https://news.google.com/b"],
+    ]);
+  });
+
+  it("keeps separate URLs even when their metadata matches", async () => {
+    const fetchMock = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(
+        new Response(feedWithLinks("https://news.google.com/a", "https://news.google.com/b")),
+      );
+
+    const records = await retrieveGoogleNewsArticles(
+      validateActorInput({ queries: ["one"] }),
+      fetchMock,
+    );
+
+    expect(records).toHaveLength(2);
+    expect(records[0]).toMatchObject({ title: "Same title", sourceName: "Same source" });
+    expect(records[1]).toMatchObject({ title: "Same title", sourceName: "Same source" });
+  });
+
+  it("deduplicates by URL when optional metadata is missing", async () => {
+    const fetchMock = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(
+        new Response(
+          `<rss><channel><item><title>Story</title><link>https://news.google.com/a</link></item><item><title>Story</title><link>https://news.google.com/a</link><source>Publisher</source></item></channel></rss>`,
+        ),
+      );
+
+    const records = await retrieveGoogleNewsArticles(
+      validateActorInput({ queries: ["one"] }),
+      fetchMock,
+    );
+
+    expect(records).toHaveLength(1);
+    expect(records[0]).toEqual({
+      query: "one",
+      title: "Story",
+      googleNewsUrl: "https://news.google.com/a",
+    });
+  });
+
+  it("does not refill a query after its cap is applied before deduplication", async () => {
+    const fetchMock = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        new Response(
+          feedWithLinks(
+            "https://news.google.com/a",
+            "https://news.google.com/a",
+            "https://news.google.com/b",
+          ),
+        ),
+      )
+      .mockResolvedValueOnce(new Response(feedWithLinks("https://news.google.com/a")));
+
+    const records = await retrieveGoogleNewsArticles(
+      validateActorInput({ queries: ["first", "second"], maxItemsPerQuery: 2 }),
+      fetchMock,
+    );
+
+    expect(records.map((record) => [record.query, record.googleNewsUrl])).toEqual([
+      ["first", "https://news.google.com/a"],
+    ]);
+  });
+
+  it("retains all per-query occurrences when deduplication is disabled", async () => {
+    const fetchMock = vi
+      .fn<typeof fetch>()
+      .mockImplementation(
+        async () =>
+          new Response(feedWithLinks("https://news.google.com/a", "https://news.google.com/a")),
+      );
+
+    const records = await retrieveGoogleNewsArticles(
+      validateActorInput({ queries: ["first", "second"], dedupe: false }),
+      fetchMock,
+    );
+
+    expect(records.map((record) => [record.query, record.googleNewsUrl])).toEqual([
+      ["first", "https://news.google.com/a"],
+      ["first", "https://news.google.com/a"],
+      ["second", "https://news.google.com/a"],
+      ["second", "https://news.google.com/a"],
+    ]);
   });
 
   it("rejects malformed feeds and failed HTTP responses", async () => {

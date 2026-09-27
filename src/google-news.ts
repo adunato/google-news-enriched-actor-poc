@@ -197,5 +197,12 @@ export async function retrieveGoogleNewsArticles(
     const xml = await readBoundedBody(response);
     records.push(...parseGoogleNewsRss(xml, query).slice(0, input.maxItemsPerQuery));
   }
-  return records;
+  if (!input.dedupe) return records;
+
+  const seenGoogleNewsUrls = new Set<string>();
+  return records.filter((record) => {
+    if (seenGoogleNewsUrls.has(record.googleNewsUrl)) return false;
+    seenGoogleNewsUrls.add(record.googleNewsUrl);
+    return true;
+  });
 }
