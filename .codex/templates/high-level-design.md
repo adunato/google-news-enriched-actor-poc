@@ -73,9 +73,17 @@
 
 <Material failures, invalid input, partial failure, retries, degraded behaviour, and recovery expectations.>
 
-## 11. Validation Considerations
+## 11. Validation and Feasibility Considerations
 
-<Behaviours to prove through unit, integration, end-to-end, or manual validation.>
+<Identify the behaviours that must be proved and the boundary at which they must be proved. Distinguish local/mocked evidence from representative live, deployed, or platform evidence where the real external boundary is material to acceptance.>
+
+### External / Runtime Assumptions
+
+<List any external-system, live-data, protocol, platform, permission, environment, or third-party behaviour on which the proposed design depends. If none: "None.">
+
+### Pre-Implementation Feasibility Gates
+
+<For each material assumption that is not already proven, define the evidence required before substantial implementation proceeds. A failed gate returns the change to design/product decision rather than being deferred as a late smoke test. If none: "None.">
 
 ## 12. Open Questions
 
@@ -95,4 +103,4 @@
 
 ### Completion contract
 
-The HLD is substantively complete only when the material requirements, proposed design, validation considerations, durable Product/Architecture impacts, and open questions are resolved. Set **Status** to `Approved` only when the design is ready to constrain downstream implementation.
+The HLD is substantively complete only when the material requirements, proposed design, validation and feasibility considerations, external/runtime assumptions, durable Product/Architecture impacts, and open questions are resolved. An HLD must remain on hold while a material feasibility assumption required by the chosen design has no defined proof path. Set **Status** to `Approved` only when the design is ready to constrain downstream implementation.
