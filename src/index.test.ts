@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
 
-import { runWithActorInput, validateActorInput } from "./input.js";
+import { processActorInput, runWithActorInput, validateActorInput } from "./input.js";
 
 const schema = JSON.parse(
   readFileSync(new URL("../.actor/input_schema.json", import.meta.url), "utf8"),
@@ -105,5 +105,39 @@ describe("Actor input contract", () => {
 
     await expect(runWithActorInput({ queries: [] }, processor)).rejects.toThrow();
     expect(processor).not.toHaveBeenCalled();
+  });
+
+  it("hands ordered publisher-enriched rows to the processing seam", () => {
+    const log = vi.spyOn(console, "info").mockImplementation(() => undefined);
+    const articles = [
+      {
+        query: "climate",
+        title: "A story",
+        googleNewsUrl: "https://news.google.com/rss/articles/opaque-id",
+        urlResolved: true,
+        urlResolutionStatus: "success" as const,
+        publisherUrl: "https://publisher.example/story",
+        publisherDomain: "publisher.example",
+      },
+      {
+        query: "climate",
+        title: "Another story",
+        googleNewsUrl: "https://news.google.com/rss/articles/another-id",
+        urlResolved: false,
+        urlResolutionStatus: "failure" as const,
+      },
+    ];
+
+    try {
+      processActorInput(validateActorInput({ queries: ["climate"] }), articles);
+
+      expect(JSON.parse(log.mock.calls[0]![0] as string)).toMatchObject({
+        event: "actor_input_accepted_for_processing",
+        articleCount: 2,
+        publisherUrlResolution: { successCount: 1, failureCount: 1, notRequestedCount: 0 },
+      });
+    } finally {
+      log.mockRestore();
+    }
   });
 });

@@ -1,3 +1,5 @@
+import type { PublisherResolvedArticle } from "./publisher-url.js";
+
 export type DateRange = "any" | "1h" | "6h" | "1d" | "7d" | "30d";
 
 export interface ActorInput {
@@ -80,11 +82,21 @@ export async function runWithActorInput(
 }
 
 /** Observable processing boundary for the next implementation stage. */
-export function processActorInput(input: ActorInput): void {
+export function processActorInput(input: ActorInput, articles: PublisherResolvedArticle[]): void {
   console.info(
     JSON.stringify({
       event: "actor_input_accepted_for_processing",
       queryCount: input.queries.length,
+      articleCount: articles.length,
+      publisherUrlResolution: {
+        successCount: articles.filter((article) => article.urlResolutionStatus === "success")
+          .length,
+        failureCount: articles.filter((article) => article.urlResolutionStatus === "failure")
+          .length,
+        notRequestedCount: articles.filter(
+          (article) => article.urlResolutionStatus === "not_requested",
+        ).length,
+      },
     }),
   );
 }

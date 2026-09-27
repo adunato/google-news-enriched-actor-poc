@@ -42,12 +42,12 @@ External dependencies are Google News public search/RSS behaviour, public publis
 2. The request adapter retrieves Google News results for each bounded query.
 3. The parser normalizes feed records, and each query is capped at `maxItemsPerQuery`.
 4. At the currently implemented retrieval boundary, optional in-run deduplication removes later records with the same exact `googleNewsUrl`, retaining the first record and its query context. Disabling deduplication preserves every capped occurrence.
-5. When implemented, the resolver attempts a publisher URL for each remaining row and records the result status.
-6. When full text is requested and a publisher URL is available, the article stage performs a bounded HTTP fetch and readability extraction.
+5. The publisher resolver attempts each remaining row with at most four concurrent rows, a 10-second row deadline, five redirects, and a 2 MiB cap per response. It first accepts a validated external HTTP(S) redirect; otherwise it reads Google News article markers and submits the `Fbv4je` / `garturlreq` request to Google's `batchexecute` endpoint. It records `success`, `failure`, or `not_requested` on each row, preserves the original Google News URL, and passes the ordered enriched rows to the in-memory processing boundary. Live compatibility of the undocumented RPC remains unverified because the current smoke check is redirected to Google's consent host before marker retrieval.
+6. The resolver does not fetch publisher page bodies. Full-text extraction remains a later bounded HTTP stage when requested and when a publisher URL is available.
 7. Row-level failures are captured as status/fallback data rather than propagated as run-fatal errors.
 8. Final rows are written to the default Apify dataset.
 
-Steps 5-8 describe the intended downstream enriched flow; publisher resolution, full-text extraction and dataset delivery are not yet implemented in the current repository state.
+Publisher URL resolution and its in-memory row handoff are implemented. Full-text extraction is a later stage. Dataset writes and the public output schema belong to Issue #6 and are not yet implemented in the current repository state.
 
 ### Fail-soft enrichment
 
@@ -84,7 +84,7 @@ Actor/Store schemas and Docker packaging are implementation artifacts and will b
 ## 8. Cross-Cutting Architecture
 
 - **Security:** No product credentials should be required for Google News/public publisher access. Repository/deployment secrets remain in platform secret stores, never source control.
-- **Reliability:** Bounded requests, retries/timeouts/body limits where appropriate, and strict row-level isolation for publisher-specific failures.
+- **Reliability:** Publisher resolution uses a shared 10-second per-row deadline, a five-redirect limit, a 2 MiB per-response bound, concurrency capped at four, and strict row-level failure isolation. Google's decoder endpoint is undocumented and may change; live RPC compatibility remains unverified, and Google-owned redirect destinations are failures rather than publisher URLs.
 - **Observability:** Apify-native logs/run status/dataset evidence plus charging/analytics needed for Step 8 evaluation.
 - **Performance / scale:** Query count and per-query result limits bound work. Enrichment must remain bounded and suitable for a lightweight POC.
 - **Cost:** Avoid mandatory browser/proxy/paid extraction infrastructure; preserve the low-cost experimental model.
