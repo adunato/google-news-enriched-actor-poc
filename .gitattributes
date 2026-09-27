@@ -1,0 +1,2 @@
+# SideGig product repositories normalize text files to LF across platforms.
+* text=auto eol=lf
