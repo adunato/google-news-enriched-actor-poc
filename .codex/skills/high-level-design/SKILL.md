@@ -9,13 +9,15 @@ Use the canonical `.codex/templates/high-level-design.md` template when the Deve
 
 Start from the GitHub Issue, current Product Definition, current Architecture Definition, and relevant repository context. The HLD describes the proposed behaviour and design for this individual change; it does not replace the durable product or architecture documents and must not prescribe individual file edits.
 
-Keep the design proportional to the change. Resolve material design choices, interfaces, state changes, error behaviour, validation considerations, and any intended impact on the durable Product Definition or Architecture Definition.
+Keep the design proportional to the change. Resolve material design choices, interfaces, state changes, error behaviour, validation considerations, external/runtime assumptions, feasibility gates, and any intended impact on the durable Product Definition or Architecture Definition.
 
-Structural validity is not substantive approval. The skill prepares the HLD and identifies unresolved decisions; it must not infer project-owner approval. Keep the artifact on hold while a material design question remains unresolved or explicit approval is still required.
+When the design depends on behaviour outside the repository, distinguish what is already evidenced from what is assumed. Define a pre-implementation feasibility gate for any material unproven assumption that could invalidate the chosen design. A late smoke test is not an acceptable substitute for proving a prerequisite before substantial dependent implementation.
+
+Structural validity is not substantive approval. The skill prepares the HLD and identifies unresolved decisions; it must not infer project-owner approval. Keep the artifact on hold while a material design question remains unresolved, a material feasibility assumption lacks a defined proof path, or explicit approval is still required.
 
 ## Completion contract
 
-Report the artifact path/ID, originating Issue, product/architecture context used, material design decisions, validation considerations, durable-document impacts, unresolved questions, and approval state. A material unresolved design question or missing required owner approval keeps the HLD on hold.
+Report the artifact path/ID, originating Issue, product/architecture context used, material design decisions, validation/feasibility considerations, external/runtime assumptions and gates, durable-document impacts, unresolved questions, and approval state. A material unresolved design question or missing required owner approval keeps the HLD on hold.
 
 ## Learning checkpoint
 
