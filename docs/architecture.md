@@ -23,16 +23,16 @@ External dependencies are Google News public search/RSS behaviour, public publis
 
 ## 3. Components and Responsibilities
 
-| Component                             | Responsibility                                                                                         |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Actor entrypoint and input validation | Read Actor input, enforce the approved bounded contract and start orchestration.                       |
-| Google News request adapter           | Perform bounded HTTP requests with timeout/retry/body-size controls.                                   |
-| Google News parser/normalizer         | Convert feed records into the approved core metadata contract.                                         |
-| Publisher URL resolver                | Resolve Google News article links to publisher URLs and emit explicit status/reason information.       |
-| Article fetch/readability stage       | When requested, fetch resolved publisher pages over HTTP and attempt readable text extraction.         |
-| Row enrichment boundary               | Isolate URL/full-text failures and preserve fallback/provenance fields.                                |
-| Multi-query orchestrator              | Execute bounded queries, enforce result limits, deduplicate where requested and coordinate enrichment. |
-| Apify delivery/observability          | Push rows to the default dataset and emit platform-native logs, analytics and charging evidence.       |
+| Component                             | Responsibility                                                                                                                                                            |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Actor entrypoint and input validation | Read Actor input, enforce the approved bounded contract and start orchestration.                                                                                          |
+| Google News request adapter           | Perform bounded HTTP requests with timeout/retry/body-size controls.                                                                                                      |
+| Google News parser/normalizer         | Convert feed records into the approved core metadata contract.                                                                                                            |
+| Publisher URL resolver                | Resolve Google News article links to publisher URLs and emit explicit status/reason information.                                                                          |
+| Article fetch/readability stage       | When requested, fetch resolved publisher pages over HTTP and attempt readable text extraction.                                                                            |
+| Row enrichment boundary               | Isolate URL/full-text failures and preserve fallback/provenance fields.                                                                                                   |
+| Multi-query orchestrator              | Execute bounded queries, enforce per-query result limits, deduplicate by Google News URL at the retrieval boundary where requested, and coordinate downstream enrichment. |
+| Apify delivery/observability          | Push rows to the default dataset and emit platform-native logs, analytics and charging evidence.                                                                          |
 
 ## 4. Principal Flows
 
@@ -40,12 +40,14 @@ External dependencies are Google News public search/RSS behaviour, public publis
 
 1. Apify starts the Actor with validated query/locale/recency/result-limit inputs.
 2. The request adapter retrieves Google News results for each bounded query.
-3. The parser normalizes feed records.
-4. When enabled, the resolver attempts a publisher URL for each row and records the result status.
-5. When full text is requested and a publisher URL is available, the article stage performs a bounded HTTP fetch and readability extraction.
-6. Row-level failures are captured as status/fallback data rather than propagated as run-fatal errors.
-7. Optional cross-query deduplication is applied.
+3. The parser normalizes feed records, and each query is capped at `maxItemsPerQuery`.
+4. At the currently implemented retrieval boundary, optional in-run deduplication removes later records with the same exact `googleNewsUrl`, retaining the first record and its query context. Disabling deduplication preserves every capped occurrence.
+5. When implemented, the resolver attempts a publisher URL for each remaining row and records the result status.
+6. When full text is requested and a publisher URL is available, the article stage performs a bounded HTTP fetch and readability extraction.
+7. Row-level failures are captured as status/fallback data rather than propagated as run-fatal errors.
 8. Final rows are written to the default Apify dataset.
+
+Steps 5-8 describe the intended downstream enriched flow; publisher resolution, full-text extraction and dataset delivery are not yet implemented in the current repository state.
 
 ### Fail-soft enrichment
 
