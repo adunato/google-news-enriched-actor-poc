@@ -52,9 +52,9 @@ The strategy must prove every material acceptance criterion at the lowest level 
 
 ### Acceptance Evidence Matrix
 
-| Acceptance criterion / behaviour | Risk or boundary | Test level | Environment / data | Pass evidence |
-| --- | --- | --- | --- | --- |
-| <criterion/reference> | <what could invalidate acceptance> | <unit/component/contract/integration/end-to-end/manual> | <mocked/local/live/staging/platform> | <observable evidence required> |
+| Acceptance criterion / behaviour | Risk or boundary                  | Test level                                              | Environment / data                   | Pass evidence                  |
+| -------------------------------- | --------------------------------- | ------------------------------------------------------- | ------------------------------------ | ------------------------------ |
+| <criterion/reference>            | <what could invalidate acceptance> | <unit/component/contract/integration/end-to-end/manual> | <mocked/local/live/staging/platform> | <observable evidence required> |
 
 ### Feasibility Gates
 
