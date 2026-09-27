@@ -38,7 +38,7 @@
 
 ## 4. File Change Summary
 
-| File     | Action   | Purpose |
+| File | Action | Purpose |
 | -------- | -------- | ------- | ------ | ------ | --------------------- |
 | `<path>` | `<Modify | Create  | Remove | Move>` | `<short description>` |
 

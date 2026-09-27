@@ -42,13 +42,13 @@ npm run validate
 
 Additional project commands:
 
-| Command | Purpose |
-| --- | --- |
+| Command                | Purpose                                                             |
+| ---------------------- | ------------------------------------------------------------------- |
 | `npm run format:check` | Verify formatting for repository and installed lifecycle artifacts. |
-| `npm run lint` | Run ESLint. |
-| `npm run typecheck` | Run the TypeScript compiler without emitting output. |
-| `npm test` | Run the Vitest test suite. |
-| `npm run build` | Compile TypeScript to `dist/`. |
+| `npm run lint`         | Run ESLint.                                                         |
+| `npm run typecheck`    | Run the TypeScript compiler without emitting output.                |
+| `npm test`             | Run the Vitest test suite.                                          |
+| `npm run build`        | Compile TypeScript to `dist/`.                                      |
 
 Repository-specific agent instructions are in [AGENTS.md](AGENTS.md).
 

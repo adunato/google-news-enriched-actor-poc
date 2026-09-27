@@ -23,16 +23,16 @@ External dependencies are Google News public search/RSS behaviour, public publis
 
 ## 3. Components and Responsibilities
 
-| Component | Responsibility |
-| --- | --- |
-| Actor entrypoint and input validation | Read Actor input, enforce the approved bounded contract and start orchestration. |
-| Google News request adapter | Perform bounded HTTP requests with timeout/retry/body-size controls. |
-| Google News parser/normalizer | Convert feed records into the approved core metadata contract. |
-| Publisher URL resolver | Resolve Google News article links to publisher URLs and emit explicit status/reason information. |
-| Article fetch/readability stage | When requested, fetch resolved publisher pages over HTTP and attempt readable text extraction. |
-| Row enrichment boundary | Isolate URL/full-text failures and preserve fallback/provenance fields. |
-| Multi-query orchestrator | Execute bounded queries, enforce result limits, deduplicate where requested and coordinate enrichment. |
-| Apify delivery/observability | Push rows to the default dataset and emit platform-native logs, analytics and charging evidence. |
+| Component                             | Responsibility                                                                                         |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Actor entrypoint and input validation | Read Actor input, enforce the approved bounded contract and start orchestration.                       |
+| Google News request adapter           | Perform bounded HTTP requests with timeout/retry/body-size controls.                                   |
+| Google News parser/normalizer         | Convert feed records into the approved core metadata contract.                                         |
+| Publisher URL resolver                | Resolve Google News article links to publisher URLs and emit explicit status/reason information.       |
+| Article fetch/readability stage       | When requested, fetch resolved publisher pages over HTTP and attempt readable text extraction.         |
+| Row enrichment boundary               | Isolate URL/full-text failures and preserve fallback/provenance fields.                                |
+| Multi-query orchestrator              | Execute bounded queries, enforce result limits, deduplicate where requested and coordinate enrichment. |
+| Apify delivery/observability          | Push rows to the default dataset and emit platform-native logs, analytics and charging evidence.       |
 
 ## 4. Principal Flows
 
@@ -57,13 +57,13 @@ External dependencies are Google News public search/RSS behaviour, public publis
 
 ## 5. Interfaces and Integrations
 
-| Interface / integration | Purpose | Direction / contract |
-| --- | --- | --- |
-| Apify Actor input | User/API invocation | Inbound JSON matching the Product Definition input contract. |
-| Google News public feed/search | Article discovery | Outbound bounded HTTP; no paid API dependency. |
-| Publisher HTTP pages | URL resolution and optional article text | Outbound bounded HTTP; partial failure is expected. |
-| Apify default dataset/API | Result delivery | Outbound normalized rows matching the product contract. |
-| Apify logs/analytics/charging | Operational and POC evidence | Platform-native observability and pay-per-event evidence. |
+| Interface / integration        | Purpose                                  | Direction / contract                                         |
+| ------------------------------ | ---------------------------------------- | ------------------------------------------------------------ |
+| Apify Actor input              | User/API invocation                      | Inbound JSON matching the Product Definition input contract. |
+| Google News public feed/search | Article discovery                        | Outbound bounded HTTP; no paid API dependency.               |
+| Publisher HTTP pages           | URL resolution and optional article text | Outbound bounded HTTP; partial failure is expected.          |
+| Apify default dataset/API      | Result delivery                          | Outbound normalized rows matching the product contract.      |
+| Apify logs/analytics/charging  | Operational and POC evidence             | Platform-native observability and pay-per-event evidence.    |
 
 ## 6. Data and State
 
