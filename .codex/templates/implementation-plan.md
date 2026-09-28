@@ -8,7 +8,7 @@
 **Created / updated:** `<YYYY-MM-DD>`  
 **GitHub Issue:** `<#issue or URL>`  
 **HLD reference:** `<path and artifact ID | Not required>`  
-**Technical Discovery:** `<completed discovery Issue/artifact reference | Not required>`  
+**Technical Spike:** `<completed Spike Issue/artifact reference | Not required>`  
 **Context references:** `<Product Definition / Architecture Definition references or None>`
 
 ## 1. Implementation Summary
@@ -40,7 +40,7 @@
 3. <dependent and integration behaviour>
 4. <integrity checks and validation hand-off>
 
-<Explain only meaningful dependencies. Required Technical Discovery must already be complete before this plan is approved. A plan-level feasibility gate is only for bounded residual uncertainty inside the established design.>
+<Explain only meaningful dependencies. Required Technical Spike must already be complete before this plan is approved. A plan-level feasibility gate is only for bounded residual uncertainty inside the established design.>
 
 ## 6. Development Integrity Checks
 
@@ -59,7 +59,7 @@ The strategy must prove every material acceptance criterion at the lowest level 
 
 ### Bounded Residual Feasibility Gates
 
-<List only narrow residual assumptions that can be demonstrated without determining the fundamental external integration contract or basic viability. State the exact evidence and stop/return path if a gate fails. If the unknown is material enough to require empirical characterization or selection among fundamentally different integration approaches, this plan must remain on hold and the Issue must return to `assess-change` for Technical Discovery. If none: “None.”>
+<List only narrow residual assumptions that can be demonstrated without determining the fundamental external integration contract or basic viability. State the exact evidence and stop/return path if a gate fails. If the unknown is material enough to require empirical characterization or selection among fundamentally different integration approaches, this plan must remain on hold and the Issue must return to `assess-change` for Technical Spike. If none: “None.”>
 
 ### Representative End-to-End / Live Coverage
 
@@ -71,7 +71,7 @@ The strategy must prove every material acceptance criterion at the lowest level 
 
 ## 8. Open Implementation Questions
 
-<Questions requiring resolution before or during development. If none: “No outstanding implementation questions.” A question about fundamental external/runtime viability or specification is Technical Discovery, not an implementation question. A narrow residual implementation assumption may be a bounded feasibility gate.>
+<Questions requiring resolution before or during development. If none: “No outstanding implementation questions.” A question about fundamental external/runtime viability or specification is Technical Spike, not an implementation question. A narrow residual implementation assumption may be a bounded feasibility gate.>
 
 ## 9. Low-Level Design Decision
 
@@ -98,4 +98,4 @@ The strategy must prove every material acceptance criterion at the lowest level 
 
 ### Completion contract
 
-The plan is substantively complete only when required Technical Discovery is complete, the repository assessment, implementation approach and sequence, checks, acceptance-evidence matrix, bounded residual feasibility gates, representative end-to-end/live coverage, explicit LLD decision, open questions, and traceability are resolved. Set **Status** to `Approved` only when implementation can proceed without an unresolved material planning or feasibility decision.
+The plan is substantively complete only when required Technical Spike is complete, the repository assessment, implementation approach and sequence, checks, acceptance-evidence matrix, bounded residual feasibility gates, representative end-to-end/live coverage, explicit LLD decision, open questions, and traceability are resolved. Set **Status** to `Approved` only when implementation can proceed without an unresolved material planning or feasibility decision.
