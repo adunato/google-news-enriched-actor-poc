@@ -1,0 +1,176 @@
+{
+  "issue": 18,
+  "accountUsername": "adunato",
+  "evidenceStatus": "final_pinned_probe",
+  "actor": {
+    "id": "ffjdMHqwE6aTsLhnb",
+    "name": "issue18-publisher-identity-node20-8d8299d8",
+    "isPublic": false,
+    "createdForThisTask": true,
+    "deletedAfterEvidenceCapture": true
+  },
+  "finalBuild": {
+    "id": "bhBBv5ohtKDQamR4D",
+    "number": "0.4.1",
+    "status": "SUCCEEDED",
+    "startedAtUtc": "2026-09-28T15:57:01.355Z",
+    "finishedAtUtc": "2026-09-28T15:57:09.906Z",
+    "tag": "issue18-final-v4",
+    "baseImage": "apify/actor-node:20",
+    "baseImageDigest": "sha256:c475bc63b3e70488dfb574147d8e63e7f410480bb0a3ef5b7ccad54635299a63"
+  },
+  "finalRun": {
+    "id": "oiLOkd2rSc4WAYTAg",
+    "status": "SUCCEEDED",
+    "startedAtUtc": "2026-09-28T15:57:19.831Z",
+    "finishedAtUtc": "2026-09-28T15:57:51.272Z",
+    "probeStartedAtUtc": "2026-09-28T15:57:21.883Z",
+    "probeCompletedAtUtc": "2026-09-28T15:57:37.465Z",
+    "configuredMemoryMbytes": 256,
+    "timeoutSeconds": 900,
+    "actualNodeVersion": "v20.20.2",
+    "platform": "linux",
+    "architecture": "x64",
+    "durationSeconds": 31.322,
+    "peakMemoryBytes": 72314880,
+    "computeUnits": 0.0021751388888888888,
+    "usageTotalUsd": 0.0010753898329304325,
+    "defaultDatasetId": "urfl3jsv2WB81GnUo",
+    "defaultKeyValueStoreId": "msi9KdzxsMlf7Mtn2",
+    "defaultRequestQueueId": "ANcfxlHwSUAsX3q30"
+  },
+  "hashes": {
+    "manifestFileSha256": "d1ed2bea31efc54358ac24d991a9037ec0f0840ccd50547c01bd794c64389f3c",
+    "rowArraySha256": "fdbab474e5764350c547080c0002f042b062e03f157a270d5b9474d846ad2f2a",
+    "probeSha256": "16da65c4ba05259b4e9614325576e8f8ad33c1ab38b686cf97369de6921d1b22",
+    "networkModuleSha256": "9fc0357e9f97e0325951fe40388dd238d05ed5ffff0e9da445b6699d0c3723a3",
+    "titleModuleSha256": "f609bef966f264ea64e1650158776bbee4c7b157777e7214db74ab6678053de9",
+    "packageLockSha256": "c1f7096eab098f4009cc9c0a5a3f0d388b80bc6907d82d83124952169ab7cce5",
+    "localResultsSha256": "f24402ddcc1b5b0990a9acc19bed36f95b49dc77abee6dbf5b9699c349b9972f"
+  },
+  "evidence": {
+    "datasetItemCount": 101,
+    "summaryItemCount": 1,
+    "rowItemCount": 100,
+    "rowIdsExactOnce": true,
+    "publisherHttpStages": 101,
+    "redirectResponses": 1,
+    "containsGoogleNewsUrls": false,
+    "containsPublisherUrls": false,
+    "containsPageBodies": false,
+    "containsSecretsOrCookies": false,
+    "rowsFile": "hosted-results.json",
+    "datasetExportFile": "hosted-dataset-items-pinned-final.json",
+    "logFile": "hosted-run-log-pinned-final.txt",
+    "logHasUrls": false,
+    "logHasSecretTerms": false
+  },
+  "retries": {
+    "count": 0,
+    "rows": [],
+    "statuses": [],
+    "additionalRequests": 0,
+    "finalStrictSuccessesUnchanged": true,
+    "note": "The fixed final run had zero retries; see superseded run 0.2.1 for the single justified 503 retry and unchanged result."
+  },
+  "supersededRuns": [
+    {
+      "id": "qucBPtccC6YhknGKN",
+      "buildId": "ff7MAA5j9eFlIBuxW",
+      "reason": "title adjudication defects"
+    },
+    {
+      "id": "Elw4umZiOM0dddUDb",
+      "buildId": "OuuO1CT6bmKziAWDH",
+      "reason": "preflight-only DNS check left DNS rebinding unpinned"
+    },
+    {
+      "id": "fb01FIaxyn5eRlafA",
+      "buildId": "jslSiwDfVTu4jQYbM",
+      "reason": "failed before probe execution because hosted wrapper dependency was missing; no publisher requests issued"
+    }
+  ],
+  "allCreatedBuildIds": [
+    "ff7MAA5j9eFlIBuxW",
+    "OuuO1CT6bmKziAWDH",
+    "jslSiwDfVTu4jQYbM",
+    "bhBBv5ohtKDQamR4D"
+  ],
+  "allCreatedRunIds": [
+    "qucBPtccC6YhknGKN",
+    "Elw4umZiOM0dddUDb",
+    "fb01FIaxyn5eRlafA",
+    "oiLOkd2rSc4WAYTAg"
+  ],
+  "resourceCleanup": {
+    "status": "complete",
+    "verifiedAtUtc": "2026-09-28T16:12:05Z",
+    "verification": "All four run IDs were deleted successfully. Exact build ID lookups returned not found; the disposable Actor deletion succeeded and its exact ID lookup returned not found. Account dataset and key-value-store listings contained none of the four created IDs in each category. The request-queue CLI has no list/delete subcommands; queues belonged to the deleted runs and Actor.",
+    "actorId": "ffjdMHqwE6aTsLhnb",
+    "runIds": ["qucBPtccC6YhknGKN", "Elw4umZiOM0dddUDb", "fb01FIaxyn5eRlafA", "oiLOkd2rSc4WAYTAg"],
+    "datasetIds": [
+      "bSjzaoBgB2v4wlNPZ",
+      "4ajNaQPy7bjgGzlQE",
+      "HfsBDTA7H1rIuNF7j",
+      "urfl3jsv2WB81GnUo"
+    ],
+    "keyValueStoreIds": [
+      "nCnj2dxMQPIQ9wovg",
+      "A8c3jyqrE7Wm4i4eA",
+      "4n8JW2lyXFjdx4ywx",
+      "msi9KdzxsMlf7Mtn2"
+    ],
+    "requestQueueIds": [
+      "Ds8AHaDFR8DcYGeL5",
+      "Vc75RonvVbBW7vPeU",
+      "u8QcHGfEYze082yFP",
+      "ANcfxlHwSUAsX3q30"
+    ],
+    "buildIds": ["ff7MAA5j9eFlIBuxW", "OuuO1CT6bmKziAWDH", "jslSiwDfVTu4jQYbM", "bhBBv5ohtKDQamR4D"]
+  },
+  "supersededRetryObservation": {
+    "runId": "Elw4umZiOM0dddUDb",
+    "buildId": "OuuO1CT6bmKziAWDH",
+    "rowId": "q5-gb-08",
+    "triggerStatus": 503,
+    "requestStatuses": [503, 503],
+    "additionalRequests": 1,
+    "finalAccessStatus": "http_503",
+    "identityStatus": "unverifiable",
+    "strictSuccessChanged": false,
+    "runTotalUsageUsd": 0.00105480364167028,
+    "supersededBecause": "DNS checks were preflight-only and addresses were not pinned to sockets."
+  },
+  "preFormatHashes": {
+    "manifestFileSha256": "56b389351b04c1288c36dc971481a1933668fd46571c1bea2f18a37c59181034",
+    "rowArraySha256": "fdbab474e5764350c547080c0002f042b062e03f157a270d5b9474d846ad2f2a",
+    "probeSha256": "f384b13cb61856690a9be38d800c64af2fb2b9711842bf35019d46153d3eb7c4",
+    "networkModuleSha256": "f2fc8bda0af4b9ccae352fd73ea5b8822ea18c08788b97174f7248fe9a926062",
+    "titleModuleSha256": "7e5e970a426ac0f321ce8d56f531f3d8b8255dc42a4885d79517e9d71d057325",
+    "packageLockSha256": "c1f7096eab098f4009cc9c0a5a3f0d388b80bc6907d82d83124952169ab7cce5",
+    "localResultsSha256": "26c3ace09f3c700f7aa3dbf518fe2ad387c410f287fa24d9c4ef08c140beaa2e"
+  },
+  "captureSanitization": {
+    "removedField": "defaultDataset.urlSigningSecretKey",
+    "removedOccurrences": 4,
+    "reason": "Platform-generated dataset access signing keys are not required for discovery evidence.",
+    "files": {
+      "hosted-failed-run-info.json": {
+        "removedFields": 1,
+        "sha256": "3d5e42f45670a1880c9f807bb4c0ac397d1bef0f18334b1d6fb81d616b734153"
+      },
+      "hosted-run-info-final.json": {
+        "removedFields": 1,
+        "sha256": "da78ed444f1f034b9976c358c835f7bb8fba94e0c6d5fb4488245a8e136e687d"
+      },
+      "hosted-run-info-pinned-final.json": {
+        "removedFields": 1,
+        "sha256": "850907b1ef8d1e6d5f2ed3025607df1affb27836503a65374509b3a14f6469c6"
+      },
+      "hosted-run-info.json": {
+        "removedFields": 1,
+        "sha256": "a891fef6437879ba5cf46deb3e99446210813828fd39250ebc6194e1c9b1362e"
+      }
+    }
+  }
+}
