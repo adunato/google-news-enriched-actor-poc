@@ -6,13 +6,7 @@
   "workingTreeDirty": false,
   "nodeVersion": "v24.15.0",
   "configuration": {
-    "queries": [
-      "world news",
-      "politics",
-      "business",
-      "technology",
-      "health"
-    ],
+    "queries": ["world news", "politics", "business", "technology", "health"],
     "editions": [
       {
         "id": "GB",
