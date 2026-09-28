@@ -15,7 +15,7 @@ Adopt an existing suitable branch/worktree when present. Never reset, overwrite,
 
 If a suitable worktree already exists outside the canonical location, adopt it in place and report the location exception. Never move it automatically. If the canonical target path exists but is not the suitable registered worktree for this Issue, stop without changing it. Do not create a second worktree for the same Issue and branch.
 
-Inspect the Issue, Product Definition, Architecture Definition, `AGENTS.md`, and relevant repository state so the downstream lifecycle can determine proportionately whether HLD, implementation planning, or LLD are required. Workspace setup itself must not require those artifacts to exist.
+Inspect the Issue, Product Definition, Architecture Definition, `AGENTS.md`, and relevant repository state. For Feature/Bug work, downstream assessment determines Technical Discovery/HLD/Implementation Plan/LLD depth. For a Technical Discovery Issue, the workspace holds the investigation artifact and any narrowly scoped reproducibility tooling. Workspace setup itself must not require downstream design artifacts to exist.
 
 ## Completion contract
 

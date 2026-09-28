@@ -15,6 +15,8 @@
 
 Acceptance criteria must prove the corrected real behaviour, not only mocked or conditional handling. When the defect involves an external system, live data, deployed runtime, or platform integration, include the externally observable condition that demonstrates the defect is actually resolved.
 
+If correcting the defect depends on an undocumented, reverse-engineered, materially volatile, or otherwise unknown external/runtime boundary, do not infer its specification during issue refinement. The `assess-change` step determines whether prerequisite Technical Discovery is required.
+
 ## Validation Expectations
 
 - **Acceptance evidence:** <Identify the evidence needed to prove each material correction/regression criterion.>
@@ -32,6 +34,10 @@ Acceptance criteria must prove the corrected real behaviour, not only mocked or 
 
 > Populated by the `assess-change` step after Issue refinement. Leave as `Pending` when the Issue is created.
 
+- **Technical Discovery:** Pending
+  - **Rationale:** Pending
+  - **Prerequisite Issue:** Pending
+  - **Status:** Pending
 - **HLD:** Pending
   - **Rationale:** Pending
 - **Implementation Plan:** Pending

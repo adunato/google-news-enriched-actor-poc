@@ -8,7 +8,8 @@
 **Created / updated:** `<YYYY-MM-DD>`  
 **GitHub Issue:** `<#issue or URL>`  
 **Implementation Plan:** `<path and artifact ID>`  
-**HLD reference:** `<path and artifact ID | Not required>`
+**HLD reference:** `<path and artifact ID | Not required>`  
+**Technical Discovery:** `<completed discovery Issue/artifact reference | Not required>`
 
 ## 1. Change Overview
 
@@ -38,10 +39,10 @@
 
 ## 4. File Change Summary
 
-| File | Action | Purpose |
-| -------- | -------- | ------- | ------ | ------ | --------------------- |
-| `<path>` | `<Modify | Create  | Remove | Move>` | `<short description>` |
+| File     | Action     | Purpose               |
+| -------- | ---------- | --------------------- |
+| `<path>` | `<action>` | `<short description>` |
 
 ### Completion contract
 
-The LLD is substantively complete only when every significant file has an action and responsibility, dependencies are explicit where needed, the summary agrees with the detailed entries, and **Status** is `Approved` against the originating Issue and Implementation Plan.
+The LLD is substantively complete only when every significant file has an action and responsibility, dependencies are explicit where needed, the summary agrees with the detailed entries, required Technical Discovery evidence is respected, and **Status** is `Approved` against the originating Issue and Implementation Plan.

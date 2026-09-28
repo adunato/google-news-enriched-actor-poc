@@ -9,6 +9,7 @@
 **GitHub Issue:** `<#issue or URL>`  
 **Product Definition:** `<path / requirement references or None>`  
 **Architecture Definition:** `<path / section references or None>`  
+**Technical Discovery:** `<completed discovery Issue/artifact reference | Not required>`  
 **Traceability:** `<other upstream requirement or decision links, or None>`
 
 ## 1. Summary
@@ -17,7 +18,7 @@
 
 ## 2. Current State
 
-<Describe only the current behaviour and architecture relevant to this change, including material limitations.>
+<Describe only the current behaviour and architecture relevant to this change, including material limitations. When prerequisite Technical Discovery was required, summarize only the established findings needed by this design and reference the discovery artifact rather than reinterpreting it.>
 
 ## 3. Requirements
 
@@ -77,13 +78,13 @@
 
 <Identify the behaviours that must be proved and the boundary at which they must be proved. Distinguish local/mocked evidence from representative live, deployed, or platform evidence where the real external boundary is material to acceptance.>
 
-### External / Runtime Assumptions
+### Discovery-backed external / runtime contract
 
-<List any external-system, live-data, protocol, platform, permission, environment, or third-party behaviour on which the proposed design depends. If none: "None.">
+<State the external/runtime behaviour that completed Technical Discovery or authoritative specifications establish and that this design is allowed to rely on. If discovery was not required, identify the authoritative basis. Do not treat third-party/community code as a specification.>
 
-### Pre-Implementation Feasibility Gates
+### Residual assumptions and bounded feasibility gates
 
-<For each material assumption that is not already proven, define the evidence required before substantial implementation proceeds. A failed gate returns the change to design/product decision rather than being deferred as a late smoke test. If none: "None.">
+<List only residual assumptions narrow enough to validate inside the implementation lifecycle without determining the fundamental integration approach. For each, define the evidence required before dependent implementation. If a material unknown would determine basic viability or the integration contract, stop and return to `assess-change` for Technical Discovery rather than keeping it here. If none: "None.">
 
 ## 12. Open Questions
 
@@ -103,4 +104,4 @@
 
 ### Completion contract
 
-The HLD is substantively complete only when the material requirements, proposed design, validation and feasibility considerations, external/runtime assumptions, durable Product/Architecture impacts, and open questions are resolved. An HLD must remain on hold while a material feasibility assumption required by the chosen design has no defined proof path. Set **Status** to `Approved` only when the design is ready to constrain downstream implementation.
+The HLD is substantively complete only when required prerequisite Technical Discovery is complete, the material requirements, proposed design, validation and bounded-feasibility considerations, external/runtime contract, durable Product/Architecture impacts, and open questions are resolved. An HLD must not select an integration design while the material external/runtime contract or basic viability remains an unresolved discovery question. Set **Status** to `Approved` only when the design is ready to constrain downstream implementation.

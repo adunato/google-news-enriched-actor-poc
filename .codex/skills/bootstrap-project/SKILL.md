@@ -16,7 +16,7 @@ Create or populate, as applicable:
 - repository-root `.gitattributes` from `.codex/templates/product.gitattributes`, establishing `* text=auto eol=lf` before normal development begins;
 - `docs/product.md` from `.codex/templates/product-definition.md`;
 - `docs/architecture.md` from `.codex/templates/architecture-definition.md`;
-- `.github/ISSUE_TEMPLATE/feature.md` and `bug.md`;
+- `.github/ISSUE_TEMPLATE/feature.md`, `bug.md`, and `technical-discovery.md`;
 - `.github/workflows/sidegig-learning-dispatch.yml` from `.codex/templates/learning-collection-dispatch.yml`;
 - the project source/test/configuration baseline;
 - the canonical local validation command and required language/tool configuration;
@@ -27,11 +27,13 @@ The product `.gitattributes` baseline is standard SideGig repository infrastruct
 
 The learning-dispatch workflow is standard SideGig repository infrastructure. It runs when a pull request is merged to `dev` and immediately dispatches the central SideGig learning collector.
 
-Secret provisioning is part of bootstrap, not a later manual reminder. After the repository and dispatch workflow exist, use `provision-repository-secrets` and run the installed `.codex/tools/provision-repository-secrets.ps1` tool for the new `owner/repository`. The tool consumes the one-time workstation credential initialized through `implementation/bootstrap/initialize-dispatch-credential.ps1` in the SideGig repository and automatically creates or updates `SIDEGIG_COLLECTOR_DISPATCH_TOKEN`.
+Secret provisioning is part of bootstrap, not a later manual reminder. Before asking for any token setup, check whether the shared workstation credential already exists at `%LOCALAPPDATA%\\SideGig\\bootstrap\\collector-dispatch-token.dpapi`. This is one central SideGig bootstrap credential reused across all product repositories. If it exists, do not ask the developer to create, retrieve or re-enter a token; proceed directly with `provision-repository-secrets` and run the installed `.codex/tools/provision-repository-secrets.ps1` tool for the new `owner/repository`.
+
+Only when that shared credential is genuinely absent should bootstrap direct the developer through the one-time initialization path in `implementation/bootstrap/initialize-dispatch-credential.ps1`. After initialization, future repository bootstraps must reuse the stored credential automatically.
 
 If the local credential is missing or provisioning fails, treat bootstrap as blocked. Do not mark bootstrap complete and do not defer the secret as an undocumented or optional manual task.
 
-Preserve the operating-model branch model: create `dev`, `staging`, and `main` from the same bootstrap baseline, set `dev` as the default branch, and apply the required repository controls after the branches and CI checks exist.
+Preserve the operating-model branch model: create `dev`, `staging`, and `main` from the same bootstrap baseline, set `dev` as the default branch, create the standard `feature`, `bug`, and `technical-discovery` labels, and apply the required repository controls after the branches and CI checks exist.
 
 Do not invent unresolved product or architecture decisions merely to finish bootstrap. Durable documents may remain `Draft` where the operating model permits it, with unresolved decisions made explicit.
 
@@ -41,7 +43,7 @@ After creating and installing all bootstrap artifacts, run the target repository
 
 ## Completion contract
 
-Report the repository, baseline commit, permanent branches/default branch, durable-document status, installed Issue templates, validation command, installed CI/deployment workflows, learning-dispatch workflow, automatic repository-secret provisioning result, lifecycle package version, repository controls applied, unresolved bootstrap blockers, and any explicit human action still required. Bootstrap is complete only when the repository can enter the normal Issue-centred Development Lifecycle safely.
+Report the repository, baseline commit, permanent branches/default branch, durable-document status, installed Issue templates/labels, validation command, installed CI/deployment workflows, learning-dispatch workflow, automatic repository-secret provisioning result, lifecycle package version, repository controls applied, unresolved bootstrap blockers, and any explicit human action still required. Bootstrap is complete only when the repository can enter the normal Issue-centred Development Lifecycle safely.
 
 ## Learning checkpoint
 
