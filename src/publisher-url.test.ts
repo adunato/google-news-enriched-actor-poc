@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import type { GoogleNewsArticleRecord } from "./google-news.js";
+import type { PublisherResolutionDiagnostic } from "./publisher-url.js";
 import { resolvePublisherUrls } from "./publisher-url.js";
 
 const record: GoogleNewsArticleRecord = {
@@ -18,11 +19,12 @@ function response(body: string, init?: ResponseInit): Response {
 
 describe("resolvePublisherUrls", () => {
   it("resolves a direct publisher redirect and preserves the discovery record", async () => {
-    const fetchImpl = vi
-      .fn<typeof fetch>()
-      .mockResolvedValue(
-        response("", { status: 302, headers: { location: "https://WWW.Example.com/story" } }),
-      );
+    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(
+      response("", {
+        status: 302,
+        headers: { location: "https://WWW.Example.com/story/sorry/captcha" },
+      }),
+    );
 
     const [result] = await resolvePublisherUrls([record], true, fetchImpl);
 
@@ -31,7 +33,7 @@ describe("resolvePublisherUrls", () => {
       ...record,
       urlResolved: true,
       urlResolutionStatus: "success",
-      publisherUrl: "https://www.example.com/story",
+      publisherUrl: "https://www.example.com/story/sorry/captcha",
       publisherDomain: "www.example.com",
     });
   });
@@ -43,7 +45,10 @@ describe("resolvePublisherUrls", () => {
         response("", { status: 302, headers: { location: "https://consent.google.com/m" } }),
       );
 
-    const [result] = await resolvePublisherUrls([record], true, fetchImpl);
+    const diagnostics: PublisherResolutionDiagnostic[] = [];
+    const [result] = await resolvePublisherUrls([record], true, fetchImpl, (_index, diagnostic) => {
+      diagnostics.push(diagnostic);
+    });
 
     expect(result).toMatchObject({
       googleNewsUrl: record.googleNewsUrl,
@@ -51,6 +56,30 @@ describe("resolvePublisherUrls", () => {
       urlResolutionStatus: "failure",
     });
     expect(result?.publisherUrl).toBeUndefined();
+    expect(diagnostics[0]).toMatchObject({
+      failureCategory: "consent_or_interstitial",
+      resultHostClass: "interstitial",
+      requests: [{ stage: "google_page", status: 302 }],
+    });
+  });
+
+  it("rejects the Google short host g.co as a publisher URL", async () => {
+    const fetchImpl = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(
+        response("", { status: 302, headers: { location: "https://g.co/story" } }),
+      );
+    const diagnostics: PublisherResolutionDiagnostic[] = [];
+
+    const [result] = await resolvePublisherUrls([record], true, fetchImpl, (_index, diagnostic) => {
+      diagnostics.push(diagnostic);
+    });
+
+    expect(result).toMatchObject({ urlResolved: false, urlResolutionStatus: "failure" });
+    expect(diagnostics[0]).toMatchObject({
+      failureCategory: "google_host",
+      resultHostClass: "google",
+    });
   });
 
   it("rejects publisher URLs on regional Google domains and their subdomains", async () => {

@@ -8,6 +8,33 @@ const MAX_REDIRECTS = 5;
 const MAX_CONCURRENCY = 4;
 
 export type UrlResolutionStatus = "success" | "failure" | "not_requested";
+export type ResolutionFailureCategory =
+  | "consent_or_interstitial"
+  | "invalid_publisher_url"
+  | "google_host"
+  | "metadata_missing_or_mismatch"
+  | "rpc_http_error"
+  | "rpc_parse_or_result_error"
+  | "timeout"
+  | "network"
+  | "redirect_limit"
+  | "other";
+
+export interface ResolutionRequestObservation {
+  stage: "google_page" | "decoder_rpc";
+  hostClass: "google" | "interstitial" | "publisher" | "unknown";
+  status?: number;
+  responseBytes?: number;
+  declaredBytes?: number;
+  error?: "timeout" | "network" | "other";
+}
+
+export interface PublisherResolutionDiagnostic {
+  elapsedMs: number;
+  failureCategory?: ResolutionFailureCategory;
+  resultHostClass?: ResolutionRequestObservation["hostClass"];
+  requests: ResolutionRequestObservation[];
+}
 
 export interface PublisherResolvedArticle extends GoogleNewsArticleRecord {
   urlResolved: boolean;
@@ -26,18 +53,34 @@ function failed(record: GoogleNewsArticleRecord): PublisherResolvedArticle {
   return { ...record, urlResolved: false, urlResolutionStatus: "failure" };
 }
 
+function classifyHost(host: string): ResolutionRequestObservation["hostClass"] {
+  const normalized = host.toLowerCase();
+  if (/(^|[.-])(consent|captcha|recaptcha|interstitial|sorry)([.-]|$)/i.test(normalized))
+    return "interstitial";
+  if (
+    normalized === "g.co" ||
+    normalized.endsWith(".g.co") ||
+    /(?:^|\.)google\.[a-z]{2,3}(?:\.[a-z]{2})?$/.test(normalized) ||
+    normalized === "googleusercontent.com" ||
+    normalized.endsWith(".googleusercontent.com") ||
+    normalized === "gstatic.com" ||
+    normalized.endsWith(".gstatic.com")
+  )
+    return "google";
+  return "publisher";
+}
+
 function validHttpUrl(value: string, rejectGoogleNews = true): URL | undefined {
   try {
     const url = new URL(value);
     if (url.protocol !== "http:" && url.protocol !== "https:") return undefined;
     const host = url.hostname.toLowerCase();
-    const googleOwned =
-      /(?:^|\.)google\.[a-z]{2,3}(?:\.[a-z]{2})?$/.test(host) ||
-      host === "googleusercontent.com" ||
-      host.endsWith(".googleusercontent.com") ||
-      host === "gstatic.com" ||
-      host.endsWith(".gstatic.com");
-    if (rejectGoogleNews && (host === GOOGLE_NEWS_HOST || googleOwned)) return undefined;
+    const hostClass = classifyHost(host);
+    if (
+      rejectGoogleNews &&
+      (host === GOOGLE_NEWS_HOST || hostClass === "google" || hostClass === "interstitial")
+    )
+      return undefined;
     return url;
   } catch {
     return undefined;
@@ -67,7 +110,10 @@ function extractMarkers(html: string, expectedId: string): Markers | undefined {
   return undefined;
 }
 
-async function readBounded(response: Response): Promise<string> {
+async function readBounded(
+  response: Response,
+  onBytesRead?: (bytes: number) => void,
+): Promise<string> {
   const contentLength = response.headers.get("content-length");
   if (contentLength && Number(contentLength) > MAX_RESPONSE_BYTES) {
     await response.body?.cancel();
@@ -83,6 +129,7 @@ async function readBounded(response: Response): Promise<string> {
       const { done, value } = await reader.read();
       if (done) break;
       size += value.byteLength;
+      onBytesRead?.(value.byteLength);
       if (size > MAX_RESPONSE_BYTES) {
         await reader.cancel();
         throw new Error("Response exceeded the 2 MiB limit.");
@@ -128,8 +175,8 @@ async function fetchGooglePage(
     if (response.status < 300 || response.status >= 400) return { response };
     const location = response.headers.get("location");
     await response.body?.cancel();
-    if (!location || redirects >= MAX_REDIRECTS)
-      throw new Error("Redirect limit or location failure.");
+    if (!location) throw new Error("Missing redirect location.");
+    if (redirects >= MAX_REDIRECTS) throw new Error("Redirect limit exceeded.");
     const next = new URL(location, current);
     if (next.protocol !== "http:" && next.protocol !== "https:")
       throw new Error("Unsupported redirect scheme.");
@@ -207,22 +254,97 @@ function parseRpcResponse(body: string): string | undefined {
 export async function resolvePublisherUrl(
   record: GoogleNewsArticleRecord,
   fetchImpl: FetchLike = fetch,
+  onDiagnostic?: (diagnostic: PublisherResolutionDiagnostic) => void,
 ): Promise<PublisherResolvedArticle> {
+  const startedAt = Date.now();
+  const requests: ResolutionRequestObservation[] = [];
+  let latestObservation: ResolutionRequestObservation | undefined;
+  let currentStage: "google_page" | "decoder_rpc" = "google_page";
+  let signal: AbortSignal | undefined;
+  const report = (
+    result: PublisherResolvedArticle,
+    failureCategory?: ResolutionFailureCategory,
+    resultHostClass?: ResolutionRequestObservation["hostClass"],
+  ): PublisherResolvedArticle => {
+    try {
+      onDiagnostic?.({
+        elapsedMs: Date.now() - startedAt,
+        ...(failureCategory ? { failureCategory } : {}),
+        ...(resultHostClass ? { resultHostClass } : {}),
+        requests,
+      });
+    } catch {
+      // Measurement diagnostics must never change resolver behavior.
+    }
+    return result;
+  };
+  const observedFetch: FetchLike = async (input, init) => {
+    currentStage = init?.method?.toUpperCase() === "POST" ? "decoder_rpc" : "google_page";
+    let requestUrl: URL;
+    try {
+      const value = input instanceof Request ? input.url : String(input);
+      requestUrl = new URL(value);
+    } catch {
+      requestUrl = new URL("https://unknown.invalid/");
+    }
+    const observation: ResolutionRequestObservation = {
+      stage: currentStage,
+      hostClass: classifyHost(requestUrl.hostname),
+    };
+    requests.push(observation);
+    latestObservation = observation;
+    try {
+      const response = await fetchImpl(input, init);
+      observation.status = response.status;
+      const contentLength = response.headers.get("content-length");
+      if (contentLength && Number.isFinite(Number(contentLength))) {
+        observation.declaredBytes = Number(contentLength);
+      }
+      observation.responseBytes = 0;
+      return response;
+    } catch (error) {
+      observation.error = signal?.aborted
+        ? "timeout"
+        : error instanceof TypeError
+          ? "network"
+          : "other";
+      throw error;
+    }
+  };
+
   try {
     const article = googleArticleId(record.googleNewsUrl);
-    if (!article) return failed(record);
-    const signal = AbortSignal.timeout(ROW_TIMEOUT_MS);
-    const page = await fetchGooglePage(article.url, fetchImpl, signal);
-    if (page.destination) return successful(record, page.destination) ?? failed(record);
+    if (!article) return report(failed(record), "invalid_publisher_url");
+    signal = AbortSignal.timeout(ROW_TIMEOUT_MS);
+    const page = await fetchGooglePage(article.url, observedFetch, signal);
+    if (page.destination) {
+      const destination = new URL(page.destination);
+      const hostClass = classifyHost(destination.hostname);
+      const resolved = successful(record, page.destination);
+      if (resolved) return report(resolved, undefined, hostClass);
+      const category =
+        hostClass === "interstitial"
+          ? "consent_or_interstitial"
+          : hostClass === "google"
+            ? "google_host"
+            : "invalid_publisher_url";
+      return report(failed(record), category, hostClass);
+    }
     if (!page.response?.ok) {
       await page.response?.body?.cancel();
-      return failed(record);
+      return report(
+        failed(record),
+        latestObservation?.hostClass === "interstitial" ? "consent_or_interstitial" : "other",
+        latestObservation?.hostClass,
+      );
     }
-    const html = await readBounded(page.response);
+    const html = await readBounded(page.response, (bytes) => {
+      latestObservation!.responseBytes = (latestObservation!.responseBytes ?? 0) + bytes;
+    });
     const markers = extractMarkers(html, article.id);
-    if (!markers) return failed(record);
+    if (!markers) return report(failed(record), "metadata_missing_or_mismatch");
 
-    const rpcResponse = await fetchImpl(BATCHEXECUTE_URL, {
+    const rpcResponse = await observedFetch(BATCHEXECUTE_URL, {
       method: "POST",
       redirect: "manual",
       headers: { "content-type": "application/x-www-form-urlencoded;charset=UTF-8" },
@@ -231,12 +353,35 @@ export async function resolvePublisherUrl(
     });
     if (!rpcResponse.ok) {
       await rpcResponse.body?.cancel();
-      return failed(record);
+      return report(failed(record), "rpc_http_error", latestObservation?.hostClass);
     }
-    const publisherUrl = parseRpcResponse(await readBounded(rpcResponse));
-    return (publisherUrl && successful(record, publisherUrl)) || failed(record);
-  } catch {
-    return failed(record);
+    const publisherUrl = parseRpcResponse(
+      await readBounded(rpcResponse, (bytes) => {
+        latestObservation!.responseBytes = (latestObservation!.responseBytes ?? 0) + bytes;
+      }),
+    );
+    if (!publisherUrl) return report(failed(record), "rpc_parse_or_result_error");
+    const resultUrl = validHttpUrl(publisherUrl, false);
+    const hostClass = resultUrl ? classifyHost(resultUrl.hostname) : undefined;
+    const resolved = successful(record, publisherUrl);
+    if (resolved) return report(resolved, undefined, hostClass);
+    const category =
+      hostClass === "interstitial"
+        ? "consent_or_interstitial"
+        : hostClass === "google"
+          ? "google_host"
+          : "invalid_publisher_url";
+    return report(failed(record), category, hostClass);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const failureCategory: ResolutionFailureCategory = signal?.aborted
+      ? "timeout"
+      : /redirect limit/i.test(message)
+        ? "redirect_limit"
+        : latestObservation?.error === "network"
+          ? "network"
+          : "other";
+    return report(failed(record), failureCategory, latestObservation?.hostClass);
   }
 }
 
@@ -245,6 +390,7 @@ export async function resolvePublisherUrls(
   records: GoogleNewsArticleRecord[],
   enabled: boolean,
   fetchImpl: FetchLike = fetch,
+  onDiagnostic?: (index: number, diagnostic: PublisherResolutionDiagnostic) => void,
 ): Promise<PublisherResolvedArticle[]> {
   if (!enabled) {
     return records.map((record) => ({
@@ -259,7 +405,9 @@ export async function resolvePublisherUrls(
     while (true) {
       const index = nextIndex++;
       if (index >= records.length) return;
-      results[index] = await resolvePublisherUrl(records[index]!, fetchImpl);
+      results[index] = await resolvePublisherUrl(records[index]!, fetchImpl, (diagnostic) => {
+        onDiagnostic?.(index, diagnostic);
+      });
     }
   };
   await Promise.all(Array.from({ length: Math.min(MAX_CONCURRENCY, records.length) }, worker));

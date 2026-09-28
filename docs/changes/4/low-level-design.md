@@ -1,5 +1,17 @@
 # Low-Level Design: Publisher URL Resolution
 
+## Addendum: Live Sample Harness and Diagnostic Contract (2026-09-28)
+
+The Issue acceptance gate is 95 valid resolutions out of 100 retained rows across the fixed matrix in `hld.md` and `implementation-plan.md`. The harness must run before any substantial resolver algorithm change, call the retrieval and resolver exports directly, and avoid Actor dataset delivery.
+
+The current resolver output exposes only `success`, `failure`, or `not_requested`; it has no failure reason field. Add a measurement-only internal diagnostic path (for example, an optional callback or a detailed internal result) that reports row index/cell, stage, bounded reason category, observed HTTP status, final host class, elapsed time, and response bytes. Do not add diagnostic fields to public enriched rows or persist response bodies. Keep the existing public resolver result and order unchanged.
+
+Use categories `consent_or_interstitial`, `invalid_publisher_url`, `google_host`, `metadata_missing_or_mismatch`, `rpc_http_error`, `rpc_parse_or_result_error`, `timeout`, `network`, `redirect_limit`, and `other`. Derive a success independently from output fields: `urlResolved===true`, successful status, unchanged `googleNewsUrl`, valid HTTP(S) `publisherUrl` outside Google/consent/interstitial hosts, and `publisherDomain` equal to the parsed lowercased host. Ambiguous results count as failure until manually resolved under the stated predicate.
+
+The harness manifest pins the code SHA and UTC run time, captures all ten matrix cells and input settings, requires exactly ten rows in every cell, and summarizes denominator, successes, failures per cell/category, timing, and response limits. It must not collapse records across cells or fill a short cell from another query. Record only minimal row audit data (cell, ordinal or stable hash, outcome, publisher host class/domain, and category); exclude article text and raw HTML/RPC bodies.
+
+The present evidence supports running this sample against the current resolver before changing its algorithm. If measurement shows fewer than 95 valid rows or an incomplete matrix, leave Issue #4 and PR #11 on hold/draft; classify the failure distribution, make a targeted bounded HTTP-first correction, and rerun the identical matrix against the resulting commit.
+
 ## Change Overview
 
 Implement a typed per-row resolver using native Fetch and integrate it between RSS retrieval and the current processing seam. Preserve Google News provenance, row ordering, bounded resource use, and failure isolation.

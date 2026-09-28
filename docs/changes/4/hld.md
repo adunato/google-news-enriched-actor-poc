@@ -1,5 +1,25 @@
 # High-Level Design: Publisher URL Resolution
 
+## Addendum: Mandatory Representative Live Gate (2026-09-28)
+
+Issue #4 now requires at least 95 valid publisher URL successes from exactly 100 retained rows: five broad queries, two English editions (GB and US), and ten rows per query/edition cell. This external gate is separate from mocked tests and `npm run validate`; an incomplete or sub-threshold sample keeps Issue #4 and PR #11 on hold/draft.
+
+Use this fixed matrix for the first run and every rerun:
+
+| Query        | GB edition | US edition |
+| ------------ | ---------: | ---------: |
+| `world news` |         10 |         10 |
+| `politics`   |         10 |         10 |
+| `business`   |         10 |         10 |
+| `technology` |         10 |         10 |
+| `health`     |         10 |         10 |
+
+Run GB with `language=en-GB`, `country=GB`, and US with `language=en-US`, `country=US`. Set `maxItemsPerQuery=10`, `dedupe=false`, `resolvePublisherUrls=true`, and use the same collection date range/configuration for all cells in a run. Record the exact inputs and UTC collection time in a run manifest. Do not substitute rows between cells; fewer than ten retained rows in any cell makes the sample incomplete.
+
+A row counts as a success only when it has `urlResolved=true`, success status, preserved `googleNewsUrl`, a parseable HTTP(S) `publisherUrl` on a non-Google publisher host, and `publisherDomain` equal to the parsed lowercased hostname. Reject Google-owned hosts, consent/captcha/interstitial destinations, malformed URLs, and ambiguous targets. Do not count a Google News redirect or an asset URL as a publisher URL. Report the total denominator and successes by cell; a run passes only with all 100 retained rows and at least 95 valid successes.
+
+This matrix is the external capability gate, not an algorithm assumption. The three earlier BBC/Telegraph/Reuters failures are a small smoke observation and do not establish failure prevalence. No resolver strategy change is justified until the representative sample supplies a failure distribution.
+
 ## Summary
 
 Issue #4 adds a bounded publisher URL resolution stage for retained Google News RSS records. The stage preserves the original Google News URL and discovery metadata, reports a per-row outcome, and allows one failed resolution to coexist with successful results for other rows.

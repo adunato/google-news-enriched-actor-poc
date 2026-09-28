@@ -1,5 +1,36 @@
 # Implementation Plan: Publisher URL Resolution
 
+## Addendum: Early Feasibility Gate and Executable Sample (2026-09-28)
+
+The Issue #4 acceptance criterion now requires **at least 95 valid publisher URLs from exactly 100 retained rows** across the fixed matrix below. This live gate is independent of mocked tests and CI. Do not treat the earlier three-link BBC/Telegraph/Reuters smoke as representative evidence.
+
+| Query        | GB (`en-GB`, `GB`) | US (`en-US`, `US`) |
+| ------------ | -----------------: | -----------------: |
+| `world news` |                 10 |                 10 |
+| `politics`   |                 10 |                 10 |
+| `business`   |                 10 |                 10 |
+| `technology` |                 10 |                 10 |
+| `health`     |                 10 |                 10 |
+
+### Procedure
+
+1. Freeze the matrix above before the first run. For each edition, call the existing retrieval export with the five queries, `maxItemsPerQuery=10`, `dedupe=false`, resolution enabled, and the same date range for the full run. Record the exact accepted input values and collection UTC time. Require ten retained rows in each of the ten cells; do not replace missing rows from another cell.
+2. Resolve the 100 collected rows through the existing resolver export in original order. Use the resolver's current 10-second per-row deadline, 2 MiB per-response cap, five-redirect limit, and concurrency cap of four. The harness calls retrieval/resolution exports directly; it does not invoke Actor persistence or write to a dataset (Issue #6 scope).
+3. Before this run, add only the internal diagnostic visibility needed to classify failures if it cannot be captured reliably at the injected Fetch seam. Keep it out of the public row fields. Record per row/cell outcome, resolution stage, bounded failure category, response status/host class, and elapsed time/bytes where available. Never retain response bodies or article text in the report.
+4. Count a success only if `urlResolved=true`, status is success, `googleNewsUrl` remains present, `publisherUrl` parses as HTTP(S) and is not a Google-owned, consent, captcha, or interstitial target, and `publisherDomain` equals the lowercased parsed hostname. Treat malformed, unresolved, ambiguous, Google-host, and consent/interstitial outcomes as failures.
+5. Record a compact run manifest with commit SHA, UTC time, Node version, exact query/locale/configuration, per-cell retained counts, total denominator, successful count, failures by cell/category, and bounded request metrics. Keep row-level evidence sufficient to audit classification without including raw HTML/RPC bodies; attach a durable summary under `docs/changes/4/`.
+6. If fewer than 100 rows are available, any cell is incomplete, or valid successes are below 95, the gate fails. Keep Issue #4 and PR #11 draft/on hold. Use the measured failure categories to make the smallest HTTP-first correction, add focused regression coverage, then rerun the **same matrix** against the new exact commit. If the gate passes, record the evidence and continue normal validation; do not merge or promote as part of this gate.
+
+This sample is safe to run before an algorithm change. The present implementation and green CI do not prove current Google News compatibility, but no evidence yet justifies changing the resolver strategy before measuring the matrix. Measurement-only diagnostic instrumentation is permitted; dataset/public-schema work is not. If the current implementation returns a generic failure without a classifiable stage, add an internal diagnostic callback/result that does not alter the public row shape, then run the sample.
+
+### Failure Categories
+
+Use at least: `consent_or_interstitial`, `invalid_publisher_url`, `google_host`, `metadata_missing_or_mismatch`, `rpc_http_error`, `rpc_parse_or_result_error`, `timeout`, `network`, `redirect_limit`, and `other`. Record HTTP status and host class when observed. A category is diagnostic evidence; it does not make the row successful.
+
+### Gate Status
+
+The required matrix ran at `2026-09-28T06:41:40.589Z` against commit `953281a584ee3490d29fc7d49f90bffd7421d995`. It retained 100/100 rows (10 in every cell) and produced 0 valid publisher URLs; all 100 failures were classified as `consent_or_interstitial`. The sample is recorded in `docs/changes/4/live-sample.json`. The gate is **hold** because the threshold is at least 95/100; do not treat mocked success or automated validation as a live pass.
+
 ## Implementation Summary
 
 Add a native Fetch based publisher resolver for each retained Google News record, preserve all discovery data, and integrate row-level success/failure/not-requested outcomes into the existing processing flow.
