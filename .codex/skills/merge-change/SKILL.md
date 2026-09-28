@@ -7,20 +7,20 @@ description: Prepare a validated change for integration through the repository's
 
 Use this skill only after validation is complete when preparing a change as ready for merge. A branch may be pushed and an existing pull request may remain or become draft while required validation is incomplete, but it must not be reported ready for merge.
 
-Confirm the originating GitHub Issue, change branch/worktree, target branch, intended commits, required change artifacts, durable Product/Architecture updates, validation evidence, captured learning records, and unrelated local changes.
+Confirm the originating GitHub Issue/type, change branch/worktree, target branch, intended commits, required discovery/design/change artifacts, durable Product/Architecture updates, validation evidence, captured learning records, and unrelated local changes.
 
 Before integration preparation, complete the learning checkpoint. For every learning record marked `SideGig review: Yes`, verify that it satisfies the portable context contract defined by `capture-learning`: repository-qualified Learning ID, origin repository, stable source, lifecycle context, self-contained change context, evidence, impact, local action, cross-project relevance, and stable local references. Do not leave a SideGig-review learning dependent on unstated pull-request context.
 
 Follow the GitHub Delivery Model. Normal changes target `dev`; release fixes target the active release branch.
 
-Before reporting the pull request ready, confirm that every material acceptance criterion has passing evidence, including required representative live/end-to-end checks. A passing repository/CI suite does not compensate for a failed or incomplete required real-boundary check.
+Before reporting a Feature/Bug pull request ready, confirm that every material acceptance criterion has passing evidence, including required representative live/end-to-end checks and completed prerequisite Technical Discovery. Before reporting a Technical Discovery pull request ready, confirm every discovery evidence/exit criterion is satisfied or that an `Inconclusive` outcome is explicitly and correctly recorded; discovery integration does not claim the blocked feature is implemented. A passing repository/CI suite does not compensate for a failed or incomplete required real-boundary check.
 
 After the validated change is ready:
 
 1. commit all intended in-scope changes, including durable documentation and learning records;
 2. push the source branch to GitHub;
 3. create a pull request when one does not already exist, or update the existing pull request when it does;
-4. ensure the pull request references the originating Issue and summarizes the implemented outcome, relevant design/planning artifacts, validation evidence, durable-document updates, and captured learning records;
+4. ensure the pull request references the originating Issue and summarizes either the implemented outcome or Technical Discovery conclusion, relevant discovery/design/planning artifacts, validation evidence, durable-document updates, and captured learning records;
 5. explicitly identify learning records marked `SideGig review: Yes` in the pull-request body;
 6. confirm the required CI/validation state and report the pull request as ready for the explicit human merge decision.
 
@@ -32,7 +32,7 @@ After a human-approved merge is confirmed, verify the pull request is merged int
 
 ## Completion report contract
 
-Report the Issue reference, source branch, target branch, pull request URL/ID, CI/validation state, integration state, durable-document updates, learning-record paths and review flags, workspace cleanup, residual conditions, and required human action. Before merge, the expected terminal state is `PR prepared; human merge required`. The change is integrated only when the human-approved merge is confirmed according to the GitHub Delivery Model.
+Report the Issue reference/type, source branch, target branch, pull request URL/ID, CI/validation state, integration state, discovery/design/durable-document updates, learning-record paths and review flags, workspace cleanup, residual conditions, downstream reassessment required for discovery Issues, and required human action. Before merge, the expected terminal state is `PR prepared; human merge required`. The change is integrated only when the human-approved merge is confirmed according to the GitHub Delivery Model.
 
 ## Learning checkpoint
 
