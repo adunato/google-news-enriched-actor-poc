@@ -8,7 +8,7 @@
 **Created / updated:** `2026-09-28`  
 **GitHub Spike Issue:** [#14](https://github.com/adunato/google-news-enriched-actor-poc/issues/14)  
 **Blocked downstream Issue(s):** [#4](https://github.com/adunato/google-news-enriched-actor-poc/issues/4); #5, #6 and #7 transitively  
-**Spike branch / draft PR:** `spike/14-google-news-publisher-url-resolution` / Pending  
+**Spike branch / draft PR:** `spike/14-google-news-publisher-url-resolution` / [PR #21](https://github.com/adunato/google-news-enriched-actor-poc/pull/21)  
 **Product Definition:** `docs/product.md`, PR-006, PR-007, PR-010, PR-011, PR-013 and Sections 3-5  
 **Architecture Definition:** `docs/architecture.md`, Sections 2-5 and 8-9
 
