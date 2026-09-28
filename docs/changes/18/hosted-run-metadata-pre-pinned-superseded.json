@@ -1,0 +1,87 @@
+﻿{
+  "issue": 18,
+  "accountUsername": "adunato",
+  "evidenceStatus": "final_corrected_probe",
+  "actor": {
+    "id": "ffjdMHqwE6aTsLhnb",
+    "name": "issue18-publisher-identity-node20-8d8299d8",
+    "isPublic": false,
+    "deletedAfterEvidenceCapture": false
+  },
+  "build": {
+    "id": "OuuO1CT6bmKziAWDH",
+    "number": "0.2.1",
+    "status": "SUCCEEDED",
+    "startedAtUtc": "2026-09-28T15:34:56.041Z",
+    "finishedAtUtc": "2026-09-28T15:34:59.284Z",
+    "tag": "issue18-final-v2",
+    "baseImage": "apify/actor-node:20",
+    "baseImageDigest": "sha256:c475bc63b3e70488dfb574147d8e63e7f410480bb0a3ef5b7ccad54635299a63"
+  },
+  "run": {
+    "id": "Elw4umZiOM0dddUDb",
+    "status": "SUCCEEDED",
+    "startedAtUtc": "2026-09-28T15:35:07.376Z",
+    "finishedAtUtc": "2026-09-28T15:35:37.448Z",
+    "probeStartedAtUtc": "2026-09-28T15:35:09.648Z",
+    "probeCompletedAtUtc": "2026-09-28T15:35:23.126Z",
+    "configuredMemoryMbytes": 256,
+    "timeoutSeconds": 900,
+    "actualNodeVersion": "v20.20.2",
+    "platform": "linux",
+    "architecture": "x64",
+    "durationSeconds": 29.98,
+    "peakMemoryBytes": 86032384,
+    "computeUnits": 0.0020819444444444444,
+    "usageTotalUsd": 0.00105480364167028,
+    "defaultDatasetId": "4ajNaQPy7bjgGzlQE",
+    "defaultKeyValueStoreId": "A8c3jyqrE7Wm4i4eA",
+    "defaultRequestQueueId": "Vc75RonvVbBW7vPeU"
+  },
+  "hashes": {
+    "manifestFileSha256": "56b389351b04c1288c36dc971481a1933668fd46571c1bea2f18a37c59181034",
+    "rowArraySha256": "fdbab474e5764350c547080c0002f042b062e03f157a270d5b9474d846ad2f2a",
+    "probeSha256": "34f49424b6b67a05d61504aff4caea2bcbc054daa70b92508657a9f9588d7448",
+    "localResultsSha256": "2391a9cffb3b3973ea0b3fe0c95207d4e107048f330eefd36cc3132963f863dd"
+  },
+  "evidence": {
+    "datasetItemCount": 101,
+    "summaryItemCount": 1,
+    "rowItemCount": 100,
+    "rowIdsExactOnce": true,
+    "publisherRequestStageCount": 102,
+    "redirectStageCount": 1,
+    "containsGoogleNewsUrls": false,
+    "containsPublisherUrls": false,
+    "containsPageBodies": false,
+    "containsSecretsOrCookies": false,
+    "rowsFile": "hosted-results.json",
+    "datasetExportFile": "hosted-dataset-items-final.json",
+    "logFile": "hosted-run-log-final.txt",
+    "evidenceStatus": "superseded",
+    "supersededReason": "DNS rebinding review required validated addresses to be pinned to each publisher connection; this run only preflight-resolved addresses."
+  },
+  "retry": {
+    "additionalRequestCount": 1,
+    "rowId": "q5-gb-08",
+    "triggerStatus": 503,
+    "attemptStatuses": [503, 503],
+    "retryReason": "http_503",
+    "finalAccessStatus": "http_503",
+    "finalIdentityStatus": "unverifiable",
+    "strictSuccessChanged": false,
+    "reportedMarginalApifyCostAvailable": false,
+    "runTotalUsageUsd": 0.00105480364167028
+  },
+  "supersededRunIds": ["qucBPtccC6YhknGKN"],
+  "supersededBuildIds": ["ff7MAA5j9eFlIBuxW"],
+  "resourceCleanup": {
+    "status": "pending",
+    "actorId": "ffjdMHqwE6aTsLhnb",
+    "runIds": ["qucBPtccC6YhknGKN", "Elw4umZiOM0dddUDb"],
+    "datasetIds": ["bSjzaoBgB2v4wlNPZ", "4ajNaQPy7bjgGzlQE"],
+    "keyValueStoreIds": ["nCnj2dxMQPIQ9wovg", "A8c3jyqrE7Wm4i4eA"],
+    "requestQueueIds": ["Ds8AHaDFR8DcYGeL5", "Vc75RonvVbBW7vPeU"],
+    "buildIds": ["ff7MAA5j9eFlIBuxW", "OuuO1CT6bmKziAWDH"]
+  }
+}

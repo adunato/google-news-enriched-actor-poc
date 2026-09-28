@@ -1,0 +1,62 @@
+﻿{
+  "issue": 18,
+  "accountUsername": "adunato",
+  "actor": {
+    "id": "ffjdMHqwE6aTsLhnb",
+    "name": "issue18-publisher-identity-node20-8d8299d8",
+    "isPublic": false,
+    "deletedAfterEvidenceCapture": false
+  },
+  "build": {
+    "id": "ff7MAA5j9eFlIBuxW",
+    "number": "0.1.1",
+    "status": "SUCCEEDED",
+    "startedAtUtc": "2026-09-28T15:16:32.585Z",
+    "finishedAtUtc": "2026-09-28T15:16:40.506Z",
+    "baseImage": "apify/actor-node:20",
+    "baseImageDigest": "sha256:c475bc63b3e70488dfb574147d8e63e7f410480bb0a3ef5b7ccad54635299a63"
+  },
+  "run": {
+    "id": "qucBPtccC6YhknGKN",
+    "status": "SUCCEEDED",
+    "startedAtUtc": "2026-09-28T15:17:02.074Z",
+    "finishedAtUtc": "2026-09-28T15:17:34.770Z",
+    "configuredMemoryMbytes": 256,
+    "timeoutSeconds": 900,
+    "actualNodeVersion": "v20.20.2",
+    "platform": "linux",
+    "architecture": "x64",
+    "durationSeconds": 32.551,
+    "peakMemoryBytes": 89165824,
+    "usageTotalUsd": 0.00013038229479392371,
+    "defaultDatasetId": "bSjzaoBgB2v4wlNPZ",
+    "defaultKeyValueStoreId": "nCnj2dxMQPIQ9wovg",
+    "defaultRequestQueueId": "Ds8AHaDFR8DcYGeL5"
+  },
+  "evidence": {
+    "datasetItemCount": 101,
+    "summaryItemCount": 1,
+    "rowItemCount": 100,
+    "rowIdsExactOnce": true,
+    "manifestFileSha256": "56b389351b04c1288c36dc971481a1933668fd46571c1bea2f18a37c59181034",
+    "rowArraySha256": "fdbab474e5764350c547080c0002f042b062e03f157a270d5b9474d846ad2f2a",
+    "probeSha256": "410177b7a75d95a0897fbe05eaa86223ff3ebe44e00aebc2b3cd2dd9048f56b2",
+    "rowsFile": "hosted-results.json",
+    "containsGoogleNewsUrls": false,
+    "containsPublisherUrls": false,
+    "containsPageBodies": false,
+    "containsSecretsOrCookies": false,
+    "logsContainedRawUrlsOrSecrets": false,
+    "evidenceStatus": "superseded",
+    "supersededReason": "Review found title normalization/adjudication defects and missing public-destination DNS/IP validation; rerun required before conclusion."
+  },
+  "resourceCleanup": {
+    "status": "pending",
+    "createdActorId": "ffjdMHqwE6aTsLhnb",
+    "runId": "qucBPtccC6YhknGKN",
+    "datasetId": "bSjzaoBgB2v4wlNPZ",
+    "keyValueStoreId": "nCnj2dxMQPIQ9wovg",
+    "requestQueueId": "Ds8AHaDFR8DcYGeL5",
+    "buildId": "ff7MAA5j9eFlIBuxW"
+  }
+}

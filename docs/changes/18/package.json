@@ -1,0 +1,14 @@
+{
+  "name": "issue18-publisher-identity-probe",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "apify": "3.7.2",
+    "fast-xml-parser": "5.11.1",
+    "ipaddr.js": "2.2.0"
+  },
+  "scripts": {
+    "test": "node --test probe-safety.node.mjs"
+  }
+}

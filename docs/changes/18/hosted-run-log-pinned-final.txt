@@ -1,0 +1,23 @@
+Info: Log for run with ID "oiLOkd2rSc4WAYTAg":
+
+apify-cli.exe : 2026-09-28T15:57:19.956Z ACTOR: Pulling container image of build bhBBv5ohtKDQamR4D from registry.
+At line:2 char:131
++ ... -final.txt';& 'C:\Users\danie\.apify\bin\apify-cli.exe' runs log oiLO ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (2026-09-28T15:5... from registry.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+2026-09-28T15:57:21.156Z ACTOR: Creating container.
+2026-09-28T15:57:21.233Z ACTOR: Starting container.
+2026-09-28T15:57:21.234Z ACTOR: Running under "LIMITED_PERMISSIONS".
+2026-09-28T15:57:21.747Z INFO  System info {"apifyVersion":"3.7.2","apifyClientVersion":"2.25.0","crawleeVersion":"3.18
+.1","osType":"Linux","nodeVersion":"v20.20.2"}
+2026-09-28T15:57:51.201Z ISSUE18_HOSTED_PROBE {"nodeVersion":"v20.20.2","platform":"linux","architecture":"x64","frozen
+InputFileSha256":"56b389351b04c1288c36dc971481a1933668fd46571c1bea2f18a37c59181034","frozenRowArraySha256":"fdbab474e57
+64350c547080c0002f042b062e03f157a270d5b9474d846ad2f2a","totalRows":100,"candidateCounts":{"success_rpc":100},"accessCou
+nts":{"http_200_html":81,"http_403":15,"http_401":4},"identityCounts":{"confirmed_match":79,"unverifiable":21},"article
+LikeCount":78,"strictConfirmedSuccesses":76,"retryCount":0,"perCell":{"q1-gb":{"rows":10,"candidateOutcomes":{"success_
+rpc":10},"access":{"http_200_html":8,"http_403":2},"articleLike":8,"identity":{"confirmed_match":8,"unverifiable":2},"c
+onfirmedValid":8},"q1-us":{"rows":10,"candidateOutcomes":{"success_rpc":10},"access":{"http_200_html":9,"http_403":1},"
+articleLike":9,"identity":{"confirmed_match":9,"unverifiable":1},"confirmedValid":9},"q2-gb":{"rows":10,"candidateOutco
+mes":{"success_rpc":10},"access":{"http_403":4,"http_200_html":6},"articleLik... [line-too-long]
