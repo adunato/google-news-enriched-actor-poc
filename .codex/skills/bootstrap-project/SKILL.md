@@ -16,7 +16,7 @@ Create or populate, as applicable:
 - repository-root `.gitattributes` from `.codex/templates/product.gitattributes`, establishing `* text=auto eol=lf` before normal development begins;
 - `docs/product.md` from `.codex/templates/product-definition.md`;
 - `docs/architecture.md` from `.codex/templates/architecture-definition.md`;
-- `.github/ISSUE_TEMPLATE/feature.md`, `bug.md`, and `technical-discovery.md`;
+- `.github/ISSUE_TEMPLATE/feature.md`, `bug.md`, and `technical-spike.md`;
 - `.github/workflows/sidegig-learning-dispatch.yml` from `.codex/templates/learning-collection-dispatch.yml`;
 - the project source/test/configuration baseline;
 - the canonical local validation command and required language/tool configuration;
@@ -33,7 +33,7 @@ Only when that shared credential is genuinely absent should bootstrap direct the
 
 If the local credential is missing or provisioning fails, treat bootstrap as blocked. Do not mark bootstrap complete and do not defer the secret as an undocumented or optional manual task.
 
-Preserve the operating-model branch model: create `dev`, `staging`, and `main` from the same bootstrap baseline, set `dev` as the default branch, create the standard `feature`, `bug`, and `technical-discovery` labels, and apply the required repository controls after the branches and CI checks exist.
+Preserve the operating-model branch model: create `dev`, `staging`, and `main` from the same bootstrap baseline, set `dev` as the default branch, create the standard `feature`, `bug`, and `technical-spike` labels, and apply the required repository controls after the branches and CI checks exist.
 
 Do not invent unresolved product or architecture decisions merely to finish bootstrap. Durable documents may remain `Draft` where the operating model permits it, with unresolved decisions made explicit.
 
