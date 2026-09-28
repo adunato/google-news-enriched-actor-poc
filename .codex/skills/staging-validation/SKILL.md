@@ -9,6 +9,8 @@ Validate the deployed release candidate after promotion to the staging/pre-produ
 
 Use the exact release candidate identity, Architecture Definition, relevant release/change context, repository workflows, platform runtime evidence, and Chapter 7 staging-validation expectations.
 
+Staging re-proves the deployed candidate at boundaries that repository-local validation cannot establish and repeats critical real-world flows where deployment state can change the outcome. It must not be used as the first proof of a feature's basic external feasibility when representative evidence was practical earlier in the change lifecycle. If a material acceptance check genuinely can run only in staging, the Issue/Implementation Plan must have identified that deferred blocking gate explicitly.
+
 Select only the staging checks that are material to the product and release. These may include:
 
 - deployment smoke tests;
@@ -21,7 +23,7 @@ Select only the staging checks that are material to the product and release. The
 - platform-specific execution behaviour;
 - charging, billing, metering, or commercial mechanics.
 
-Automate where reliable and proportionate. Record required manual evidence explicitly where automation would add disproportionate complexity.
+Automate where reliable and proportionate. Use a representative scenario set for materially variable external integrations rather than a single token smoke test. Record required manual evidence explicitly where automation would add disproportionate complexity.
 
 Do not patch application code directly in staging. If a software or version-controlled configuration correction is required, create or identify a Bug Issue and route it through the release-fix lifecycle from the active release branch.
 

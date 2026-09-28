@@ -34,35 +34,43 @@
 
 ## 5. Implementation Sequence
 
-1. <underlying capability>
-2. <dependent behaviour>
-3. <integration and supporting behaviour>
-4. <integrity checks and hand-off>
+1. <required feasibility gate, when one exists>
+2. <underlying capability>
+3. <dependent and integration behaviour>
+4. <integrity checks and validation hand-off>
 
-<Explain only meaningful dependencies.>
+<Explain only meaningful dependencies. A material unproven external/runtime assumption must be resolved before substantial dependent implementation.>
 
 ## 6. Development Integrity Checks
 
 - <lint, formatting, syntax, type, build, or repository-specific check>
 - <check or “Not applicable, because …”>
 
-## 7. Validation Requirements
+## 7. Test and Validation Strategy
 
-### Unit Validation
+The strategy must prove every material acceptance criterion at the lowest level that can actually establish the claimed behaviour. Mocked tests may prove local logic and failure handling, but they do not prove a material external/runtime integration works.
 
-- <behaviour and edge case to prove>
+### Acceptance Evidence Matrix
 
-### End-to-End Validation
+| Acceptance criterion / behaviour | Risk or boundary                   | Test level                                              | Environment / data                   | Pass evidence                  |
+| -------------------------------- | ---------------------------------- | ------------------------------------------------------- | ------------------------------------ | ------------------------------ |
+| <criterion/reference>            | <what could invalidate acceptance> | <unit/component/contract/integration/end-to-end/manual> | <mocked/local/live/staging/platform> | <observable evidence required> |
 
-- <user/system flow to prove, or Not applicable>
+### Feasibility Gates
 
-### Other Relevant Validation
+<List unproven external-system, live-data, protocol, platform, permission, or runtime assumptions that must be demonstrated before substantial dependent implementation. State the exact evidence and stop/return path if a gate fails. If none: “None.”>
 
-- <integration, migration, compatibility, or manual check, if needed>
+### Representative End-to-End / Live Coverage
+
+<Define the representative scenario matrix needed to prove the real user/system flow. Cover material variability such as different external providers, data shapes, states, permissions, or failure classes where relevant. Do not use one token smoke test when the integration is materially variable. If live/in-environment validation is not applicable or cannot safely be performed before staging, explain why and state the later blocking gate explicitly.>
+
+### Regression and Edge Coverage
+
+<Identify lower-level automated tests needed for logic, regressions, error handling, bounds, and stable contracts.>
 
 ## 8. Open Implementation Questions
 
-<Questions requiring resolution before or during development. If none: “No outstanding implementation questions.”>
+<Questions requiring resolution before or during development. If none: “No outstanding implementation questions.” A question that determines whether the chosen implementation can work is a feasibility gate, not a deferred implementation question.>
 
 ## 9. Low-Level Design Decision
 
@@ -74,9 +82,11 @@
 
 ## 10. Implementation Checklist
 
+- [ ] Complete required feasibility gates
 - [ ] <implementation activity>
 - [ ] <implementation activity>
 - [ ] Complete relevant integrity checks
+- [ ] Execute the acceptance-evidence strategy required before validation hand-off
 - [ ] Prepare implementation hand-off for validation
 
 ### Approval
@@ -87,4 +97,4 @@
 
 ### Completion contract
 
-The plan is substantively complete only when the repository assessment, implementation approach and sequence, checks, validation requirements, explicit LLD decision, open questions, and traceability are resolved. Set **Status** to `Approved` only when implementation can proceed without an unresolved material planning decision.
+The plan is substantively complete only when the repository assessment, implementation approach and sequence, checks, acceptance-evidence matrix, feasibility gates, representative end-to-end/live coverage, explicit LLD decision, open questions, and traceability are resolved. Set **Status** to `Approved` only when implementation can proceed without an unresolved material planning or feasibility decision.

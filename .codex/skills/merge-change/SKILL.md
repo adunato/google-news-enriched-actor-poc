@@ -5,13 +5,15 @@ description: Prepare a validated change for integration through the repository's
 
 # Merge Change
 
-Use this skill only after validation is complete.
+Use this skill only after validation is complete when preparing a change as ready for merge. A branch may be pushed and an existing pull request may remain or become draft while required validation is incomplete, but it must not be reported ready for merge.
 
 Confirm the originating GitHub Issue, change branch/worktree, target branch, intended commits, required change artifacts, durable Product/Architecture updates, validation evidence, captured learning records, and unrelated local changes.
 
 Before integration preparation, complete the learning checkpoint. For every learning record marked `SideGig review: Yes`, verify that it satisfies the portable context contract defined by `capture-learning`: repository-qualified Learning ID, origin repository, stable source, lifecycle context, self-contained change context, evidence, impact, local action, cross-project relevance, and stable local references. Do not leave a SideGig-review learning dependent on unstated pull-request context.
 
 Follow the GitHub Delivery Model. Normal changes target `dev`; release fixes target the active release branch.
+
+Before reporting the pull request ready, confirm that every material acceptance criterion has passing evidence, including required representative live/end-to-end checks. A passing repository/CI suite does not compensate for a failed or incomplete required real-boundary check.
 
 After the validated change is ready:
 
@@ -22,7 +24,7 @@ After the validated change is ready:
 5. explicitly identify learning records marked `SideGig review: Yes` in the pull-request body;
 6. confirm the required CI/validation state and report the pull request as ready for the explicit human merge decision.
 
-Do not stop after committing or pushing when no pull request exists. Pull-request preparation is a required part of normal change closure.
+Do not stop after committing or pushing when no pull request exists. Pull-request preparation is a required part of normal change closure. When validation is still blocked, the pull request must remain draft and its body must state the failed/incomplete acceptance evidence and next required action.
 
 Do not bypass required CI, branch protection, or explicit human merge/promotion decisions. A coding agent prepares or updates the pull request but does not merge or promote its own change and must not claim that an unmerged pull request is integrated.
 

@@ -6,8 +6,15 @@
 
 ## Acceptance Criteria
 
-- [ ] <observable condition that must be true when the change is complete>
-- [ ] <observable condition>
+- [ ] <positive observable condition that must actually be true when the change is complete>
+- [ ] <observable error, edge-case, compatibility, or regression condition where material>
+
+Acceptance criteria must prove the feature's real outcome, not only describe what should happen if an attempted operation succeeds or fails. When the feature materially depends on an external system, live data, deployed runtime, or platform integration, include the externally observable success condition that must be demonstrated.
+
+## Validation Expectations
+
+- **Acceptance evidence:** <For each material acceptance criterion, identify the kind of evidence needed to prove it: automated unit/component/contract/integration/end-to-end, manual, or a combination. Detailed test design belongs in an Implementation Plan when one is required.>
+- **External/runtime evidence:** <Identify representative live or in-environment evidence required for material external-system, live-data, or platform behaviour. Use "Not applicable" only with a concise rationale. Mocked evidence alone is not sufficient when the real boundary is part of the acceptance claim.>
 
 ## Product / Architecture Context
 
