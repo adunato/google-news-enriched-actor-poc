@@ -29,7 +29,7 @@ Use at least: `consent_or_interstitial`, `invalid_publisher_url`, `google_host`,
 
 ### Gate Status
 
-The required matrix ran at `2026-09-28T06:41:40.589Z` against commit `953281a584ee3490d29fc7d49f90bffd7421d995`. It retained 100/100 rows (10 in every cell) and produced 0 valid publisher URLs; all 100 failures were classified as `consent_or_interstitial`. The sample is recorded in `docs/changes/4/live-sample.json`. The gate is **hold** because the threshold is at least 95/100; do not treat mocked success or automated validation as a live pass.
+The required matrix ran from clean commit `7c8780ec1686bfb5c250ca98d7f69a1c54032208` at `2026-09-28T06:57:21.690Z`. It retained 100/100 rows (10 in every cell) and produced 0 valid publisher URLs; all 100 failures were classified as `consent_or_interstitial`. At the `google_page` stage, each request returned HTTP 302 to a consent/interstitial host before marker retrieval or RPC. The sample is recorded in `docs/changes/4/live-sample.json`. The gate is **hold** because the threshold is at least 95/100; do not treat mocked success or automated validation as a live pass. The next action is to run from an authorized validation environment that can reach Google News without this interstitial, or obtain approval for an alternate HTTP-first resolution method, then rerun the same matrix against the exact clean commit.
 
 ## Implementation Summary
 
@@ -94,11 +94,11 @@ Run repository formatting, lint, typecheck, unit tests, and build through `npm r
 - [x] Resolver module and types added
 - [x] Bounded ordered row mapping integrated
 - [x] Success, failure, and not-requested tests added
-- [ ] Corrected current-link RPC smoke result recorded
+- [ ] 100-row live matrix reaches at least 95 valid publisher URLs
 - [x] Architecture definition reconciled if required
 - [x] `npm run validate` passes
 
-**Implementation status:** The resolver module and types are implemented. `npm run validate` passed formatting, lint, typecheck, 53 tests, and build. The live success check remains open as recorded above.
+**Implementation status:** The resolver module and types are implemented. `npm run validate` passed formatting, lint, typecheck, 59 tests, and build. The 100-row live acceptance gate remains on hold as recorded above.
 
 ## Approval
 
