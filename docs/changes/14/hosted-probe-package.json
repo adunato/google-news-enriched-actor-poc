@@ -1,0 +1,7 @@
+{
+  "name": "issue14-node20-rpc-probe-20260928-a9f3c2",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "dependencies": { "apify": "3.7.2" }
+}
