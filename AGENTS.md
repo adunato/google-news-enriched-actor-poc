@@ -18,13 +18,21 @@ The GitHub Issue remains the root traceability object. Do not expand its scope s
 
 Reusable SideGig skills are installed under `.codex/skills/`, canonical project-local templates under `.codex/templates/`, and bootstrap/repository utilities under `.codex/tools/`.
 
-Use the relevant installed skill instead of recreating lifecycle behaviour ad hoc. The installed package includes the Apify Actor deployment skill and the full SideGig development/release lifecycle.
+Use the relevant installed skill instead of recreating lifecycle behaviour ad hoc. The installed package includes the Apify Actor deployment skill and the full SideGig development/release lifecycle, including prerequisite Technical Discovery for materially unknown external/runtime boundaries.
 
 ## Development lifecycle
 
-Before implementation, ensure the Issue is development-ready. Use `refine-issue` where requirements need shaping and `assess-change` to choose the minimum proportional design/planning path.
+Before implementation, ensure the Feature/Bug Issue is development-ready. Use `refine-issue` where requirements need shaping and `assess-change` to decide first whether prerequisite Technical Discovery is required and then the minimum proportional design/planning path.
 
-Create `hld.md`, `implementation-plan.md` and `low-level-design.md` under `docs/changes/<issue-number>/` only when the assessment requires them. Update the durable Product or Architecture definitions in the same change when the implemented outcome materially changes them.
+When `assess-change` requires Technical Discovery, create/link a separate Technical Discovery Issue, execute it with `technical-discovery`, integrate its evidence, and rerun `assess-change` on the blocked Feature/Bug Issue. Do not begin or continue HLD, implementation planning, or production implementation that depends on the unresolved technical boundary.
+
+Create change-specific artifacts only when required under `docs/changes/<issue-number>/`:
+- `technical-discovery.md` for a Technical Discovery Issue;
+- `hld.md` for a material change-design decision;
+- `implementation-plan.md` for meaningful repository-level implementation planning;
+- `low-level-design.md` only when an approved implementation plan requires file-level design.
+
+Use the canonical copies in `.codex/templates/`. Update the durable Product or Architecture definitions in the same change when the implemented outcome materially changes them.
 
 ## Learning capture
 
