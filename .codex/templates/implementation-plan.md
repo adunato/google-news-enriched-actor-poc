@@ -8,6 +8,7 @@
 **Created / updated:** `<YYYY-MM-DD>`  
 **GitHub Issue:** `<#issue or URL>`  
 **HLD reference:** `<path and artifact ID | Not required>`  
+**Technical Discovery:** `<completed discovery Issue/artifact reference | Not required>`  
 **Context references:** `<Product Definition / Architecture Definition references or None>`
 
 ## 1. Implementation Summary
@@ -34,12 +35,12 @@
 
 ## 5. Implementation Sequence
 
-1. <required feasibility gate, when one exists>
+1. <bounded residual feasibility gate, when one exists>
 2. <underlying capability>
 3. <dependent and integration behaviour>
 4. <integrity checks and validation hand-off>
 
-<Explain only meaningful dependencies. A material unproven external/runtime assumption must be resolved before substantial dependent implementation.>
+<Explain only meaningful dependencies. Required Technical Discovery must already be complete before this plan is approved. A plan-level feasibility gate is only for bounded residual uncertainty inside the established design.>
 
 ## 6. Development Integrity Checks
 
@@ -56,9 +57,9 @@ The strategy must prove every material acceptance criterion at the lowest level 
 | -------------------------------- | ---------------------------------- | ------------------------------------------------------- | ------------------------------------ | ------------------------------ |
 | <criterion/reference>            | <what could invalidate acceptance> | <unit/component/contract/integration/end-to-end/manual> | <mocked/local/live/staging/platform> | <observable evidence required> |
 
-### Feasibility Gates
+### Bounded Residual Feasibility Gates
 
-<List unproven external-system, live-data, protocol, platform, permission, or runtime assumptions that must be demonstrated before substantial dependent implementation. State the exact evidence and stop/return path if a gate fails. If none: “None.”>
+<List only narrow residual assumptions that can be demonstrated without determining the fundamental external integration contract or basic viability. State the exact evidence and stop/return path if a gate fails. If the unknown is material enough to require empirical characterization or selection among fundamentally different integration approaches, this plan must remain on hold and the Issue must return to `assess-change` for Technical Discovery. If none: “None.”>
 
 ### Representative End-to-End / Live Coverage
 
@@ -70,7 +71,7 @@ The strategy must prove every material acceptance criterion at the lowest level 
 
 ## 8. Open Implementation Questions
 
-<Questions requiring resolution before or during development. If none: “No outstanding implementation questions.” A question that determines whether the chosen implementation can work is a feasibility gate, not a deferred implementation question.>
+<Questions requiring resolution before or during development. If none: “No outstanding implementation questions.” A question about fundamental external/runtime viability or specification is Technical Discovery, not an implementation question. A narrow residual implementation assumption may be a bounded feasibility gate.>
 
 ## 9. Low-Level Design Decision
 
@@ -97,4 +98,4 @@ The strategy must prove every material acceptance criterion at the lowest level 
 
 ### Completion contract
 
-The plan is substantively complete only when the repository assessment, implementation approach and sequence, checks, acceptance-evidence matrix, feasibility gates, representative end-to-end/live coverage, explicit LLD decision, open questions, and traceability are resolved. Set **Status** to `Approved` only when implementation can proceed without an unresolved material planning or feasibility decision.
+The plan is substantively complete only when required Technical Discovery is complete, the repository assessment, implementation approach and sequence, checks, acceptance-evidence matrix, bounded residual feasibility gates, representative end-to-end/live coverage, explicit LLD decision, open questions, and traceability are resolved. Set **Status** to `Approved` only when implementation can proceed without an unresolved material planning or feasibility decision.
