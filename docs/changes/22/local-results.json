@@ -1,0 +1,1795 @@
+{
+  "evidenceType": "issue18_local_http_identity_probe",
+  "startedAtUtc": "2026-09-29T14:45:12.875Z",
+  "completedAtUtc": "2026-09-29T14:45:47.777Z",
+  "manifestCapturedAtUtc": "2026-09-29T14:45:12.872Z",
+  "manifestSha256": "d56e23c8a266312e7ed5afd82643d18330caf2c52cad5708ff6754e50696e0d1",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "arch": "x64",
+    "probeRuntime": "v24.15.0",
+    "probePlatform": "win32",
+    "probeArch": "x64"
+  },
+  "configuration": {
+    "concurrency": 4,
+    "timeoutMs": 10000,
+    "maxRedirects": 5,
+    "googleMaxBytes": 2097152,
+    "publisherMaxBytes": 262144,
+    "feedMaxBytes": 2097152,
+    "retryStatuses": [
+      408,
+      425,
+      429
+    ],
+    "retry5xx": true,
+    "retryNetworkErrors": true,
+    "perHostDelayMs": 250,
+    "identityRule": "exact NFKC/case/punctuation/space normalized title equality on h1, og:title, or JSON-LD headline; mismatch requires two independent signals agreeing; conflicting or single nonmatching signals are unverifiable",
+    "destinationPolicy": "each publisher URL and redirect is resolved and its full A/AAAA set classified as globally routable; the validated addresses are pinned to the HTTP(S) connection; redirects are manual",
+    "robotsPolicy": "Fetch robots.txt before each publisher origin; skip on disallow or unknown/truncated robots; Terms of Service not assessed; no legal conclusion"
+  },
+  "totalRows": 30,
+  "complete": true,
+  "candidateCounts": {
+    "success_rpc": 30
+  },
+  "accessCounts": {
+    "http_200_html": 19,
+    "skipped_robots_unavailable": 4,
+    "http_451": 1,
+    "http_403": 4,
+    "skipped_robots_disallowed": 2
+  },
+  "identityCounts": {
+    "confirmed_match": 19,
+    "unverifiable": 11
+  },
+  "articleLikeCount": 19,
+  "strictConfirmedSuccesses": 19,
+  "retryCount": 1,
+  "noRetryBaselineAccessCounts": {
+    "http_200_html": 19,
+    "skipped_robots_unavailable": 4,
+    "http_451": 1,
+    "http_403": 4,
+    "skipped_robots_disallowed": 2
+  },
+  "perCell": {
+    "q1-gb": {
+      "rows": 3,
+      "candidateOutcomes": {
+        "success_rpc": 3
+      },
+      "access": {
+        "http_200_html": 2,
+        "skipped_robots_unavailable": 1
+      },
+      "articleLike": 2,
+      "identity": {
+        "confirmed_match": 2,
+        "unverifiable": 1
+      },
+      "confirmedValid": 2
+    },
+    "q1-us": {
+      "rows": 3,
+      "candidateOutcomes": {
+        "success_rpc": 3
+      },
+      "access": {
+        "skipped_robots_unavailable": 1,
+        "http_200_html": 1,
+        "http_451": 1
+      },
+      "articleLike": 1,
+      "identity": {
+        "unverifiable": 2,
+        "confirmed_match": 1
+      },
+      "confirmedValid": 1
+    },
+    "q2-gb": {
+      "rows": 3,
+      "candidateOutcomes": {
+        "success_rpc": 3
+      },
+      "access": {
+        "http_200_html": 1,
+        "http_403": 2
+      },
+      "articleLike": 1,
+      "identity": {
+        "confirmed_match": 1,
+        "unverifiable": 2
+      },
+      "confirmedValid": 1
+    },
+    "q2-us": {
+      "rows": 3,
+      "candidateOutcomes": {
+        "success_rpc": 3
+      },
+      "access": {
+        "http_200_html": 1,
+        "skipped_robots_disallowed": 1,
+        "http_403": 1
+      },
+      "articleLike": 1,
+      "identity": {
+        "confirmed_match": 1,
+        "unverifiable": 2
+      },
+      "confirmedValid": 1
+    },
+    "q3-gb": {
+      "rows": 3,
+      "candidateOutcomes": {
+        "success_rpc": 3
+      },
+      "access": {
+        "skipped_robots_unavailable": 1,
+        "http_403": 1,
+        "http_200_html": 1
+      },
+      "articleLike": 1,
+      "identity": {
+        "unverifiable": 2,
+        "confirmed_match": 1
+      },
+      "confirmedValid": 1
+    },
+    "q3-us": {
+      "rows": 3,
+      "candidateOutcomes": {
+        "success_rpc": 3
+      },
+      "access": {
+        "http_200_html": 2,
+        "skipped_robots_disallowed": 1
+      },
+      "articleLike": 2,
+      "identity": {
+        "confirmed_match": 2,
+        "unverifiable": 1
+      },
+      "confirmedValid": 2
+    },
+    "q4-gb": {
+      "rows": 3,
+      "candidateOutcomes": {
+        "success_rpc": 3
+      },
+      "access": {
+        "http_200_html": 3
+      },
+      "articleLike": 3,
+      "identity": {
+        "confirmed_match": 3
+      },
+      "confirmedValid": 3
+    },
+    "q4-us": {
+      "rows": 3,
+      "candidateOutcomes": {
+        "success_rpc": 3
+      },
+      "access": {
+        "http_200_html": 3
+      },
+      "articleLike": 3,
+      "identity": {
+        "confirmed_match": 3
+      },
+      "confirmedValid": 3
+    },
+    "q5-gb": {
+      "rows": 3,
+      "candidateOutcomes": {
+        "success_rpc": 3
+      },
+      "access": {
+        "http_200_html": 2,
+        "skipped_robots_unavailable": 1
+      },
+      "articleLike": 2,
+      "identity": {
+        "confirmed_match": 2,
+        "unverifiable": 1
+      },
+      "confirmedValid": 2
+    },
+    "q5-us": {
+      "rows": 3,
+      "candidateOutcomes": {
+        "success_rpc": 3
+      },
+      "access": {
+        "http_200_html": 3
+      },
+      "articleLike": 3,
+      "identity": {
+        "confirmed_match": 3
+      },
+      "confirmedValid": 3
+    }
+  },
+  "rows": [
+    {
+      "rowId": "q1-gb-01",
+      "cell": "q1-gb",
+      "query": "world news",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 1,
+      "articleIdHash": "82aeb3e5dd5ae788",
+      "googleNewsUrlHash": "82aeb3e5dd5ae7880fe57f4cc1f4d1d90ba17f94af8d22ad60ff90d9256bd652",
+      "sourceName": "BBC",
+      "sourceHost": "www.bbc.co.uk",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.bbc.co.uk",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 3162,
+      "candidateUrlHash": "b070af934fa113c365a64a5793b3ba999fa639ab85bf4be75af02ebe441547f6",
+      "publisherHost": "www.bbc.co.uk",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "responseBytes": 262144,
+      "responsePrefixCapped": true,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "b070af934fa113c365a64a5793b3ba999fa639ab85bf4be75af02ebe441547f6",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+      "identityMatchedSignals": [
+        "h1",
+        "og:title",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 591,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "25e37e79b2e8b8ec4772961ff7cee54948f4d02e917923f2a1b5c784a8e335c3"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "25e37e79b2e8b8ec4772961ff7cee54948f4d02e917923f2a1b5c784a8e335c3"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "25e37e79b2e8b8ec4772961ff7cee54948f4d02e917923f2a1b5c784a8e335c3"
+        }
+      ]
+    },
+    {
+      "rowId": "q1-gb-02",
+      "cell": "q1-gb",
+      "query": "world news",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 2,
+      "articleIdHash": "cee93dbd6fa64601",
+      "googleNewsUrlHash": "cee93dbd6fa64601a5e134b59b7c8a598448c96d5d0c2872354cdc7124ed3a6a",
+      "sourceName": "BBC",
+      "sourceHost": "www.bbc.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.bbc.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 3426,
+      "candidateUrlHash": "d995e5681751b39891721bb250bbf88e0a2ffa17cb6ea66efcfd4cc8441cca5b",
+      "publisherHost": "www.bbc.com",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "responseBytes": 262144,
+      "responsePrefixCapped": true,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "d995e5681751b39891721bb250bbf88e0a2ffa17cb6ea66efcfd4cc8441cca5b",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:og:title,jsonld:headline",
+      "identityMatchedSignals": [
+        "og:title",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 620,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "0898732482b6cf8aaed1d8020e5adb15f3c6ccb5c48b357730d62a8fb625f599"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "724dbbcbdcc2987274af76ff154089854faff46e2136c00671375424f23c3d0a"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "724dbbcbdcc2987274af76ff154089854faff46e2136c00671375424f23c3d0a"
+        }
+      ]
+    },
+    {
+      "rowId": "q1-gb-03",
+      "cell": "q1-gb",
+      "query": "world news",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 3,
+      "articleIdHash": "0351082857ad7291",
+      "googleNewsUrlHash": "0351082857ad72918a5ec6c81d5362df440901fb2651852d686dcdbeda138841",
+      "sourceName": "UN News",
+      "sourceHost": "news.un.org",
+      "candidateStatus": "success_rpc",
+      "stages": [],
+      "elapsedMs": 3689,
+      "candidateUrlHash": "3d7796522890ee4da7cb22713609fb4f05e6dac0e6964d9acf5063cfc8d8ba0b",
+      "publisherHost": "news.un.org",
+      "accessStatus": "skipped_robots_unavailable",
+      "httpStatus": null,
+      "contentType": null,
+      "responseBytes": 0,
+      "responsePrefixCapped": false,
+      "articleLike": false,
+      "challengeLike": false,
+      "sourceHostMatch": null,
+      "publisherUrlHash": "3d7796522890ee4da7cb22713609fb4f05e6dac0e6964d9acf5063cfc8d8ba0b",
+      "identityStatus": "unverifiable",
+      "identityReason": "robots_unavailable",
+      "identityMatchedSignals": [],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "unavailable",
+      "robotsStatus": 308,
+      "publisherElapsedMs": 85,
+      "accessClass": "robots_unknown",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": []
+    },
+    {
+      "rowId": "q1-us-01",
+      "cell": "q1-us",
+      "query": "world news",
+      "country": "US",
+      "language": "en-US",
+      "position": 1,
+      "articleIdHash": "0351082857ad7291",
+      "googleNewsUrlHash": "0351082857ad72918a5ec6c81d5362df440901fb2651852d686dcdbeda138841",
+      "sourceName": "UN News",
+      "sourceHost": "news.un.org",
+      "candidateStatus": "success_rpc",
+      "stages": [],
+      "elapsedMs": 3963,
+      "candidateUrlHash": "3d7796522890ee4da7cb22713609fb4f05e6dac0e6964d9acf5063cfc8d8ba0b",
+      "publisherHost": "news.un.org",
+      "accessStatus": "skipped_robots_unavailable",
+      "httpStatus": null,
+      "contentType": null,
+      "responseBytes": 0,
+      "responsePrefixCapped": false,
+      "articleLike": false,
+      "challengeLike": false,
+      "sourceHostMatch": null,
+      "publisherUrlHash": "3d7796522890ee4da7cb22713609fb4f05e6dac0e6964d9acf5063cfc8d8ba0b",
+      "identityStatus": "unverifiable",
+      "identityReason": "robots_unavailable",
+      "identityMatchedSignals": [],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "unavailable",
+      "robotsStatus": 308,
+      "publisherElapsedMs": 85,
+      "accessClass": "robots_unknown",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": []
+    },
+    {
+      "rowId": "q1-us-02",
+      "cell": "q1-us",
+      "query": "world news",
+      "country": "US",
+      "language": "en-US",
+      "position": 2,
+      "articleIdHash": "136cb2057a2b6ef7",
+      "googleNewsUrlHash": "136cb2057a2b6ef77c0bfdd7d9dc8b7b691ae157972335eb349b2ce3a315e748",
+      "sourceName": "Texas Christian University",
+      "sourceHost": "www.tcu.edu",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.tcu.edu",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4179,
+      "candidateUrlHash": "1b7b0ee96323226ccaadbd441ec52c9c0b70df72657d6b3628a3d505c2b85560",
+      "publisherHost": "www.tcu.edu",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "responseBytes": 65141,
+      "responsePrefixCapped": false,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "1b7b0ee96323226ccaadbd441ec52c9c0b70df72657d6b3628a3d505c2b85560",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+      "identityMatchedSignals": [
+        "h1",
+        "og:title",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 1140,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "7734d57e221162375276c241f1b87b3869aa9e8aa2671d8577f4047588994fd0"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "7734d57e221162375276c241f1b87b3869aa9e8aa2671d8577f4047588994fd0"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "7734d57e221162375276c241f1b87b3869aa9e8aa2671d8577f4047588994fd0"
+        }
+      ]
+    },
+    {
+      "rowId": "q1-us-03",
+      "cell": "q1-us",
+      "query": "world news",
+      "country": "US",
+      "language": "en-US",
+      "position": 3,
+      "articleIdHash": "a32dd1a22ce36892",
+      "googleNewsUrlHash": "a32dd1a22ce3689241ecef9fc96f7ff1e86d76c51809b785307030b220f962b2",
+      "sourceName": "news8000.com",
+      "sourceHost": "www.news8000.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 429,
+          "host": "www.news8000.com",
+          "locationHost": null
+        },
+        {
+          "attempt": 2,
+          "status": 451,
+          "host": "www.news8000.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4174,
+      "candidateUrlHash": "63efddfc8f11d732f3c36629f7eb849b2c82a0fd1b75dc730a17d92cd0b8c8cc",
+      "publisherHost": "www.news8000.com",
+      "accessStatus": "http_451",
+      "httpStatus": 451,
+      "contentType": "text/html; charset=UTF-8",
+      "responseBytes": 0,
+      "responsePrefixCapped": false,
+      "articleLike": false,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "63efddfc8f11d732f3c36629f7eb849b2c82a0fd1b75dc730a17d92cd0b8c8cc",
+      "identityStatus": "unverifiable",
+      "identityReason": "no_supported_title_signal",
+      "identityMatchedSignals": [],
+      "retryUsed": true,
+      "retryReason": "http_429",
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 845,
+      "accessClass": "http_access_denial",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": []
+    },
+    {
+      "rowId": "q2-gb-01",
+      "cell": "q2-gb",
+      "query": "politics",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 1,
+      "articleIdHash": "410f167c65d2511f",
+      "googleNewsUrlHash": "410f167c65d2511fbddffe0456ee42cf54e54598ebb62b9a270ad10a0e9f74a5",
+      "sourceName": "BBC",
+      "sourceHost": "www.bbc.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.bbc.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4175,
+      "candidateUrlHash": "f4f63f43e07901c4bd77e4e7be89ddf7f20be6328e09ee067d539e62373e8835",
+      "publisherHost": "www.bbc.com",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "responseBytes": 262144,
+      "responsePrefixCapped": true,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "f4f63f43e07901c4bd77e4e7be89ddf7f20be6328e09ee067d539e62373e8835",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+      "identityMatchedSignals": [
+        "h1",
+        "og:title",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 295,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "20d0d63c29f9d8ec7a7d76314f6b49e2cae2a905823aa3ed140480958048c89c"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "20d0d63c29f9d8ec7a7d76314f6b49e2cae2a905823aa3ed140480958048c89c"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "20d0d63c29f9d8ec7a7d76314f6b49e2cae2a905823aa3ed140480958048c89c"
+        }
+      ]
+    },
+    {
+      "rowId": "q2-gb-02",
+      "cell": "q2-gb",
+      "query": "politics",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 2,
+      "articleIdHash": "cb9b8cbc9748ef7f",
+      "googleNewsUrlHash": "cb9b8cbc9748ef7f71f9196aa74dc86904ba9e9071ca1fcaad93c6d38d2301b3",
+      "sourceName": "The Economist",
+      "sourceHost": "www.economist.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 403,
+          "host": "www.economist.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4161,
+      "candidateUrlHash": "4aa5e245118082442d9cdc6c6c485f07f4bbb8396f56d871affdfa6287da5e5c",
+      "publisherHost": "www.economist.com",
+      "accessStatus": "http_403",
+      "httpStatus": 403,
+      "contentType": "text/html; charset=UTF-8",
+      "responseBytes": 0,
+      "responsePrefixCapped": false,
+      "articleLike": false,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "4aa5e245118082442d9cdc6c6c485f07f4bbb8396f56d871affdfa6287da5e5c",
+      "identityStatus": "unverifiable",
+      "identityReason": "no_supported_title_signal",
+      "identityMatchedSignals": [],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 334,
+      "accessClass": "http_access_denial",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": []
+    },
+    {
+      "rowId": "q2-gb-03",
+      "cell": "q2-gb",
+      "query": "politics",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 3,
+      "articleIdHash": "822fcba52299a2b4",
+      "googleNewsUrlHash": "822fcba52299a2b4c3a9586c48fdec8ef261db7cabdb8d7df726864672e914c7",
+      "sourceName": "Financial Times",
+      "sourceHost": "www.ft.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 403,
+          "host": "www.ft.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4192,
+      "candidateUrlHash": "c078877ed96dca6613d104b7e7096e0965f178f72a906d5faefa0f643a954fda",
+      "publisherHost": "www.ft.com",
+      "accessStatus": "http_403",
+      "httpStatus": 403,
+      "contentType": "text/html; charset=UTF-8",
+      "responseBytes": 0,
+      "responsePrefixCapped": false,
+      "articleLike": false,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "c078877ed96dca6613d104b7e7096e0965f178f72a906d5faefa0f643a954fda",
+      "identityStatus": "unverifiable",
+      "identityReason": "no_supported_title_signal",
+      "identityMatchedSignals": [],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 344,
+      "accessClass": "http_access_denial",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": []
+    },
+    {
+      "rowId": "q2-us-01",
+      "cell": "q2-us",
+      "query": "politics",
+      "country": "US",
+      "language": "en-US",
+      "position": 1,
+      "articleIdHash": "98636144683627c1",
+      "googleNewsUrlHash": "98636144683627c1790e80a16200a8041cc35d588862f299b8468f586e70a38c",
+      "sourceName": "Brookings",
+      "sourceHost": "www.brookings.edu",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.brookings.edu",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4191,
+      "candidateUrlHash": "35083b42d62164743f7626351102790186247276541080073ac8e46929a7956a",
+      "publisherHost": "www.brookings.edu",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "responseBytes": 225475,
+      "responsePrefixCapped": false,
+      "articleLike": true,
+      "challengeLike": true,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "35083b42d62164743f7626351102790186247276541080073ac8e46929a7956a",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+      "identityMatchedSignals": [
+        "h1",
+        "og:title",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 429,
+      "accessClass": "challenge_or_denial_signal",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "f96bb91dfbf0cac2c597c94002a983b3d3c5364b1c45f439d7eb7ad73ce9f4a1"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "3dabff49fd44ee05b00db348f77aed91e8b28c94df64867c02275f3a1e524cc0"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "f96bb91dfbf0cac2c597c94002a983b3d3c5364b1c45f439d7eb7ad73ce9f4a1"
+        }
+      ]
+    },
+    {
+      "rowId": "q2-us-02",
+      "cell": "q2-us",
+      "query": "politics",
+      "country": "US",
+      "language": "en-US",
+      "position": 2,
+      "articleIdHash": "630ba5b4c5e200cd",
+      "googleNewsUrlHash": "630ba5b4c5e200cd9a2371492eefd1b497e07a42588b8616baa3b5edec2351ba",
+      "sourceName": "Reuters",
+      "sourceHost": "www.reuters.com",
+      "candidateStatus": "success_rpc",
+      "stages": [],
+      "elapsedMs": 4192,
+      "candidateUrlHash": "28d3b0ed32f494044f52e7b1cf53afd9ab47e36646d5d70f61c4a4429be00d27",
+      "publisherHost": "www.reuters.com",
+      "accessStatus": "skipped_robots_disallowed",
+      "httpStatus": null,
+      "contentType": null,
+      "responseBytes": 0,
+      "responsePrefixCapped": false,
+      "articleLike": false,
+      "challengeLike": false,
+      "sourceHostMatch": null,
+      "publisherUrlHash": "28d3b0ed32f494044f52e7b1cf53afd9ab47e36646d5d70f61c4a4429be00d27",
+      "identityStatus": "unverifiable",
+      "identityReason": "robots_disallowed",
+      "identityMatchedSignals": [],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "disallowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 120,
+      "accessClass": "robots_disallowed",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": []
+    },
+    {
+      "rowId": "q2-us-03",
+      "cell": "q2-us",
+      "query": "politics",
+      "country": "US",
+      "language": "en-US",
+      "position": 3,
+      "articleIdHash": "27b499ff2954a574",
+      "googleNewsUrlHash": "27b499ff2954a574679f37ac2c76ab529fd876ceb8aec0ade23815f364bb0df2",
+      "sourceName": "Ohio Capital Journal",
+      "sourceHost": "ohiocapitaljournal.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 403,
+          "host": "ohiocapitaljournal.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4178,
+      "candidateUrlHash": "667985d6cfb0fb32525f8e4fa20465ab680daca932e23e2929d9f4c3fb56c5dc",
+      "publisherHost": "ohiocapitaljournal.com",
+      "accessStatus": "http_403",
+      "httpStatus": 403,
+      "contentType": "text/html; charset=UTF-8",
+      "responseBytes": 0,
+      "responsePrefixCapped": false,
+      "articleLike": false,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "667985d6cfb0fb32525f8e4fa20465ab680daca932e23e2929d9f4c3fb56c5dc",
+      "identityStatus": "unverifiable",
+      "identityReason": "no_supported_title_signal",
+      "identityMatchedSignals": [],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 330,
+      "accessClass": "http_access_denial",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": []
+    },
+    {
+      "rowId": "q3-gb-01",
+      "cell": "q3-gb",
+      "query": "business",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 1,
+      "articleIdHash": "83ff02e3c4175a81",
+      "googleNewsUrlHash": "83ff02e3c4175a81f5a0765bcf8d3be97749f6e7c181943d42f987eec681af74",
+      "sourceName": "UK Parliament",
+      "sourceHost": "committees.parliament.uk",
+      "candidateStatus": "success_rpc",
+      "stages": [],
+      "elapsedMs": 4183,
+      "candidateUrlHash": "b5f8378bf6b6b62210dbb15aca4d56e19f78e56e4be47a84f8554d44d5dfce5b",
+      "publisherHost": "committees.parliament.uk",
+      "accessStatus": "skipped_robots_unavailable",
+      "httpStatus": null,
+      "contentType": null,
+      "responseBytes": 0,
+      "responsePrefixCapped": false,
+      "articleLike": false,
+      "challengeLike": false,
+      "sourceHostMatch": null,
+      "publisherUrlHash": "b5f8378bf6b6b62210dbb15aca4d56e19f78e56e4be47a84f8554d44d5dfce5b",
+      "identityStatus": "unverifiable",
+      "identityReason": "robots_unavailable",
+      "identityMatchedSignals": [],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "unavailable",
+      "robotsStatus": 403,
+      "publisherElapsedMs": 58,
+      "accessClass": "robots_unknown",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": []
+    },
+    {
+      "rowId": "q3-gb-02",
+      "cell": "q3-gb",
+      "query": "business",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 2,
+      "articleIdHash": "b089a5eeaa6083f1",
+      "googleNewsUrlHash": "b089a5eeaa6083f14159f7f331224ae848cee90e29d9043ad63e0e42961d96e7",
+      "sourceName": "Financial Times",
+      "sourceHost": "www.ft.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 403,
+          "host": "www.ft.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4180,
+      "candidateUrlHash": "f64e11b4f2582e2b43464a57ad7a5f22699933908be97b5c87fd9e28b0c49bd5",
+      "publisherHost": "www.ft.com",
+      "accessStatus": "http_403",
+      "httpStatus": 403,
+      "contentType": "text/html; charset=UTF-8",
+      "responseBytes": 0,
+      "responsePrefixCapped": false,
+      "articleLike": false,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "f64e11b4f2582e2b43464a57ad7a5f22699933908be97b5c87fd9e28b0c49bd5",
+      "identityStatus": "unverifiable",
+      "identityReason": "no_supported_title_signal",
+      "identityMatchedSignals": [],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 231,
+      "accessClass": "http_access_denial",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": []
+    },
+    {
+      "rowId": "q3-gb-03",
+      "cell": "q3-gb",
+      "query": "business",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 3,
+      "articleIdHash": "f191f78dd335b6ad",
+      "googleNewsUrlHash": "f191f78dd335b6adc0d8c407fbd2634e657c0aad2d60c5eec949139a30387891",
+      "sourceName": "BBC",
+      "sourceHost": "www.bbc.co.uk",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.bbc.co.uk",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4185,
+      "candidateUrlHash": "380f7513fa7ed195e2cd4c06447a878d91bd28231be40f58965ada96dcce38d9",
+      "publisherHost": "www.bbc.co.uk",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "responseBytes": 262144,
+      "responsePrefixCapped": true,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "380f7513fa7ed195e2cd4c06447a878d91bd28231be40f58965ada96dcce38d9",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:og:title,jsonld:headline",
+      "identityMatchedSignals": [
+        "og:title",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 315,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "623b97e484dd44d947ab435910571cde254421be3f466db35c5589e32fb621c7"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "c491aacd80cfd12047f0cd4a8a9f519842a87ff72e0225aec2c73f629a105b5c"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "c491aacd80cfd12047f0cd4a8a9f519842a87ff72e0225aec2c73f629a105b5c"
+        }
+      ]
+    },
+    {
+      "rowId": "q3-us-01",
+      "cell": "q3-us",
+      "query": "business",
+      "country": "US",
+      "language": "en-US",
+      "position": 1,
+      "articleIdHash": "12d3a0a19c731767",
+      "googleNewsUrlHash": "12d3a0a19c73176768c1dd15accdb90d3256dca26f0f3d207538cb8b62aaa278",
+      "sourceName": "Department of Energy (.gov)",
+      "sourceHost": "www.energy.gov",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.energy.gov",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4306,
+      "candidateUrlHash": "1c130b88e9d0e2336101ccc94d0211670206565b52b23d067cbad7f5ad4ca64f",
+      "publisherHost": "www.energy.gov",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "responseBytes": 151655,
+      "responsePrefixCapped": false,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "1c130b88e9d0e2336101ccc94d0211670206565b52b23d067cbad7f5ad4ca64f",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+      "identityMatchedSignals": [
+        "h1",
+        "og:title",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 367,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "3b7d4bf253d074045b9003ea9d94d7c0d1d4e4efc908ffbeca3f7e18fb4a98c9"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "3b7d4bf253d074045b9003ea9d94d7c0d1d4e4efc908ffbeca3f7e18fb4a98c9"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "3b7d4bf253d074045b9003ea9d94d7c0d1d4e4efc908ffbeca3f7e18fb4a98c9"
+        }
+      ]
+    },
+    {
+      "rowId": "q3-us-02",
+      "cell": "q3-us",
+      "query": "business",
+      "country": "US",
+      "language": "en-US",
+      "position": 2,
+      "articleIdHash": "21980e5f2b3fa860",
+      "googleNewsUrlHash": "21980e5f2b3fa86055c7c224d59fb626af3c6a85aa9e2d745266f846bba5af57",
+      "sourceName": "CNBC",
+      "sourceHost": "www.cnbc.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.cnbc.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4191,
+      "candidateUrlHash": "29b9c90004d367c990909055e7748c81a9660f732d9fbd039ed71bb378a14e5e",
+      "publisherHost": "www.cnbc.com",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "responseBytes": 262144,
+      "responsePrefixCapped": true,
+      "articleLike": true,
+      "challengeLike": true,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "29b9c90004d367c990909055e7748c81a9660f732d9fbd039ed71bb378a14e5e",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:og:title",
+      "identityMatchedSignals": [
+        "og:title"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 764,
+      "accessClass": "challenge_or_denial_signal",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "og:title",
+          "valueSha256": "2c34fa46c15b87cf837bf26426938b81d8bafd5e89cfb73adc9de755a43391ff"
+        }
+      ]
+    },
+    {
+      "rowId": "q3-us-03",
+      "cell": "q3-us",
+      "query": "business",
+      "country": "US",
+      "language": "en-US",
+      "position": 3,
+      "articleIdHash": "61da7f2457dded1f",
+      "googleNewsUrlHash": "61da7f2457dded1fd3e0aad7f9d561c30f28c477fe9100be44299c012bee0224",
+      "sourceName": "Reuters",
+      "sourceHost": "www.reuters.com",
+      "candidateStatus": "success_rpc",
+      "stages": [],
+      "elapsedMs": 4216,
+      "candidateUrlHash": "752b77ca1e1e53c4d15b370ceafc53e6ba97979ee946dc44e06418e1ce078fd7",
+      "publisherHost": "www.reuters.com",
+      "accessStatus": "skipped_robots_disallowed",
+      "httpStatus": null,
+      "contentType": null,
+      "responseBytes": 0,
+      "responsePrefixCapped": false,
+      "articleLike": false,
+      "challengeLike": false,
+      "sourceHostMatch": null,
+      "publisherUrlHash": "752b77ca1e1e53c4d15b370ceafc53e6ba97979ee946dc44e06418e1ce078fd7",
+      "identityStatus": "unverifiable",
+      "identityReason": "robots_disallowed",
+      "identityMatchedSignals": [],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "disallowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 0,
+      "accessClass": "robots_disallowed",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": []
+    },
+    {
+      "rowId": "q4-gb-01",
+      "cell": "q4-gb",
+      "query": "technology",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 1,
+      "articleIdHash": "9400e46fc9dda54f",
+      "googleNewsUrlHash": "9400e46fc9dda54f5a3fa5bc4b2e4181260cab0706578c733914d59c96bf7c4f",
+      "sourceName": "ember-energy.org",
+      "sourceHost": "ember-energy.org",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "ember-energy.org",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4203,
+      "candidateUrlHash": "c09c77f6cd565840aeecc593e3584c61245cf4906d5427c4fe70261162e95669",
+      "publisherHost": "ember-energy.org",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "responseBytes": 111918,
+      "responsePrefixCapped": false,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "c09c77f6cd565840aeecc593e3584c61245cf4906d5427c4fe70261162e95669",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1",
+      "identityMatchedSignals": [
+        "h1"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 497,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "ce978f0ceb2c36c2a3d2dad5683211933602a9d24ed8c93371d3030e7ef37b91"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "aa9ba62231543891aa27096f2bebfb70d076ba4923d3d0096ac9fa5e626d792e"
+        }
+      ]
+    },
+    {
+      "rowId": "q4-gb-02",
+      "cell": "q4-gb",
+      "query": "technology",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 2,
+      "articleIdHash": "e1145941a4787d9e",
+      "googleNewsUrlHash": "e1145941a4787d9e441d6ef1a2682b8ed632ae61f463f0f265d6b3fbc3932b12",
+      "sourceName": "BBC",
+      "sourceHost": "www.bbc.co.uk",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.bbc.co.uk",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4097,
+      "candidateUrlHash": "7aede3a9618b2ea54c7db5b61b75841fe96093796ea856dad1d961694b6591f3",
+      "publisherHost": "www.bbc.co.uk",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "responseBytes": 262144,
+      "responsePrefixCapped": true,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "7aede3a9618b2ea54c7db5b61b75841fe96093796ea856dad1d961694b6591f3",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:og:title,jsonld:headline",
+      "identityMatchedSignals": [
+        "og:title",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 397,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "0ba29aa61851862126def924500bbec88182098ed8b1a2823faa2d477861194d"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "e050458c0660c6c723a918d3f3cbb7807720ae45a0beac84f66e84973ec4f76d"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "e050458c0660c6c723a918d3f3cbb7807720ae45a0beac84f66e84973ec4f76d"
+        }
+      ]
+    },
+    {
+      "rowId": "q4-gb-03",
+      "cell": "q4-gb",
+      "query": "technology",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 3,
+      "articleIdHash": "bacd5a68cf4bfeeb",
+      "googleNewsUrlHash": "bacd5a68cf4bfeebedc5aa872c15cafd90e3c70a314493a7a9f4ac61e9cbb7bb",
+      "sourceName": "The Official Microsoft Blog",
+      "sourceHost": "blogs.microsoft.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "blogs.microsoft.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4264,
+      "candidateUrlHash": "b6184dda036e73a3aaf21b5c48d9f299c099d70d51cf30d6a47ddd58a7cbb336",
+      "publisherHost": "blogs.microsoft.com",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "responseBytes": 172810,
+      "responsePrefixCapped": false,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "b6184dda036e73a3aaf21b5c48d9f299c099d70d51cf30d6a47ddd58a7cbb336",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,jsonld:headline",
+      "identityMatchedSignals": [
+        "h1",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 739,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "b59e7aad3a963cfbd791da050832449ed5c1a1fda5a45ab87726cca7c4644f2a"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "aa005f7fe077258fa411f1d51762a59fce1199a874cdde42292c617437910d2d"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "b59e7aad3a963cfbd791da050832449ed5c1a1fda5a45ab87726cca7c4644f2a"
+        }
+      ]
+    },
+    {
+      "rowId": "q4-us-01",
+      "cell": "q4-us",
+      "query": "technology",
+      "country": "US",
+      "language": "en-US",
+      "position": 1,
+      "articleIdHash": "0f859cc4f52a49b2",
+      "googleNewsUrlHash": "0f859cc4f52a49b2462157735365571ce95fb6201c653ec92c3a2e025ecaecb8",
+      "sourceName": "Department of Energy (.gov)",
+      "sourceHost": "www.energy.gov",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.energy.gov",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4257,
+      "candidateUrlHash": "12abc5eec98fce586b76a9b6306265f3741b16170509b5534a48bc8b19fd1429",
+      "publisherHost": "www.energy.gov",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "responseBytes": 114232,
+      "responsePrefixCapped": false,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "12abc5eec98fce586b76a9b6306265f3741b16170509b5534a48bc8b19fd1429",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+      "identityMatchedSignals": [
+        "h1",
+        "og:title",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 187,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "fdbba4ed4a06c68ca213b19a3a65ac6e0abaf5a6d2a4f79c09a0ececc4595384"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "fdbba4ed4a06c68ca213b19a3a65ac6e0abaf5a6d2a4f79c09a0ececc4595384"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "fdbba4ed4a06c68ca213b19a3a65ac6e0abaf5a6d2a4f79c09a0ececc4595384"
+        }
+      ]
+    },
+    {
+      "rowId": "q4-us-02",
+      "cell": "q4-us",
+      "query": "technology",
+      "country": "US",
+      "language": "en-US",
+      "position": 2,
+      "articleIdHash": "40c671d4f3946110",
+      "googleNewsUrlHash": "40c671d4f39461107cc575f29c99af9230735ab1ce4bdd0435de996e79e29c50",
+      "sourceName": "Ondas Holdings",
+      "sourceHost": "ir.ondas.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "ir.ondas.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4243,
+      "candidateUrlHash": "c8d1eb0251f4d18aa91727c6710c2c0b68784354504d062890caae30b27d032d",
+      "publisherHost": "ir.ondas.com",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "responseBytes": 32577,
+      "responsePrefixCapped": false,
+      "articleLike": true,
+      "challengeLike": true,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "c8d1eb0251f4d18aa91727c6710c2c0b68784354504d062890caae30b27d032d",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,og:title",
+      "identityMatchedSignals": [
+        "h1",
+        "og:title"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "not_found",
+      "robotsStatus": 404,
+      "publisherElapsedMs": 463,
+      "accessClass": "challenge_or_denial_signal",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "e4d6dce064c2c93764ac7892a2093505239e488241b5b79d068a6f2fb175510a"
+        },
+        {
+          "kind": "h1",
+          "valueSha256": "8df7ba72df5f9045156b4ae856d419510369f848b6b9a8143151418c8375a275"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "8df7ba72df5f9045156b4ae856d419510369f848b6b9a8143151418c8375a275"
+        }
+      ]
+    },
+    {
+      "rowId": "q4-us-03",
+      "cell": "q4-us",
+      "query": "technology",
+      "country": "US",
+      "language": "en-US",
+      "position": 3,
+      "articleIdHash": "bacd5a68cf4bfeeb",
+      "googleNewsUrlHash": "bacd5a68cf4bfeebedc5aa872c15cafd90e3c70a314493a7a9f4ac61e9cbb7bb",
+      "sourceName": "The Official Microsoft Blog",
+      "sourceHost": "blogs.microsoft.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "blogs.microsoft.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4249,
+      "candidateUrlHash": "b6184dda036e73a3aaf21b5c48d9f299c099d70d51cf30d6a47ddd58a7cbb336",
+      "publisherHost": "blogs.microsoft.com",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "responseBytes": 172810,
+      "responsePrefixCapped": false,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "b6184dda036e73a3aaf21b5c48d9f299c099d70d51cf30d6a47ddd58a7cbb336",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,jsonld:headline",
+      "identityMatchedSignals": [
+        "h1",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 406,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "b59e7aad3a963cfbd791da050832449ed5c1a1fda5a45ab87726cca7c4644f2a"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "aa005f7fe077258fa411f1d51762a59fce1199a874cdde42292c617437910d2d"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "b59e7aad3a963cfbd791da050832449ed5c1a1fda5a45ab87726cca7c4644f2a"
+        }
+      ]
+    },
+    {
+      "rowId": "q5-gb-01",
+      "cell": "q5-gb",
+      "query": "climate change",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 1,
+      "articleIdHash": "f21d59d3183557fb",
+      "googleNewsUrlHash": "f21d59d3183557fbf019703b3cc8559294682a05723ce1075cca485dc561082e",
+      "sourceName": "GOV.UK",
+      "sourceHost": "www.gov.uk",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.gov.uk",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4200,
+      "candidateUrlHash": "ae11e987d1eb9587a58e66ff41a0d5ff234d84d022895fafb06b0943f1b4f7e7",
+      "publisherHost": "www.gov.uk",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "responseBytes": 76442,
+      "responsePrefixCapped": false,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "ae11e987d1eb9587a58e66ff41a0d5ff234d84d022895fafb06b0943f1b4f7e7",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,og:title",
+      "identityMatchedSignals": [
+        "h1",
+        "og:title"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 358,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "0bcfec008ccd7f5937b062441842afeed4e0446db2e7bef30e7007288b5f5cbe"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "0bcfec008ccd7f5937b062441842afeed4e0446db2e7bef30e7007288b5f5cbe"
+        }
+      ]
+    },
+    {
+      "rowId": "q5-gb-02",
+      "cell": "q5-gb",
+      "query": "climate change",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 2,
+      "articleIdHash": "8d16227fa0e9fe13",
+      "googleNewsUrlHash": "8d16227fa0e9fe130f44b9702378555c073f170368f70767a33c784923f2e6f1",
+      "sourceName": "UN News",
+      "sourceHost": "news.un.org",
+      "candidateStatus": "success_rpc",
+      "stages": [],
+      "elapsedMs": 4191,
+      "candidateUrlHash": "0863e56c405d7018c72ed16f825bc1b2552e2e6bd101baf760838c9ac8fad36a",
+      "publisherHost": "news.un.org",
+      "accessStatus": "skipped_robots_unavailable",
+      "httpStatus": null,
+      "contentType": null,
+      "responseBytes": 0,
+      "responsePrefixCapped": false,
+      "articleLike": false,
+      "challengeLike": false,
+      "sourceHostMatch": null,
+      "publisherUrlHash": "0863e56c405d7018c72ed16f825bc1b2552e2e6bd101baf760838c9ac8fad36a",
+      "identityStatus": "unverifiable",
+      "identityReason": "robots_unavailable",
+      "identityMatchedSignals": [],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "unavailable",
+      "robotsStatus": 308,
+      "publisherElapsedMs": 0,
+      "accessClass": "robots_unknown",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": []
+    },
+    {
+      "rowId": "q5-gb-03",
+      "cell": "q5-gb",
+      "query": "climate change",
+      "country": "GB",
+      "language": "en-GB",
+      "position": 3,
+      "articleIdHash": "cf6507c3dbfcc18f",
+      "googleNewsUrlHash": "cf6507c3dbfcc18f75347b36431d3ebf6fb87fbca2a1fddb6ef586128cb6d9e5",
+      "sourceName": "Climate Outreach",
+      "sourceHost": "climateoutreach.org",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "climateoutreach.org",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4207,
+      "candidateUrlHash": "19d1c38b2cb8ba0920247c925a9d08c4c904e053a353b2d04234f84897decb76",
+      "publisherHost": "climateoutreach.org",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "responseBytes": 114847,
+      "responsePrefixCapped": false,
+      "articleLike": true,
+      "challengeLike": true,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "19d1c38b2cb8ba0920247c925a9d08c4c904e053a353b2d04234f84897decb76",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+      "identityMatchedSignals": [
+        "h1",
+        "og:title",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 1191,
+      "accessClass": "challenge_or_denial_signal",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "5308ae621b7363a0c1fd76eec438a07a377a142952ebcf0d3e72852aaa315edb"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "5308ae621b7363a0c1fd76eec438a07a377a142952ebcf0d3e72852aaa315edb"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "5308ae621b7363a0c1fd76eec438a07a377a142952ebcf0d3e72852aaa315edb"
+        }
+      ]
+    },
+    {
+      "rowId": "q5-us-01",
+      "cell": "q5-us",
+      "query": "climate change",
+      "country": "US",
+      "language": "en-US",
+      "position": 1,
+      "articleIdHash": "1ce05af82a2f5763",
+      "googleNewsUrlHash": "1ce05af82a2f57631288d03460e8c9e3e8696c4f3f8226e7a231108ffe8c4d54",
+      "sourceName": "Welcome to the United Nations",
+      "sourceHost": "www.un.org",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.un.org",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 4213,
+      "candidateUrlHash": "11603b53c3521746fa4673f7dfdfdc5f823cdad0cd3063c00eb9890d8688911c",
+      "publisherHost": "www.un.org",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "responseBytes": 99599,
+      "responsePrefixCapped": false,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "11603b53c3521746fa4673f7dfdfdc5f823cdad0cd3063c00eb9890d8688911c",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1",
+      "identityMatchedSignals": [
+        "h1"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 352,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "dc83651907062632a6801f7d0d23797cd81b420325d96d71986ed3e86e443423"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "57f75fc3f3adcb41c86121fc54e0df961c8e4ce647fd0402d49656e2c8ed0c37"
+        }
+      ]
+    },
+    {
+      "rowId": "q5-us-02",
+      "cell": "q5-us",
+      "query": "climate change",
+      "country": "US",
+      "language": "en-US",
+      "position": 2,
+      "articleIdHash": "cd90f39872aa91bb",
+      "googleNewsUrlHash": "cd90f39872aa91bb448b233be3fd3eb9679d832dc1ac5556781831e82292d33b",
+      "sourceName": "SCOTUSblog",
+      "sourceHost": "www.scotusblog.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "www.scotusblog.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 2607,
+      "candidateUrlHash": "329e82269810cae53c7ac2b94689c13730694b088680830f854fab110abcff40",
+      "publisherHost": "www.scotusblog.com",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "responseBytes": 262144,
+      "responsePrefixCapped": true,
+      "articleLike": true,
+      "challengeLike": false,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "329e82269810cae53c7ac2b94689c13730694b088680830f854fab110abcff40",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+      "identityMatchedSignals": [
+        "h1",
+        "og:title",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 674,
+      "accessClass": "html_article_like_marker",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "d71db23d1dde0ec4c276cdb59b3eb6c98818467f24b400d4618604148288bc57"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "d71db23d1dde0ec4c276cdb59b3eb6c98818467f24b400d4618604148288bc57"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "d71db23d1dde0ec4c276cdb59b3eb6c98818467f24b400d4618604148288bc57"
+        }
+      ]
+    },
+    {
+      "rowId": "q5-us-03",
+      "cell": "q5-us",
+      "query": "climate change",
+      "country": "US",
+      "language": "en-US",
+      "position": 3,
+      "articleIdHash": "07e1c30cf654bb0e",
+      "googleNewsUrlHash": "07e1c30cf654bb0e8c6212aac839410d086701c579fca1031b4e8c03c1dcc29b",
+      "sourceName": "Time Magazine",
+      "sourceHost": "time.com",
+      "candidateStatus": "success_rpc",
+      "stages": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "host": "time.com",
+          "locationHost": null
+        }
+      ],
+      "elapsedMs": 2616,
+      "candidateUrlHash": "e3555122ebb9e821f6870ca7a7cdd941d81ec9f5a416cdedab39856a53948156",
+      "publisherHost": "time.com",
+      "accessStatus": "http_200_html",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "responseBytes": 262144,
+      "responsePrefixCapped": true,
+      "articleLike": true,
+      "challengeLike": true,
+      "sourceHostMatch": true,
+      "publisherUrlHash": "e3555122ebb9e821f6870ca7a7cdd941d81ec9f5a416cdedab39856a53948156",
+      "identityStatus": "confirmed_match",
+      "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+      "identityMatchedSignals": [
+        "h1",
+        "og:title",
+        "jsonld:headline"
+      ],
+      "retryUsed": false,
+      "retryReason": null,
+      "robotsSignal": "allowed",
+      "robotsStatus": 200,
+      "publisherElapsedMs": 501,
+      "accessClass": "challenge_or_denial_signal",
+      "termsSignal": "not_assessed",
+      "pageTitleSignals": [
+        {
+          "kind": "h1",
+          "valueSha256": "47006829cf7533aef27dd6f0ffdc785020a738f4c0523f1aea9d122841da4687"
+        },
+        {
+          "kind": "og:title",
+          "valueSha256": "47006829cf7533aef27dd6f0ffdc785020a738f4c0523f1aea9d122841da4687"
+        },
+        {
+          "kind": "jsonld:headline",
+          "valueSha256": "47006829cf7533aef27dd6f0ffdc785020a738f4c0523f1aea9d122841da4687"
+        }
+      ]
+    }
+  ]
+}

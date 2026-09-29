@@ -1,0 +1,10 @@
+{
+  "name": "issue22-news-access-probe",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "fast-xml-parser": "5.11.1",
+    "ipaddr.js": "2.2.0"
+  }
+}
