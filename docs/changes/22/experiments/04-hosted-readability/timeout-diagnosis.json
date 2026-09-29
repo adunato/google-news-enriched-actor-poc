@@ -1,0 +1,116 @@
+{
+  "purpose": "local synthetic Node 20 worker-timeout diagnosis; no publisher requests",
+  "nodeVersion": "v20.19.0",
+  "package": "@extractus/article-extractor@9.0.1",
+  "dependencyLock": "package-lock.json in this experiment directory",
+  "perWorkerTimeoutMs": 5000,
+  "fixtureCount": 5,
+  "results": [
+    {
+      "id": "semantic-article",
+      "inputBytes": 1051,
+      "workerTimeoutMs": 5000,
+      "totalMs": 674.3,
+      "lastPhase": "post_done",
+      "phaseTimings": {
+        "workerBootToImportStartMs": 0.028900000000021464,
+        "importMs": 566.6490000000001,
+        "extractMs": 44.887800000000084
+      },
+      "workerStartedAtParentMs": 49.8,
+      "postMs": 0,
+      "parentProxyMs": 10.1,
+      "outputChars": 823,
+      "proxy": {
+        "status": "accepted_proxy",
+        "wordCount": 113,
+        "segmentCount": 4,
+        "fivegramUniqueness": 1
+      },
+      "status": "completed"
+    },
+    {
+      "id": "generic-div",
+      "inputBytes": 1154,
+      "workerTimeoutMs": 5000,
+      "totalMs": 442.5,
+      "lastPhase": "post_done",
+      "phaseTimings": {
+        "workerBootToImportStartMs": 0.022099999999909414,
+        "importMs": 357.9951000000001,
+        "extractMs": 21.91529999999989
+      },
+      "workerStartedAtParentMs": 44.9,
+      "postMs": 0,
+      "parentProxyMs": 2.8,
+      "outputChars": 851,
+      "proxy": {
+        "status": "accepted_proxy",
+        "wordCount": 124,
+        "segmentCount": 4,
+        "fivegramUniqueness": 1
+      },
+      "status": "completed"
+    },
+    {
+      "id": "navigation-heavy",
+      "inputBytes": 1352,
+      "workerTimeoutMs": 5000,
+      "totalMs": 513.1,
+      "lastPhase": "post_done",
+      "phaseTimings": {
+        "workerBootToImportStartMs": 0.022100000000136788,
+        "importMs": 413.05320000000006,
+        "extractMs": 35.82749999999987
+      },
+      "workerStartedAtParentMs": 39.2,
+      "postMs": 0.2,
+      "parentProxyMs": 3.6,
+      "outputChars": 851,
+      "proxy": {
+        "status": "accepted_proxy",
+        "wordCount": 117,
+        "segmentCount": 4,
+        "fivegramUniqueness": 1
+      },
+      "status": "completed"
+    },
+    {
+      "id": "malformed-truncated",
+      "inputBytes": 997,
+      "workerTimeoutMs": 5000,
+      "totalMs": 545.8,
+      "lastPhase": "post_done",
+      "phaseTimings": {
+        "workerBootToImportStartMs": 0.027800000000297587,
+        "importMs": 453.29359999999997,
+        "extractMs": 27.868199999999888
+      },
+      "workerStartedAtParentMs": 51.9,
+      "postMs": 0,
+      "parentProxyMs": 1.6,
+      "outputChars": 872,
+      "proxy": {
+        "status": "accepted_proxy",
+        "wordCount": 120,
+        "segmentCount": 4,
+        "fivegramUniqueness": 1
+      },
+      "status": "completed"
+    },
+    {
+      "id": "large-synthetic-256KiB",
+      "inputBytes": 262088,
+      "workerTimeoutMs": 5000,
+      "totalMs": 5537.8,
+      "lastPhase": "extract_started",
+      "phaseTimings": null,
+      "workerStartedAtParentMs": 50.9,
+      "postMs": null,
+      "parentProxyMs": null,
+      "outputChars": null,
+      "proxy": null,
+      "status": "timeout"
+    }
+  ]
+}

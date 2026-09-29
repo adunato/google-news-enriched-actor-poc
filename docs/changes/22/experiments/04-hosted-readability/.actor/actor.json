@@ -1,0 +1,12 @@
+{
+  "actorSpecification": 1,
+  "name": "issue22-hosted-readability-iteration4",
+  "title": "Issue 22 Hosted Readability Iteration 4",
+  "description": "Private disposable Issue 22 probe. Stores sanitized fetch and extraction proxy classifications only.",
+  "version": "0.4",
+  "buildTag": "latest",
+  "defaultMemoryMbytes": 256,
+  "minMemoryMbytes": 256,
+  "maxMemoryMbytes": 256,
+  "input": "./input_schema.json"
+}

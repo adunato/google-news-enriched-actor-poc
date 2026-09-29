@@ -2,7 +2,7 @@
 
 **Issue:** [#22](https://github.com/adunato/google-news-enriched-actor-poc/issues/22)
 
-**Status:** Iteration 3 recorded; the Spike remains open.
+**Status:** Iteration 4 recorded; the Spike remains open.
 
 **Iteration result:** Inconclusive for the original Technical Question.
 
@@ -10,6 +10,51 @@
 
 What automated web-access approaches can this news POC/product family responsibly rely on to retrieve public publisher pages at useful reliability, and where are the practical technical, cost, operational, policy or legal boundaries that should cause the product to stop, degrade gracefully, or use a different data source?
 
+## Iteration 4 plan — one hosted readability-proxy run
+
+**Current understanding:** Iteration 2 returned HTTP 200 HTML for 72/100 rows in a fresh hosted Node 20 cohort, but neither that run nor Iteration 3's local Node 24 fixture screen established readable extraction on publisher pages. Iteration 3 screened `@extractus/article-extractor@9.0.1` successfully on four authored positive fixtures and two negative fixtures. The owner explicitly approved this exact dependency and locked dependencies for one hosted Spike evaluation only; production use is not approved.
+
+**Investigation backlog (ordered):**
+
+1. Run one fresh, capped hosted Node 20 evaluation of the approved extractor on the established 100-row, ten-cell cohort, with a predeclared structural extraction proxy and sanitized output.
+2. If the proxy is useful, recommend human-reviewable quality validation on a new approved sample; preserve uncertainty about intended-article match and actual readability.
+3. Continue the broader access/policy/operational boundary investigation only through separately approved bounded iterations; no escalation to browser, proxies, managed unblocking or paid services is included here.
+
+**Selected hypothesis:** At least 50 of the planned 100 fresh rows will produce extracted text that passes the predeclared structural proxy with the owner-approved extractor in Node 20.
+
+**Why this is next:** This directly measures whether the local fixture screen survives the target runtime and a fresh publisher cohort under the already tested access controls. It has higher information value than another access-only baseline because readable text is the unmeasured Issue #5 acceptance signal.
+
+**Exact bounded experiment:** Use `extractFromHtml(htmlPrefix, publisherUrl)` once for each eligible already-fetched response. Eligibility is final HTTP 200 HTML, robots allowed/not-found, and no obvious challenge/access-gate signal. Use only the existing 256 KiB fetched prefix. Extraction runs one at a time in workers with a five-second per-row termination deadline. No `extract(url)` call. The exact proxy, categories and sanitization are predeclared in [`experiments/04-hosted-readability/experiment.md`](experiments/04-hosted-readability/experiment.md): output cap 1,048,576 chars; remove comments/scripts/styles/noscript/hidden text; decode entities and collapse whitespace; segment paragraphs/headings/list items/BR; English-letter words with optional apostrophes; require >=100 words, >=2 substantive segments of >=20 words, >=0.80 distinct consecutive five-word-sequence ratio within those segments, and navigation/chrome token ratio below 0.35. Retain only proxy status and aggregate metrics; never retain body text.
+
+**Representative environment/data:** One fresh in-run Google News feed cohort in Apify Node 20; five existing queries, GB/en-GB and US/en-US, ten feed rows in each of ten cells. Google marker/RPC resolution remains an undocumented investigation input, not a product contract. The cohort must be exactly 100 rows with ten in each cell.
+
+**Expected evidence and interpretation:** Count `accepted_proxy` over all 100 planned rows; >=50 meets only this structural proxy threshold and <50 fails it. Not-attempted, empty, short, rejected, timeout and error rows remain in the denominator. The proxy cannot prove the extracted text matches the intended article, excludes subtle boilerplate, is coherent, or is human-readable. It does not establish `fullTextStatus: success` or Issue #5 acceptance. Capture sanitized dataset/API output and hosted run/build/runtime/cost/memory evidence.
+
+**Operational bounds and stop conditions:** One private disposable Actor and one hosted run; server-enforced max charge `$1`, 256 MiB memory, 900-second timeout, restart disabled. Preserve Iteration 2 HTTP concurrency, ten-second request timeout, five redirects, 256 KiB prefix, host spacing, public DNS pinning, robots policy, and per-row isolation. No additional run, browser, paywall bypass, proxy, managed unblocking or paid external service. No raw URLs, titles, HTML, article text, cookies or raw logs may be retained. Do not start if privacy, visibility or server-enforced bounds cannot be verified. Delete the disposable Actor after collecting sanitized evidence; keep the run/dataset evidence.
+
+**Owner checkpoint:** The owner approved exactly one hosted run using `@extractus/article-extractor@9.0.1` and its locked dependencies for this Spike iteration only. The dependency is not approved for production use. Execute the single capped experiment and stop at the next checkpoint.
+
+## Iteration 4 evidence and checkpoint
+
+**Experiment:** One fresh 100-row cohort was processed by one private Apify Node 20 Actor run, with ten rows in each of the ten planned query/locale cells. Candidate publisher destination resolution succeeded for 100/100 rows. Access results were HTTP 200 HTML 75/100, HTTP 403 11/100, HTTP 406 1/100, robots unavailable/skipped 9/100, and robots disallowed/skipped 4/100. The HTTP procedure retained the existing concurrency, timeout, redirect, prefix, DNS pinning, per-host pacing, robots, retry and row-isolation bounds.
+
+**Environment and exact execution:** Actor `u7Arb7xwwXT4L7UFM` was private with `LIMITED_PERMISSIONS`; build `JixHitVDKLI84WNqm` / `0.4.1` used the Node 20 image. Exactly one run was made: `SkzjjjnVbnDgxIVtk`, status `SUCCEEDED`, exit code 0 on Node `v20.20.2`; elapsed `323.164` seconds; no restart. Run settings were 256 MiB, 900 seconds, restart disabled, and server-enforced `maxTotalChargeUsd=1` with `isMaxTotalChargeUsdSetByUser=true`. Final run metadata after evidence reads recorded usage total `$0.0052094971533649505`, `0.0224419444` compute units, average/peak memory `71,089,291` / `109,015,040` bytes, average/peak CPU `4.887` / `125.711`, and received/sent network bytes `33,354,949` / `919,972`.
+
+The normal dataset API returned 100 unique rows, ten in every cell. The deterministic proxy accepted `0/100`. The 44 eligible already-fetched HTML rows all reached the predeclared five-second extraction-worker timeout. Thirty-one challenge/gate rows were skipped before extraction, and 25 other rows were not attempted due to robots, HTTP denial or transport status. The hosted dataset labeled the challenge skips `quality_rejected`; that code label is misleading because the extractor was never invoked for those rows. Count them as pre-extraction challenge skips, not extractor-quality results. The 44 timeouts are an observed measurement/runtime bound; they are not evidence that returned text was unreadable or that the extraction method is unsuitable. No extracted output was available to score.
+
+For timeout rows, the sanitized input prefixes ranged from `23,756` to `262,144` bytes (median `162,419`); 15 were capped at 256 KiB. A local-only Node `v20.19.0` diagnostic with the same locked dependency and authored/synthetic fixtures showed four small authored fixtures completing the full worker/import/extract/post/proxy path in `442.5–674.3` ms (import `358.0–566.6` ms; extraction `21.9–44.9` ms; parent scoring `1.6–10.1` ms). An in-memory `262,088`-byte synthetic fixture reached the same five-second deadline during `extractFromHtml`, before output/post. This makes large-input parsing a plausible contributor, but it does not diagnose any live publisher row; the hosted run retained no HTML and had no phase instrumentation. No publisher requests or additional hosted run were made during this diagnostic. Sanitized timings and the local-only reproducer are retained in [`experiments/04-hosted-readability/timeout-diagnosis.json`](experiments/04-hosted-readability/timeout-diagnosis.json) and [`experiments/04-hosted-readability/src/diagnose-timeout.mjs`](experiments/04-hosted-readability/src/diagnose-timeout.mjs).
+
+Sanitized dataset SHA-256: `0ef3bfa1878d5495486c0ad8742098d348d3c057f33cb3112196b3a6a9edd54a`. The retained dataset contains only opaque row/cell IDs, fetch classifications and bounded metrics. The output schema/privacy check found no unexpected fields and zero URL patterns. The run log was scanned in memory, showed zero URL patterns and no `probe_failed` signal, and was not retained. The disposable private Actor was deleted; run and dataset remain retrievable. No URL, title, publisher name/host, HTML, article text, cookie or raw log was retained.
+
+**Iteration result:** `Inconclusive` for extraction quality and for the original Technical Question. The 100-row hosted operational test completed, but the extraction deadline prevented meaningful proxy scoring. The measured `0/100` accepted-proxy count does not distinguish extraction quality from timeout behavior. It does not establish `fullTextStatus: success` or Issue #5's 50% human-readable target. No production dependency or Product/Architecture change is approved.
+
+**Current understanding:** The direct HTTP path retrieved 200 HTML for 75/100 rows in this fresh hosted sample. The approved candidate dependency tree installed and ran in Node 20.20.2. Every eligible extraction attempt hit the five-second worker deadline; the cause remains unknown. Cost, memory, dataset completeness and output privacy remained within bounds.
+
+**Recommended next action:** Iteration 5 should run a bounded local Node 20 input-size scaling diagnostic on authored/synthetic fixtures with phase timings. This is the highest-value next step because 15 hosted prefixes were capped and a similarly sized synthetic input reached the extraction timeout, while small fixtures completed quickly. Use no publisher requests. Any later hosted publisher rerun needs a new owner approval after a defensible time/memory bound is identified; do not simply repeat the current experiment.
+
+**Prerequisite/blocker status:** The timeout affected the completed extraction measurement and blocks meaningful proxy interpretation or another hosted cohort. It is a material runtime/measurement uncertainty, not an access or authentication prerequisite. The local diagnosis narrowed but did not resolve it: worker startup/import and parsing of small authored fixtures fit within the bound, while one 262,088-byte synthetic fixture timed out during extraction. Recovery is a bounded input-size scaling diagnostic and then a revised experiment design. No publisher request or extra hosted run was made.
+
+**Owner decision requested:** **Approve Iteration 5: a bounded local Node 20 input-size scaling diagnostic using authored/synthetic HTML and the locked dependency, with no publisher requests or hosted Actor run.** If approved, identify a defensible per-row deadline and return a proposed hosted follow-up for a separate decision. If redirected or declined, Issue #22 and Issue #5 remain unresolved; current evidence supports direct-access observations only.
 ## Iteration 3 plan — local readability-method evaluation
 
 **Current understanding:** Iteration 2 showed HTTP 200 HTML for 72/100 rows in one fresh Apify Node 20 sample. Neither hosted iteration retained page HTML or measured readable article text. Issue #5's acceptance criterion remains at least 50% readable full-text extraction on a representative 100-row sample. No extraction algorithm or dependency is approved for production use.
