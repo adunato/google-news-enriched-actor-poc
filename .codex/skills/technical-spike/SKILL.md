@@ -57,12 +57,22 @@ The Issue body holds the stable problem/outcome. The living Spike artifact holds
 
 Default mode is **one approved iteration at a time**.
 
+An owner checkpoint is an **authorization and decision boundary, not a transfer of investigative ownership**. The executing agent remains responsible for understanding what the evidence means, selecting the best next step, diagnosing ordinary execution problems, and presenting a decision-ready recommendation.
+
 After each completed iteration:
 
 1. record the evidence and result in the Experiment Log;
 2. update Current Understanding, Supported Technical Specification and Remaining Uncertainty;
-3. propose the next hypothesis/experiment;
-4. report back to the project owner and stop.
+3. select and **recommend** the next hypothesis/experiment with the highest current information value; do not hand the owner an unranked list unless a genuine product/architecture choice exists;
+4. explain why that recommendation is next and what uncertainty it resolves;
+5. identify any prerequisite, blocker or execution problem and classify it explicitly:
+   - whether it affected the completed iteration;
+   - whether it blocks the recommended next iteration;
+   - whether it is an ordinary operational prerequisite or a material owner/product/architecture/risk decision;
+   - the concrete supported recovery/action required;
+6. for ordinary operational prerequisites, use or identify the repository/platform's standard recovery path before escalating manual work to the owner;
+7. state the exact owner decision requested, normally in a form such as **Approve Iteration N: <bounded experiment>**, **Redirect to <alternative>**, or **Decide <material choice>**;
+8. report back to the project owner and stop only after the hand-off is decision-ready.
 
 Proceed to the next iteration only after owner approval.
 
@@ -120,7 +130,9 @@ Do not:
 - relax approved constraints merely to obtain a positive result;
 - treat an inconclusive iteration as authority to close the Spike.
 
-If evidence shows that a product/architecture constraint itself must change, record the implication and stop for the owner/product decision.
+If evidence shows that a product/architecture constraint itself must change, record the implication, recommend the resulting decision path, state exactly what must be decided, and stop for the owner/product decision.
+
+Do not use passive checkpoint language as a substitute for ownership. Statements such as "the next experiment awaits owner review", "a token was unavailable", or "the Spike remains open" are incomplete unless accompanied by the recommended next action, blocker impact, recovery path and exact owner decision required.
 
 ## Draft PR behaviour
 
@@ -168,7 +180,18 @@ Only final Spike validation may authorize the PR to become ready for merge with 
 
 ## Completion contract
 
-For an iteration, report the Spike Issue, current iteration, hypothesis, experiment, environment/data, retained evidence, result, learning, updated current understanding, next proposed iteration and whether owner approval is required.
+For an iteration, report the Spike Issue, current iteration, hypothesis, experiment, environment/data, retained evidence, result, learning and updated current understanding.
+
+Then provide a **decision-ready checkpoint** containing:
+
+- **Recommended next iteration/action:** one clear recommendation owned by the agent;
+- **Why this is next:** the uncertainty resolved and why it has the highest current information value;
+- **Prerequisite/blocker status:** `None` or, for each item, whether it affected the completed iteration, whether it blocks the next iteration, and the concrete recovery/action;
+- **Owner decision requested:** the exact approval, redirect or material decision required;
+- **Consequence of approval:** what the agent will execute next;
+- **Consequence of non-approval/redirect:** what remains unresolved.
+
+Do not end an iteration report with only "awaiting review", "owner review required", an open-ended problem statement, or a missing prerequisite with no impact/recovery explanation.
 
 For final completion, additionally report the supported technical specification or infeasibility conclusion, limitations, downstream implications, validation result, final PR state and downstream reassessment required.
 

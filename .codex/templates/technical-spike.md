@@ -93,9 +93,13 @@ Append one subsection per completed iteration. Do not delete failed experiments;
 **Method:** <probe/experiment>  
 **Evidence:** <stable repository references and key observations>  
 **Result:** `<Supported | Rejected | Inconclusive>`  
-**Learning:** <what changed in the current understanding>  
-**Next proposed iteration:** <next H#/experiment, or "None — Spike ready to conclude">  
-**Owner checkpoint:** <Approved next iteration / Redirected / Stop / Autonomous continuation>
+**Learning:** <what changed in the current understanding>
+
+- **Recommended next iteration/action:** <one clear recommendation, or "None — Spike ready to conclude">
+- **Why this is next:** <uncertainty resolved / information value>
+- **Prerequisite/blocker status:** <None | item: effect on completed iteration; effect on next iteration; concrete recovery/action>
+- **Owner decision requested:** <Approve Iteration N: ... | Redirect to ... | Decide ...>
+- **Owner checkpoint outcome:** <Pending | Approved | Redirected | Stop | Autonomous continuation>
 
 ## 7. Supported Technical Specification
 
@@ -166,4 +170,4 @@ Record:
 
 **Spike state:** `<Open | Ready to close>`  
 **Rationale:** <why the original Technical Question is or is not resolved>  
-**Required next action:** <owner review / next iteration / downstream reassessment / product decision>
+**Required next action:** <agent-owned recommended action; include blocker recovery and exact owner decision if approval is still required>

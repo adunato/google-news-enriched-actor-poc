@@ -50,7 +50,7 @@ Create and maintain `docs/changes/<issue-number>/technical-spike.md` from the ca
 
 - **Execution path:** Technical Spike
 - **Production implementation:** Prohibited unless separately approved as reusable non-product tooling.
-- **Default iteration mode:** One approved iteration at a time. After each iteration, record the evidence, update the Spike artifact, propose the next hypothesis/experiment, and stop for project-owner review.
+- **Default iteration mode:** One approved iteration at a time. After each iteration, record the evidence, update the Spike artifact, select and recommend the best next hypothesis/experiment, diagnose any blockers/prerequisites, state their impact and recovery path, and present the project owner with the exact approval/decision required. The checkpoint is an authorization boundary, not a transfer of investigative ownership.
 - **Autonomous continuation:** Allowed only when the project owner explicitly authorizes it. Even then, stop before any material change to scope, constraints, dependency model, cost, product/architecture assumptions, safety/risk posture, or the original Technical Question.
 - **Completion:** Keep this Issue open until the original Technical Question is resolved with a supported `Feasible` or `Not feasible` conclusion. Do not create serial Spike Issues merely because an experiment failed or was inconclusive.
 - **Next lifecycle step after completion:** Integrate the final Spike evidence, then rerun `assess-change` on every blocked downstream Issue.
