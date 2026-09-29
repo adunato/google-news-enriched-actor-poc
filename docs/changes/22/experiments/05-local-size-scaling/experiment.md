@@ -14,10 +14,10 @@ Use the exact Iteration 4 dependency lock and `@extractus/article-extractor@9.0.
 
 ## Bounds and stop conditions
 
-- No publisher URL/data, credentials, cookies or network access; synthetic content only.
+- Synthetic content only. The runner contains no network client call; each worker replaces `fetch`, `http.request/get`, and `https.request/get` with a counting function that throws before importing the extractor. The supplied base is `fixture.invalid`.
 - One active worker; 12 cases maximum; five seconds per case; 90-second overall deadline.
 - Maximum 256 KiB input and 1 MiB extracted output per case.
-- Parent Node process and worker each use a 128 MiB old-space limit. Record process RSS; stop above 256 MiB.
+- Launch the parent Node process with `--max-old-space-size=128`; apply a 128 MiB worker old-space limit. Record process RSS; stop above 256 MiB. The worker limit is retained in `results.json`; the parent limit is evidenced by the launch command, not a per-case result field.
 - Stop on lock/package mismatch, attempted network access, raw fixture/output persistence or logging, cap violation, memory breach or overall timeout.
 - No production/shared-code edit and no hosted Actor run.
 
@@ -27,7 +27,9 @@ Retain only case ID, markup shape, actual input bytes, phase/total timings, stat
 
 ## Result
 
-Executed once on local Windows Node `v20.19.0`. The exact lock and installed package were verified as `@extractus/article-extractor@9.0.1`; lock SHA-256: `d40e0664285e6ebdd6222ed452dd91c3fc2f77a4fa5f3abef652e9648868b3e2`. All 12 cases completed as test cases (nine extraction completions and three five-second extraction timeouts) in 27,803.8 ms total. There was no global stop condition, no network attempt, and no retry. Peak recorded process RSS was 76,201,984 bytes; final RSS was 76,201,984 bytes. Parent and worker old-space limits were 128 MiB each.
+Executed once on local Windows Node `v20.19.0`. The exact lock and installed package were verified as `@extractus/article-extractor@9.0.1`; lock SHA-256: `d40e0664285e6ebdd6222ed452dd91c3fc2f77a4fa5f3abef652e9648868b3e2`. All 12 cases completed as test cases (nine extraction completions and three five-second extraction timeouts). The run-level elapsed metric was 27,803.8 ms; the sum of per-case `totalMs` values is 27,190.2 ms. The 613.6 ms difference is unallocated harness overhead between the overall timer boundary and case timers, including input generation/inter-case orchestration and summary assembly; it was not separately phase-timed and is not assigned to extraction. The overall timer starts immediately before the case loop and is sampled while assembling the summary, before writing `results.json`; per-case timers start inside each case after its synthetic HTML is generated. There was no global stop condition or retry.
+
+The runner itself makes no network-client calls, and the worker installs throwing/counting interceptors for global `fetch` and Node HTTP/HTTPS request/get before loading the extractor. The nine completed case records report `networkAttempts: 0`. The three timeout records have `networkAttempts: null` because the worker did not send its counter before termination; telemetry therefore cannot confirm the counter value for those cases. No network activity was observed in completed cases, but zero attempts cannot be claimed for every case from retained metrics. Peak recorded process RSS was 76,201,984 bytes; final RSS was 76,201,984 bytes. The parent was launched with `--max-old-space-size=128`; each worker used `maxOldGenerationSizeMb: 128`. Only the worker limit is recorded as a result field.
 
 | Synthetic shape | 16 KiB | 32 KiB | 64 KiB | 128 KiB | 192 KiB | 256 KiB |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
