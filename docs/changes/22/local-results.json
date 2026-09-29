@@ -19,11 +19,7 @@
     "googleMaxBytes": 2097152,
     "publisherMaxBytes": 262144,
     "feedMaxBytes": 2097152,
-    "retryStatuses": [
-      408,
-      425,
-      429
-    ],
+    "retryStatuses": [408, 425, 429],
     "retry5xx": true,
     "retryNetworkErrors": true,
     "perHostDelayMs": 250,
@@ -251,11 +247,7 @@
       "publisherUrlHash": "b070af934fa113c365a64a5793b3ba999fa639ab85bf4be75af02ebe441547f6",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
-      "identityMatchedSignals": [
-        "h1",
-        "og:title",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -312,10 +304,7 @@
       "publisherUrlHash": "d995e5681751b39891721bb250bbf88e0a2ffa17cb6ea66efcfd4cc8441cca5b",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:og:title,jsonld:headline",
-      "identityMatchedSignals": [
-        "og:title",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["og:title", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -446,11 +435,7 @@
       "publisherUrlHash": "1b7b0ee96323226ccaadbd441ec52c9c0b70df72657d6b3628a3d505c2b85560",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
-      "identityMatchedSignals": [
-        "h1",
-        "og:title",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -557,11 +542,7 @@
       "publisherUrlHash": "f4f63f43e07901c4bd77e4e7be89ddf7f20be6328e09ee067d539e62373e8835",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
-      "identityMatchedSignals": [
-        "h1",
-        "og:title",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -706,11 +687,7 @@
       "publisherUrlHash": "35083b42d62164743f7626351102790186247276541080073ac8e46929a7956a",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
-      "identityMatchedSignals": [
-        "h1",
-        "og:title",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -929,10 +906,7 @@
       "publisherUrlHash": "380f7513fa7ed195e2cd4c06447a878d91bd28231be40f58965ada96dcce38d9",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:og:title,jsonld:headline",
-      "identityMatchedSignals": [
-        "og:title",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["og:title", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -989,11 +963,7 @@
       "publisherUrlHash": "1c130b88e9d0e2336101ccc94d0211670206565b52b23d067cbad7f5ad4ca64f",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
-      "identityMatchedSignals": [
-        "h1",
-        "og:title",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -1050,9 +1020,7 @@
       "publisherUrlHash": "29b9c90004d367c990909055e7748c81a9660f732d9fbd039ed71bb378a14e5e",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:og:title",
-      "identityMatchedSignals": [
-        "og:title"
-      ],
+      "identityMatchedSignals": ["og:title"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -1138,9 +1106,7 @@
       "publisherUrlHash": "c09c77f6cd565840aeecc593e3584c61245cf4906d5427c4fe70261162e95669",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1",
-      "identityMatchedSignals": [
-        "h1"
-      ],
+      "identityMatchedSignals": ["h1"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -1193,10 +1159,7 @@
       "publisherUrlHash": "7aede3a9618b2ea54c7db5b61b75841fe96093796ea856dad1d961694b6591f3",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:og:title,jsonld:headline",
-      "identityMatchedSignals": [
-        "og:title",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["og:title", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -1253,10 +1216,7 @@
       "publisherUrlHash": "b6184dda036e73a3aaf21b5c48d9f299c099d70d51cf30d6a47ddd58a7cbb336",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,jsonld:headline",
-      "identityMatchedSignals": [
-        "h1",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["h1", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -1313,11 +1273,7 @@
       "publisherUrlHash": "12abc5eec98fce586b76a9b6306265f3741b16170509b5534a48bc8b19fd1429",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
-      "identityMatchedSignals": [
-        "h1",
-        "og:title",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -1374,10 +1330,7 @@
       "publisherUrlHash": "c8d1eb0251f4d18aa91727c6710c2c0b68784354504d062890caae30b27d032d",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,og:title",
-      "identityMatchedSignals": [
-        "h1",
-        "og:title"
-      ],
+      "identityMatchedSignals": ["h1", "og:title"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "not_found",
@@ -1434,10 +1387,7 @@
       "publisherUrlHash": "b6184dda036e73a3aaf21b5c48d9f299c099d70d51cf30d6a47ddd58a7cbb336",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,jsonld:headline",
-      "identityMatchedSignals": [
-        "h1",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["h1", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -1494,10 +1444,7 @@
       "publisherUrlHash": "ae11e987d1eb9587a58e66ff41a0d5ff234d84d022895fafb06b0943f1b4f7e7",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,og:title",
-      "identityMatchedSignals": [
-        "h1",
-        "og:title"
-      ],
+      "identityMatchedSignals": ["h1", "og:title"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -1587,11 +1534,7 @@
       "publisherUrlHash": "19d1c38b2cb8ba0920247c925a9d08c4c904e053a353b2d04234f84897decb76",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
-      "identityMatchedSignals": [
-        "h1",
-        "og:title",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -1648,9 +1591,7 @@
       "publisherUrlHash": "11603b53c3521746fa4673f7dfdfdc5f823cdad0cd3063c00eb9890d8688911c",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1",
-      "identityMatchedSignals": [
-        "h1"
-      ],
+      "identityMatchedSignals": ["h1"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -1703,11 +1644,7 @@
       "publisherUrlHash": "329e82269810cae53c7ac2b94689c13730694b088680830f854fab110abcff40",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
-      "identityMatchedSignals": [
-        "h1",
-        "og:title",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",
@@ -1764,11 +1701,7 @@
       "publisherUrlHash": "e3555122ebb9e821f6870ca7a7cdd941d81ec9f5a416cdedab39856a53948156",
       "identityStatus": "confirmed_match",
       "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
-      "identityMatchedSignals": [
-        "h1",
-        "og:title",
-        "jsonld:headline"
-      ],
+      "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
       "retryUsed": false,
       "retryReason": null,
       "robotsSignal": "allowed",

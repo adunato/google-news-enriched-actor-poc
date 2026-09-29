@@ -28,24 +28,24 @@ Issue #5 requires at least 50% readable full-text extraction on its representati
 
 The completed run covered 30/30 rows and all ten query/edition cells (three rows per cell), with 21 distinct publisher hostnames. The probe window was `2026-09-29T14:45:12.875Z` to `2026-09-29T14:45:47.777Z` UTC.
 
-| Observation | Count |
-| --- | ---: |
-| Candidate publisher destinations | 30/30 |
-| HTTP 200 HTML | 19/30 |
-| HTTP 403 | 4/30 |
-| HTTP 451 | 1/30 |
-| Skipped: robots unavailable | 4/30 |
-| Skipped: robots disallowed | 2/30 |
-| Robots file not found (page request proceeded) | 1/30 |
-| Article-like HTML marker | 19/30 |
-| Headline identity heuristic matched | 19/30 |
-| Generic challenge/denial text heuristic signalled | 5/30 |
+| Observation                                       | Count |
+| ------------------------------------------------- | ----: |
+| Candidate publisher destinations                  | 30/30 |
+| HTTP 200 HTML                                     | 19/30 |
+| HTTP 403                                          |  4/30 |
+| HTTP 451                                          |  1/30 |
+| Skipped: robots unavailable                       |  4/30 |
+| Skipped: robots disallowed                        |  2/30 |
+| Robots file not found (page request proceeded)    |  1/30 |
+| Article-like HTML marker                          | 19/30 |
+| Headline identity heuristic matched               | 19/30 |
+| Generic challenge/denial text heuristic signalled |  5/30 |
 
 Robots outcomes are counted per row: 23 allowed, four unavailable, two disallowed, and one not found. The generic challenge/denial heuristic is not proof of a CAPTCHA or a particular access-control system. Article markers and headline matches are shallow page signals; neither establishes readable article text or content identity.
 
 Publisher-stage elapsed time averaged 423.9 ms across rows (including robots-skipped rows, which can be near zero); maximum was 1,191 ms. Local resource cost is not a useful estimate of Apify hosted cost. No Apify run, hosted log, or hosted cost evidence was produced because the installed CLI had account metadata but no token in the environment or stored auth.
 
-Sanitized row evidence is [`local-results.json`](local-results.json), SHA-256 `b2d65667d0efebe8b33f8d525819bfc767cf51ee4394169eac1f796af7038f11`. The fresh RSS row-array hash is `d56e23c8a266312e7ed5afd82643d18330caf2c52cad5708ff6754e50696e0d1`.
+Sanitized row evidence is [`local-results.json`](local-results.json), SHA-256 `cb5f44ed758ed8c6d267d541f3ea9b8e0f9d11e1f0b707e7bb01c7fa616d34c5`. The fresh RSS row-array hash is `d56e23c8a266312e7ed5afd82643d18330caf2c52cad5708ff6754e50696e0d1`.
 
 ## Findings
 

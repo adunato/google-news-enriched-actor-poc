@@ -403,7 +403,9 @@ async function paceHost(value) {
   const key = host(value);
   const prior = hostQueues.get(key) ?? Promise.resolve();
   let release;
-  const current = new Promise((resolve) => { release = resolve; });
+  const current = new Promise((resolve) => {
+    release = resolve;
+  });
   hostQueues.set(key, current);
   await prior.catch(() => {});
   const delay = (hostNextRequestAt.get(key) ?? 0) - Date.now();
@@ -413,7 +415,8 @@ async function paceHost(value) {
 }
 function robotsAllows(text, pathname) {
   const groups = [];
-  let agents = [], rules = [];
+  let agents = [],
+    rules = [];
   for (const raw of text.split(/\r?\n/)) {
     const line = raw.replace(/#.*/, "").trim();
     const sep = line.indexOf(":");
@@ -421,40 +424,61 @@ function robotsAllows(text, pathname) {
     const key = line.slice(0, sep).trim().toLowerCase();
     const value = line.slice(sep + 1).trim();
     if (key === "user-agent") {
-      if (rules.length) { groups.push({ agents, rules }); agents = []; rules = []; }
+      if (rules.length) {
+        groups.push({ agents, rules });
+        agents = [];
+        rules = [];
+      }
       agents.push(value.toLowerCase());
     } else if ((key === "allow" || key === "disallow") && agents.length && value) {
       rules.push({ allow: key === "allow", path: value });
     }
   }
   if (agents.length) groups.push({ agents, rules });
-  const applicable = groups.filter((g) => g.agents.includes("*") || g.agents.some((a) => a !== "*" && ua.toLowerCase().includes(a)));
-  const matching = applicable.flatMap((g) => g.rules).filter((r) => pathname.startsWith(r.path)).sort((a, b) => b.path.length - a.path.length);
+  const applicable = groups.filter(
+    (g) =>
+      g.agents.includes("*") || g.agents.some((a) => a !== "*" && ua.toLowerCase().includes(a)),
+  );
+  const matching = applicable
+    .flatMap((g) => g.rules)
+    .filter((r) => pathname.startsWith(r.path))
+    .sort((a, b) => b.path.length - a.path.length);
   return !matching.length || matching[0].allow;
 }
 const robotsCache = new Map();
 async function robotsSignal(value) {
-  const u = new URL(value), key = u.origin;
-  if (!robotsCache.has(key)) robotsCache.set(key, (async () => {
-    const robotsUrl = `${u.origin}/robots.txt`;
-    await paceHost(robotsUrl);
-    const opened = await requestPinnedPublicHttp(robotsUrl, {
-      headers: { accept: "text/plain", "accept-encoding": "identity", "user-agent": ua },
-      timeoutMs: CONFIG.timeoutMs,
-    });
-    if (!opened.ok) return { signal: "unavailable", status: null };
-    try {
-      const res = opened.response;
-      if (res.statusCode === 404) return { signal: "not_found", status: 404 };
-      if (res.statusCode < 200 || res.statusCode >= 300) return { signal: "unavailable", status: res.statusCode };
-      const prefix = await boundedNodePrefix(res, CONFIG.publisherMaxBytes);
-      if (prefix.truncated) return { signal: "truncated_unknown", status: res.statusCode };
-      return { text: prefix.text, signal: "readable", status: res.statusCode };
-    } finally { opened.close(); }
-  })());
+  const u = new URL(value),
+    key = u.origin;
+  if (!robotsCache.has(key))
+    robotsCache.set(
+      key,
+      (async () => {
+        const robotsUrl = `${u.origin}/robots.txt`;
+        await paceHost(robotsUrl);
+        const opened = await requestPinnedPublicHttp(robotsUrl, {
+          headers: { accept: "text/plain", "accept-encoding": "identity", "user-agent": ua },
+          timeoutMs: CONFIG.timeoutMs,
+        });
+        if (!opened.ok) return { signal: "unavailable", status: null };
+        try {
+          const res = opened.response;
+          if (res.statusCode === 404) return { signal: "not_found", status: 404 };
+          if (res.statusCode < 200 || res.statusCode >= 300)
+            return { signal: "unavailable", status: res.statusCode };
+          const prefix = await boundedNodePrefix(res, CONFIG.publisherMaxBytes);
+          if (prefix.truncated) return { signal: "truncated_unknown", status: res.statusCode };
+          return { text: prefix.text, signal: "readable", status: res.statusCode };
+        } finally {
+          opened.close();
+        }
+      })(),
+    );
   const cached = await robotsCache.get(key);
   if (cached.signal !== "readable") return cached;
-  return { signal: robotsAllows(cached.text, u.pathname) ? "allowed" : "disallowed", status: cached.status };
+  return {
+    signal: robotsAllows(cached.text, u.pathname) ? "allowed" : "disallowed",
+    status: cached.status,
+  };
 }
 async function getDestination(row, candidate) {
   const publisherStartedAt = Date.now();
@@ -474,7 +498,28 @@ async function getDestination(row, candidate) {
       const robots = await robotsSignal(url);
       lastRobots = robots;
       if (["disallowed", "unavailable", "truncated_unknown"].includes(robots.signal))
-        return { accessStatus: `skipped_robots_${robots.signal}`, httpStatus: null, contentType: null, responseBytes: 0, responsePrefixCapped: false, articleLike: false, challengeLike: false, sourceHostMatch: null, publisherHost: host(url), publisherUrlHash: sha(candidate), pageTitleSignals: [], identityStatus: "unverifiable", identityReason: `robots_${robots.signal}`, identityMatchedSignals: [], retryUsed: false, retryReason: null, stages: [], robotsSignal: robots.signal, robotsStatus: robots.status, publisherElapsedMs: Date.now() - publisherStartedAt };
+        return {
+          accessStatus: `skipped_robots_${robots.signal}`,
+          httpStatus: null,
+          contentType: null,
+          responseBytes: 0,
+          responsePrefixCapped: false,
+          articleLike: false,
+          challengeLike: false,
+          sourceHostMatch: null,
+          publisherHost: host(url),
+          publisherUrlHash: sha(candidate),
+          pageTitleSignals: [],
+          identityStatus: "unverifiable",
+          identityReason: `robots_${robots.signal}`,
+          identityMatchedSignals: [],
+          retryUsed: false,
+          retryReason: null,
+          stages: [],
+          robotsSignal: robots.signal,
+          robotsStatus: robots.status,
+          publisherElapsedMs: Date.now() - publisherStartedAt,
+        };
       await paceHost(url);
       const opened = await requestPinnedPublicHttp(url, {
         headers: {
@@ -573,7 +618,10 @@ async function getDestination(row, candidate) {
     (/<article\b/i.test(body) ||
       /itemtype\s*=\s*["'][^"']*schema\.org\/(?:NewsArticle|Article)/i.test(body) ||
       /<meta\b[^>]*property\s*=\s*["']og:type["'][^>]*content\s*=\s*["']article["']/i.test(body));
-  const challengeLike = /captcha|verify (?:that )?you are human|are you a human|cf-chl-|cloudflare.{0,30}challenge|access denied|automated requests/i.test(body);
+  const challengeLike =
+    /captcha|verify (?:that )?you are human|are you a human|cf-chl-|cloudflare.{0,30}challenge|access denied|automated requests/i.test(
+      body,
+    );
   const identity = classifyIdentity(row.expectedTitle, row.sourceName, titles, bodyCapped);
   const retryUsed = retryPerformed;
   return {
@@ -767,7 +815,8 @@ async function run() {
         "exact NFKC/case/punctuation/space normalized title equality on h1, og:title, or JSON-LD headline; mismatch requires two independent signals agreeing; conflicting or single nonmatching signals are unverifiable",
       destinationPolicy:
         "each publisher URL and redirect is resolved and its full A/AAAA set classified as globally routable; the validated addresses are pinned to the HTTP(S) connection; redirects are manual",
-      robotsPolicy: "Fetch robots.txt before each publisher origin; skip on disallow or unknown/truncated robots; Terms of Service not assessed; no legal conclusion",
+      robotsPolicy:
+        "Fetch robots.txt before each publisher origin; skip on disallow or unknown/truncated robots; Terms of Service not assessed; no legal conclusion",
       perHostDelayMs: CONFIG.perHostDelayMs,
     },
     totalRows: outcomes.length,
@@ -787,23 +836,27 @@ async function run() {
     perCell,
     rows: outcomes.map(({ expectedTitle, pageTitleSignals = [], ...row }) => ({
       ...row,
-      accessClass: row.accessStatus === "skipped_robots_disallowed"
-        ? "robots_disallowed"
-        : row.accessStatus?.startsWith("skipped_robots_")
-          ? "robots_unknown"
-          : [401, 403, 451].includes(row.httpStatus)
-            ? "http_access_denial"
-            : row.challengeLike
-              ? "challenge_or_denial_signal"
-              : row.accessStatus === "http_200_html" && row.articleLike
-                ? "html_article_like_marker"
-                : row.accessStatus === "http_200_html"
-                  ? "html_without_article_like_marker"
-                  : row.contentType
-                    ? "other_http_response"
-                    : "transport_or_unavailable",
+      accessClass:
+        row.accessStatus === "skipped_robots_disallowed"
+          ? "robots_disallowed"
+          : row.accessStatus?.startsWith("skipped_robots_")
+            ? "robots_unknown"
+            : [401, 403, 451].includes(row.httpStatus)
+              ? "http_access_denial"
+              : row.challengeLike
+                ? "challenge_or_denial_signal"
+                : row.accessStatus === "http_200_html" && row.articleLike
+                  ? "html_article_like_marker"
+                  : row.accessStatus === "http_200_html"
+                    ? "html_without_article_like_marker"
+                    : row.contentType
+                      ? "other_http_response"
+                      : "transport_or_unavailable",
       termsSignal: "not_assessed",
-      pageTitleSignals: pageTitleSignals.map(({ kind, value }) => ({ kind, valueSha256: sha(value) })),
+      pageTitleSignals: pageTitleSignals.map(({ kind, value }) => ({
+        kind,
+        valueSha256: sha(value),
+      })),
     })),
   };
   await writeFile(new URL("local-results.json", OUT), JSON.stringify(result, null, 2) + "\n");
