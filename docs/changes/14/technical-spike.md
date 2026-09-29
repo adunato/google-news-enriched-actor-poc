@@ -5,7 +5,7 @@
 **Artifact ID:** `technical-spike-14-google-news-publisher-url`  
 **Status:** `Open`  
 **Owner:** Project owner; executor recorded per iteration  
-**Created / updated:** `2026-09-28`  
+**Created / updated:** `2026-09-29`  
 **GitHub Spike Issue:** [#14](https://github.com/adunato/google-news-enriched-actor-poc/issues/14)  
 **Blocked downstream Issue(s):** [#4](https://github.com/adunato/google-news-enriched-actor-poc/issues/4); #5, #6 and #7 transitively  
 **Spike branch / draft PR:** `spike/14-google-news-publisher-url-resolution` / [PR #21](https://github.com/adunato/google-news-enriched-actor-poc/pull/21)  
@@ -86,100 +86,89 @@ Historical source evidence:
 | H1  | Ordinary redirect/token paths expose the publisher URL reliably.                                                                                 | Simplest HTTP-only mechanism.                                                                                                | Representative matrix resolves >=95/100 correctly.                                                                                                      | Rejected                                                                             |
 | H2  | Google News page markers plus the observed RPC produce publisher destination candidates reliably.                                                | Historical community/implementation lead; direct observation possible.                                                       | Same article-ID-bound flow returns non-Google destinations across representative local/hosted runs.                                                     | Supported for candidate extraction                                                   |
 | H3  | Publisher-page title/content checks can independently prove candidate identity for >=95/100 rows.                                                | Direct publisher evidence would be strong identity confirmation.                                                             | >=95 confirmed matching publisher pages under bounded requests.                                                                                         | Rejected as universal verification method; 79 confirmed, 21 unverifiable             |
-| H4  | The unresolved candidates can be verified without publisher article-body access using independently validated origin/domain/URL-binding signals. | Direct page access is what prevented verification of the remaining rows; these signals exist earlier in the resolution flow. | A precommitted rule discriminates known matches from controlled mismatches, then verifies enough unresolved rows for the full matrix to reach >=95/100. | Capture attempted; positive-control eligibility gate failed; awaiting owner decision |
+| H4  | The unresolved candidates can be verified without publisher article-body access using independently validated origin/domain/URL-binding signals. | Direct page access is what prevented verification of the remaining rows; these signals exist earlier in the resolution flow. | A precommitted rule discriminates known matches from controlled mismatches, then verifies enough unresolved rows for the full matrix to reach >=95/100. | Iteration 3 inconclusive; Iteration 4 control-integrity/calibratability test proposed |
 | H5  | A materially different HTTP-only resolver/verification path is required.                                                                         | Fallback only if H4 cannot establish the required confidence.                                                                | Another bounded approach outperforms the current evidence under the same matrix/constraints.                                                            | Deferred                                                                             |
 
 ## 5. Current Iteration
 
-**Iteration:** `3`  
-**Hypothesis / approach:** `H4 — verify blocked candidates without publisher article-body access`  
+**Iteration:** `4`  
+**Hypothesis / approach:** `H4a — establish control-set integrity and calibratability before unresolved-row application`  
 **Executor:** `Codex`  
-**Owner approval:** `Approved` (2026-09-29; user approval in the active task conversation)
+**Owner approval:** `Pending`
 
 ### Why this iteration
 
-The current mechanism already generates 100/100 candidates and has 79 direct identity confirmations with zero confirmed mismatches. The immediate gap is therefore not another resolver implementation; it is whether the remaining 21 candidates can be verified by evidence that does not depend on publishers allowing the Actor to fetch the article body.
+Iteration 3 did not reject H4. It stopped before threshold selection because fewer than 76 positive controls were eligible, and the failed attempt retained too little aggregate evidence to determine why. The failure-only diagnostic path has since been added and validated.
 
-This is the smallest experiment that can answer that gap while reusing the existing matrix and evidence.
+Review of the H4 protocol also exposed two evidence-integrity conditions that must be fixed before another live calibration can support a conclusion:
 
-### H4 blind-calibration preparation
+1. the 79 historical positive labels prove the identity of the **historical #18 candidate URLs**. A replayed row may be treated as a positive control only when its current candidate hash matches the historical #18 candidate hash; otherwise the historical identity label is stale for the current candidate;
+2. realistic negative controls are required to demonstrate discrimination. Same-publisher title swaps should be used where available; fallback controls must use deterministic real nonmatching titles rather than trivially unrelated synthetic text.
 
-The reproducible pre-outcome protocol and tools are in `docs/changes/14/h4/README.md`. The decision rule requires at least 76/79 positive controls and zero accepted deliberate negative controls. Candidate capture output is sealed; unresolved rows are classified only by a separate application command after an immutable rule freeze. The application stage remains unrun.
+This iteration therefore tests whether H4 is calibratable on a trustworthy control set without examining or classifying the 21 unresolved rows.
 
-### H4 attempt record — 2026-09-29
+### Hypothesis
 
-- The operator observed the bounded capture pass reach control calibration after attempting all 100 rows from the unchanged #18 manifest. The command used no repeat requests and made no publisher-page requests. No independent capture manifest or aggregate artifact was retained, so this completion count is operator-reported rather than independently reproducible.
-- The operator observed the exact calibration gate reason `fewer_than_76_eligible_positive_controls`. The threshold-selection step was not reached, and no rule was frozen. The exact eligible-positive count is unknown.
-- The failed run retained no calibration report, freeze record, sealed candidate pack, per-control counts, request-error counts or other aggregate breakdown. Its incomplete staging directory and lock were cleaned up. The only retained failure evidence is the command outcome recorded here and in the executor handoff.
-- No unresolved-row candidate signals were inspected or classified. The cause of the calibration shortfall is undetermined: retained evidence does not distinguish capture/request failures from insufficient binding/domain/path signals among the positive controls.
-- This result does not disprove H4 or establish that the 95/100 target is infeasible. It establishes only that this capture/calibration attempt did not meet the positive-control eligibility gate. No rerun or post-hoc threshold tuning was performed.
+At least 76 of the 79 historically confirmed rows will replay to the same candidate URL previously confirmed in #18, retain the required article-ID/source-domain/title-path signals, and be distinguishable from realistic precommitted title-mismatch controls with zero accepted negative controls.
 
-**Next owner checkpoint:** decide whether to authorize a separately specified diagnostic iteration that preserves control-only failure counts and bounded request-error totals, or to select another hypothesis. No further H4 replay or threshold change is authorized by this attempt record.
+If this hypothesis is supported, H4 remains viable and a frozen verification rule may be reviewed before a separately approved application to the 21 unresolved rows. If it is not supported, the retained aggregate diagnostics should show whether H4 fails because of candidate instability, request/binding failure, insufficient path evidence, or inadequate discrimination.
 
 ### Experiment
 
-Use the frozen #18 100-row matrix and the existing marker/RPC probe path. Do not refresh the matrix unless the retained evidence is technically insufficient; if a refresh becomes necessary, stop for owner approval because it changes comparability.
+Use the unchanged #18 100-row manifest and the existing bounded Google marker/RPC capture. Do not refresh the sample and do not fetch publisher article bodies.
 
-For all 100 rows, derive verification signals that do not require a successful publisher article-body response:
+1. **Historical-candidate continuity**
+   - for each of the 79 historical `confirmed_match` controls, compare the replayed candidate URL hash with the candidate hash retained in #18;
+   - only a hash-stable row may inherit its historical positive identity label for calibration;
+   - record only aggregate counts in failure diagnostics: candidate available, historical candidate hash stable, marker/article-ID binding, source-domain match, title-path eligibility and combined eligibility.
 
-1. **Google article-ID binding**
-   - confirm that the Google News page/markers used for the RPC correspond to the same article ID as the originating RSS item;
-   - confirm that the RPC request is constructed from those markers for that row.
+2. **Realistic negative controls**
+   - use a different real title from the same publisher where the frozen sample permits;
+   - otherwise select a deterministic real nonmatching title from the known-positive corpus using a precommitted selection rule;
+   - keep the positive row's original source domain so the domain gate cannot make the negative trivially fail;
+   - do not use the synthetic `unrelated controlled mismatch <rowId>` fallback as calibration evidence.
 
-2. **Publisher/source-domain binding**
-   - canonicalise the registrable domain of the candidate publisher URL;
-   - canonicalise the source URL/domain carried by the originating Google News RSS item;
-   - record exact/registrable-domain agreement and any redirect/domain-alias case separately.
+3. **Blind calibration**
+   - keep the 21 unresolved rows sealed and excluded from all calibration/diagnostic output;
+   - require at least 76 hash-stable eligible positives and at least 76 realistic negative controls;
+   - freeze the rule only if at least 76/79 historical positives are accepted and zero negative controls are accepted;
+   - do not alter thresholds after any unresolved-row outcome is available.
 
-3. **Title-to-URL binding**
-   - when the candidate URL exposes meaningful path/query tokens, normalise the RSS title and candidate URL slug/path and calculate a deterministic token-correspondence measure;
-   - record URLs whose path is opaque separately rather than forcing them through the rule.
-
-4. **Repeatability as supporting evidence**
-   - for rows still requiring evidence, perform one independent bounded repeat of the same article-ID/marker/RPC resolution and record whether it returns the same candidate destination;
-   - repeatability is supporting evidence only and must not be treated as standalone identity proof.
-
-5. **Calibrate the decision rule before looking at the 21 unresolved outcomes**
-   - use the 79 previously confirmed matches as positive controls;
-   - create deliberately mismatched negative controls by pairing candidate URLs with incorrect RSS title/source records, including same-publisher mismatches where the sample permits;
-   - define and freeze the verification rule/thresholds from the positive/negative controls;
-   - report sensitivity on known matches and false-positive behaviour on controlled mismatches.
-
-6. **Apply the frozen rule to the 21 unresolved rows**
-   - classify each as `verified`, `contradicted`, or `still unverifiable`;
-   - do not lower thresholds after seeing these rows;
-   - combine these results with the 79 direct title-confirmed rows and report the resulting full-matrix count against 95/100.
+4. **Owner checkpoint after calibration**
+   - if calibration fails, retain the safe control-only failure report and stop;
+   - if calibration succeeds, retain the immutable calibration/freeze evidence and stop **before** running `h4-apply.mjs`;
+   - application to the 21 unresolved rows is a separate owner-approved iteration.
 
 ### Expected evidence
 
-H4 is supported strongly enough to advance the Spike if:
+**Supported:** at least 76 historical positives replay to the exact previously confirmed candidate and pass the frozen binding/domain/path rule; at least 76 realistic negative controls are evaluated; zero negatives pass.
 
-- the non-page-access verification rule demonstrates strong discrimination on the known positive/negative controls;
-- it does not introduce a material false-positive concern;
-- at least 16 of the 21 unresolved rows are newly verified, giving at least 95/100 supported correct publisher URLs overall;
-- no evidence contradicts the marker/RPC article-ID binding.
+**Rejected for this rule:** fewer than 76 historical positives are hash-stable/eligible, or any realistic negative control passes the selected rule.
 
-If the rule cannot be validated responsibly, produces material false positives, or verifies fewer than 16 of the 21 rows, record that result without changing the threshold and propose the next materially different hypothesis inside this same Spike.
+**Inconclusive:** the run cannot reach a trustworthy calibration verdict because of a bounded execution/evidence failure rather than the rule itself.
+
+A successful calibration does **not** complete H4 or Issue #14. It establishes only that the verification rule is safe enough to test against the held-out 21 unresolved rows.
 
 ### Operational bounds
 
-- Reuse retained #18 inputs/evidence wherever possible.
-- No publisher-body fetch is required by this experiment except existing historical evidence; do not add browser/proxy/paywall bypass techniques.
-- At most one independent repeat marker/RPC request for a row when required for the repeatability signal.
-- Preserve existing bounded timeouts, redirect limits and concurrency unless the experiment demonstrates a reason to change them; any material change requires owner review.
-- Do not retain unnecessary article bodies, RPC bodies, cookies, credentials or account state.
-- Candidate URLs may be processed transiently to calculate domain/path evidence; retain only the minimum reproducibility evidence consistent with existing repository privacy/evidence practice.
+- Fixed #18 100-row sample; no refresh.
+- One bounded marker/RPC capture per row; no unresolved-row repeat request in this iteration.
+- No publisher-body requests, browser automation, proxies, paid APIs or paywall bypass.
+- Preserve the existing timeout, redirect, response-size and concurrency limits unless a material change is separately approved.
+- Retain immutable input/tool/config hashes and aggregate control diagnostics only; do not expose unresolved-row metrics or candidate URLs.
+- Keep the candidate pack sealed if calibration succeeds.
+- No production Issue #4 implementation.
 
 ### Stop conditions
 
 Stop and return to the project owner before:
 
-- changing the fixed sample or Issue #4's >=95/100 target;
-- introducing a new paid/proxy/browser dependency;
-- redefining publisher-page accessibility as URL-resolution success/failure;
-- selecting thresholds after inspecting the 21 unresolved outcomes;
-- moving to H5 or another materially different resolver approach;
-- changing Product/Architecture constraints.
+- applying a frozen rule to any of the 21 unresolved rows;
+- changing the fixed sample or >=95/100 requirement;
+- relaxing the positive/negative calibration gates;
+- accepting replayed historical positives whose candidate hash no longer matches #18;
+- introducing a different dependency/resolver family or changing Product/Architecture constraints;
+- moving to H5.
 
 ## 6. Experiment Log
 
@@ -206,6 +195,18 @@ Stop and return to the project owner before:
 **Learning:** 79 hosted rows were confirmed matches, 0 were confirmed mismatches, and 21 were unverifiable. Direct publisher-page access cannot serve as the only verification mechanism because access restrictions prevent evidence on otherwise plausible candidates.  
 **Next proposed iteration:** H4 — independently verify the unresolved candidates without requiring publisher article-body access.  
 **Owner checkpoint:** Historical iteration completed before current Spike lifecycle.
+
+### Iteration 3 — H4 blind-calibration attempt
+
+**Hypothesis:** The 79 historical positives could calibrate a non-page-access domain/title-path verification rule strongly enough to freeze it before evaluating the 21 unresolved rows.  
+**Executor:** Codex / operator-assisted live execution  
+**Environment/data:** Unchanged #18 frozen 100-row matrix; bounded Google News marker/RPC requests; no publisher-page requests.  
+**Method:** Capture current candidates, calibrate only on the 79 historical positives plus deliberate negatives, and freeze only after the precommitted gates pass.  
+**Evidence:** Operator-observed completion of the 100-row capture followed by `fewer_than_76_eligible_positive_controls`; no calibration/freeze/application artifact was retained. The later failure-only diagnostic tooling is documented under `docs/changes/14/h4/` but did not recreate the failed run.  
+**Result:** `Inconclusive`  
+**Learning:** The attempt did not establish why fewer than 76 positives were eligible and therefore did not reject H4. Review also identified that replayed positive controls must prove candidate-hash continuity with #18 and that fallback negative controls must be realistic enough to test discrimination rather than use trivially unrelated synthetic titles.  
+**Next proposed iteration:** Iteration 4 / H4a — establish historical-candidate continuity and realistic-control calibratability while keeping the 21 unresolved rows sealed.  
+**Owner checkpoint:** Pending approval for Iteration 4; no rerun or unresolved-row application authorized.
 
 ## 7. Supported Technical Specification
 
@@ -248,6 +249,8 @@ Candidate extraction is strongly demonstrated on the tested matrix. Exact identi
 
 ## 8. Remaining Uncertainty
 
+- Whether at least 76 of the 79 historical positive controls replay to the exact candidate URLs whose identities were confirmed in #18.
+- Whether the path/domain rule can reject realistic title mismatches with zero false positives before it is exposed to the unresolved set.
 - Whether a validated non-page-access rule can independently verify at least 16 of the 21 unresolved candidates.
 - The false-positive/false-negative characteristics of domain/URL-binding signals.
 - Whether any unresolved rows require a genuinely different HTTP-only resolution/verification path.
@@ -295,4 +298,4 @@ The current iteration should add its experiment-specific design/probe/evidence u
 
 **Spike state:** `Open`  
 **Rationale:** 79/100 publisher candidates are directly confirmed and 21 remain unverifiable; the original >=95/100 technical question is therefore unresolved.  
-**Required next action:** Project-owner decision whether to authorize a separately specified diagnostic iteration that preserves only positive-control eligibility and request-error aggregates with frozen input/tool hashes, or to select another hypothesis. The 2026-09-29 H4 calibration attempt is complete; no rerun or unresolved-row application is authorized by its result.
+**Required next action:** Project-owner decision whether to approve Iteration 4 / H4a as specified above. The 2026-09-29 H4 attempt is logged as Inconclusive. No live rerun, threshold change or unresolved-row application is authorized until the next iteration is approved.
