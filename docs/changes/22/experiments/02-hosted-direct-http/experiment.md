@@ -38,3 +38,12 @@ See the Iteration 2 evidence table and next owner checkpoint in [`technical-spik
 **Iteration 2 validation: Pass.** The live target runtime was exercised; the exact build and accepted run options were verified; the run completed once with 100/100 rows and ten rows in every planned cell; normal dataset retrieval returned all 100 items; the enforced cost cap and actual platform usage were recorded; and the sanitized dataset/log checks found no raw publisher URLs, title/body fields, or URL values. The private disposable Actor was removed after evidence collection. Local syntax, dependency, and Apify input-schema checks also passed.
 
 **Issue #22 completion validation: Hold / Inconclusive.** Iteration 2 does not resolve the original broader question. Readable full-text extraction, session/state, browser requirements, proxy/managed access, terms/policy/legal boundaries, and reusable final guidance remain open. No production behaviour or Product/Architecture definition changed. `Learnings: None`.
+
+## Next owner decision
+
+Issue #5 does not currently approve a specific readable-text extraction library, algorithm, or dependency. Iteration 2 remains inconclusive for readable text.
+
+- **Option A (recommended):** authorize bounded candidate-method selection/evaluation within Issue #22's direct-HTTP investigation. Any new dependency must be explicitly approved before a hosted run uses it.
+- **Option B:** if the owner judges #22's access investigation sufficient, route readability-method selection to Issue #5 design and stop further access investigation. Current evidence does not meet #22's broader completion criteria, so this option alone does not support closing #22 or claiming a Feasible/Not feasible conclusion. Keep the Spike open unless its criteria are met or the original required outcome is explicitly changed/stopped.
+
+No new run is authorized by this checkpoint alone.
