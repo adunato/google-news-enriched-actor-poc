@@ -2,7 +2,7 @@
 
 **Issue:** [#22](https://github.com/adunato/google-news-enriched-actor-poc/issues/22)
 
-**Status:** Iteration 2 preparation in progress; the Spike remains open.
+**Status:** Iteration 2 recorded; the Spike remains open.
 
 **Iteration result:** Inconclusive for the original Technical Question.
 
@@ -12,7 +12,7 @@ What automated web-access approaches can this news POC/product family responsibl
 
 ## Context and scope
 
-This first iteration tested the lowest-complexity baseline: public direct HTTP access to publisher pages. It did not test session state, browser execution, proxies, managed unblocking, paid APIs, or article-text extraction. The Product and Architecture boundaries remain unchanged.
+The first two iterations tested the lowest-complexity baseline: public direct HTTP access to publisher pages, first locally and then in the target hosted runtime. They did not test session state, browser execution, proxies, managed unblocking, paid APIs, or readable full-text extraction. The Product and Architecture boundaries remain unchanged.
 
 Issue #5 requires at least 50% readable full-text extraction on its representative 100-row sample. This iteration's article marker and headline signals do not measure readable text and cannot satisfy that acceptance criterion.
 
@@ -67,7 +67,7 @@ Sanitized row evidence is [`local-results.json`](local-results.json), SHA-256 `c
 
 ## Conclusion
 
-**Result: Inconclusive.** Direct HTTP access is technically possible for a subset of the sampled public pages, while denials and robots signals require row-level classification and fail-soft behavior. The reduced local sample does not establish useful full-text reliability, hosted runtime behavior, or permission to access any publisher content. The broader access ladder and policy/legal boundaries remain unresolved.
+**Overall Spike result: Inconclusive.** Iterations 1 and 2 show that bounded direct HTTP can retrieve public HTML from a subset of sampled publisher pages, while denials and robots signals require row-level classification and fail-soft behavior. The 100-row hosted sample strengthens the target-runtime access baseline, but neither iteration measured readable full-text extraction. The broader access ladder and policy/legal boundaries remain unresolved; no permission conclusion follows.
 
 ## Iteration 2 plan — hosted direct-HTTP baseline
 
@@ -111,6 +111,43 @@ Sanitized row evidence is [`local-results.json`](local-results.json), SHA-256 `c
 **If approved:** the executor should resolve/verify the ordinary authentication prerequisite, run only the approved hosted baseline with the existing bounded HTTP/robots/privacy controls, retain hosted outcome and cost evidence, update the access-failure classification, and stop at the next decision-ready checkpoint. It should not yet escalate to browser/proxy/unblocker techniques.
 
 **If redirected/not approved:** the Spike remains unable to distinguish local-network behaviour from the target Apify runtime, so escalation-method comparisons would lack a reliable hosted baseline.
+
+## Iteration 2 evidence and checkpoint
+
+**Experiment:** One private disposable Actor run acquired a fresh 100-row cohort inside the Apify Node 20 runtime. It covered five queries across GB and US, ten rows in each of ten cells, and used the existing bounded direct-HTTP and robots procedure. The candidate resolver remains an undocumented Google marker/RPC investigation input, not a product contract.
+
+**Environment and exact execution:** Apify Actor Node `v20.20.2`; Actor `557mC3yknShbfdUFj`, verified private and `LIMITED_PERMISSIONS`; build `VmbZa987nkwekkELF` / `0.2.1`; run `rs8Ld1Hbq48WKaPHi`; status `SUCCEEDED`, exit code 0. Run settings were 256 MiB, 900 seconds, restart disabled, and Apify server-enforced `maxTotalChargeUsd=1` (`isMaxTotalChargeUsdSetByUser=true`). Start `2026-09-29T16:31:21.109Z`; finish `2026-09-29T16:33:32.651Z`; elapsed `131.389` seconds. Platform usage was `$0.0025387885869575873` / `0.0091242361` compute units. Average memory was `72,294,011` bytes; peak `117,448,704` bytes. Average/peak CPU usage was `4.889` / `103.668`; received/sent network bytes were `34,023,567` / `893,821`.
+
+The default dataset API returned 100 items from dataset `i0SFWOp2bDxXlTSiG`; every one of the ten cells contained ten items. There were 73 distinct publisher hosts. Sanitized downloaded dataset SHA-256: `b52c3db653ab34d0fcf64ff33bf22b494deb616b78b708551d423139c10ca0eb`. No raw URL/title/body fields or URL values were found in the dataset; the run log scan also found no URL values. No URL-bearing run input or manifest was uploaded or persisted. The private disposable Actor was deleted after evidence collection; the succeeded run and sanitized dataset remain available for audit. No raw logs, URLs, titles or page bodies were committed.
+
+| Cell | Rows | HTTP 200 HTML | HTTP 403 | Robots unavailable | Robots disallowed | Robots not found | Article-like | Headline match |
+| ---- | ---: | ------------: | ------: | -----------------: | ----------------: | --------------: | -----------: | -------------: |
+| q1-gb | 10 | 6 | 1 | 2 | 1 | 1 | 6 | 6 |
+| q1-us | 10 | 8 | 1 | 1 | 0 | 0 | 8 | 8 |
+| q2-gb | 10 | 7 | 3 | 0 | 0 | 0 | 7 | 7 |
+| q2-us | 10 | 6 | 2 | 1 | 1 | 0 | 6 | 5 |
+| q3-gb | 10 | 7 | 2 | 1 | 0 | 3 | 5 | 7 |
+| q3-us | 10 | 6 | 2 | 0 | 2 | 0 | 6 | 5 |
+| q4-gb | 10 | 9 | 0 | 1 | 0 | 0 | 8 | 8 |
+| q4-us | 10 | 7 | 0 | 2 | 1 | 1 | 7 | 7 |
+| q5-gb | 10 | 7 | 1 | 2 | 0 | 0 | 7 | 7 |
+| q5-us | 10 | 9 | 1 | 0 | 0 | 0 | 9 | 9 |
+
+**Aggregate observations:** All 100 rows resolved to a candidate publisher destination. Access outcomes were HTTP 200 HTML `72/100`, HTTP 403 `13/100`, robots unavailable/skipped `10/100`, and robots disallowed/skipped `5/100`. Five robots files were not found and those page requests proceeded. Robots totals were 80 allowed, 10 unavailable, five disallowed, and five not found. Sixty-nine rows had an article-like HTML marker; 70 matched the headline identity heuristic; 68 met the combined strict marker-and-identity signal. A generic challenge/denial heuristic signalled 29 rows; this is not proof of CAPTCHA or a particular access-control system. These signals do not establish readable article text.
+
+**Iteration result:** `Inconclusive` for the selected local-versus-hosted comparison and the original Technical Question. The hosted run supports that direct HTTP retrieves HTML for a subset of this sample, but the local and hosted cohorts differ in size and selection, so their rates are not a controlled comparison. It does not establish population reliability, readable-text success, or access permission. No retry was run. No Product/Architecture boundary change is supported.
+
+**Current understanding:** The target Apify runtime can resolve all 100 selected Google News destinations and retrieve HTTP 200 HTML for 72 sampled rows under the approved direct-HTTP bounds. Denials and robots-unavailable/disallowed outcomes remain material and must fail soft per row. Robots-not-found is distinct from unavailable/disallowed and was treated as a proceed signal in five rows. HTTP status, article-like marker, and headline match remain separate observations. No content was retained to assess readable extraction.
+
+**Recommended next iteration:** Iteration 3 — measure actual readable-text extraction on a fresh representative 100-row direct-HTTP cohort in Apify Node 20, using the approved Issue #5 extraction approach, with text processed in memory and never retained. Verify the exact extraction method and dependency against the approved Issue #5 design before execution; if it requires a new material dependency or a Product/Architecture boundary change, stop and request that decision first.
+
+**Why this is next:** It resolves the highest-value remaining uncertainty for downstream work: whether the current in-scope direct-HTTP path can produce readable full text at Issue #5's required rate. The current hosted baseline's HTTP 200, HTML marker, and identity results cannot substitute for that acceptance evidence. A fresh sample is required because no HTML or article text was retained from this run.
+
+**Prerequisite/blocker status:** None for recording Iteration 2. The next iteration is blocked on confirming the approved Issue #5 extraction method and that its dependency is already in scope. This is a scope/dependency check, not a platform-authentication problem; recover by reviewing the approved Issue #5 design before preparing Iteration 3. Do not add a new extractor dependency or change Product/Architecture constraints within this iteration.
+
+**Owner decision requested:** **Approve Iteration 3: run one fresh 100-row hosted direct-HTTP cohort and evaluate readable-text extraction using the already-approved Issue #5 approach, subject to confirming its dependency is in scope.** If the approved approach is not yet defined or requires a new dependency, decide whether to authorize that dependency/method as a separate technical boundary before the run.
+
+**Consequence of approval:** Confirm the Issue #5 extraction method, prepare and validate a single bounded hosted iteration, then stop at its checkpoint. **Consequence of redirect/non-approval:** Issue #5's readable-text target remains unmeasured and the Spike remains open; no heavier access method is justified by the present evidence.
 
 ## Downstream implications
 
