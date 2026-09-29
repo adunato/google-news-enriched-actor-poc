@@ -81,96 +81,101 @@ Historical source evidence:
 
 ## 4. Investigation Backlog
 
-| ID  | Hypothesis / approach                                                                                                                            | Why test it                                                                                                                  | Evidence that would support/refute it                                                                                                                   | Status                                                                                                                                                                                                   |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| H1  | Ordinary redirect/token paths expose the publisher URL reliably.                                                                                 | Simplest HTTP-only mechanism.                                                                                                | Representative matrix resolves >=95/100 correctly.                                                                                                      | Rejected                                                                                                                                                                                                 |
-| H2  | Google News page markers plus the observed RPC produce publisher destination candidates reliably.                                                | Historical community/implementation lead; direct observation possible.                                                       | Same article-ID-bound flow returns non-Google destinations across representative local/hosted runs.                                                     | Supported for candidate extraction                                                                                                                                                                       |
-| H3  | Publisher-page title/content checks can independently prove candidate identity for >=95/100 rows.                                                | Direct publisher evidence would be strong identity confirmation.                                                             | >=95 confirmed matching publisher pages under bounded requests.                                                                                         | Rejected as universal verification method; 79 confirmed, 21 unverifiable                                                                                                                                 |
-| H4  | The unresolved candidates can be verified without publisher article-body access using independently validated origin/domain/URL-binding signals. | Direct page access is what prevented verification of the remaining rows; these signals exist earlier in the resolution flow. | A precommitted rule discriminates known matches from controlled mismatches, then verifies enough unresolved rows for the full matrix to reach >=95/100. | H4a stopped before calibration: first due to an input hash-guard defect, then because all known-positive rows failed with `unexpected_redirect_destination`; no calibration or unresolved-row conclusion |
-| H5  | A materially different HTTP-only resolver/verification path is required.                                                                         | Fallback only if H4 cannot establish the required confidence.                                                                | Another bounded approach outperforms the current evidence under the same matrix/constraints.                                                            | Deferred                                                                                                                                                                                                 |
+| ID | Hypothesis / approach | Why test it | Evidence that would support/refute it | Status |
+| --- | --- | --- | --- | --- |
+| H1 | Ordinary redirect/token paths expose the publisher URL reliably. | Simplest HTTP-only mechanism. | Representative matrix resolves >=95/100 correctly. | Rejected |
+| H2 | Google News page markers plus the observed RPC produce publisher destination candidates reliably. | Directly observed mechanism tied to the originating Google News article ID. | Same article-ID-bound flow returns valid non-Google destinations across representative local/hosted runs. | Supported for candidate extraction; historical 100/100 |
+| H3 | Publisher-page title/content checks can independently prove candidate identity for >=95/100 rows. | Direct publisher evidence would be strong identity confirmation. | >=95 confirmed matching publisher pages under bounded requests. | Rejected as a universal verification method; 79 confirmed, 21 inaccessible/unverifiable, 0 confirmed mismatches |
+| H4 | The unresolved candidates can be individually verified without publisher-body access using domain/title-path heuristics. | Attempted to replace publisher-page verification with an independent per-row rule. | A precommitted rule discriminates known positives/negatives and verifies enough held-out rows. | Inconclusive and no longer the preferred closure path. Calibration never occurred; later attempts exposed a Google acquisition/consent issue rather than an identity contradiction. |
+| H5 | Mechanism-level assurance is sufficient for Issue #4: a reproducible article-ID-bound Google marker/RPC result may count as successful URL resolution without requiring the publisher page itself to be fetchable. | Issue #4 requires publisher-URL resolution, not universal publisher-page accessibility. Existing evidence is 100/100 candidate extraction, 79 direct confirmations and 0 confirmed mismatches. | Existing/offline evidence plus a minimal current-compatible replay on known controls shows the same article-bound mechanism remains reproducible, with no material contradiction across the fixed matrix. | **Current** |
+| H6 | A materially different resolver is required. | Fallback only if H5 cannot support an evidence-backed resolver contract. | Existing marker/RPC mechanism cannot be reproduced or produces material contradictions under bounded current-runtime checks. | Deferred |
+
+Publisher/news-site access, anti-bot techniques, proxy/browser escalation and access-policy boundaries are now owned by independent Spike #22. They are not part of Issue #14 closure.
 
 ## 5. Current Iteration
 
-**Iteration:** `4`  
-**Hypothesis / approach:** `H4a — establish control-set integrity and calibratability before unresolved-row application`  
-**Executor:** `Codex`  
-**Owner approval:** `Approved (2026-09-29; explicit approval in the current session)`
+**Iteration:** `6`  
+**Hypothesis / approach:** `H5 — mechanism-level assurance for publisher-URL resolution`  
+**Executor:** `ChatGPT-led evidence synthesis; Codex only for repository-local/offline checks or a separately approved minimal replay`  
+**Owner approval:** `Approved direction (2026-09-29)`
 
 ### Why this iteration
 
-Iteration 3 did not reject H4. It stopped before threshold selection because fewer than 76 positive controls were eligible, and the failed attempt retained too little aggregate evidence to determine why. The failure-only diagnostic path has since been added and validated.
+The investigation had become too focused on independently re-proving each returned publisher URL. That conflated three different capabilities:
 
-Review of the H4 protocol also exposed two evidence-integrity conditions that must be fixed before another live calibration can support a conclusion:
+1. Google News publisher-URL resolution;
+2. ability to access the publisher website automatically;
+3. ability to extract readable article content.
 
-1. the 79 historical positive labels prove the identity of the **historical #18 candidate URLs**. A replayed row may be treated as a positive control only when its current candidate hash matches the historical #18 candidate hash; otherwise the historical identity label is stale for the current candidate;
-2. realistic negative controls are required to demonstrate discrimination. Same-publisher title swaps should be used where available; fallback controls must use deterministic real nonmatching titles rather than trivially unrelated synthetic text.
+Issue #14 blocks #4 and should answer only the first question. Issue #22 now owns the general automated publisher-site access problem, and #5 depends on that Spike.
 
-This iteration therefore tests whether H4 is calibratable on a trustworthy control set without examining or classifying the 21 unresolved rows.
+Historical evidence already shows:
+
+- marker/RPC returned 100/100 syntactically valid non-Google candidates on the fixed representative matrix;
+- the marker/article ID matched the originating Google News article ID for all 100 rows;
+- 79 candidates were independently confirmed by publisher-page title evidence;
+- 0 candidate mismatches were confirmed;
+- the remaining 21 were not shown wrong; they were inaccessible or otherwise unverifiable by the page-access method.
+
+The H4/H4a work did not produce contradictory identity evidence. Its latest failure occurred before marker/RPC extraction because the replay path encountered `consent.google.com`.
 
 ### Hypothesis
 
-At least 76 of the 79 historically confirmed rows will replay to the same candidate URL previously confirmed in #18, retain the required article-ID/source-domain/title-path signals, and be distinguishable from realistic precommitted title-mismatch controls with zero accepted negative controls.
+A valid non-Google destination returned by the reproducible Google marker/RPC mechanism for the same originating Google News article ID can be treated as a successful publisher-URL resolution for Issue #4, without requiring the publisher page itself to be directly fetchable, provided the combined representative evidence shows no material contradiction.
 
-If this hypothesis is supported, H4 remains viable and a frozen verification rule may be reviewed before a separately approved application to the 21 unresolved rows. If it is not supported, the retained aggregate diagnostics should show whether H4 fails because of candidate instability, request/binding failure, insufficient path evidence, or inadequate discrimination.
+### Experiment / evidence synthesis
 
-### Experiment
+Use the fixed #18 evidence set and avoid publisher-page access.
 
-Use the unchanged #18 100-row manifest and the existing bounded Google marker/RPC capture. Do not refresh the sample and do not fetch publisher article bodies.
+1. **Reassess the acceptance meaning**
+   - separate `urlResolved` from later publisher accessibility/full-text status;
+   - confirm Issue #4's >=95/100 criterion is a resolver-output capability criterion rather than a requirement for >=95 direct publisher-page confirmations.
 
-1. **Historical-candidate continuity**
-   - for each of the 79 historical `confirmed_match` controls, compare the replayed candidate URL hash with the candidate hash retained in #18;
-   - only a hash-stable row may inherit its historical positive identity label for calibration;
-   - record only aggregate counts in failure diagnostics: candidate available, historical candidate hash stable, marker/article-ID binding, source-domain match, title-path eligibility and combined eligibility.
+2. **Offline full-matrix assurance**
+   - inspect the retained 100 candidate outputs and article-ID binding evidence;
+   - assess source/domain association or other already-retained provenance signals where available;
+   - identify any positive contradiction rather than treating missing page access as a resolver failure.
 
-2. **Realistic negative controls**
-   - use a different real title from the same publisher where the frozen sample permits;
-   - otherwise select a deterministic real nonmatching title from the known-positive corpus using a precommitted selection rule;
-   - keep the positive row's original source domain so the domain gate cannot make the negative trivially fail;
-   - deduplicate by candidate URL hash plus NFKC/lowercase/normalized title, and count distinct valid pairs toward the 76-control gate;
-   - if first-choice swaps leave fewer than 76 distinct pairs, add further distinct title swaps in deterministic same-publisher-first order until the gate is met or the positive corpus is exhausted;
-   - do not use the synthetic `unrelated controlled mismatch <rowId>` fallback as calibration evidence.
+3. **Independent current corroboration**
+   - review current implementations of the same Google marker/signature/`Fbv4je` mechanism as leads;
+   - record the current-compatible acquisition pattern, especially explicit article-ID parameter-page requests with locale parameters, without treating community code as authoritative specification.
 
-3. **Blind calibration**
-   - keep the 21 unresolved rows sealed and excluded from all calibration/diagnostic output;
-   - require at least 76 hash-stable eligible positives and at least 76 distinct valid candidate/title negative pairs, deduplicated by exact candidate URL hash plus normalized title;
-   - freeze the rule only if at least 76/79 historical positives are accepted and zero negative controls are accepted;
-   - do not alter thresholds after any unresolved-row outcome is available.
+4. **Minimal current-runtime replay only if required**
+   - use known historical positives only;
+   - use the current-compatible Google parameter-page acquisition path rather than publisher-page access;
+   - prove that the article-ID-bound marker/RPC mechanism can still reproduce valid publisher destinations at a representative rate;
+   - do not follow publisher destinations, investigate CAPTCHA/anti-bot workarounds, or broaden into the #22 access problem.
 
-4. **Owner checkpoint after calibration**
-   - if calibration fails, retain the safe control-only failure report and stop;
-   - if calibration succeeds, retain the immutable calibration/freeze evidence and stop **before** running `h4-apply.mjs`;
-   - application to the 21 unresolved rows is a separate owner-approved iteration.
+5. **Final specification**
+   - define exactly what Issue #4 may count as successful resolution;
+   - define fail-soft statuses for Google-resolution failure separately from publisher-page access failure;
+   - state the residual risk that the Google RPC is undocumented and may change.
 
 ### Expected evidence
 
-**Supported:** at least 76 historical positives replay to the exact previously confirmed candidate and pass the frozen binding/domain/path rule; at least 76 realistic negative controls are evaluated; zero negatives pass.
+**Supported:** The retained matrix and any minimum current replay show that the same originating article ID is bound to a valid non-Google publisher destination with no material contradictory evidence, sufficient to support >=95/100 resolution under the Issue #4 definition.
 
-**Rejected for this rule:** fewer than 76 historical positives are hash-stable/eligible, or any realistic negative control passes the selected rule.
+**Rejected:** Material mismatches/contradictions are found, or the mechanism can no longer be reproduced sufficiently in the intended runtime.
 
-**Inconclusive:** the run cannot reach a trustworthy calibration verdict because of a bounded execution/evidence failure rather than the rule itself.
-
-A successful calibration does **not** complete H4 or Issue #14. It establishes only that the verification rule is safe enough to test against the held-out 21 unresolved rows.
+**Inconclusive:** Existing evidence cannot establish the resolver contract and a bounded minimal replay cannot distinguish mechanism failure from transient/environmental acquisition failure.
 
 ### Operational bounds
 
-- Fixed #18 100-row sample; no refresh.
-- One bounded marker/RPC capture per row; no unresolved-row repeat request in this iteration.
-- No publisher-body requests, browser automation, proxies, paid APIs or paywall bypass.
-- Preserve the existing timeout, redirect, response-size and concurrency limits unless a material change is separately approved.
-- Retain immutable input/tool/config hashes and aggregate control diagnostics only; do not expose unresolved-row metrics or candidate URLs.
-- Keep the candidate pack sealed if calibration succeeds.
+- No publisher-page/body requests for identity verification.
+- No browser automation, residential proxies, managed unblockers, CAPTCHA handling or publisher anti-bot circumvention; those belong to #22.
+- Preserve the fixed sample and >=95/100 Issue #4 requirement unless a separate Product/POC decision changes them.
+- Prefer offline retained evidence; make new network requests only where they materially resolve the mechanism-level question.
 - No production Issue #4 implementation.
 
 ### Stop conditions
 
-Stop and return to the project owner before:
+Stop for owner review before:
 
-- applying a frozen rule to any of the 21 unresolved rows;
-- changing the fixed sample or >=95/100 requirement;
-- relaxing the positive/negative calibration gates;
-- accepting replayed historical positives whose candidate hash no longer matches #18;
-- introducing a different dependency/resolver family or changing Product/Architecture constraints;
-- moving to H5.
+- changing Issue #4's acceptance criterion;
+- introducing a different resolver family or paid/excluded dependency;
+- expanding into publisher-site access techniques owned by #22;
+- making Product/Architecture changes;
+- implementing the production resolver.
 
 ## 6. Experiment Log
 
@@ -280,9 +285,9 @@ Stop and return to the project owner before:
 2. Follow the bounded Google News page flow required to obtain markers for that same article ID.
 3. Call the observed marker/RPC endpoint using those row-bound markers.
 4. Parse the returned candidate and reject Google-owned destinations.
-5. Apply the final verification rule established by this Spike before treating the candidate as successfully resolved.
+5. Apply the final mechanism-level assurance rule established by this Spike before treating the candidate as successfully resolved. Direct publisher-page accessibility is not itself required for URL-resolution success; it is a separate downstream capability.
 
-Step 5 remains unresolved and is the subject of the current iteration.
+Step 5 is the subject of the current H5 iteration.
 
 ### Failure modes and handling constraints
 
@@ -303,12 +308,11 @@ Candidate extraction is strongly demonstrated on the tested matrix. Exact identi
 
 ## 8. Remaining Uncertainty
 
-- Whether at least 76 of the 79 historical positive controls replay to the exact candidate URLs whose identities were confirmed in #18.
-- Whether the path/domain rule can reject realistic title mismatches with zero false positives before it is exposed to the unresolved set.
-- Whether a validated non-page-access rule can independently verify at least 16 of the 21 unresolved candidates.
-- The false-positive/false-negative characteristics of domain/URL-binding signals.
-- Whether any unresolved rows require a genuinely different HTTP-only resolution/verification path.
-- The production-time verification rule Issue #4 should implement after the Spike establishes design evidence.
+- Whether the retained full-matrix evidence contains any material contradiction to treating the article-ID-bound marker/RPC destination as the publisher URL.
+- Whether a minimal current-compatible replay on known positives is required, and if so whether it reproduces the historical mechanism sufficiently in the intended runtime.
+- The exact runtime success/failure rule Issue #4 should use for `urlResolved` independently of publisher-page accessibility.
+- The maintenance risk of relying on an undocumented Google marker/RPC mechanism.
+- Publisher-site reachability, anti-bot controls, browser/proxy escalation and permission/policy boundaries are explicitly outside this Spike and are owned by #22.
 
 ## 9. Final Conclusion
 
@@ -351,5 +355,5 @@ The current iteration should add its experiment-specific design/probe/evidence u
 ## Completion
 
 **Spike state:** `Open`  
-**Rationale:** 79/100 publisher candidates are directly confirmed and 21 remain unverifiable; the original >=95/100 technical question is therefore unresolved.  
-**Required next action:** Decide whether the observed `consent.google.com` redirect warrants a separately specified policy investigation or another hypothesis. The corrected H4a rerun and the single control-only diagnostic both stopped before calibration; no negative-control calibration or unresolved-row assessment exists. Any redirect-policy change, further diagnostic or resolver pass requires a separate decision. No H4 capture, threshold/sample change or unresolved-row application is authorized by the completed diagnostic approval.
+**Rationale:** Candidate extraction is historically 100/100 and 79/100 identities were directly confirmed with 0 confirmed mismatches, but the Spike has not yet stated the evidence-backed rule that allows Issue #4 to count a resolved URL independently of publisher-page accessibility.  
+**Required next action:** Execute H5 as an evidence-synthesis/assurance iteration, using retained evidence first and only a minimal current-compatible known-positive replay if materially necessary. Do not continue H4 publisher-access or consent-circumvention work; general automated news-site access is owned by #22.
