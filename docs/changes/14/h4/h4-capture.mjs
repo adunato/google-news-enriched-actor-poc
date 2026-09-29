@@ -3,7 +3,12 @@ import { createCipheriv, randomBytes, randomUUID } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { decideCalibration, sha256, summarizePositiveControlFailure } from "./h4-core.mjs";
+import {
+  decideCalibration,
+  googleNewsUrlHashMatches,
+  sha256,
+  summarizePositiveControlFailure,
+} from "./h4-core.mjs";
 import {
   acquireCaptureLock,
   cleanupStagingDirectory,
@@ -170,8 +175,11 @@ function isNewsGoogleUrl(value) {
 
 async function requestRow(row) {
   const expectedId = articleId(row.googleNewsUrl);
-  const expectedIdHash = expectedId ? sha256(expectedId).slice(0, 16) : null;
-  if (!isNewsGoogleUrl(row.googleNewsUrl) || !expectedId || expectedIdHash !== row.articleIdHash) {
+  if (
+    !isNewsGoogleUrl(row.googleNewsUrl) ||
+    !expectedId ||
+    !googleNewsUrlHashMatches(row.googleNewsUrl, row.articleIdHash)
+  ) {
     return {
       rowId: row.rowId,
       articleIdHash: row.articleIdHash,
@@ -354,12 +362,31 @@ async function main() {
       ) {
         throw new Error("Frozen manifest does not align with historical #18 labels.");
       }
+      if (
+        historicalRow.identityStatus === "confirmed_match" &&
+        !/^[a-f\d]{64}$/i.test(historicalRow.candidateUrlHash ?? "")
+      ) {
+        throw new Error("Historical #18 positive control is missing its exact candidate URL hash.");
+      }
+    }
+    const invalidGoogleNewsInputs = manifest.rows.filter(
+      (row) =>
+        !isNewsGoogleUrl(row.googleNewsUrl) ||
+        !articleId(row.googleNewsUrl) ||
+        !googleNewsUrlHashMatches(row.googleNewsUrl, row.articleIdHash),
+    ).length;
+    if (invalidGoogleNewsInputs > 0) {
+      throw new Error(
+        `Frozen #18 manifest preflight rejected ${invalidGoogleNewsInputs} Google News URL/hash rows; no network requests were made.`,
+      );
     }
     const aliases = aliasesConfig.aliases ?? {};
     const scriptHashes = {};
     for (const file of [
       "h4-capture.mjs",
       "h4-core.mjs",
+      "h4-core.check.mjs",
+      "h4-storage.check.mjs",
       "h4-apply.mjs",
       "h4-storage.mjs",
       "aliases.json",
@@ -371,23 +398,6 @@ async function main() {
     }
     const startedAtUtc = new Date().toISOString();
     const captured = await mapBounded(manifest.rows);
-    const repeatRequested = process.argv.includes("--repeat-unverifiable");
-    if (repeatRequested) {
-      const unresolvedIndexes = manifest.rows
-        .map((row, index) => (labels.get(row.rowId).identityStatus === "unverifiable" ? index : -1))
-        .filter((index) => index >= 0);
-      const repeated = await mapBounded(unresolvedIndexes.map((index) => manifest.rows[index]));
-      repeated.forEach((result, offset) => {
-        captured[unresolvedIndexes[offset]].repeat = {
-          markerRpcBound: result.markerRpcBound,
-          candidateUrlHash: result.candidateUrlHash ?? null,
-          agreesWithInitial:
-            !!result.candidateUrlHash &&
-            result.candidateUrlHash === captured[unresolvedIndexes[offset]].candidateUrlHash,
-          failure: result.failure ?? null,
-        };
-      });
-    }
     const captureCompletedAtUtc = new Date().toISOString();
     const positiveRows = captured.flatMap((row, index) => {
       const input = manifest.rows[index];
@@ -399,6 +409,9 @@ async function main() {
           sourceHost: input.sourceHost,
           candidateUrl: row.candidateUrl,
           binding: row.bindingStatus === "matched",
+          hashStable:
+            !!row.candidateUrlHash &&
+            row.candidateUrlHash === labels.get(input.rowId).candidateUrlHash,
         },
       ];
     });
@@ -418,6 +431,9 @@ async function main() {
               title: input.expectedTitle,
               sourceHost: input.sourceHost,
               knownPositive: true,
+              historicalCandidateHashStable:
+                !!row.candidateUrlHash &&
+                row.candidateUrlHash === labels.get(input.rowId).candidateUrlHash,
             },
           ];
         }),
@@ -440,7 +456,7 @@ async function main() {
           maxRedirects: MAX_REDIRECTS,
           maxResponseBytes: MAX_BYTES,
           concurrency: CONCURRENCY,
-          repeatRequested: process.argv.includes("--repeat-unverifiable"),
+          maxRequestsPerRow: 1,
         },
         positiveControlDiagnostics: controlDiagnostics,
       };
@@ -461,14 +477,15 @@ async function main() {
         throw error;
       }
       throw new Error(
-        `H4 calibration failed: ${calibration.reason}. A control-only failure report was written; no unresolved rows were classified and no freeze was written.`,
+        `H4a calibration failed: ${calibration.reason}. A control-only failure report was written; no unresolved rows were classified and no freeze was written.`,
       );
     }
     const freeze = {
       artifact: "issue14-h4-rule-freeze-v1",
       frozenAtUtc: new Date().toISOString(),
       issue: 14,
-      hypothesis: "H4",
+      hypothesis: "H4a",
+      iteration: 4,
       sample: {
         rows: manifest.rows.length,
         rowsSha256: manifest.rowsSha256,
@@ -485,9 +502,8 @@ async function main() {
         maxRedirects: MAX_REDIRECTS,
         maxResponseBytes: MAX_BYTES,
         concurrency: CONCURRENCY,
-        maxRepeatPerRow: 1,
-        repeatPerformed: repeatRequested,
-        repeatScope: repeatRequested ? "historically_unverifiable_rows" : "none",
+        maxRequestsPerRow: 1,
+        repeatPerformed: false,
       },
       rule: calibration.rule,
       metrics: calibration.metrics,
@@ -517,7 +533,7 @@ async function main() {
       positiveControlIds: positiveRows.map((row) => row.rowId),
       negativeControlTypes: {
         samePublisherTitleSwap: calibration.metrics.samePublisherNegativeControls,
-        syntheticUnrelatedTitle: calibration.metrics.syntheticNegativeControls,
+        knownPositiveCorpusTitleSwap: calibration.metrics.knownPositiveCorpusTitleSwaps,
       },
       rule: calibration.rule,
       metrics: calibration.metrics,
@@ -540,7 +556,7 @@ async function main() {
     ]);
     stage = undefined;
     console.log(
-      "H4 capture complete. Full candidate payload is encrypted; calibration output contains only known positives and synthetic controls.",
+      "H4a capture complete. Full candidate payload is encrypted; calibration output contains only control IDs and aggregates.",
     );
   } finally {
     await cleanupStagingDirectory(stage);

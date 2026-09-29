@@ -5,6 +5,14 @@ import { getDomain } from "tldts";
 
 export const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 
+export function googleNewsUrlHashMatches(googleNewsUrl, articleIdHash) {
+  return (
+    typeof googleNewsUrl === "string" &&
+    typeof articleIdHash === "string" &&
+    sha256(googleNewsUrl).slice(0, 16) === articleIdHash
+  );
+}
+
 export function h4Verdict(priorConfirmed, newlyVerified, contradicted) {
   const totalSupported = priorConfirmed + newlyVerified;
   const supported = newlyVerified >= 16 && totalSupported >= 95 && contradicted === 0;
@@ -86,38 +94,98 @@ export function sourceDomainMatches(sourceHost, candidateUrl, aliases = {}) {
   return allowed.has(target);
 }
 
+function normalizedControlTitle(value) {
+  return String(value ?? "")
+    .normalize("NFKC")
+    .toLocaleLowerCase("en-US")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
 export function makeNegativeControls(positiveRows, aliases = {}) {
-  const usableRows = positiveRows.filter((row) => row.candidateUrl);
+  const usableRows = positiveRows.filter(
+    (row) =>
+      row.hashStable === true &&
+      row.candidateUrl &&
+      row.title &&
+      sourceDomainMatches(row.sourceHost, row.candidateUrl, aliases),
+  );
   const byDomain = new Map();
-  for (const row of usableRows) {
+  const orderedRows = [...usableRows].sort((a, b) => a.rowId.localeCompare(b.rowId));
+  for (const row of orderedRows) {
     const domain = registrableDomain(row.sourceHost);
     if (!domain) continue;
     if (!byDomain.has(domain)) byDomain.set(domain, []);
     byDomain.get(domain).push(row);
   }
-  return usableRows.map((row) => {
-    const domain = registrableDomain(row.sourceHost);
-    const samePublisher = (byDomain.get(domain) ?? []).find(
-      (other) => other.rowId !== row.rowId && other.title !== row.title,
-    );
-    const title = samePublisher
-      ? samePublisher.title
-      : `unrelated controlled mismatch ${row.rowId}`;
-    return {
+  const controlsByPair = new Map();
+  const addControl = (row, selected, samePublisher) => {
+    const title = selected.title;
+    const normalizedTitle = normalizedControlTitle(title);
+    if (!normalizedTitle || normalizedTitle === normalizedControlTitle(row.title)) return;
+    const control = {
       controlId: `negative-${sha256(`${row.rowId}\0${title}`).slice(0, 16)}`,
-      type: samePublisher ? "same_publisher_title_swap" : "synthetic_unrelated_title",
+      type: samePublisher ? "same_publisher_title_swap" : "known_positive_corpus_title_swap",
       sourceHost: row.sourceHost,
       title,
       candidateUrl: row.candidateUrl,
       originalPositiveRowId: row.rowId,
-      aliasMatch: sourceDomainMatches(row.sourceHost, row.candidateUrl, aliases),
+      aliasMatch: true,
     };
-  });
+    const pairKey = sha256(`${sha256(row.candidateUrl)}\0${normalizedTitle}`);
+    const existing = controlsByPair.get(pairKey);
+    if (!existing || (existing.type !== "same_publisher_title_swap" && samePublisher)) {
+      controlsByPair.set(pairKey, control);
+    }
+  };
+  const choicesFor = (row) => {
+    const domain = registrableDomain(row.sourceHost);
+    const samePublisherRows = (byDomain.get(domain) ?? []).filter(
+      (other) =>
+        other.rowId !== row.rowId &&
+        normalizedControlTitle(other.title) !== normalizedControlTitle(row.title),
+    );
+    const samePublisherTitles = new Set(
+      samePublisherRows.map((other) => normalizedControlTitle(other.title)),
+    );
+    const corpusRows = orderedRows.filter(
+      (other) =>
+        other.rowId !== row.rowId &&
+        normalizedControlTitle(other.title) !== normalizedControlTitle(row.title) &&
+        !samePublisherTitles.has(normalizedControlTitle(other.title)),
+    );
+    return [
+      ...samePublisherRows.map((selected) => ({ selected, samePublisher: true })),
+      ...corpusRows.map((selected) => ({ selected, samePublisher: false })),
+    ];
+  };
+
+  for (const row of orderedRows) {
+    const choice = choicesFor(row)[0];
+    if (choice) addControl(row, choice.selected, choice.samePublisher);
+  }
+
+  // A fixed corpus may repeat the same candidate/title pairing across rows.
+  // Add deterministic alternate real titles until the distinct-pair gate is met.
+  if (controlsByPair.size < 76) {
+    for (const row of orderedRows) {
+      for (const choice of choicesFor(row)) {
+        const before = controlsByPair.size;
+        addControl(row, choice.selected, choice.samePublisher);
+        if (controlsByPair.size >= 76) break;
+        if (controlsByPair.size === before) continue;
+      }
+      if (controlsByPair.size >= 76) break;
+    }
+  }
+  return [...controlsByPair.values()];
 }
 
 export function decideCalibration(positiveRows, aliases = {}) {
   const positives = positiveRows.map((row) => ({
     rowId: row.rowId,
+    hashStable: row.hashStable === true,
     binding: row.binding,
     domainMatch: sourceDomainMatches(row.sourceHost, row.candidateUrl, aliases),
     correspondence: pathCorrespondence(row.title, row.candidateUrl),
@@ -132,7 +200,11 @@ export function decideCalibration(positiveRows, aliases = {}) {
   const candidateScores = positives
     .filter(
       (x) =>
-        x.binding && x.domainMatch && x.correspondence.determinate && x.correspondence.matched >= 2,
+        x.hashStable &&
+        x.binding &&
+        x.domainMatch &&
+        x.correspondence.determinate &&
+        x.correspondence.matched >= 2,
     )
     .map((x) => x.correspondence.score)
     .sort((a, b) => b - a);
@@ -146,14 +218,15 @@ export function decideCalibration(positiveRows, aliases = {}) {
   if (controls.length < 76) {
     return {
       ok: false,
-      reason: "fewer_than_76_negative_controls",
-      negativeControls: controls.length,
+      reason: "fewer_than_76_unique_negative_control_pairs",
+      uniqueNegativeControlPairs: controls.length,
     };
   }
   const threshold = candidateScores[75];
   const positiveAccepted = positives.filter(
     (x) =>
       x.binding &&
+      x.hashStable &&
       x.domainMatch &&
       x.correspondence.determinate &&
       x.correspondence.matched >= 2 &&
@@ -192,14 +265,18 @@ export function decideCalibration(positiveRows, aliases = {}) {
     },
     metrics: {
       positiveControls: positives.length,
+      hashStablePositiveControls: positives.filter((x) => x.hashStable).length,
+      eligiblePositiveControls: candidateScores.length,
       positiveAccepted,
       positiveSensitivity: positiveAccepted / positives.length,
       negativeControls: controls.length,
+      uniqueNegativeControlPairs: controls.length,
       negativeAccepted,
       samePublisherNegativeControls: controls.filter((x) => x.type === "same_publisher_title_swap")
         .length,
-      syntheticNegativeControls: controls.filter((x) => x.type === "synthetic_unrelated_title")
-        .length,
+      knownPositiveCorpusTitleSwaps: controls.filter(
+        (x) => x.type === "known_positive_corpus_title_swap",
+      ).length,
       falsePositiveRate: negativeAccepted / controls.length,
     },
   };
@@ -218,6 +295,7 @@ export function summarizePositiveControlFailure(rows, aliases = {}) {
     "rpc_destination_missing_or_invalid",
   ]);
   let candidateAvailable = 0;
+  let historicalCandidateHashStable = 0;
   let bindingMatched = 0;
   let sourceDomainMatched = 0;
   let titlePathEligible = 0;
@@ -226,6 +304,7 @@ export function summarizePositiveControlFailure(rows, aliases = {}) {
 
   for (const row of positives) {
     if (row.candidateUrl) candidateAvailable++;
+    if (row.historicalCandidateHashStable === true) historicalCandidateHashStable++;
     const binding = row.bindingStatus === "matched" && row.markerRpcBound === true;
     if (binding) bindingMatched++;
     const domain = sourceDomainMatches(row.sourceHost, row.candidateUrl, aliases);
@@ -233,7 +312,9 @@ export function summarizePositiveControlFailure(rows, aliases = {}) {
     const correspondence = pathCorrespondence(row.title, row.candidateUrl);
     const titleEligible = correspondence.determinate && correspondence.matched >= 2;
     if (titleEligible) titlePathEligible++;
-    if (binding && domain && titleEligible) eligiblePositiveControls++;
+    if (row.historicalCandidateHashStable === true && binding && domain && titleEligible) {
+      eligiblePositiveControls++;
+    }
 
     if (row.failure) {
       const bucket = /^rpc_http_\d+$/.test(row.failure)
@@ -259,6 +340,7 @@ export function summarizePositiveControlFailure(rows, aliases = {}) {
   return {
     positiveControlsExpected: positives.length,
     positiveControlsWithCandidate: candidateAvailable,
+    historicalCandidateHashStable,
     markerBindingMatched: bindingMatched,
     sourceDomainMatched,
     titlePathEligible,

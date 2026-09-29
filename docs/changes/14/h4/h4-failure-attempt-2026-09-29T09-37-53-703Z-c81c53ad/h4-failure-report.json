@@ -1,0 +1,43 @@
+{
+  "artifact": "issue14-h4-calibration-failure-v1",
+  "recordedAtUtc": "2026-09-29T09:37:53.703Z",
+  "gateReason": "fewer_than_76_eligible_positive_controls",
+  "inputHashes": {
+    "manifestFileSha": "d1ed2bea31efc54358ac24d991a9037ec0f0840ccd50547c01bd794c64389f3c",
+    "manifestRowsSha256": "fdbab474e5764350c547080c0002f042b062e03f157a270d5b9474d846ad2f2a",
+    "historicalLabelsFileSha": "00bce29a5d0582f0cb82f6d8e685d60075932b9e9659247233566c4fb88b4788",
+    "historicalHostedManifestSha256": "aaa88dc26c22f9ae31c559f5bd6deb0f2b74da1985444bdb456b49b43b04dc5c",
+    "aliasConfigSha": "2913d219900778d4c94f44571403ed085be7bedd90e58c3b38c1107dcd6829fd"
+  },
+  "codeHashes": {
+    "h4-capture.mjs": "425b85ece72f354c4f746ac67b245acec6508dfffe834d8f05129e3f33d5c38c",
+    "h4-core.mjs": "89d4c4998ac158483f7780f11cde97297c3acb0120396d1978a588c48971bb64",
+    "h4-core.check.mjs": "50591f47834cea01825b84d5a3cd31a1871b977c4c2eb11044faddeb95cf2e14",
+    "h4-storage.check.mjs": "26e78159f1cd078e3b3cb4449f82743935c94f88ce5a0a24e2bd9dcdd79c9483",
+    "h4-apply.mjs": "0705da71341b84f5464c3d78be84912ebb2030ffcaea5d060d435754e042407a",
+    "h4-storage.mjs": "d1836f71271aec6e1916bf37e2be9aafa2d0540c227b0560349c6282f304deb1",
+    "aliases.json": "2913d219900778d4c94f44571403ed085be7bedd90e58c3b38c1107dcd6829fd",
+    "package.json": "8c4db7037f2d1265f60675ad2b71abc4ef71c025f75bffd207cb341f549c1a06",
+    "package-lock.json": "9c251ffe50f7c9645b582180c7ecd7a81c30e37d10cf4c06df758a82ba09dd9b"
+  },
+  "operationalBounds": {
+    "timeoutMs": 10000,
+    "maxRedirects": 5,
+    "maxResponseBytes": 2097152,
+    "concurrency": 4,
+    "maxRequestsPerRow": 1
+  },
+  "positiveControlDiagnostics": {
+    "positiveControlsExpected": 79,
+    "positiveControlsWithCandidate": 0,
+    "historicalCandidateHashStable": 0,
+    "markerBindingMatched": 0,
+    "sourceDomainMatched": 0,
+    "titlePathEligible": 0,
+    "eligiblePositiveControls": 0,
+    "requestErrors": 0,
+    "failureReasonCounts": {
+      "input_article_id_hash_mismatch": 79
+    }
+  }
+}
