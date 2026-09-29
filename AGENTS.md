@@ -28,17 +28,19 @@ Bootstrap and repository-management utilities used by those skills are installed
 
 `.codex/tools/`
 
-Use the relevant skill and installed tool instead of recreating lifecycle behaviour ad hoc. The installed package covers repository bootstrap, durable product/architecture definition, Issue refinement, proportional change assessment, prerequisite Technical Discovery, workspace/design/planning, development, validation, CI diagnosis, integration, release preparation, staging validation, production promotion and learning capture.
+Use the relevant skill and installed tool instead of recreating lifecycle behaviour ad hoc. The installed package covers repository bootstrap, durable product/architecture definition, Issue refinement, proportional change assessment, prerequisite Technical Spike, workspace/design/planning, development, validation, CI diagnosis, integration, release preparation, staging validation, production promotion and learning capture.
 
 ## Development lifecycle
 
-Before implementation, ensure the Feature/Bug Issue is development-ready. Use `refine-issue` when requirements or acceptance criteria need shaping, and `assess-change` to decide first whether prerequisite Technical Discovery is required and then the minimum proportional design/planning path.
+Before implementation, ensure the Feature/Bug Issue is development-ready. Use `refine-issue` when requirements or acceptance criteria need shaping, and `assess-change` to decide first whether prerequisite Technical Spike is required and then the minimum proportional design/planning path.
 
-When `assess-change` requires Technical Discovery, create/link a separate Technical Discovery Issue, execute it with `technical-discovery`, integrate its evidence, and rerun `assess-change` on the blocked Feature/Bug Issue. Do not begin HLD or production implementation that depends on the unresolved technical boundary.
+When `assess-change` requires a Technical Spike, create/link one controlling Technical Spike Issue and execute it with `technical-spike`. Keep that Spike open across failed or inconclusive experiments; iterate in the same Spike until the original technical question is resolved or shown infeasible. After the final Spike evidence is integrated, rerun `assess-change` on the blocked Feature/Bug Issue. Do not begin HLD or production implementation that depends on the unresolved technical boundary.
+
+At each Spike checkpoint, the agent retains investigative ownership: it must recommend the highest-value next iteration, explain why it is next, classify any blocker or prerequisite by impact and recovery path, and state the exact owner approval or decision required. The checkpoint is an authorization boundary, not a transfer of responsibility back to the owner.
 
 Create change-specific artifacts only when required:
 
-- `technical-discovery.md` for a Technical Discovery Issue;
+- `technical-spike.md` as the living investigation/specification artifact for a Technical Spike Issue;
 - `hld.md` for a material change-design decision;
 - `implementation-plan.md` for meaningful repository-level implementation planning;
 - `low-level-design.md` only when an approved implementation plan requires file-level design.

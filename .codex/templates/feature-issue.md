@@ -11,7 +11,7 @@
 
 Acceptance criteria must prove the feature's real outcome, not only describe what should happen if an attempted operation succeeds or fails. When the feature materially depends on an external system, live data, deployed runtime, or platform integration, include the externally observable success condition that must be demonstrated.
 
-If the required behaviour depends on an undocumented, reverse-engineered, materially volatile, or otherwise unknown external/runtime boundary, do not invent the integration specification inside this Issue. The `assess-change` step determines whether a prerequisite Technical Discovery Issue is required before design/implementation.
+If the required behaviour depends on an undocumented, reverse-engineered, materially volatile, or otherwise unknown external/runtime boundary, do not invent the integration specification inside this Issue. The `assess-change` step determines whether a prerequisite Technical Spike Issue is required before design/implementation.
 
 ## Validation Expectations
 
@@ -30,7 +30,7 @@ If the required behaviour depends on an undocumented, reverse-engineered, materi
 
 > Populated by the `assess-change` step after Issue refinement. Leave as `Pending` when the Issue is created.
 
-- **Technical Discovery:** Pending
+- **Technical Spike:** Pending
   - **Rationale:** Pending
   - **Prerequisite Issue:** Pending
   - **Status:** Pending

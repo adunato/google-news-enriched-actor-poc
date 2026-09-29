@@ -19,13 +19,15 @@ The workstation must contain the encrypted bootstrap credential at:
 
 `%LOCALAPPDATA%\SideGig\bootstrap\collector-dispatch-token.dpapi`
 
-If it is missing, bootstrap is blocked. Do not silently continue and do not replace automatic provisioning with a reminder.
+This is a single shared SideGig workstation credential, not a repository-specific credential. Every product repository bootstrap reuses it.
 
-Initialize it once from the SideGig repository with:
+Always check for this file before asking the developer to create, retrieve or enter a token. If it exists, token initialization is already complete and must not be repeated; proceed directly to repository provisioning.
+
+Only if the file is genuinely missing is bootstrap blocked on the one-time initialization. Initialize it once from the SideGig repository with:
 
 `implementation/bootstrap/initialize-dispatch-credential.ps1`
 
-Token creation itself remains an explicit human security action in GitHub. The initialization script only stores the already-created token locally under Windows DPAPI.
+Token creation itself remains an explicit human security action in GitHub. The initialization script only stores the already-created token locally under Windows DPAPI. Once initialized, future product repositories require no further token entry unless the token is deliberately rotated or the local credential is removed.
 
 ## Provisioning
 

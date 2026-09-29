@@ -27,7 +27,7 @@ Automate where reliable and proportionate. Use a representative scenario set for
 
 Do not patch application code directly in staging. If a software or version-controlled configuration correction is required, create or identify a Bug Issue and route it through the release-fix lifecycle from the active release branch.
 
-If staging reveals that the assumed external/runtime contract itself was not established — for example an undocumented integration behaves fundamentally differently in the deployed environment — classify that as a Technical Discovery need rather than a normal release defect. Hold promotion, create/link the prerequisite discovery Issue, and return the affected downstream Issue/release scope to reassessment.
+If staging reveals that the assumed external/runtime contract itself was not established — for example an undocumented integration behaves fundamentally differently in the deployed environment — classify that as a Technical Spike need rather than a normal release defect. Hold promotion, create/link the prerequisite Spike Issue, and return the affected downstream Issue/release scope to reassessment.
 
 Use the CI Diagnostics skill when a failed automated staging/deployment check needs diagnosis.
 
@@ -35,7 +35,7 @@ A candidate is promotion-ready only when every required staging check is passed 
 
 ## Completion contract
 
-Report the release candidate/version, deployed staging identity, checks executed, automated/manual evidence, failures and their classification, Bug or Technical Discovery Issues created/referenced, retest results, remaining blockers, and the explicit staging validation result: `Pass` or `Hold`.
+Report the release candidate/version, deployed staging identity, checks executed, automated/manual evidence, failures and their classification, Bug or Technical Spike Issues created/referenced, retest results, remaining blockers, and the explicit staging validation result: `Pass` or `Hold`.
 
 ## Learning checkpoint
 
