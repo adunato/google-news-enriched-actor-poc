@@ -76,6 +76,7 @@ Sanitized row evidence is [`local-results.json`](local-results.json), SHA-256 `c
 **Why this is next:** Iteration 1 established that direct HTTP sometimes works and exposed several failure classes, but it ran locally on a reduced 30-row sample. Before escalating to sessions, browser execution, proxies or managed unblocking, the Spike needs to know how much of the observed access behaviour changes simply because the workload runs from the intended hosted environment/network. This is the highest-value next discriminator and provides the representative baseline against which later access-ladder techniques should be compared.
 
 **Prerequisite/blocker status:** A usable Apify API token was not available to the Iteration 1 executor.
+
 - This **did not affect Iteration 1's completed local evidence**.
 - It **does block the recommended hosted Iteration 2** because the target-runtime run cannot be launched without Apify authentication.
 - This is currently an **ordinary execution prerequisite**, not evidence against the access hypothesis and not a Product/Architecture decision.
