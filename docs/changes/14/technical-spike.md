@@ -246,7 +246,21 @@ Stop and return to the project owner before:
 
 **Learning:** None.
 
-**Next proposed iteration:** Owner decision whether to separately authorize a control-only redirect diagnostic on known positives. It would retain only sanitized origin/path shape, response status, hop number, rejection reason, and aggregate row/request counts; it must not retain the `Location` value or full path. Use that evidence to decide whether any redirect-policy change is justified, then consider a separate live pass only under new explicit approval. The one approved rerun is exhausted; do not repeat capture, change the sample or threshold, inspect unresolved outcomes, or run `h4-apply.mjs` without new approval.
+**Diagnostic result:** The owner-approved single pass completed on 2026-09-29. It selected and completed all 79 historical positive controls with 79 total HTTP requests. Every response was HTTP 302 at hop 0 from `https://news.google.com` to sanitized origin `https://consent.google.com`, rejected as `unexpected_redirect_destination` before the destination was fetched. The request path shape was `/letters/letters/letters-and-digits` for 76 controls and `/letters/letters/mixed` for three; every destination path shape was `/letters`. Response bodies were canceled without reading. No marker/RPC or publisher requests were made and unresolved rows were not requested or inspected.
+
+**Evidence:** `docs/changes/14/h4/h4-redirect-diagnostic-2026-09-29T11-54-04-963Z-f3c8ad9b/redirect-diagnostic.json` (SHA-256 `fee1f24724e44a1ae73f19eb10f7a89d86d288b3e519e71ad85dbd7bae732b08`). The report retains only aggregate counts and sanitized origin/path shapes, status, hop and fixed rejection reason. Its input hashes match the pinned #18 manifest and historical-label artifacts.
+
+**Interpretation and next decision:** The repeated redirect destination is confirmed as `consent.google.com` for the 79 known positives. This establishes where the current capture stops; it does not establish that following consent redirects, changing the allowlist, or continuing marker/RPC resolution is safe or successful. The single diagnostic approval is exhausted. A redirect-policy change or any further live diagnostic/resolver pass requires a separate owner decision. Do not change the sample or threshold, inspect unresolved outcomes, repeat H4 capture, or run `h4-apply.mjs` under this approval.
+
+### Iteration 5 — control-only redirect diagnostic
+
+**Authorization:** Owner approval in the current session for one bounded diagnostic pass over the 79 historically confirmed positive controls.
+
+**Prepared method:** `h4-redirect-diagnostic.mjs` selects exactly the 79 #18 `confirmed_match` inputs before network access. It performs one initial manual-redirect GET per control, follows at most five further redirects only while the URL remains HTTPS on exactly `news.google.com`, uses a 10-second timeout per request and concurrency four, and cancels response bodies without reading them. It does not parse page markers, issue the RPC, fetch publisher destinations, retry, or request unresolved rows. Rejected destinations are never fetched.
+
+**Retained evidence design:** An atomic immutable report contains aggregate row/request counts and a histogram of response status, hop, fixed rejection reason, plus sanitized request/destination origin and path shapes. It omits raw `Location`, complete paths, query strings, row IDs, titles, article IDs, headers and bodies. A small fixed list of known Google hosts may be named; other dynamic subdomains are collapsed to a wildcard with subdomain depth, and other registrable domains are reduced to `other-registrable-domain`. Each path segment is reduced to a character-class label.
+
+**Status:** The single approved diagnostic pass is complete. It explains the observed capture rejection but does not establish that following the consent redirect is safe or that the URL identity rule will meet the 95/100 target. No calibration, unresolved-row assessment, or policy change resulted.
 
 ## 7. Supported Technical Specification
 
@@ -338,4 +352,4 @@ The current iteration should add its experiment-specific design/probe/evidence u
 
 **Spike state:** `Open`  
 **Rationale:** 79/100 publisher candidates are directly confirmed and 21 remain unverifiable; the original >=95/100 technical question is therefore unresolved.  
-**Required next action:** Project-owner decision whether to separately authorize the control-only redirect diagnostic described above. The corrected rerun stopped before calibration because all 79 known-positive rows failed with `unexpected_redirect_destination`; the rejected destination and hop were not retained, and no negative-control calibration or unresolved-row assessment exists. Use only sanitized origin/path shape, status, hop, reason, and known-positive aggregate row/request counts for that diagnosis. Any redirect-policy change or later live pass requires a separate decision. No further live run, threshold/sample change or unresolved-row application is authorized until approved.
+**Required next action:** Decide whether the observed `consent.google.com` redirect warrants a separately specified policy investigation or another hypothesis. The corrected H4a rerun and the single control-only diagnostic both stopped before calibration; no negative-control calibration or unresolved-row assessment exists. Any redirect-policy change, further diagnostic or resolver pass requires a separate decision. No H4 capture, threshold/sample change or unresolved-row application is authorized by the completed diagnostic approval.

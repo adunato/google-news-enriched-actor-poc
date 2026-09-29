@@ -1,0 +1,49 @@
+{
+  "diagnostic": "issue14_control_only_redirect_v1",
+  "completedAtUtc": "2026-09-29T11:54:04.954Z",
+  "controlsSelected": 79,
+  "rowsCompleted": 79,
+  "rowsWithRedirect": 79,
+  "requestsAttempted": 79,
+  "bounds": {
+    "timeoutMs": 10000,
+    "maxRedirects": 5,
+    "maxResponseBytes": 0,
+    "concurrency": 4
+  },
+  "observations": [
+    {
+      "hop": 0,
+      "status": 302,
+      "requestOrigin": "https://news.google.com",
+      "requestPathShape": "/letters/letters/letters-and-digits",
+      "destinationOrigin": "https://consent.google.com",
+      "destinationPathShape": "/letters",
+      "rejectionReason": "unexpected_redirect_destination",
+      "count": 76
+    },
+    {
+      "hop": 0,
+      "status": 302,
+      "requestOrigin": "https://news.google.com",
+      "requestPathShape": "/letters/letters/mixed",
+      "destinationOrigin": "https://consent.google.com",
+      "destinationPathShape": "/letters",
+      "rejectionReason": "unexpected_redirect_destination",
+      "count": 3
+    }
+  ],
+  "dataRetained": {
+    "rowIdentifiers": false,
+    "titles": false,
+    "rawLocation": false,
+    "fullPaths": false,
+    "queries": false,
+    "bodies": false
+  },
+  "inputHashes": {
+    "manifestSha256": "d1ed2bea31efc54358ac24d991a9037ec0f0840ccd50547c01bd794c64389f3c",
+    "historicalLabelsSha256": "00bce29a5d0582f0cb82f6d8e685d60075932b9e9659247233566c4fb88b4788"
+  },
+  "codeSha256": "8d88b7bb6f9f34f465916acef0f1557d64917f331e57725b176c94c53ed2bccf"
+}

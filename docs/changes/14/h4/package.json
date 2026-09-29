@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test h4-core.check.mjs h4-storage.check.mjs",
+    "test": "node --test h4-core.check.mjs h4-storage.check.mjs h4-redirect-diagnostic.check.mjs",
     "capture": "node h4-capture.mjs",
-    "apply": "node h4-apply.mjs"
+    "apply": "node h4-apply.mjs",
+    "redirect-diagnostic": "node h4-redirect-diagnostic.mjs"
   },
   "dependencies": {
     "tldts": "6.1.86"
