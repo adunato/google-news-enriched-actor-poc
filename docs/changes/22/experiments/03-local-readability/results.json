@@ -1,0 +1,130 @@
+{
+  "package": "@extractus/article-extractor@9.0.1",
+  "nodeVersion": "v24.15.0",
+  "fixtureCount": 6,
+  "limits": {
+    "maxInputBytes": 262144,
+    "perFixtureTimeoutMs": 5000,
+    "deadlineMs": 60000
+  },
+  "elapsedMs": 1877,
+  "rows": [
+    {
+      "id": "semantic-article",
+      "shouldRead": true,
+      "htmlBytes": 1051,
+      "candidate": {
+        "wordCount": 113,
+        "expectedTokenRecall": 1,
+        "expectedTokenPrecision": 1,
+        "readable": true,
+        "falsePositive": false
+      },
+      "semanticBaseline": {
+        "wordCount": 116,
+        "expectedTokenRecall": 1,
+        "expectedTokenPrecision": 1,
+        "readable": true,
+        "falsePositive": false
+      }
+    },
+    {
+      "id": "generic-div",
+      "shouldRead": true,
+      "htmlBytes": 1154,
+      "candidate": {
+        "wordCount": 124,
+        "expectedTokenRecall": 1,
+        "expectedTokenPrecision": 0.99,
+        "readable": true,
+        "falsePositive": false
+      },
+      "semanticBaseline": {
+        "available": false,
+        "wordCount": 0,
+        "expectedTokenRecall": 0,
+        "expectedTokenPrecision": 0,
+        "readable": false,
+        "falsePositive": false
+      }
+    },
+    {
+      "id": "navigation-heavy",
+      "shouldRead": true,
+      "htmlBytes": 1352,
+      "candidate": {
+        "wordCount": 117,
+        "expectedTokenRecall": 1,
+        "expectedTokenPrecision": 1,
+        "readable": true,
+        "falsePositive": false
+      },
+      "semanticBaseline": {
+        "wordCount": 122,
+        "expectedTokenRecall": 1,
+        "expectedTokenPrecision": 1,
+        "readable": true,
+        "falsePositive": false
+      }
+    },
+    {
+      "id": "short-metadata",
+      "shouldRead": false,
+      "htmlBytes": 420,
+      "candidate": {
+        "wordCount": 0,
+        "expectedTokenRecall": 0,
+        "expectedTokenPrecision": 0,
+        "readable": false,
+        "falsePositive": false
+      },
+      "semanticBaseline": {
+        "wordCount": 10,
+        "expectedTokenRecall": 1,
+        "expectedTokenPrecision": 0.6,
+        "readable": false,
+        "falsePositive": false
+      }
+    },
+    {
+      "id": "malformed-truncated",
+      "shouldRead": true,
+      "htmlBytes": 997,
+      "candidate": {
+        "wordCount": 120,
+        "expectedTokenRecall": 1,
+        "expectedTokenPrecision": 1,
+        "readable": true,
+        "falsePositive": false
+      },
+      "semanticBaseline": {
+        "available": false,
+        "wordCount": 0,
+        "expectedTokenRecall": 0,
+        "expectedTokenPrecision": 0,
+        "readable": false,
+        "falsePositive": false
+      }
+    },
+    {
+      "id": "consent-block",
+      "shouldRead": false,
+      "htmlBytes": 583,
+      "candidate": {
+        "wordCount": 54,
+        "expectedTokenRecall": 1,
+        "expectedTokenPrecision": 0.976,
+        "readable": false,
+        "falsePositive": false
+      },
+      "semanticBaseline": {
+        "available": false,
+        "wordCount": 0,
+        "expectedTokenRecall": 0,
+        "expectedTokenPrecision": 0,
+        "readable": false,
+        "falsePositive": false
+      }
+    }
+  ]
+}

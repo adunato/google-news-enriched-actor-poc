@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@extractus/article-extractor": "9.0.1"
+  }
+}

@@ -2,7 +2,7 @@
 
 **Issue:** [#22](https://github.com/adunato/google-news-enriched-actor-poc/issues/22)
 
-**Status:** Iteration 2 recorded; the Spike remains open.
+**Status:** Iteration 3 recorded; the Spike remains open.
 
 **Iteration result:** Inconclusive for the original Technical Question.
 
@@ -10,11 +10,68 @@
 
 What automated web-access approaches can this news POC/product family responsibly rely on to retrieve public publisher pages at useful reliability, and where are the practical technical, cost, operational, policy or legal boundaries that should cause the product to stop, degrade gracefully, or use a different data source?
 
+## Iteration 3 plan — local readability-method evaluation
+
+**Current understanding:** Iteration 2 showed HTTP 200 HTML for 72/100 rows in one fresh Apify Node 20 sample. Neither hosted iteration retained page HTML or measured readable article text. Issue #5's acceptance criterion remains at least 50% readable full-text extraction on a representative 100-row sample. No extraction algorithm or dependency is approved for production use.
+
+**Investigation backlog (ordered):**
+
+1. Screen a candidate open-source readability method against authored, sanitized HTML fixtures using explicit expected article text and a lightweight no-new-dependency baseline where it can produce text.
+2. If the candidate passes this local quality screen, present its exact dependency and hosted test proposal for explicit owner approval before any hosted run.
+3. Only after approval, test readable extraction on a fresh representative 100-row cohort in the target Apify Node 20 runtime; measure the Issue #5 criterion with human-reviewable quality evidence.
+
+**Selected hypothesis:** `@extractus/article-extractor@9.0.1`, called with already-fetched HTML and its URL, may identify readable article text across common publisher layouts without performing its own network fetch, and may outperform a minimal semantic-container baseline on a small local fixture set.
+
+**Why this is the next useful test:** Readable text is the unmeasured acceptance signal blocking Issue #5. A local, authored-fixture screen can reject an unsuitable method cheaply and without publisher data or hosted spend. It cannot establish the representative 50% target, but it can inform whether a separately approved hosted evaluation is worthwhile.
+
+**Exact bounded experiment:** Inspect the exact candidate package metadata, source and transitive dependency tree; verify the called API is extraction-only and does not fetch URLs; record license, install scripts, dependency count and Node compatibility evidence. Then evaluate serially against a small authored fixture corpus covering semantic article markup, generic div containers, navigation-heavy pages, short/metadata pages, malformed/truncated HTML, and blocked/consent pages. Use fixture-level expected title/body text and classify each output as readable or not. Cap fixture HTML at 256 KiB, set a per-fixture timeout and an overall time bound, isolate exceptions per fixture, and retain only authored fixtures, expected text, sanitized metrics and classifications. Compare a no-new-dependency semantic `article`/`main` baseline only where it emits text; do not treat marker-only signals as extracted text.
+
+**Representative environment/data:** Local Node runtime, exact packed npm artifact for `@extractus/article-extractor@9.0.1`, and synthetic authored HTML fixtures with no live publisher data, URLs, page text, or credentials. The local environment is not Apify Node 20 and the fixture corpus is not representative of the 100-row acceptance cohort.
+
+**Expected evidence and interpretation:** Retain candidate package identity/integrity, dependency and license facts, Node/API behavior, per-fixture output word counts/readable classifications, expected-body coverage and non-article contamination estimates, plus manual fixture-level quality review. A local pass supports only a candidate recommendation for an owner-approved hosted test. It does not satisfy Issue #5 or support adoption. Recommend against the candidate if it fetches independently, materially expands the approved dependency/risk boundary, or has systematic fixture failures/contamination.
+
+**Operational bounds and stop conditions:** No publisher requests, no Apify Actor or hosted run, and no production dependency changes. Maximum six fixtures, each HTML input at most 256 KiB; serial execution with a 5-second fixture timeout and a 60-second overall cap. Install or unpack only within this experiment directory; disable lifecycle scripts. Stop on any unexpected network access, package identity/integrity mismatch, unsafe behavior, or fixture data leakage. Do not retain package caches, raw live pages, URLs, or sensitive output in Git.
+
+**Owner checkpoint:** The owner approved local candidate-method evaluation within #22. That approval does not approve a production dependency or a hosted run. Return the candidate recommendation and exact dependency choice for explicit approval before any hosted evaluation.
+
 ## Context and scope
 
 The first two iterations tested the lowest-complexity baseline: public direct HTTP access to publisher pages, first locally and then in the target hosted runtime. They did not test session state, browser execution, proxies, managed unblocking, paid APIs, or readable full-text extraction. The Product and Architecture boundaries remain unchanged.
 
 Issue #5 requires at least 50% readable full-text extraction on its representative 100-row sample. This iteration's article marker and headline signals do not measure readable text and cannot satisfy that acceptance criterion.
+
+## Iteration 3 evidence and checkpoint
+
+**Hypothesis:** `@extractus/article-extractor@9.0.1` can extract readable text from already-fetched HTML across common layouts without making its own network requests, and improves on a minimal semantic-container baseline.
+
+**Package inspection:** The exact npm package artifact was `@extractus/article-extractor@9.0.1`, MIT licensed, registry integrity `sha512-tI6tVthdtv3diHKg7SwiHrhwmP4AERKSa/0Cv/MT8cP7vFFMk74M1IgegZLf6pWtq4tdCxPdiDQ/77DVa0yTpQ==`. The package declares no install scripts and no Node `engines` range. Its two direct runtime dependencies are `@mozilla/readability@0.6.0` (Apache-2.0; Node >=14) and `linkedom@0.18.13` (ISC; Node >=16); the locked dependency tree installed 22 packages total, with optional `canvas` unmet. Source inspection confirms `extractFromHtml(html, url, options)` passes supplied HTML to parsing. Only the separate `extract()` URL path calls `retrieve()` and its fetcher. This experiment invoked `extractFromHtml` only. Node 20 compatibility remains unverified because this local run used Node `v24.15.0`.
+
+**Experiment:** Six synthetic authored fixtures (four positive article layouts, two negative short/metadata or consent/block pages), each under 1.4 KiB, were processed serially. The candidate ran in isolated workers with a 5-second fixture timeout and 60-second overall cap. The no-new-dependency baseline extracted text only from semantic `article` or `main` containers. A result counted as readable when it had at least 100 words, expected-body unique-token recall >=0.55 and precision >=0.80. The evaluation retained only output word counts, token metrics and classifications; no extracted body text was written.
+
+| Fixture class | Candidate result | Semantic baseline |
+| ------------- | ---------------- | ----------------- |
+| Semantic article | Readable, 113 words, recall/precision 1.00/1.00 | Readable, 116 words, 1.00/1.00 |
+| Generic div article | Readable, 124 words, 1.00/0.99 | Not available |
+| Navigation-heavy article | Readable, 117 words, 1.00/1.00 | Readable, 122 words, 1.00/1.00 |
+| Malformed/truncated article | Readable, 120 words, 1.00/1.00 | Not available |
+| Short metadata page | No readable output | 10 words; below readable threshold |
+| Consent/block page | 54 words; below readable threshold | Not available |
+
+The candidate passed the authored screen on all four positive fixtures and had no false positive on either negative fixture. The semantic baseline produced readable text on two of the four positive fixtures; it is intentionally unavailable for the generic-div and malformed cases. The candidate therefore adds fixture coverage in this narrow comparison. This supports a hosted evaluation recommendation only; six authored fixtures do not estimate publisher success or Issue #5's representative rate.
+
+**Iteration result:** `Supported` for the bounded synthetic-fixture hypothesis. The original Technical Question remains `Inconclusive`: no fresh publisher HTML was tested, Node 20 behavior and hosted cost remain unmeasured, and the 100-row readable-text criterion remains untested. No production dependency is approved or added.
+
+**Current understanding:** The inspected candidate can extract the authored fixture bodies when called with already-fetched HTML on local Node 24. Its separate URL convenience API performs fetching, so the tested function boundary can preserve the existing HTTP/robots controls. It expands the runtime dependency tree by 22 packages and has no declared Node engine range. Hosted compatibility and representative publisher quality are unknown.
+
+**Recommended next iteration:** Iteration 4 — after explicit owner approval, run one capped private Apify Node 20 evaluation using `@extractus/article-extractor@9.0.1` on a fresh 100-row cohort stratified as ten rows in each of the existing five-query by two-locale cells. Keep the existing direct-HTTP, URL-resolution, robots, per-row failure isolation, and privacy constraints; invoke only `extractFromHtml` on the response bytes already fetched by the bounded pipeline. Collect per-row readable-status and word-count quality metrics plus run identity, Node version, cost, memory and sanitized failure classes. Set the same server-enforced $1 maximum charge, 256 MiB memory and 900-second timeout, and do not retry an incomplete run. Retain no URLs, titles, HTML or article text.
+
+**Why this is next:** It tests whether the fixture result survives the target Node runtime and fresh publisher HTML, and whether readable output reaches the Issue #5 threshold under the already measured access conditions. No retained publisher HTML exists to replay locally.
+
+**Prerequisite/blocker status:** None affected Iteration 3. A new dependency approval blocks Iteration 4. This is an explicit dependency/risk decision, not an authentication prerequisite. Recovery is to obtain approval for this exact package and bounded hosted evaluation, or redirect to another candidate/no-dependency approach. The candidate has no declared Node engine range, so the hosted Node 20 run must itself verify runtime compatibility before interpreting extraction rates.
+
+**Owner decision requested:** **Approve `@extractus/article-extractor@9.0.1` and its locked runtime dependencies solely for the single bounded hosted Iteration 4 above.** This approval would authorize an experiment only, not production adoption. If approved, execute one private capped Node 20 run and return the per-row quality, runtime, cost and memory evidence. If redirected or not approved, do not use this package in a hosted run; Issue #22 and Issue #5 remain unresolved on readable-text success.
+
+Reproducible code, authored fixtures and sanitized metrics are in [`experiments/03-local-readability/`](experiments/03-local-readability/); exact lockfile and output are retained there.
 
 ## Investigation
 

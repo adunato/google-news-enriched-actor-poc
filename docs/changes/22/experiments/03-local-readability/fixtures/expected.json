@@ -1,0 +1,38 @@
+[
+  {
+    "id": "semantic-article",
+    "file": "semantic-article.html",
+    "shouldRead": true,
+    "expectedBody": "City officials approved a long-term harbor restoration plan on Tuesday after months of public meetings. The project will replace aging barriers, restore wetlands and improve protection for nearby neighborhoods. Engineers said construction will happen in stages so shipping can continue. The first phase will reinforce the eastern seawall, while crews monitor water levels and wildlife throughout the work. Residents asked the council to publish regular progress reports. Officials agreed to release quarterly updates and to hold another public meeting before the second phase begins next spring. The approved budget includes funds for independent environmental testing. The council said any major schedule change will require a public vote and a revised cost estimate."
+  },
+  {
+    "id": "generic-div",
+    "file": "generic-div.html",
+    "shouldRead": true,
+    "expectedBody": "A new transit study found that redesigned street crossings reduced collisions near busy bus stops. Researchers reviewed three years of traffic records and interviewed passengers at twelve locations. The report recommends wider refuge islands, clearer signal timing and brighter signs. It says the changes should be tested with people who walk, cycle and use mobility devices before construction starts. Transport officials will review the findings this month. They have not selected locations or set a construction date, and the study does not estimate the cost of a citywide program. Passenger groups welcomed the focus on safer access but asked for the agency to publish its data. The research team plans to release an anonymized dataset with its final report."
+  },
+  {
+    "id": "navigation-heavy",
+    "file": "navigation-heavy.html",
+    "shouldRead": true,
+    "expectedBody": "Researchers released a coastal flood map that identifies neighborhoods facing the greatest risk over the next two decades. The analysis combines tide gauges, elevation measurements and updated storm projections. The team said local planning decisions can reduce damage when maps are paired with drainage improvements and clear evacuation routes. It cautioned that the estimates describe risk across broad areas rather than predicting a specific storm. Several councils plan to use the findings when reviewing building standards. Community groups requested more detail about the assumptions and asked for translated versions of the public summary. The researchers will update the map as new measurements become available. They also plan workshops with emergency services and residents during the coming year."
+  },
+  {
+    "id": "short-metadata",
+    "file": "short-metadata.html",
+    "shouldRead": false,
+    "expectedBody": "Stocks edged higher in morning trading."
+  },
+  {
+    "id": "malformed-truncated",
+    "file": "malformed-truncated.html",
+    "shouldRead": true,
+    "expectedBody": "Bridge repairs will begin in June after inspectors found corrosion in several support joints. The transport department said the work will close one lane at a time and maintain a route for emergency vehicles. Contractors will replace damaged sections, apply protective coatings and test the structure before reopening each repaired span. Officials expect the project to last four months, depending on weather conditions and material deliveries. Bus operators will publish temporary stop locations before the first closure. Pedestrian access will remain available, although people should follow signed routes around the active construction area. Inspectors will examine the bridge after each stage and publish a short safety report. The department will announce any schedule changes through its public travel information service."
+  },
+  {
+    "id": "consent-block",
+    "file": "consent-block.html",
+    "shouldRead": false,
+    "expectedBody": "We use cookies and similar technologies to provide services, measure audience activity and show relevant offers. Choose accept all to continue or review your privacy choices and manage settings. By continuing, you agree to our terms and privacy policy. You can change your preferences at any time in your account settings."
+  }
+]
