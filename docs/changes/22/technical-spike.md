@@ -69,6 +69,24 @@ Sanitized row evidence is [`local-results.json`](local-results.json), SHA-256 `c
 
 **Result: Inconclusive.** Direct HTTP access is technically possible for a subset of the sampled public pages, while denials and robots signals require row-level classification and fail-soft behavior. The reduced local sample does not establish useful full-text reliability, hosted runtime behavior, or permission to access any publisher content. The broader access ladder and policy/legal boundaries remain unresolved.
 
+## Owner checkpoint — Iteration 1
+
+**Recommended next iteration:** Iteration 2 — run the same bounded direct-HTTP baseline on a fresh stratified 100-row sample in the target Apify Node 20 runtime.
+
+**Why this is next:** Iteration 1 established that direct HTTP sometimes works and exposed several failure classes, but it ran locally on a reduced 30-row sample. Before escalating to sessions, browser execution, proxies or managed unblocking, the Spike needs to know how much of the observed access behaviour changes simply because the workload runs from the intended hosted environment/network. This is the highest-value next discriminator and provides the representative baseline against which later access-ladder techniques should be compared.
+
+**Prerequisite/blocker status:** A usable Apify API token was not available to the Iteration 1 executor.
+- This **did not affect Iteration 1's completed local evidence**.
+- It **does block the recommended hosted Iteration 2** because the target-runtime run cannot be launched without Apify authentication.
+- This is currently an **ordinary execution prerequisite**, not evidence against the access hypothesis and not a Product/Architecture decision.
+- Recovery: use the repository/workstation's supported Apify authentication path and verify the executor can launch a private hosted run before Iteration 2. If no usable credential can be obtained through the supported project setup, report that specific credential/setup problem and the exact owner action required; do not reinterpret it as a research result.
+
+**Owner decision requested:** **Approve Iteration 2: 100-row hosted Apify direct-HTTP baseline, once the ordinary Apify-authentication prerequisite is satisfied.**
+
+**If approved:** the executor should resolve/verify the ordinary authentication prerequisite, run only the approved hosted baseline with the existing bounded HTTP/robots/privacy controls, retain hosted outcome and cost evidence, update the access-failure classification, and stop at the next decision-ready checkpoint. It should not yet escalate to browser/proxy/unblocker techniques.
+
+**If redirected/not approved:** the Spike remains unable to distinguish local-network behaviour from the target Apify runtime, so escalation-method comparisons would lack a reliable hosted baseline.
+
 ## Downstream implications
 
 - Keep Issue #5 blocked pending a supported access strategy and representative readable-text evidence.
