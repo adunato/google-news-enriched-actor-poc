@@ -1,0 +1,10 @@
+{
+  "visibility": "private",
+  "runtime": "Node 20",
+  "maxTotalChargeUsd": 1,
+  "maxTotalChargeUsdMustBeUserSet": true,
+  "memoryMbytes": 256,
+  "timeoutSecs": 900,
+  "restartOnError": false,
+  "runCount": 1
+}
