@@ -2,7 +2,7 @@
 
 **Issue:** [#22](https://github.com/adunato/google-news-enriched-actor-poc/issues/22)
 
-**Status:** Iteration 5 recorded; the Spike remains open.
+**Status:** Iteration 6 recorded; the Spike remains open.
 
 **Iteration result:** Inconclusive for the original Technical Question.
 
@@ -101,6 +101,54 @@ The generated repeated text failed the structural readability proxy in every com
 
 **Learning checkpoint:** None. The observed size sensitivity is specific to this extractor, version, runtime patch and synthetic corpus; it is not a portable operational rule.
 
+## Iteration 6 approved plan — local synthetic complexity controls
+
+**Owner approval:** The owner approved one local Iteration 6 matching the bounded cohort below. This authorizes synthetic local work only; no live publisher or hosted run.
+
+**Current understanding:** Iteration 5 showed extraction times increasing with size for repeated synthetic inputs. At 192 KiB, semantic article markup timed out while generic nested-div markup completed in 4,266.6 ms. The content was repeated, so Iteration 5 did not distinguish text profile/markup density effects from outer structure. It did not establish a live page cap or explain Iteration 4's hosted timeouts.
+
+**Hypothesis:** Holding HTML input bytes and outer shape constant, the repeated-prose/high-inline-markup profile will take longer to extract than unique varied prose with paragraph-level markup. The effect may differ between semantic-article and nested-div structures. This comparison measures the combined content-profile change, not repetition or markup density independently.
+
+**Why this is next:** It repeats the ambiguous 192 KiB boundary and samples 64/128 KiB controls while crossing each shape and size with both content profiles. The balanced 2×3×2 cohort can show whether the prior shape-dependent boundary persists and whether profile shifts local extraction timing, without involving publisher content or another hosted run.
+
+**Exact bounded experiment:** Run exactly 12 serial cases: `semantic_article` and `generic_nested_div` × 64, 128 and 192 KiB × `unique_low_markup` and `repeated_high_markup`. Generate each exact-size UTF-8 fixture in memory, assert its size, and use one fresh worker per case. Use `extractFromHtml(html, fixture.invalid URL)` with the Iteration 4 locked and installed `@extractus/article-extractor@9.0.1`. Record worker start, import, extraction, output post, parent proxy and case total timings; retain only case profile/shape/size, bytes, output character count and sanitized proxy metrics. Do not retry.
+
+**Representative environment/data:** Local Windows Node `v20.19.0`, exact Iteration 4 lock; generated synthetic English prose only. The unique profile uses varied word sequences with paragraph-level markup. The repeated profile uses repeated English prose with inline span markup. Both profiles are generated at each target input size in both outer shapes. This is not a representative publisher cohort.
+
+**Expected evidence and interpretation:** Compare extraction and full case timings for the two profiles within each shape/size pair, and compare shapes separately. Consistent differences support only a profile-associated cost on these fixtures because repetition and inline markup density change together. Timeout means the worker exceeded the measurement deadline; it is not a quality failure. The study cannot establish publisher readability, a universal safe input cap/deadline, or the cause of any Iteration 4 timeout. Report overall timer and per-case timer totals separately, including unallocated harness overhead and exact timer boundaries.
+
+**Operational bounds and stop conditions:** One worker at a time; 12 cases maximum; five seconds per case; 90-second overall deadline; input cap 256 KiB; output cap 1 MiB; parent launched with `--max-old-space-size=128`; worker old-space 128 MiB; stop over 256 MiB RSS. Synthetic data only; no publisher URL or network request. Worker replaces global `fetch` and Node HTTP/HTTPS request/get with throwing/counting interceptors before importing the extractor. Stop if an attempt is reported, dependency identity or fixture/cap assertion fails, RSS exceeds the bound, or overall deadline expires. If a case times out before returning its network counter, retain null and do not claim zero attempts for that case. Never retain raw HTML or extracted text.
+
+**Deliverables:** A local-only reproducibility runner/worker and `experiments/06-local-complexity/experiment.md` with sanitized per-case phase metrics, interpretation, limitations and a next decision checkpoint. No production/shared-code changes, Actor, hosted run or new dependency.
+
+**Owner decision recorded:** Approved for this one bounded local iteration. After evidence is recorded, stop and return with the result and next recommendation; do not start another experiment under this approval.
+
+## Iteration 6 evidence and checkpoint
+
+**Experiment:** One local Node `v20.19.0` run completed the balanced 12 cases across two HTML shapes, three byte sizes and two synthetic profiles. Exact lock and installed `@extractus/article-extractor@9.0.1` were verified; package-lock SHA-256 was `d40e0664285e6ebdd6222ed452dd91c3fc2f77a4fa5f3abef652e9648868b3e2`. Preflight verified exact UTF-8 sizes. Run elapsed was `32,495.3` ms; per-case `totalMs` summed to `32,224.1` ms, leaving `271.2` ms unallocated fixture-generation/inter-case/summary overhead. Overall timing starts before the case loops and is sampled before results-file write; per-case timing begins after fixture generation. No retry or global stop condition occurred.
+
+| Outer shape | Profile | 64 KiB | 128 KiB | 192 KiB |
+| --- | --- | ---: | ---: | ---: |
+| Semantic article | Unique, low markup | 487.3 ms, 7,960 words | 2,624.4 ms, 15,880 words | timeout at 5 s |
+| Semantic article | Repeated, high markup | 263.5 ms, 3,024 words | 1,514.7 ms, 6,144 words | 2,738.8 ms, 9,216 words |
+| Generic nested div | Unique, low markup | 1,171.3 ms, 7,963 words | timeout at 5 s | timeout at 5 s |
+| Generic nested div | Repeated, high markup | 611.0 ms, 3,027 words | 1,593.3 ms, 6,147 words | 3,024.3 ms, 9,219 words |
+
+Nine cases completed and reported `networkAttempts: 0`; three unique/low-markup cases timed out during extraction and report null network counters: semantic 192 KiB and nested-div 128/192 KiB. The harness itself makes no network-client calls, and workers block/count `fetch` and Node HTTP/HTTPS request/get before importing the extractor; no intercepted attempts were reported by completed cases, but timeout rows cannot be claimed as zero. Parent old-space was set by the `--max-old-space-size=128` launch option and each worker had a 128 MiB old-space limit. Maximum retained post-case RSS sample was `106,704,896` bytes; final RSS `94,535,680` bytes, below the 256 MiB stop.
+
+**Plan limitation/deviation:** The cases held total HTML input bytes equal, but not extracted word count. The high-markup profile used more inline spans, reducing how many repeated phrases fit in a fixed byte size; the unique/low-markup profile returned roughly 2.6 times as many words at 128 KiB. Thus the observed timing differences apply to the combined profile and text volume; they do not isolate repetition or markup density. No rerun was made under the one-iteration approval. Sanitized phase and outcome data are in [`experiments/06-local-complexity/results.json`](experiments/06-local-complexity/results.json); the script and worker remain local to that experiment. No raw HTML or extracted text was retained.
+
+**Iteration result:** `Inconclusive` for the original Technical Question and publisher readability. The unique/low-markup profile was slower at each comparable completed shape/size and timed out in three larger cells, while every repeated/high-markup case completed, including both 192 KiB cells. This is only an observed combined-profile difference; the unique profile also returned substantially more words. Shape affected outcomes: unique/low markup completed at 128 KiB in semantic markup and timed out at that size in generic nested divs. These synthetic observations establish neither a universal input cap nor a safe live deadline and do not explain the Iteration 4 publisher timeouts. No production change or hosted follow-up is approved.
+
+**Recommended next action:** Seek approval for one fresh 100-row access/eligibility cohort with an approved transient privacy-review method for challenge/gate-positive pages. In Iteration 4's cohort, 31 challenge/gate rows were skipped before extraction and 25 other rows were not attempted. That left at most 44/100 possible proxy accepts even if every eligible timeout had succeeded, below Issue #5's 50/100 target. This is conditional on the observed cohort and its classifications; it does not establish the population eligible rate, and gate heuristics may have false positives.
+
+Use the same five queries × GB/US × ten rows/cell and bounded direct-HTTP controls (concurrency four, 10-second request timeout, five redirects, 256 KiB response prefix, per-host spacing, public DNS pinning, robots policy and per-row isolation). Run one private Node 20 Actor with a server-enforced $1 charge cap, 256 MiB memory, 900-second timeout and restart disabled. Do not invoke the extractor. Record HTTP, robots and transport outcomes plus each challenge signal separately. Review only challenge-positive response prefixes in a temporary private in-memory review surface; persist only opaque cell/row IDs, status classes, signal booleans, bounded byte counts and coarse reviewer classes. Retain no URL, title, HTML, article text, cookies or raw logs. Stop if server limits or privacy isolation cannot be enforced; one run only, no retry. This directly tests whether the access/eligibility ceiling or challenge classification is the next limiting factor. A status-only cohort without transient review can measure the ceiling but cannot validate challenge false positives.
+
+**Prerequisite/blocker status:** None affected Iteration 6. The 44/100 ceiling is conditional on Iteration 4's single sample; it blocks claiming that an extraction-only improvement can meet Issue #5's 50/100 target on that cohort, but not the broader population. Recovery is a fresh stratified cohort; validating challenge classifications requires explicit privacy authorization for ephemeral review. No run is authorized yet.
+
+**Owner decision requested:** **Approve Iteration 7: one fresh private Node 20, 100-row direct-HTTP access/eligibility run under the same request/robots bounds, server-enforced $1/256 MiB/900-second/no-restart settings, and transient in-memory review of challenge-positive prefixes, retaining only sanitized per-row classes and metrics.** This authorizes one hosted cohort and the stated temporary review method only; no extractor run or raw-content retention. If the privacy method or server-enforced limits are not approved, do not launch; retain the conditional 44/100 ceiling and the Inconclusive result. Any later extraction run requires separate approval.
+
+**Learning checkpoint:** None. Iteration 6's fixture-profile word-count confound is a limitation of this one-off probe, not a portable lesson.
 ## Iteration 3 plan — local readability-method evaluation
 
 **Current understanding:** Iteration 2 showed HTTP 200 HTML for 72/100 rows in one fresh Apify Node 20 sample. Neither hosted iteration retained page HTML or measured readable article text. Issue #5's acceptance criterion remains at least 50% readable full-text extraction on a representative 100-row sample. No extraction algorithm or dependency is approved for production use.
