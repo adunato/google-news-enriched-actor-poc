@@ -1,0 +1,12 @@
+{
+  "name": "issue22-hosted-direct-http-spike",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {"start": "node src/probe.mjs"},
+  "dependencies": {
+    "apify": "3.5.2",
+    "fast-xml-parser": "5.11.1",
+    "ipaddr.js": "2.2.0"
+  }
+}

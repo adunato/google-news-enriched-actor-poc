@@ -1,0 +1,12 @@
+{
+    "actorSpecification":  1,
+    "name":  "issue22-hosted-direct-http-iteration2",
+    "title":  "Issue 22 Hosted Direct HTTP Iteration 2",
+    "description":  "Private disposable evidence probe for Issue 22. Produces sanitized publisher-access classifications only.",
+    "version":  "0.2",
+    "buildTag":  "latest",
+    "defaultMemoryMbytes":  256,
+    "minMemoryMbytes":  256,
+    "maxMemoryMbytes":  256,
+    "input":  "./input_schema.json"
+}

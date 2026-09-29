@@ -2,7 +2,7 @@
 
 **Issue:** [#22](https://github.com/adunato/google-news-enriched-actor-poc/issues/22)
 
-**Status:** Iteration 1 recorded; the Spike remains open.
+**Status:** Iteration 2 preparation in progress; the Spike remains open.
 
 **Iteration result:** Inconclusive for the original Technical Question.
 
@@ -68,6 +68,30 @@ Sanitized row evidence is [`local-results.json`](local-results.json), SHA-256 `c
 ## Conclusion
 
 **Result: Inconclusive.** Direct HTTP access is technically possible for a subset of the sampled public pages, while denials and robots signals require row-level classification and fail-soft behavior. The reduced local sample does not establish useful full-text reliability, hosted runtime behavior, or permission to access any publisher content. The broader access ladder and policy/legal boundaries remain unresolved.
+
+## Iteration 2 plan — hosted direct-HTTP baseline
+
+**Current understanding:** Iteration 1 observed mixed outcomes on 30 rows from 21 hosts on local Node 24. Direct HTTP returned 200 HTML for 19 rows; robots denials/unavailability and HTTP denials occurred. This is exploratory access evidence only: no readable-text extraction or permission conclusion was produced. Apify Node 20 runtime and hosted cost remain unknown.
+
+**Investigation backlog (ordered):**
+
+1. Measure the same bounded direct-HTTP access path from the target Apify Node 20 environment on a representative 100-row sample.
+2. Classify the resulting access and robots outcomes by the ten query/edition cells and publisher host, without treating HTML markers as readable-text evidence.
+3. Use the hosted baseline to select a later, separately approved test of session/state or browser requirements; defer proxies, managed unblocking, and paid data sources until their product and risk boundaries are explicitly reviewed.
+
+**Selected hypothesis:** The 30-row local baseline may not represent the access outcomes from Apify's target network/runtime; a fresh 100-row cohort may expose materially different denial, robots, or transport rates.
+
+**Why this is the next useful test:** It isolates hosted network/runtime effects while holding the access method and request controls constant. It gives later access-ladder tests a representative baseline without escalating to a heavier technique.
+
+**Exact experiment:** Run one private disposable Actor build on Apify Node 20. During that single run, fetch a fresh Google News RSS cohort for five existing broad queries in GB and US editions, taking the first ten feed items from each of the ten cells (100 rows total). Resolve each Google News destination and probe publisher pages using the existing direct HTTP procedure. Keep concurrency at four, request timeout at 10 seconds, manual redirects at no more than five, publisher response prefix at 256 KiB, and 250 ms per-host request-start spacing. Apply the existing public-DNS validation/pinning and robots skip policy. Keep per-row failures isolated. The run must reject an incomplete 100-row cohort and must not retry the experiment automatically.
+
+**Representative environment/data:** Apify Node 20 hosted runtime; current fresh public Google News feeds for `world news`, `politics`, `business`, `technology`, and `climate change`, each in GB/en-GB and US/en-US editions, ten rows per cell. The feed/RPC acquisition runs inside the Actor; no URL-bearing manifest is uploaded as input. The Google marker/RPC destination method remains an undocumented investigation input and is not asserted as a product contract.
+
+**Expected evidence and interpretation:** Record exact Actor/build/run identity; Node/runtime and run settings; start/end time, total and per-cell row counts; candidate resolution outcomes; HTTP/robots/access-class counts; latency summary; dataset item count and sanitized dataset hash; platform usage cost and memory; and sanitized warning/error classes. Retain only publisher hostnames, row/cell identifiers, status/classification signals, and one-way hashes; do not retain URLs, titles, page bodies, cookies, or raw logs. HTML/article markers remain separate from readable-text evidence. Treat any meaningful local-versus-hosted rate change as a sample-specific observation, not a population success guarantee.
+
+**Operational bounds and stop conditions:** The Actor remains private. Start exactly one run with Apify's server-enforced `maxTotalChargeUsd=1`, 256 MiB memory, and a 900-second timeout. If the API does not confirm that cost cap and run settings, do not start. Stop/abort on any cap/configuration mismatch, incomplete or URL-bearing persistence, unexpected paid service/proxy use, or a material access-control signal requiring a new decision. Do not retry a failed/incomplete run in this iteration. Delete the disposable hosted Actor and URL-bearing temporary stores after collecting the run's sanitized dataset and metadata; retain no raw logs or input. Do not claim the 50% readable-text criterion was measured.
+
+**Owner checkpoint:** The user's request to examine Issue #22 and proceed with next steps authorizes this bounded Iteration 2 under the existing Spike scope. This checkpoint is limited to the stated direct-HTTP hosted baseline; any escalation to sessions, browser execution, proxy/network identity changes, managed unblocking, or paid APIs requires a new decision.
 
 ## Owner checkpoint — Iteration 1
 
