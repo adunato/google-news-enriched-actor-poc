@@ -72,3 +72,7 @@ For the 44 hosted timeout rows, sanitized response-prefix lengths were `23,756â€
 Local `npm ci --ignore-scripts`, Node syntax checks for Actor/helper modules, and `apify validate-schema` passed before the hosted run. Node 20.19.0 syntax checks and the local timing diagnostic passed. The dataset was downloaded through the normal API and checked for 100 unique rows, ten per cell, allowed fields and URL patterns. Run settings, cost, runtime, memory, logs, dataset and Actor deletion were verified. No raw publisher content or logs were retained.
 
 **Issue #22 completion validation:** Hold / Inconclusive. No Product/Architecture boundary changed. `Learnings: None`.
+
+## Historical proxy implementation erratum
+
+An implementation audit found that the pre-run proxy specification above included a navigation/chrome token-ratio threshold `<0.35`, but [`src/readability-proxy.mjs`](src/readability-proxy.mjs) does not calculate that ratio. The helper implements the output-size limit, text normalization/segmentation, minimum word and substantive-segment counts, and distinct five-gram threshold only. Therefore Iteration 4 did not measure the declared navigation/chrome criterion. The recorded `accepted_proxy=0/100` remains accurate: no row returned output for scoring, so no row passed or failed any output-quality criterion. Do not describe the navigation/chrome filter as evaluated.
