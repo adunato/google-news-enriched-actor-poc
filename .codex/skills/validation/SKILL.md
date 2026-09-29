@@ -1,30 +1,72 @@
 ---
 name: validation
-description: Validate a Feature/Bug implementation or Technical Discovery Issue against its acceptance/evidence criteria and required artifacts, rectifying in-scope gaps proportionately.
+description: Validate Feature/Bug implementation or a Technical Spike iteration/final conclusion against its acceptance/evidence criteria and required artifacts.
 ---
 
 # Validation
 
 Use the GitHub Issue as the primary acceptance/evidence contract.
 
-For Feature/Bug work, also use completed prerequisite Technical Discovery when required, HLD, implementation plan, LLD, current Product/Architecture definitions, implementation hand-off, repository tests, and relevant operating-model quality rules.
+For Feature/Bug work, also use any completed prerequisite Technical Spike, HLD, Implementation Plan, LLD, current Product/Architecture definitions, implementation hand-off, repository tests, and relevant operating-model quality rules.
 
-For a Technical Discovery Issue, use its evidence/exit criteria, `docs/changes/<issue>/technical-discovery.md`, retained evidence/probes, Product/Architecture constraints, and repository validation relevant to any committed tooling.
+For a Technical Spike, use its stable Technical Question/Required Outcome, `docs/changes/<issue>/technical-spike.md`, retained experiment evidence/probes, Product/Architecture constraints, and repository validation relevant to committed tooling.
 
-For Feature/Bug work, validate changed behaviour, regression risk, edge cases, errors, user/system flows, and material integration boundaries. Trace every material acceptance criterion to explicit evidence. Add or extend proportionate unit, integration, API, contract, component, or end-to-end tests; do not introduce disproportionate infrastructure merely for ceremony.
+## Feature/Bug validation
 
-Use evidence at the boundary of the claim. Mocked tests can validate local logic, deterministic parsing, error handling, and contracts, but they do not establish that a material external system, live-data source, deployed runtime, or platform integration actually works. Where the Issue or plan requires representative live/in-environment evidence, execute that evidence across the defined scenario matrix. A failed or incomplete required live/end-to-end check is an acceptance failure and the change remains on hold.
+Validate changed behaviour, regression risk, edge cases, errors, user/system flows and material integration boundaries. Trace every material acceptance criterion to explicit evidence.
 
-For Technical Discovery, validate that representative environments/data were actually exercised, observations are reproducible and distinguished from inference, material alternatives/hypotheses were treated proportionately, limitations are explicit, and the Feasible / Not feasible / Inconclusive conclusion follows from retained evidence. Do not validate a discovery as successful merely because a probe ran or repository CI is green.
+Use evidence at the boundary of the claim. Mocked tests can validate local logic and deterministic behaviour but cannot prove that a material external/live/runtime boundary actually works. Required representative live/in-environment evidence must be executed across the defined scenario matrix.
 
-For Feature/Bug work, run change-specific tests first, including required bounded-feasibility/live/end-to-end checks at the stage where they are executable; rectify implementation defects within the approved scope, rerun affected tests, then run the relevant regression coverage. Do not weaken valid tests or replace a failed real-boundary check with a passing mock.
+If Feature/Bug validation exposes a material product, architecture, scope, design or previously hidden unknown-integration problem, stop and return to the appropriate Issue/Technical Spike/design/planning stage.
 
-If Feature/Bug validation exposes a material product, architecture, scope, design, or previously hidden technical-discovery need, stop and return to the appropriate Issue/discovery/design/planning stage. If discovery validation shows the question remains unresolved, record `Inconclusive`; do not convert uncertainty into a passing result. Before hand-off for integration, confirm that any required Product Definition or Architecture Definition update is present and consistent with the implemented behaviour.
+## Technical Spike iteration validation
+
+An individual Spike iteration is valid when:
+
+- the approved hypothesis/experiment was executed within its stated bounds;
+- representative environment/data requirements for that iteration were met;
+- observations and inference are clearly separated;
+- retained evidence supports the recorded experiment result;
+- limitations/variability are explicit;
+- the living Spike document has been updated consistently;
+- the proposed next iteration follows from the evidence.
+
+Classify an experiment result as `Supported`, `Rejected`, or `Inconclusive`.
+
+An `Inconclusive` experiment is **not a failed lifecycle state** and is not a reason to close the Spike. Validation may report:
+
+**Iteration valid / Spike remains open**
+
+when the experiment was correctly executed but the original Technical Question is unresolved.
+
+## Technical Spike final validation
+
+A Spike may be validated as ready to close only when:
+
+- the original Technical Question is resolved;
+- the Required Outcome is either demonstrated or shown not feasible within the approved constraints;
+- material hypotheses/alternatives were investigated proportionately;
+- the Supported Technical Specification contains only evidence-backed behaviour;
+- representative variability/limitations are explicit;
+- the final conclusion is `Feasible` or `Not feasible`;
+- downstream implications and required reassessment/product decision are explicit.
+
+Do not validate a Spike as complete merely because repository CI is green, a probe ran successfully, or one experiment has finished.
+
+If the original question remains unresolved, validation result is **Hold — Spike remains open** even when the current iteration itself is valid.
+
+Before Feature/Bug hand-off, confirm required Product/Architecture updates are present and consistent. Before final Spike hand-off, confirm any durable Product/Architecture implication is explicitly routed rather than silently applied.
 
 ## Completion report contract
 
-Report the Issue reference/type, acceptance-or-exit-criterion-to-evidence results, validation performed and coverage, representative scenario coverage, observed versus inferred evidence (and mocked versus live/in-environment evidence where relevant), tests/probes and reruns, every in-scope correction, outstanding failures or unresolved questions, manual validation still required, and durable-document consistency. State the validation result explicitly as `Pass` or `Hold`. Explicitly state `No additional manual validation is required.` when applicable.
+Report the Issue/type, validation scope (`Feature/Bug`, `Spike iteration`, or `Spike final`), criterion-to-evidence results, representative scenario coverage, observed versus inferred evidence, tests/probes/reruns, corrections, outstanding questions, manual validation still required, durable-document consistency, and explicit result:
+
+- `Pass`;
+- `Iteration valid / Spike remains open`;
+- `Hold`.
+
+Explicitly state `No additional manual validation is required.` when applicable.
 
 ## Learning checkpoint
 
-Before completing this skill, consider whether execution exposed a reusable lesson about the product, Development Operating Model, a skill/template, tooling/CI, or the implementation methodology. A normal defect or one-off execution problem is not automatically a learning. When a reusable lesson exists, use `capture-learning` to record it under `docs/learnings/`; otherwise report `Learnings: None`. A learning that requires SideGig-level change must be recorded for later SideGig review rather than changing cross-project standards from the product repository.
+Consider whether validation exposed a reusable lesson. Use `capture-learning` when warranted; otherwise report `Learnings: None`.
