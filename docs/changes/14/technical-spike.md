@@ -3,7 +3,7 @@
 > Living investigation artifact for Issue #14. Historical Technical Discovery artifacts under Issues #14 and #18 remain retained evidence; this document is now the controlling research/design record.
 
 **Artifact ID:** `technical-spike-14-google-news-publisher-url`  
-**Status:** `Open`  
+**Status:** `Feasible`  
 **Owner:** Project owner; executor recorded per iteration  
 **Created / updated:** `2026-09-29`  
 **GitHub Spike Issue:** [#14](https://github.com/adunato/google-news-enriched-actor-poc/issues/14)  
@@ -55,14 +55,15 @@ A Feasible conclusion requires evidence supporting at least 95 correct publisher
 - The owner approved H5's mechanism-level attribution rule: a parseable non-Google destination from the RPC request bound to a matching Google News article-ID marker may count as URL resolution, independently of publisher-page accessibility.
 - #18's strict-success measure was 76/100 because it additionally required HTTP 200 HTML and an article-like marker. That measure combines URL-resolution evidence with publisher-page accessibility.
 - The 21 unverifiable hosted rows were not demonstrated to be incorrect destinations. Their identity could not be confirmed with the publisher-page-title method.
-- Issue #4 requires >=95/100 successful publisher URL resolution, so at least 16 of those 21 unresolved rows must be independently verified, assuming the existing 79 confirmed rows remain valid.
+- Issue #4's current acceptance wording requires >=95/100 successful resolution to valid non-Google HTTP(S) publisher URLs. It does not require >=95 independent publisher-page identity confirmations.
 
 ### Unresolved questions
 
-- Can enough of the 21 inaccessible/unverifiable candidates be tied to the correct originating story without successfully loading the publisher article body?
-- What combination of independent signals is sufficiently discriminating to count as verification rather than plausibility?
-- Does the resulting evidence support >=95/100 correct publisher URLs under the same representative matrix and hosted runtime constraints?
-- What minimum runtime verification should production #4 perform, versus what evidence is only needed to validate the design?
+The original Technical Question is resolved under the owner-approved H5 attribution rule. The remaining uncertainties are implementation/maintenance risks rather than blockers to this Spike conclusion:
+
+- whether the undocumented Google acquisition path still works unchanged in a fresh implementation-time live sample;
+- how often the marker/RPC mechanism changes over time;
+- exact independent story identity for the 21 rows that publisher-page title checks could not verify.
 
 ### Rejected / unsupported assumptions
 
@@ -89,7 +90,7 @@ Historical source evidence:
 | H3  | Publisher-page title/content checks can independently prove candidate identity for >=95/100 rows.                                                                                                                  | Direct publisher evidence would be strong identity confirmation.                                                                                                                               | >=95 confirmed matching publisher pages under bounded requests.                                                                                              | Rejected as a universal verification method; 79 confirmed, 21 inaccessible/unverifiable, 0 confirmed mismatches                                                                     |
 | H4  | The unresolved candidates can be individually verified without publisher-body access using domain/title-path heuristics.                                                                                           | Attempted to replace publisher-page verification with an independent per-row rule.                                                                                                             | A precommitted rule discriminates known positives/negatives and verifies enough held-out rows.                                                               | Inconclusive and no longer the preferred closure path. Calibration never occurred; later attempts exposed a Google acquisition/consent issue rather than an identity contradiction. |
 | H5  | Mechanism-level assurance is sufficient for Issue #4: a reproducible article-ID-bound Google marker/RPC result may count as successful URL resolution without requiring the publisher page itself to be fetchable. | Issue #4 requires publisher-URL resolution, not universal publisher-page accessibility. Existing evidence is 100/100 candidate extraction, 79 direct confirmations and 0 confirmed mismatches. | Existing/offline evidence shows 100/100 candidates under the approved mechanism-level attribution rule, with no material contradiction in the retained data. | **Supported under the approved attribution rule; see Iteration 6**                                                                                                                  |
-| H6  | A materially different resolver is required.                                                                                                                                                                       | Fallback only if H5 cannot support an evidence-backed resolver contract.                                                                                                                       | Existing marker/RPC mechanism cannot be reproduced or produces material contradictions under bounded current-runtime checks.                                 | Deferred                                                                                                                                                                            |
+| H6  | A materially different resolver is required.                                                                                                                                                                       | Fallback only if H5 could not support an evidence-backed resolver contract.                                                                                                                     | Existing marker/RPC mechanism cannot be reproduced or produces material contradictions under bounded current-runtime checks.                                 | Not required for Spike closure because H5 is supported                                                                                                                              |
 
 Publisher/news-site access, anti-bot techniques, proxy/browser escalation and access-policy boundaries are now owned by independent Spike #22. They are not part of Issue #14 closure.
 
@@ -331,12 +332,13 @@ Candidate extraction is strongly demonstrated on the tested matrix. Exact identi
 
 ## 8. Remaining Uncertainty
 
-- Whether the approved mechanism-level attribution rule satisfies #4's acceptance wording; #4 must be reassessed after this evidence is integrated.
-- Whether a future separately authorized current-runtime replay is needed for implementation readiness. H5 did not run one because the retained hosted matrix answers the evidence question, while the current capture path stops at the consent redirect before marker/RPC extraction.
-- The RPC result has no response-side article-ID or title field checked by the retained parser; exact story identity for the 21 title-unverifiable rows is therefore not independently established.
-- The maintenance risk of relying on an undocumented Google marker/RPC mechanism.
-- The current H4 capture path is blocked by `consent.google.com`; H5 relied on historical hosted RPC evidence and does not claim that today's acquisition path is currently replayable under its existing redirect policy.
-- Publisher-site reachability, anti-bot controls, browser/proxy escalation and permission/policy boundaries are explicitly outside this Spike and are owned by #22.
+The following uncertainties remain explicit but do **not** prevent the Spike from closing Feasible:
+
+- the Google marker/RPC mechanism is undocumented and may change without notice;
+- H5 relied on retained hosted evidence rather than a new live replay because the later H4 capture path stopped at `consent.google.com` before marker/RPC extraction;
+- Issue #4 must still perform its own mandatory fresh 100-row external/runtime acceptance validation during implementation/validation, which will establish current compatibility at that point;
+- the RPC result has no independently checked response-side article ID or title, so 21/100 rows remain unconfirmed by the publisher-title method even though they satisfy the approved mechanism-level URL-resolution rule;
+- publisher-site reachability, anti-bot controls, browser/proxy escalation and permission/policy boundaries are outside this Spike and owned by #22.
 
 ## 9. Final Conclusion
 
@@ -346,20 +348,22 @@ Candidate extraction is strongly demonstrated on the tested matrix. Exact identi
 
 The retained #18 hosted fixed matrix yielded 100/100 article-ID-bound marker/RPC candidates with syntactically valid non-Google destinations. Historical #14 evidence independently demonstrated the mechanism locally and in Apify Node 20. The standalone #18 labels are 79 direct title-confirmed rows, 21 unverifiable rows and zero confirmed mismatches. The retained evidence contains no confirmed contrary destination. Under the approved H5 rule, these results support 100/100 operational URL resolutions, above the unchanged 95/100 threshold.
 
-This feasibility result depends on the approved interpretation that an ID-bound Google marker/RPC result is sufficient attribution for URL-resolution success. It is not a finding that all 100 publisher identities were independently verified: 79 are directly title-confirmed, 21 remain unverifiable by that method, and the RPC parser does not inspect response-side identity fields. If Issue #4 requires 95 independently confirmed exact identities, this evidence does not meet that criterion.
+This feasibility result depends on the approved interpretation that an ID-bound Google marker/RPC result is sufficient attribution for URL-resolution success. It is not a finding that all 100 publisher identities were independently verified: 79 are directly title-confirmed, 21 remain unverifiable by that method, and the RPC parser does not inspect response-side identity fields. Issue #4's current acceptance criteria require >=95 valid resolved publisher URLs, not >=95 independent publisher-page identity confirmations.
 
 ### Not feasible
 
-Not selected under the approved H5 interpretation. A stricter requirement for 95 independent identity confirmations remains unsupported by current evidence and needs an explicit owner decision; this Spike does not silently change that requirement.
+Not selected. The approved H5 interpretation satisfies the Spike's required outcome and Issue #4's current URL-resolution acceptance meaning. A future requirement for >=95 independent publisher-page identity confirmations would be a separate change to the downstream acceptance contract, not a reason to keep this Spike open.
 
-The Spike remains open. Historical #14/#18 experiment completion does not complete this controlling Spike.
+The Technical Spike is complete with a supported `Feasible` conclusion.
 
 ## 10. Downstream Implications
 
-- Issue #4 remains blocked.
-- #5, #6 and #7 remain transitively dependent on #4.
-- #20 is superseded by this Spike and should not be used as a parallel investigation.
-- No HLD, Implementation Plan or further production resolver implementation should resume until this Spike reaches a supported final conclusion and #4 is reassessed.
+- Merge of PR #21 integrates the final Spike evidence and closes Issue #14.
+- After that merge, rerun `assess-change` on Issue #4 using the current installed SideGig skills before HLD, Implementation Planning or production resolver work resumes.
+- Issue #4 retains its mandatory fresh representative 100-row external/runtime acceptance validation; the historical Spike evidence does not replace that implementation-time/current-runtime gate.
+- #5, #6 and #7 remain transitively dependent through #4.
+- #20 remains superseded and should not be revived as a parallel investigation.
+- Publisher-site access remains a separate capability owned by #22.
 
 ## 11. Reproducibility
 
@@ -376,12 +380,10 @@ Historical reproducibility details remain authoritative in:
 - `docs/changes/18/frozen-input.json`
 - retained #18 probe/package files.
 
-The current iteration should add its experiment-specific design/probe/evidence under `docs/changes/14/experiments/03-independent-verification/` if files beyond this living artifact materially improve reproducibility.
-
 ## Completion
 
-**Spike state:** `Open pending evidence integration and downstream reassessment`
+**Spike state:** `Ready to close`
 
-**Rationale:** H5 now supports a 100/100 URL-resolution result under the owner-approved mechanism-level attribution rule. This is not 100 independently confirmed publisher identities; 79 are directly confirmed, 21 remain unverifiable, and the undocumented RPC has no response-side identity check.
+**Rationale:** H5 supports 100/100 operational publisher-URL resolutions on the retained fixed matrix under the owner-approved mechanism-level attribution rule, exceeding the unchanged >=95/100 requirement. The 79 direct confirmations / 21 publisher-title-unverifiable distinction remains an explicit evidence limitation but does not contradict the accepted URL-resolution rule or Issue #4's current wording.
 
-**Required next action:** Integrate the H5 evidence and rerun `assess-change` on #4. Keep #4 blocked until that review confirms this success meaning satisfies its acceptance criteria. If not, obtain an explicit owner decision. Do not continue H4 publisher-access or consent-circumvention work; general automated news-site access is owned by #22.
+**Required next action:** Merge PR #21, which closes Issue #14. Then rerun `assess-change` on Issue #4 using the newly refreshed SideGig skills and proceed according to that assessment. Do not continue H4 publisher-access or consent-circumvention work; general automated news-site access is owned by #22.
