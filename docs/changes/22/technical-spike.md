@@ -2,7 +2,7 @@
 
 **Issue:** [#22](https://github.com/adunato/google-news-enriched-actor-poc/issues/22)
 
-**Status:** Iteration 4 recorded; the Spike remains open.
+**Status:** Iteration 5 recorded; the Spike remains open.
 
 **Iteration result:** Inconclusive for the original Technical Question.
 
@@ -56,9 +56,9 @@ Sanitized dataset SHA-256: `0ef3bfa1878d5495486c0ad8742098d348d3c057f33cb3112196
 
 **Owner decision requested:** **Approve Iteration 5: a bounded local Node 20 input-size scaling diagnostic using authored/synthetic HTML and the locked dependency, with no publisher requests or hosted Actor run.** If approved, identify a defensible per-row deadline and return a proposed hosted follow-up for a separate decision. If redirected or declined, Issue #22 and Issue #5 remain unresolved; current evidence supports direct-access observations only.
 
-## Iteration 5 proposed plan -- local synthetic input-size scaling
+## Iteration 5 plan -- local synthetic input-size scaling
 
-**Status:** Proposed for owner approval. No Iteration 5 code or experiment has been run. Iteration 4's authorization covered one hosted run only; this proposed local diagnostic is a separate approved-iteration checkpoint. It does not authorize another hosted run.
+**Status:** Approved and executed as one local diagnostic. Iteration 4's authorization covered one hosted run only; Iteration 5 was separately approved for local synthetic inputs. It does not authorize another hosted run.
 
 **Current understanding:** In Iteration 4, all 44 eligible hosted rows reached the five-second worker timeout; 15 response prefixes were capped, and the timed-out prefixes ranged from 23,756 to 262,144 bytes. A local Node 20.19.0 diagnostic with the same lock completed four small authored fixtures in 443-674 ms, while one 262,088-byte synthetic input timed out during extraction. Hosted execution used Node 20.20.2; the local patch version differs. The live publisher HTML was not retained, so the timed-out cases cannot be replayed.
 
@@ -76,7 +76,31 @@ Sanitized dataset SHA-256: `0ef3bfa1878d5495486c0ad8742098d348d3c057f33cb3112196
 
 **Deliverables:** A small local-only reproducibility script and sanitized `experiment.md`/metrics record with phase timings, size/shape outcome and a supported deadline/cap recommendation (or an explicit inconclusive result). Retain no generated fixture or extracted text. No hosted Actor, publisher request, cost or production change is included.
 
-**Owner decision requested:** **Approve Iteration 5: the bounded local Node 20 synthetic size-scaling diagnostic described above.** If approved, execute only these local cases and return with a measured bound and a separate recommendation for any later hosted experiment. If declined or redirected, preserve the current timeout uncertainty; do not start another hosted run under Iteration 4's approval.
+**Owner decision recorded:** Approved for one bounded local diagnostic only. Execution and evidence are recorded below; no later hosted run is authorized.
+
+## Iteration 5 evidence and checkpoint
+
+**Experiment:** Ran all 12 serial synthetic cases in the planned two markup shapes at 16, 32, 64, 128, 192 and 256 KiB. Each used one fresh worker and the five-second end-to-end deadline. Node `v20.19.0`, exact locked and installed `@extractus/article-extractor@9.0.1`; package-lock SHA-256 `d40e0664285e6ebdd6222ed452dd91c3fc2f77a4fa5f3abef652e9648868b3e2`. Total elapsed time was `27.804` seconds; all cases ran, with no global stop condition. No network attempt occurred. Peak recorded parent-process RSS was `76,201,984` bytes, below the 256 MiB bound; worker old-space was limited to 128 MiB and parent old-space to 128 MiB.
+
+| Synthetic shape | 16 KiB | 32 KiB | 64 KiB | 128 KiB | 192 KiB | 256 KiB |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Semantic article extraction | 69.8 ms | 154.1 ms | 502.6 ms | 1,758.7 ms | timeout at 5 s | timeout at 5 s |
+| Generic nested-div extraction | 55.6 ms | 120.9 ms | 348.6 ms | 1,237.3 ms | 4,266.6 ms | timeout at 5 s |
+
+All nine completed cases reached output post and parent proxy scoring; the three timeouts remained in `extractFromHtml`. Parent scoring took 3.5-14.0 ms. Worker import was 2,174.1 ms on the first case and 123.2-139.3 ms on subsequent fresh workers. Thus the hypothesis that import stays below one second across the ladder was false for this first-run measurement; extraction time increased sharply with input size in both generated shapes. The semantic shape timed out at 192 KiB while the generic shape completed that size close to the deadline, so a universal size threshold is not established. These timings are specific to a local Node 20.19.0 Windows process and generated repetitive markup; they cannot establish hosted Node 20.20.2 behavior or explain particular live rows.
+
+The generated repeated text failed the structural readability proxy in every completed case; this is expected from the fixture design and is not an extractor-quality result. Output was measured only in memory, never persisted. The sanitized per-case results are in [`experiments/05-local-size-scaling/results.json`](experiments/05-local-size-scaling/results.json); the one-pass runner and worker are in that experiment's `src/` directory. No generated HTML or extracted text was retained.
+
+**Iteration result:** `Inconclusive` for the original Technical Question and for live publisher quality. This diagnostic supports that extraction cost can dominate the five-second deadline as synthetic inputs grow, while worker startup is about 28-54 ms and proxy scoring is small; the first package import incurred a one-time 2.17-second delay. It does not provide a safe live-page byte cap or timeout recommendation because the content is synthetic, highly repetitive, and only one machine/runtime patch was tested. Iteration 4's 44 hosted timeouts remain unexplained on a per-row basis. No production dependency, timeout or input-cap change is approved.
+
+**Recommended next action:** Before any more hosted extraction evaluation, seek approval for one local Node 20 complexity-control study: 12 serial cases using two structures (semantic article and nested div), three exact input sizes (64, 128 and 192 KiB), and two authored synthetic content profiles (unique varied prose at low markup density and equivalent-length repeated prose at high markup density). Use a fresh worker per case, five-second per-case and 90-second overall limits, 256 KiB input/1 MiB output caps, 128 MiB parent and worker old-space limits, and stop at 256 MiB RSS or any network attempt. Retain phase timings, size, profile, shape, sanitized proxy counts and completion phase only. This isolates the two factors absent from Iteration 5—text repetition and markup density—while rechecking the near-timeout 192 KiB point. It may inform a synthetic-only candidate cap/deadline, but cannot establish a safe live-page bound or publisher readability. It is higher value than another hosted cohort because the current evidence has no defensible bound for interpreting the prior 44 timeouts.
+
+**Prerequisite/blocker status:** No execution blocker affected Iteration 5. A defensible live-page timeout/cap remains unresolved; the safe recovery is another separately approved local diagnostic before considering a hosted rerun. No production or hosted action is currently authorized.
+
+**Owner decision requested:** **Approve one further local Node 20 complexity-control study: the 12-case 2-shape × 3-size × 2-content-profile cohort, with one fresh worker/case, 5-second per-case and 90-second overall deadlines, 256 KiB input/1 MiB output caps, 128 MiB old-space per parent and worker, 256 MiB RSS stop, and no network/publisher data.** This authorizes local synthetic work only. Any hosted publisher evaluation requires separate explicit approval. If declined, retain the current Inconclusive conclusion and do not rerun Iteration 4.
+
+**Learning checkpoint:** None. The observed size sensitivity is specific to this extractor, version, runtime patch and synthetic corpus; it is not a portable operational rule.
+
 ## Iteration 3 plan — local readability-method evaluation
 
 **Current understanding:** Iteration 2 showed HTTP 200 HTML for 72/100 rows in one fresh Apify Node 20 sample. Neither hosted iteration retained page HTML or measured readable article text. Issue #5's acceptance criterion remains at least 50% readable full-text extraction on a representative 100-row sample. No extraction algorithm or dependency is approved for production use.
