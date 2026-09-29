@@ -1,4 +1,4 @@
-/* global AbortSignal:readonly, Buffer:readonly, URL:readonly, TextDecoder:readonly, console:readonly, fetch:readonly */
+/* global AbortSignal:readonly, Buffer:readonly, URL:readonly, TextDecoder:readonly, console:readonly, fetch:readonly, setTimeout:readonly */
 import { XMLParser } from "fast-xml-parser";
 import { createHash } from "node:crypto";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
@@ -834,30 +834,34 @@ async function run() {
     retryCount: outcomes.filter((x) => x.retryUsed).length,
     noRetryBaselineAccessCounts: countBy(outcomes, (x) => x.accessStatus),
     perCell,
-    rows: outcomes.map(({ expectedTitle, pageTitleSignals = [], ...row }) => ({
-      ...row,
-      accessClass:
-        row.accessStatus === "skipped_robots_disallowed"
-          ? "robots_disallowed"
-          : row.accessStatus?.startsWith("skipped_robots_")
-            ? "robots_unknown"
-            : [401, 403, 451].includes(row.httpStatus)
-              ? "http_access_denial"
-              : row.challengeLike
-                ? "challenge_or_denial_signal"
-                : row.accessStatus === "http_200_html" && row.articleLike
-                  ? "html_article_like_marker"
-                  : row.accessStatus === "http_200_html"
-                    ? "html_without_article_like_marker"
-                    : row.contentType
-                      ? "other_http_response"
-                      : "transport_or_unavailable",
-      termsSignal: "not_assessed",
-      pageTitleSignals: pageTitleSignals.map(({ kind, value }) => ({
-        kind,
-        valueSha256: sha(value),
-      })),
-    })),
+    rows: outcomes.map((outcome) => {
+      const { pageTitleSignals = [], ...row } = outcome;
+      delete row.expectedTitle;
+      return {
+        ...row,
+        accessClass:
+          row.accessStatus === "skipped_robots_disallowed"
+            ? "robots_disallowed"
+            : row.accessStatus?.startsWith("skipped_robots_")
+              ? "robots_unknown"
+              : [401, 403, 451].includes(row.httpStatus)
+                ? "http_access_denial"
+                : row.challengeLike
+                  ? "challenge_or_denial_signal"
+                  : row.accessStatus === "http_200_html" && row.articleLike
+                    ? "html_article_like_marker"
+                    : row.accessStatus === "http_200_html"
+                      ? "html_without_article_like_marker"
+                      : row.contentType
+                        ? "other_http_response"
+                        : "transport_or_unavailable",
+        termsSignal: "not_assessed",
+        pageTitleSignals: pageTitleSignals.map(({ kind, value }) => ({
+          kind,
+          valueSha256: sha(value),
+        })),
+      };
+    }),
   };
   await writeFile(new URL("local-results.json", OUT), JSON.stringify(result, null, 2) + "\n");
   await rm(new URL(".probe-input.json", OUT), { force: true });
