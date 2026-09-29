@@ -15,7 +15,7 @@
 
 Acceptance criteria must prove the corrected real behaviour, not only mocked or conditional handling. When the defect involves an external system, live data, deployed runtime, or platform integration, include the externally observable condition that demonstrates the defect is actually resolved.
 
-If correcting the defect depends on an undocumented, reverse-engineered, materially volatile, or otherwise unknown external/runtime boundary, do not infer its specification during issue refinement. The `assess-change` step determines whether prerequisite Technical Discovery is required.
+If correcting the defect depends on an undocumented, reverse-engineered, materially volatile, or otherwise unknown external/runtime boundary, do not infer its specification during issue refinement. The `assess-change` step determines whether prerequisite Technical Spike is required.
 
 ## Validation Expectations
 
@@ -34,7 +34,7 @@ If correcting the defect depends on an undocumented, reverse-engineered, materia
 
 > Populated by the `assess-change` step after Issue refinement. Leave as `Pending` when the Issue is created.
 
-- **Technical Discovery:** Pending
+- **Technical Spike:** Pending
   - **Rationale:** Pending
   - **Prerequisite Issue:** Pending
   - **Status:** Pending
