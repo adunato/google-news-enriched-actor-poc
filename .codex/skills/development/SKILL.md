@@ -21,6 +21,8 @@ Update the durable Product Definition or Architecture Definition in the same cha
 
 Run the relevant local integrity checks and distinguish implementation-caused failures from unrelated failures. A green deterministic repository suite does not override a failed required live/end-to-end acceptance check.
 
+When a required acceptance check fails, stop treating the current candidate as acceptance-ready. Diagnose the failure and make a relevant correction before repeating that check. Re-running an unchanged candidate is not a corrective action and cannot convert its failed acceptance state into a pass.
+
 ## Completion report contract
 
 Report the Issue reference, prerequisite Technical Spike reference/status when applicable, implementation summary, changed areas, bounded feasibility-gate results, change-artifact deviations and reasons, durable-document updates, tests added/changed, live/end-to-end evidence executed during development, integrity checks and results, and known unrelated failures. Development is complete only when the approved scope is implemented and ready for validation.
