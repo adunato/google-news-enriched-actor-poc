@@ -59,7 +59,11 @@ An earlier malformed CLI Actor-creation request unexpectedly created a default e
 
 ## Next checkpoint
 
-The highest-value next action is an offline run-options shape test before attempting the cohort again. That test is now added. The original approval was consumed by the aborted hosted attempt, so request a new approval for exactly one replacement 100-row cohort only after the offline check passes. Do not infer production adoption or start another run under the prior approval.
+**Recommended next iteration:** One replacement fresh 100-row hosted eligibility/gate-proxy cohort under this same method and bounds. The I7 cohort was not measured; another local synthetic sizing/timing experiment cannot resolve live publisher eligibility or gate/proxy discordance. The earlier 44/100 ceiling is specific to the Iteration 4 cohort, so a complete fresh cohort has the highest information value for the remaining sampled access question.
+
+**Prerequisite/blocker and recovery:** The client-side response-shape check is fixed: `npm run preflight:run-options` passes against the sanitized actual run detail and synthetic valid, root-only-flag, and wrong-build cases. No disposable Actor remains. Before a replacement, create a new private `LIMITED_PERMISSIONS` Node 20 Actor, pass the `$1`/256 MiB/900-second/no-restart settings in the run-start request, and check the detailed run record's nested `options` and exact build immediately. Stop if any value differs. The earlier run's empty dataset and zero network-byte metrics do not prove that no request was attempted; they only establish that no usable cohort result was recorded.
+
+**Owner decision requested:** **Approve exactly one replacement Iteration 7 run:** a fresh five-query × GB/US × ten-row-per-cell cohort (100 total), extract once from every permitted already-fetched 2xx HTML including gate-positive responses, retain one aggregate item only, and use a private `LIMITED_PERMISSIONS` Node 20 Actor with user-set server `$1`, 256 MiB, 900 seconds and restart disabled. The prior approval was consumed by the aborted attempt. If approved, execute this one replacement and report all 100 rows, the gate/extraction cross-tab, and hosted settings/cost/memory with proxy limitations. If declined or redirected, do not build or request publisher data; leave Issue #22 open and Inconclusive, with eligibility and gate/proxy behavior unresolved. No production adoption follows from approval.
 
 ## Learning checkpoint
 
