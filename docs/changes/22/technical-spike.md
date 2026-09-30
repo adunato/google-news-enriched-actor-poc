@@ -2,13 +2,69 @@
 
 **Issue:** [#22](https://github.com/adunato/google-news-enriched-actor-poc/issues/22)
 
-**Status:** Iteration 7's replacement cohort completed all 100 rows, but all 78 eligible extraction calls timed out before proxy scoring. Iteration 8's local diagnostic and Iteration 9's offline phase-protocol preflight are complete. The original Technical Question remains Inconclusive; Issue #22 remains open.
+**Status:** Owner-directed lifecycle re-baseline after the Technical Spike methodology correction. All completed Iteration 1–8 evidence and Iteration 9 offline-preflight evidence are preserved. The planned hosted Iteration 9 continuation is deferred; Extractus is now a deprioritised option pending comparison against higher-priority alternatives. Issue #22 remains open.
 
 **Iteration result:** Inconclusive for the original Technical Question.
 
 ## Technical Question
 
 What automated web-access approaches can this news POC/product family responsibly rely on to retrieve public publisher pages at useful reliability, and where are the practical technical, cost, operational, policy or legal boundaries that should cause the product to stop, degrade gracefully, or use a different data source?
+
+## Lifecycle correction and option re-baseline — 2026-09-30
+
+The project owner directed a methodology correction after reviewing this Spike. The previous lifecycle moved too quickly from a plausible candidate into repeated candidate-specific experiments without first establishing and prioritising a credible option set. This section is the current controlling checkpoint. Historical experiment plans/checkpoints below are retained as evidence and do not authorize their previously recommended next runs.
+
+### Investigation boundary
+
+This Spike is now explicitly bounded to the concrete live technical uncertainties blocking #4 and #5 under the current POC constraints:
+
+- ordinary public access/session behaviour needed for #4's Google News resolution flow;
+- public publisher-page retrieval and generic article-content extraction needed for #5's >=50% readable-full-text target.
+
+It is not a general research programme into anti-bot systems, proxy markets, browser automation, scraping providers or every possible extraction technology. Browser rendering, residential proxies, paid external extraction APIs, paywall bypass and publisher-specific heavy infrastructure remain outside #5's current boundary unless evidence forces an explicit owner/Product/Architecture decision.
+
+### Proportionate option scan — publisher article-content branch
+
+A lightweight option scan was performed before selecting the next experiment. The scan used current official/upstream documentation and maintenance/community signals rather than attempting an exhaustive technology survey.
+
+| Option | Approach | Evidence / rationale | Material limitation | Priority / status |
+| ------ | -------- | -------------------- | ------------------- | ----------------- |
+| O1 | Direct Mozilla Readability on the already-fetched public HTML, with an explicit DOM implementation and runtime guards; use structured `NewsArticle.articleBody`/JSON-LD as a cheap fast path where present | Mozilla Readability is the standalone algorithm used for Firefox Reader View and exposes `isProbablyReaderable` and `maxElemsToParse`; Schema.org defines `articleBody` for Article/NewsArticle | Requires a Node DOM implementation; structured article body is not guaranteed on every publisher | **1 — Selected for next evaluation** |
+| O2 | Extractus 9.0.1 wrapper on already-fetched HTML | Active package, current release, and already has substantial retained evidence in this Spike | In this Spike, 78/78 eligible hosted calls reached the five-second deadline without output; local synthetic work also showed sharp extraction-cost growth on some inputs | **Deprioritised — viability checkpoint completed** |
+| O3 | Trafilatura as an alternate generic extractor | Mature purpose-built article/main-text extractor with documented fallback extraction and current maintenance | Python/CLI runtime introduces additional deployment/runtime complexity into the current Node POC | **Reserve — evaluate only if the Node-native option is insufficient** |
+| O4 | Postlight Parser / Mercury-style parser | Established article parsing approach and supports generic/custom parsers | Public project activity/release evidence is materially older than the other candidates and custom parsers move toward publisher-specific maintenance | **Deprioritised without experiment** |
+
+Sources consulted for this bounded scan:
+
+- Mozilla Readability: https://github.com/mozilla/readability
+- Schema.org NewsArticle / articleBody: https://schema.org/NewsArticle and https://schema.org/articleBody
+- Extractus package/upstream: https://www.npmjs.com/package/@extractus/article-extractor and https://github.com/extractus/article-extractor
+- Trafilatura: https://trafilatura.readthedocs.io/
+- Postlight Parser: https://github.com/postlight/parser
+
+This option set is intentionally small and directly tied to #5. It does not claim these are all article-extraction technologies.
+
+### Extractus option-viability checkpoint
+
+**Trigger:** repeated/surprising failure. The replacement hosted cohort produced 78/78 eligible five-second timeouts, including one small eligible input, while local synthetic tests did not reproduce that pattern consistently.
+
+**Upstream/community check:** the bounded search did **not** find strong evidence that Extractus 9.0.1 has a known universal timeout defect. The package remains actively published. Therefore the evidence does not support declaring Extractus generally broken.
+
+**Spike-specific viability decision:** **Deprioritise O2.** The current evidence is sufficient to say that continuing immediately into deeper Extractus-specific hosted telemetry has lower information value than testing a simpler, more directly controlled extraction path. The already-built Iteration 9 phase-telemetry tooling remains retained evidence/tooling and may be reused later if a comparative result makes Extractus-specific diagnosis worthwhile.
+
+**Interpretation boundary:** this is not a claim that Extractus cannot work. It is a decision that, for this Spike, the current candidate has accumulated enough unexplained hosted failure that the next experiment should return to the ranked option set rather than continue drilling into the same implementation.
+
+### Current selected option and next hypothesis
+
+**Selected option:** O1 — direct Mozilla Readability with explicit runtime guards, with structured article-body data treated as a fast path where available.
+
+**Next hypothesis:** removing the higher-level Extractus wrapper and exercising the underlying readability approach directly on the same class of already-fetched public publisher HTML may avoid the unexplained hosted timeout pattern while still producing useful article text within #5's existing HTTP-first boundary.
+
+**Recommended next iteration:** one bounded comparative O1 evaluation on a fresh representative cohort using the existing access/robots/privacy controls. Retain only aggregate success/failure, timing, input-size/runtime guard and readable-text proxy evidence. Existing O2 evidence is the comparison baseline; do not run the deferred hosted I9 telemetry first.
+
+**Owner decision requested:** approve or redirect that single O1 evaluation after this re-baseline is reviewed. No new experiment has been executed as part of this methodology correction.
+
+> Historical checkpoints and experiment plans below remain append-only evidence. Where they recommend hosted Iteration 9 telemetry as the next step, that recommendation is superseded by this current checkpoint.
 
 ## Living checkpoint after Iteration 8
 
@@ -83,7 +139,7 @@ The stage of Iteration 7's five-second failures remains unknown: startup, import
 
 ## Iteration 9 offline preparation result — hosted worker phase telemetry
 
-**Status:** Offline implementation and preflight passed; future hosted run is not authorized by this checkpoint.
+**Status:** Offline implementation and preflight passed. **Current lifecycle status: deferred/superseded as the next experiment by the 2026-09-30 option re-baseline.** No hosted Iteration 9 run is authorized.
 
 **Hypothesis:** A monotonic phase protocol with one idempotent terminal classification per eligible attempt can identify the stage responsible for worker timeouts while retaining only aggregate telemetry. A strict cohort/privacy gate can also ensure that partial, inconsistent, or malformed results never reach the dataset sink.
 
@@ -476,7 +532,7 @@ The default dataset API returned 100 items from dataset `i0SFWOp2bDxXlTSiG`; eve
 
 - Keep Issue #5 blocked pending a supported access strategy and representative readable-text evidence.
 - Do not promote this investigation's Google marker/RPC method, browser execution, proxy use, managed unblocking, or paid extraction into the product boundary.
-- Proposed next hypothesis for owner review: repeat the direct HTTP baseline on a fresh 100-row stratified sample in the Apify Node 20 runtime, retaining the same request, robots, and privacy bounds; then separately assess readable-text signals and hosted cost. This requires valid Apify authentication and a decision to authorize the next Spike iteration.
+- Current next hypothesis is defined by the 2026-09-30 option re-baseline: evaluate O1 (direct Mozilla Readability with explicit runtime guards and structured article-body fast path) before any further Extractus-specific hosted telemetry. Historical next-step recommendations below are superseded.
 - Issue #22 remains open. After the Spike reaches a supported conclusion and is integrated, reassess Issue #5 as specified in that Issue.
 
 ## Reproducibility
