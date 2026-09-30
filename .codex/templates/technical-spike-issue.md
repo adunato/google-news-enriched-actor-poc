@@ -21,12 +21,14 @@
 
 <Approved product/architecture boundaries, environments, cost/safety limits, credentials, prohibited techniques, or other non-negotiable constraints.>
 
-## Initial Investigation Direction
+## Investigation Boundary and Known Leads
 
-<List the initial hypotheses or approaches worth testing. These are starting points, not commitments. Detailed iteration design belongs in the living Technical Spike artifact.>
+<State the intended Spike depth and any owner constraint, for example a lightweight/proportionate technical search rather than broad domain research. If no special constraint exists, state "Proportionate to the bounded Technical Question".>
 
-- <hypothesis / approach>
-- <hypothesis / approach>
+<List any already-known approaches, sources or evidence worth including in the initial option scan. These are leads, not selected solutions or committed hypotheses. The `technical-spike` lifecycle performs the proportionate option scan, prioritisation and hypothesis design in the living artifact.>
+
+- <known lead / source / approach>
+- <known lead / source / approach>
 
 ## Completion Criteria
 
@@ -50,7 +52,8 @@ Create and maintain `docs/changes/<issue-number>/technical-spike.md` from the ca
 
 - **Execution path:** Technical Spike
 - **Production implementation:** Prohibited unless separately approved as reusable non-product tooling.
-- **Default iteration mode:** One approved iteration at a time. After each iteration, record the evidence, update the Spike artifact, select and recommend the best next hypothesis/experiment, diagnose any blockers/prerequisites, state their impact and recovery path, and present the project owner with the exact approval/decision required. The checkpoint is an authorization boundary, not a transfer of investigative ownership.
+- **Option selection:** Before the first experimental hypothesis, perform a proportionate option scan and prioritise the materially credible approaches in the living Spike artifact. Do not turn this bounded Spike into a broad research exercise.
+- **Default iteration mode:** One approved iteration at a time. After each iteration, record the evidence, update the Spike artifact, decide whether the selected option remains viable, then recommend the best next hypothesis/experiment or return to the ranked option set. Diagnose blockers/prerequisites, state their impact and recovery path, and present the project owner with the exact approval/decision required. The checkpoint is an authorization boundary, not a transfer of investigative ownership.
 - **Autonomous continuation:** Allowed only when the project owner explicitly authorizes it. Even then, stop before any material change to scope, constraints, dependency model, cost, product/architecture assumptions, safety/risk posture, or the original Technical Question.
 - **Completion:** Keep this Issue open until the original Technical Question is resolved with a supported `Feasible` or `Not feasible` conclusion. Do not create serial Spike Issues merely because an experiment failed or was inconclusive.
 - **Next lifecycle step after completion:** Integrate the final Spike evidence, then rerun `assess-change` on every blocked downstream Issue.
