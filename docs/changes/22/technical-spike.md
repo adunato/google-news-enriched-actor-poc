@@ -50,6 +50,8 @@ The Spike must establish enough evidence to let downstream engineering know:
 - In the replacement hosted Extractus cohort, 78 rows were eligible and all 78 reached the five-second worker deadline without a scored output, including one small eligible input.
 - Local synthetic lifecycle work showed that extraction cost can rise sharply with input size/shape, but it did not explain the hosted 78/78 timeout pattern.
 - Iteration 9 phase-telemetry tooling passed its offline preflight, but no hosted Iteration 9 run occurred.
+- The Iteration 9 harness exercises Extractus, a structural extraction proxy and retries; it cannot be reused unchanged to evaluate the newly selected direct Readability option.
+- Iteration 10 is still a proposal. Its exact cohort, scoring rules and resource bounds are now specified below; no owner approval or hosted run has occurred.
 
 ### Unresolved questions
 
@@ -143,7 +145,7 @@ This option set is intentionally small and bounded to the current blocker.
 
 **Why test it:** It is the highest-priority credible option after the lifecycle re-baseline and directly tests whether the problem is specific to the current wrapper/path rather than the environment or HTML itself.
 
-**Evidence that would support it:** representative rows complete within the approved bounds, produce non-empty candidate article text for a useful share of eligible rows, and retain aggregate timing/failure evidence sufficient to compare against O2.
+**Evidence that would support it:** on a complete fresh cohort of 100 unique candidates, at least 50 produce qualifying candidate text within the approved bounds, with the 100-slot denominator and permitted-2xx denominator reported separately. A cohort shortfall is non-decisive for extraction viability. This is an early viability signal only: it does not close the Spike or establish #5's quality criterion.
 
 **Evidence that would refute it:** the same broad timeout pattern occurs despite explicit guards, or readable output remains too low to plausibly support #5's >=50% representative target.
 
@@ -160,8 +162,8 @@ This option set is intentionally small and bounded to the current blocker.
 **Iteration:** 10 proposed  
 **Selected option:** O1 — direct Mozilla Readability with explicit guards  
 **Hypothesis / approach:** H10  
-**Executor:** Pending  
-**Owner approval:** Pending
+**Executor:** Pending owner approval and offline compatibility preflight
+**Owner approval:** Pending; no execution authorization recorded
 
 ### Why this iteration
 
@@ -169,35 +171,55 @@ The previous path was increasingly instrumenting Extractus rather than reassessi
 
 ### Experiment
 
-Run one bounded O1 evaluation on a fresh representative cohort under the existing direct-HTTP, robots, DNS, privacy and hosted-resource controls. Process only rows that successfully return permitted 2xx HTML.
+After the owner approves this bounded Iteration 10, complete an offline preflight that confirms the selected DOM adapter and Mozilla Readability versions are compatible with the Actor's Node/Apify runtime, and that structured extraction and direct Readability can be invoked on the same sanitized fixture HTML. It must also assert worker cancellation at the five-second deadline; response-prefix, cumulative structured-script, DOM-element and output-character guards at their stated limits; and that the configured sink emits aggregate-only records with no URL, title, article text, HTML, exception text or other raw row data. Exercise these assertions with offline fixtures, including inputs over each limit and a worker that exceeds its deadline. The preflight must make no network requests and emit no article text. If any assertion fails, stop the iteration and return to this owner checkpoint with the failed assertion and recovery options; approval does not waive a failed gate and does not authorize a hosted run after failure.
+
+Only if every preflight assertion passes and the exact stated hosted gates remain verified, execute at most one bounded O1 evaluation on a fresh representative cohort under the existing direct-HTTP, robots, DNS, privacy and hosted-resource controls. Define 100 cohort slots as 5 fixed queries × GB/US locales × the first 10 ranked results per query/locale. A slot is identified by its query, locale and rank. Deduplicate repeated stories across slots by parsing the original Google News URL, removing its fragment and serializing it with the URL parser (preserving query parameters); retain the first occurrence in query/locale/rank order and mark later occurrences as duplicate slots. Do not backfill a duplicate, missing result, inaccessible result or other shortfall with a later-ranked result or a new query. Report requested slots, returned candidates, duplicate slots, unique retained candidates and all subsequent eligibility/outcome counts separately. The primary denominator remains all 100 requested slots; the permitted successful 2xx HTML subset is a separate denominator for extraction yield. If fewer than 100 unique candidates remain, report a source/cohort shortfall and treat the result as non-decisive for extraction viability; do not classify missing/duplicate slots as extraction failures.
 
 For each eligible row:
 
-- check structured article-body data first where available;
-- otherwise construct the chosen DOM implementation and run direct Mozilla Readability;
-- use explicit size/element/time guards;
-- retain only aggregate success/failure, timing, input-size/guard and readable-text proxy evidence;
+- inspect structured `ArticleBody`/JSON-LD and run direct Mozilla Readability against the same eligible HTML; record structured and Readability outcomes independently, including overlap;
+- define a qualifying Readability result as non-empty cleaned text with `fullTextStatus=success` and a reported `wordCount` equal to the whitespace-delimited word count of that cleaned text. Structured-only output is reported separately and does not count as Readability success;
+- apply a 512 KiB response-prefix cap, a cumulative 64 KiB structured-script cap, a 10,000 DOM-element cap and a 100,000-character output cap. Record truncation/guard outcomes; never represent truncated extraction as complete without recording that status;
+- retain only aggregate success/failure, timing, input-size/guard, access-eligibility, truncation, overlap and readable-text proxy evidence;
 - do not retain URL, title, HTML body, article text, cookies or exception text.
 
-The existing O2 evidence is the comparison baseline. Do not execute the deferred hosted Iteration 9 telemetry first.
+Use zero retries (`attempt_count=1`) and preserve the five-second per-row worker deadline, five-redirect maximum, concurrency of four and 250 ms pacing. Apply a 780-second soft stop within the hosted 900-second run limit. The existing O2 evidence is contextual comparison evidence, not a controlled head-to-head baseline. Do not execute the deferred hosted Iteration 9 telemetry first.
 
 ### Expected evidence
 
-The run should distinguish:
+The run should report all of the following, with counts and denominators:
 
-- access failure versus extraction failure;
-- structured-data success versus Readability success;
-- guarded rejection versus timeout/error;
-- candidate-readable output versus unavailable/failed extraction;
-- runtime/cost evidence needed to decide whether O1 remains viable.
+- requested slots (100), returned candidates, duplicate slots, unique retained candidates, source/cohort shortfall and rows with permitted 2xx HTML;
+- access failure versus extraction failure, including robots unavailable/disallowed, HTTP denial, non-HTML and other ineligible outcomes;
+- structured-data success versus Readability success and their overlap;
+- guarded rejection, truncation, timeout/error and non-empty qualifying output;
+- aggregate timings, peak memory, elapsed time and hosted cost needed to decide whether O1 remains viable.
+
+At least 50 qualifying unique rows out of all 100 requested slots is a positive initial signal only when the cohort has all 100 unique candidates; fewer than 100 unique candidates makes the result non-decisive for extraction viability regardless of extraction yield. With a complete cohort, fewer than 50 qualifying rows is a negative signal for this cohort, not by itself proof that #5 is infeasible. Neither outcome closes #22: #5's readable-quality threshold is not yet defined by this experiment, and #4 remains a separate unresolved boundary.
 
 ### Operational bounds
 
-Use the same private Apify, $1 maximum charge, 256 MiB, 900-second run, bounded request, no-retry and aggregate-only retention principles already demonstrated by the hosted Spike experiments. The exact per-row extraction deadline and element/input guards must be fixed before approval.
+Use at most one private Apify run with `LIMITED_PERMISSIONS`, restart disabled, maximum charge $1, 256 MiB memory and a 900-second platform limit; stop new work at 780 seconds. Keep the five-second per-row worker deadline, five redirects, concurrency four, 250 ms pacing, zero retries and aggregate-only retention as stated above. Owner approval authorizes the bounded iteration, including the offline preflight, but a hosted run is permitted only after every preflight assertion passes and the stated hosted gates are verified. Approval does not waive these gates.
 
 ### Stop conditions
 
-Stop before execution if the implementation would require browser rendering, residential proxies, paid external extraction APIs, publisher-specific rules, paywall bypass or another Product/Architecture boundary change.
+Stop before hosted execution if the offline compatibility preflight fails, if the probe would emit raw row-level output or article text, if retries cannot be disabled, or if the soft stop cannot be enforced. Stop the run at the $1, 256 MiB, 780-second soft-stop or 900-second platform bound, and stop before execution if the implementation would require browser rendering, residential proxies, paid external extraction APIs, publisher-specific rules, paywall bypass or another Product/Architecture boundary change. Any such failure invalidates this proposed experiment until corrected and re-approved; it must not be reported as an Iteration 10 result.
+
+### Decision-ready checkpoint
+
+**Recommended next action:** request approval for the bounded Iteration 10 described below; if approved, perform its offline preflight and proceed to at most one hosted run only if every preflight assertion passes and the stated hosted gates are verified.
+
+**Why this is next:** the option-viability checkpoint deprioritised further Extractus-specific telemetry. A small offline compatibility check first removes a deployment/API compatibility risk; the bounded hosted cohort then directly measures whether O1 can produce qualifying text in the target runtime while distinguishing access eligibility from extraction yield.
+
+**Prerequisite/blocker status:** owner approval for the bounded Iteration 10 is pending and blocks all execution; no Iteration 10 run has occurred. If approved, offline preflight is the first iteration step and must pass before any hosted run. It covers runtime/API compatibility, five-second worker cancellation, each stated input/output guard and aggregate-only sink behavior, including absence of raw row data. If an assertion fails, stop and return to this checkpoint with the failure and supported recovery; approval does not waive the gate. A cohort with fewer than 100 unique candidates is a source/cohort shortfall and makes extraction viability non-decisive. The unresolved #5 quality threshold is a material acceptance-definition gap: it prevents treating the 50/100 signal as proof of #5 completion, but does not prevent this limited viability experiment. Iteration 10 cannot resolve #4's consent/session boundary.
+
+**Owner decision requested:** **Approve Iteration 10 as one bounded iteration: first perform the specified offline compatibility/safety preflight; then, only if every preflight assertion passes and all stated hosted gates are verified, run at most one private Apify cohort of 100 fixed query/locale/rank slots (5 queries × GB/US × first 10 ranked results), applying the specified dedupe and no-replacement policy, direct HTTP and extraction bounds, aggregate-only evidence and $1/256 MiB/900-second hosted cap; or redirect to another ranked option.** Approval does not waive any gate, authorize a hosted run after a failed preflight, authorize follow-on iterations, or close #22, #5 or #4.
+
+**Consequence of approval:** execute the offline preflight first. If every assertion passes and all hosted gates are verified, execute at most one hosted run and record aggregate evidence and result; if any gate fails, stop, return to this checkpoint with recovery options, and do not run hosted. Afterward update current understanding and recommend the next highest-value action.
+
+**Consequence of non-approval or redirect:** do not run Iteration 10; #22 remains open, O1 target-runtime viability remains unmeasured, and #4/#5 remain blocked on their unresolved evidence/decision paths.
+
+**Learning checkpoint:** Learnings: None. This plan has not executed an experiment and has produced no reusable execution lesson.
 
 ## 7. Experiment Log
 
