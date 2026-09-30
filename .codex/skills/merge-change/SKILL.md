@@ -15,6 +15,8 @@ Follow the GitHub Delivery Model. Normal product changes target `dev`; release f
 
 Before reporting a Feature/Bug PR ready, confirm every material acceptance criterion has passing evidence, including required representative live/end-to-end checks and any prerequisite Technical Spike with a supported final conclusion. The downstream Issue must have been reassessed after the final Spike evidence was integrated.
 
+A candidate with an unresolved failed required acceptance test is not ready for merge. A later rerun may support readiness only after the failure cause and a relevant corrective change are recorded; repeating the unchanged candidate cannot erase the failed result.
+
 ## Technical Spike pull-request lifecycle
 
 A Technical Spike normally opens **one draft PR early** and keeps it for the lifetime of the Spike.

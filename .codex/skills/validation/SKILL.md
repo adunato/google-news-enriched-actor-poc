@@ -17,6 +17,8 @@ Validate changed behaviour, regression risk, edge cases, errors, user/system flo
 
 Use evidence at the boundary of the claim. Mocked tests can validate local logic and deterministic behaviour but cannot prove that a material external/live/runtime boundary actually works. Required representative live/in-environment evidence must be executed across the defined scenario matrix.
 
+A failed required acceptance test places the tested candidate in `Hold`. Do not rerun the same unchanged candidate merely to seek a passing result, and do not treat a later pass on that unchanged candidate as superseding the failure. Before retesting, identify the failure cause, make and record a relevant correction to the candidate, acceptance-relevant configuration/environment, test or evidence path, then test the corrected state.
+
 If Feature/Bug validation exposes a material product, architecture, scope, design or previously hidden unknown-integration problem, stop and return to the appropriate Issue/Technical Spike/design/planning stage.
 
 ## Technical Spike iteration validation

@@ -33,6 +33,8 @@ Use the CI Diagnostics skill when a failed automated staging/deployment check ne
 
 A candidate is promotion-ready only when every required staging check is passed or explicitly not applicable and no known release blocker remains.
 
+If a required staging acceptance check fails, that deployed candidate remains `Hold`. Do not repeat the unchanged candidate merely to obtain a pass. Diagnose the failure and record the relevant corrective change to code, acceptance-relevant configuration/environment, test or evidence path before retesting.
+
 ## Completion contract
 
 Report the release candidate/version, deployed staging identity, checks executed, automated/manual evidence, failures and their classification, Bug or Technical Spike Issues created/referenced, retest results, remaining blockers, and the explicit staging validation result: `Pass` or `Hold`.

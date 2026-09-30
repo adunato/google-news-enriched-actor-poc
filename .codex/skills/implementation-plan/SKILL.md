@@ -15,6 +15,8 @@ Map every material acceptance criterion to evidence at the lowest test level tha
 
 For materially variable integrations, define a representative scenario matrix covering the dimensions that could invalidate acceptance. Do not reduce this to one arbitrary smoke test.
 
+For every required acceptance gate, define failure handling as `fail -> diagnose -> relevant correction -> retest`. A plan must not authorize repeating the unchanged candidate until a pass occurs. State the evidence needed to show what changed before a failed candidate is eligible for retest.
+
 Do not use the Implementation Plan to absorb a material unresolved external-system, live-data, protocol, platform, permission, or runtime question. Required Technical Spike must already be complete and integrated. Plan-level feasibility gates are reserved for bounded residual assumptions inside an established design space; put those gates before dependent implementation and define the stop/return path if they fail.
 
 The plan must explicitly state `LLD required: Yes | No`. Require an LLD only when file-level design, cross-file coupling, or repository-specific implementation risk cannot be represented clearly enough in the Issue, HLD (if present), and plan.
