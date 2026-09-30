@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "issue22-iteration9-offline-preflight-v1",
+  "status": "passed",
+  "nodeVersion": "v20.19.0",
+  "extractorVersion": "9.0.1",
+  "packageLockSha256": "c157a45248319abe8b3d51031f0bd64bf801cf28168d804b49b9e031c180b858",
+  "baselinePackageLockSha256": "7853c09187e1687763b4678f02a7aa516e86737f1149f52b200185854323f370",
+  "transitiveLockRecordsMatch": true,
+  "futureRunOptionsValidShapeChecked": true,
+  "sourceManifestSha256": "dc3c4f70101adae71dbbf8dffd8d825a230fd6637b487e5d8902049894b0cfd3",
+  "preflightBaseCommit": "196ec79e2255b5c10f0eefe1e2398b46256b6a80",
+  "plannedCheckCount": 24,
+  "completedCheckCount": 24,
+  "totalElapsedMs": 803,
+  "totalDeadlineMs": 90000,
+  "maxRssBytes": 268435456,
+  "peakRssBytes": 76910592,
+  "configuredHostedWorkerDeadlineMs": 5000,
+  "networkAttempts": 0,
+  "aggregateSinkChecks": {
+    "completeCohortWrites": 1,
+    "partialCohortWrites": 0,
+    "inconsistentWrites": 0,
+    "privacyViolationWrites": 0
+  },
+  "checks": [
+    {
+      "id": "stage_success",
+      "status": "passed"
+    },
+    {
+      "id": "stall_startup",
+      "status": "passed"
+    },
+    {
+      "id": "stall_import",
+      "status": "passed"
+    },
+    {
+      "id": "stall_extract",
+      "status": "passed"
+    },
+    {
+      "id": "stall_result_delivery",
+      "status": "passed"
+    },
+    {
+      "id": "stall_worker_exit",
+      "status": "passed"
+    },
+    {
+      "id": "fixed_worker_error_result",
+      "status": "passed"
+    },
+    {
+      "id": "worker_error_event",
+      "status": "passed"
+    },
+    {
+      "id": "premature_exit_before_ready",
+      "status": "passed"
+    },
+    {
+      "id": "exit_after_ready_without_result",
+      "status": "passed"
+    },
+    {
+      "id": "messageerror_event",
+      "status": "passed"
+    },
+    {
+      "id": "timeout_cleans_worker",
+      "status": "passed"
+    },
+    {
+      "id": "malformed_phase",
+      "status": "passed"
+    },
+    {
+      "id": "duplicate_phase",
+      "status": "passed"
+    },
+    {
+      "id": "late_phase",
+      "status": "passed"
+    },
+    {
+      "id": "out_of_order_phase",
+      "status": "passed"
+    },
+    {
+      "id": "duplicate_result",
+      "status": "passed"
+    },
+    {
+      "id": "timeout_exit_result_race",
+      "status": "passed"
+    },
+    {
+      "id": "real_extractor_semantic_smoke",
+      "status": "passed"
+    },
+    {
+      "id": "real_extractor_nested_smoke",
+      "status": "passed"
+    },
+    {
+      "id": "complete_cohort_single_sink",
+      "status": "passed"
+    },
+    {
+      "id": "partial_cohort_zero_sink",
+      "status": "passed"
+    },
+    {
+      "id": "inconsistent_terminal_zero_sink",
+      "status": "passed"
+    },
+    {
+      "id": "privacy_unknown_field_zero_sink",
+      "status": "passed"
+    }
+  ]
+}
