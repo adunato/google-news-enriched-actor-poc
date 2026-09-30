@@ -1,0 +1,5182 @@
+[
+  {
+    "evidenceType": "issue18_hosted_node20_http_identity_probe",
+    "startedAtUtc": "2026-09-28T15:35:09.648Z",
+    "completedAtUtc": "2026-09-28T15:35:23.126Z",
+    "manifestCapturedAtUtc": "2026-09-28T14:58:03.823Z",
+    "manifestSha256": "aaa88dc26c22f9ae31c559f5bd6deb0f2b74da1985444bdb456b49b43b04dc5c",
+    "environment": {
+      "node": "v24.15.0",
+      "platform": "win32",
+      "arch": "x64",
+      "probeRuntime": "v20.20.2",
+      "probePlatform": "linux",
+      "probeArch": "x64"
+    },
+    "configuration": {
+      "concurrency": 4,
+      "timeoutMs": 10000,
+      "maxRedirects": 5,
+      "googleMaxBytes": 2097152,
+      "publisherMaxBytes": 262144,
+      "feedMaxBytes": 2097152,
+      "retryStatuses": [408, 425, 429],
+      "retry5xx": true,
+      "retryNetworkErrors": true,
+      "identityRule": "exact NFKC/case/punctuation/space normalized equality against publisher h1, og:title, or JSON-LD headline after exact source suffix removal; no substring/slug/marker/domain-only matches"
+    },
+    "totalRows": 100,
+    "complete": true,
+    "candidateCounts": {
+      "success_rpc": 100
+    },
+    "accessCounts": {
+      "http_200_html": 81,
+      "http_403": 14,
+      "http_401": 4,
+      "http_503": 1
+    },
+    "identityCounts": {
+      "confirmed_match": 78,
+      "unverifiable": 22
+    },
+    "articleLikeCount": 78,
+    "strictConfirmedSuccesses": 75,
+    "threshold": 95,
+    "retryCount": 1,
+    "noRetryBaselineAccessCounts": {
+      "http_200_html": 81,
+      "http_403": 14,
+      "http_401": 4,
+      "http_503": 1
+    },
+    "perCell": {
+      "q1-gb": {
+        "rows": 10,
+        "candidateOutcomes": {
+          "success_rpc": 10
+        },
+        "access": {
+          "http_200_html": 8,
+          "http_403": 2
+        },
+        "articleLike": 8,
+        "identity": {
+          "confirmed_match": 8,
+          "unverifiable": 2
+        },
+        "confirmedValid": 8
+      },
+      "q1-us": {
+        "rows": 10,
+        "candidateOutcomes": {
+          "success_rpc": 10
+        },
+        "access": {
+          "http_200_html": 9,
+          "http_403": 1
+        },
+        "articleLike": 9,
+        "identity": {
+          "confirmed_match": 9,
+          "unverifiable": 1
+        },
+        "confirmedValid": 9
+      },
+      "q2-gb": {
+        "rows": 10,
+        "candidateOutcomes": {
+          "success_rpc": 10
+        },
+        "access": {
+          "http_403": 3,
+          "http_200_html": 7
+        },
+        "articleLike": 7,
+        "identity": {
+          "unverifiable": 3,
+          "confirmed_match": 7
+        },
+        "confirmedValid": 7
+      },
+      "q2-us": {
+        "rows": 10,
+        "candidateOutcomes": {
+          "success_rpc": 10
+        },
+        "access": {
+          "http_200_html": 7,
+          "http_401": 1,
+          "http_403": 2
+        },
+        "articleLike": 7,
+        "identity": {
+          "confirmed_match": 6,
+          "unverifiable": 4
+        },
+        "confirmedValid": 6
+      },
+      "q3-gb": {
+        "rows": 10,
+        "candidateOutcomes": {
+          "success_rpc": 10
+        },
+        "access": {
+          "http_403": 3,
+          "http_200_html": 7
+        },
+        "articleLike": 7,
+        "identity": {
+          "unverifiable": 3,
+          "confirmed_match": 7
+        },
+        "confirmedValid": 7
+      },
+      "q3-us": {
+        "rows": 10,
+        "candidateOutcomes": {
+          "success_rpc": 10
+        },
+        "access": {
+          "http_200_html": 7,
+          "http_401": 2,
+          "http_403": 1
+        },
+        "articleLike": 7,
+        "identity": {
+          "confirmed_match": 6,
+          "unverifiable": 4
+        },
+        "confirmedValid": 6
+      },
+      "q4-gb": {
+        "rows": 10,
+        "candidateOutcomes": {
+          "success_rpc": 10
+        },
+        "access": {
+          "http_200_html": 10
+        },
+        "articleLike": 9,
+        "identity": {
+          "confirmed_match": 9,
+          "unverifiable": 1
+        },
+        "confirmedValid": 8
+      },
+      "q4-us": {
+        "rows": 10,
+        "candidateOutcomes": {
+          "success_rpc": 10
+        },
+        "access": {
+          "http_200_html": 8,
+          "http_401": 1,
+          "http_403": 1
+        },
+        "articleLike": 6,
+        "identity": {
+          "confirmed_match": 8,
+          "unverifiable": 2
+        },
+        "confirmedValid": 6
+      },
+      "q5-gb": {
+        "rows": 10,
+        "candidateOutcomes": {
+          "success_rpc": 10
+        },
+        "access": {
+          "http_200_html": 9,
+          "http_503": 1
+        },
+        "articleLike": 9,
+        "identity": {
+          "confirmed_match": 9,
+          "unverifiable": 1
+        },
+        "confirmedValid": 9
+      },
+      "q5-us": {
+        "rows": 10,
+        "candidateOutcomes": {
+          "success_rpc": 10
+        },
+        "access": {
+          "http_200_html": 9,
+          "http_403": 1
+        },
+        "articleLike": 9,
+        "identity": {
+          "confirmed_match": 9,
+          "unverifiable": 1
+        },
+        "confirmedValid": 9
+      }
+    },
+    "hosted": {
+      "actorStartedAtUtc": "2026-09-28T15:35:09.485Z",
+      "actorCompletedAtUtc": "2026-09-28T15:35:23.742Z",
+      "nodeVersion": "v20.20.2",
+      "platform": "linux",
+      "architecture": "x64",
+      "frozenInputFileSha256": "56b389351b04c1288c36dc971481a1933668fd46571c1bea2f18a37c59181034",
+      "frozenRowArraySha256": "fdbab474e5764350c547080c0002f042b062e03f157a270d5b9474d846ad2f2a",
+      "rowIdsExactOnce": true
+    },
+    "recordType": "summary"
+  },
+  {
+    "rowId": "q1-gb-01",
+    "cell": "q1-gb",
+    "query": "world news",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 1,
+    "articleIdHash": "82aeb3e5dd5ae788",
+    "googleNewsUrlHash": "82aeb3e5dd5ae7880fe57f4cc1f4d1d90ba17f94af8d22ad60ff90d9256bd652",
+    "sourceName": "bbc.co.uk",
+    "sourceHost": "www.bbc.co.uk",
+    "expectedTitle": "News media must stay relevant or 'society will struggle', says World News Day organiser",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.bbc.co.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 386,
+    "candidateUrlHash": "b070af934fa113c365a64a5793b3ba999fa639ab85bf4be75af02ebe441547f6",
+    "publisherHost": "www.bbc.co.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "b070af934fa113c365a64a5793b3ba999fa639ab85bf4be75af02ebe441547f6",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "News media must stay relevant or 'society will struggle', says World News Day organiser"
+      },
+      {
+        "kind": "og:title",
+        "value": "News media must stay relevant or 'society will struggle', says World News Day organiser"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "News media must stay relevant or 'society will struggle', says World News Day organiser"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-gb-02",
+    "cell": "q1-gb",
+    "query": "world news",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 2,
+    "articleIdHash": "cee93dbd6fa64601",
+    "googleNewsUrlHash": "cee93dbd6fa64601a5e134b59b7c8a598448c96d5d0c2872354cdc7124ed3a6a",
+    "sourceName": "bbc.com",
+    "sourceHost": "www.bbc.com",
+    "expectedTitle": "Who are the Houthis in Yemen and what do they want?",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.bbc.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 256,
+    "candidateUrlHash": "d995e5681751b39891721bb250bbf88e0a2ffa17cb6ea66efcfd4cc8441cca5b",
+    "publisherHost": "www.bbc.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "d995e5681751b39891721bb250bbf88e0a2ffa17cb6ea66efcfd4cc8441cca5b",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Who are the Houthis and what do they want?"
+      },
+      {
+        "kind": "og:title",
+        "value": "Who are the Houthis in Yemen and what do they want?"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Who are the Houthis in Yemen and what do they want?"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title,jsonld:headline",
+    "identityMatchedSignals": ["og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-gb-03",
+    "cell": "q1-gb",
+    "query": "world news",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 3,
+    "articleIdHash": "f22e99d928680197",
+    "googleNewsUrlHash": "f22e99d9286801978f239075bc4935b220de9a9ee493d56a4b245b8c48ad3013",
+    "sourceName": "Church Times",
+    "sourceHost": "www.churchtimes.co.uk",
+    "expectedTitle": "World news in brief",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "www.churchtimes.co.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 253,
+    "candidateUrlHash": "bb0a80eb2b86518f2ecbcda4d1e0851a42263b954f5fd41cc5ea66e5c7006cd7",
+    "publisherHost": "www.churchtimes.co.uk",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "bb0a80eb2b86518f2ecbcda4d1e0851a42263b954f5fd41cc5ea66e5c7006cd7",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-gb-04",
+    "cell": "q1-gb",
+    "query": "world news",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 4,
+    "articleIdHash": "befd558e49ae357c",
+    "googleNewsUrlHash": "befd558e49ae357c3e87a4d86feff9ef4153555150b797e5dd18e9076da7de93",
+    "sourceName": "World Nuclear News",
+    "sourceHost": "world-nuclear-news.org",
+    "expectedTitle": "Nuward targets 10 SMRs in five EU countries",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "world-nuclear-news.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 250,
+    "candidateUrlHash": "851f71bf127540260bcf5b02ee8c8ccfd9e69bd3dbd84691fc274c578972f283",
+    "publisherHost": "world-nuclear-news.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 55269,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "851f71bf127540260bcf5b02ee8c8ccfd9e69bd3dbd84691fc274c578972f283",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Nuward targets 10 SMRs in five EU countries"
+      },
+      {
+        "kind": "og:title",
+        "value": "Nuward targets 10 SMRs in five EU countries"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-gb-05",
+    "cell": "q1-gb",
+    "query": "world news",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 5,
+    "articleIdHash": "dd4c540980450111",
+    "googleNewsUrlHash": "dd4c540980450111cdaab084a267bd762f3092c9aad8b4d9563dea39f288d95e",
+    "sourceName": "Physics World",
+    "sourceHost": "physicsworld.com",
+    "expectedTitle": "Cyril Hilsum, former GEC research boss and Institute of Physics president, dies aged 101",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "physicsworld.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 183,
+    "candidateUrlHash": "ea76991900f7c1639fec2516aa39d9d70c81e6c3b3ca35051c5e13a389755613",
+    "publisherHost": "physicsworld.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 115161,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "ea76991900f7c1639fec2516aa39d9d70c81e6c3b3ca35051c5e13a389755613",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Cyril Hilsum, former GEC research boss and Institute of Physics president, dies aged 101"
+      },
+      {
+        "kind": "og:title",
+        "value": "Cyril Hilsum, former GEC research boss and Institute of Physics president, dies aged 101 – Physics World"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Cyril Hilsum, former GEC research boss and Institute of Physics president, dies aged 101"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-gb-06",
+    "cell": "q1-gb",
+    "query": "world news",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 6,
+    "articleIdHash": "0351082857ad7291",
+    "googleNewsUrlHash": "0351082857ad72918a5ec6c81d5362df440901fb2651852d686dcdbeda138841",
+    "sourceName": "UN News",
+    "sourceHost": "news.un.org",
+    "expectedTitle": "World News in Brief: ‘New intensity’ to Russian attacks on Ukraine, Yemen, Gaza and Colombia updates",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "news.un.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 184,
+    "candidateUrlHash": "3d7796522890ee4da7cb22713609fb4f05e6dac0e6964d9acf5063cfc8d8ba0b",
+    "publisherHost": "news.un.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 98470,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "3d7796522890ee4da7cb22713609fb4f05e6dac0e6964d9acf5063cfc8d8ba0b",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "World News in Brief: ‘New intensity’ to Russian attacks on Ukraine, Yemen, Gaza and Colombia updates"
+      },
+      {
+        "kind": "og:title",
+        "value": "World News in Brief: ‘New intensity’ to Russian attacks on Ukraine, Yemen, Gaza and Colombia updates"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "World News in Brief: ‘New intensity’ to Russian attacks on Ukraine, Yemen, Gaza and Colombia updates"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-gb-07",
+    "cell": "q1-gb",
+    "query": "world news",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 7,
+    "articleIdHash": "397504a4bf45e057",
+    "googleNewsUrlHash": "397504a4bf45e05719884f3f78e9fb264822c5d9b4a6ac6ec3e2a264ef98ae30",
+    "sourceName": "The Past website",
+    "sourceHost": "the-past.com",
+    "expectedTitle": "World news",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "the-past.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 179,
+    "candidateUrlHash": "a6e14990be72b36268e60c73eedeab65eb4e74ed701d576b47625a98bb8ec8e7",
+    "publisherHost": "the-past.com",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "a6e14990be72b36268e60c73eedeab65eb4e74ed701d576b47625a98bb8ec8e7",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-gb-08",
+    "cell": "q1-gb",
+    "query": "world news",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 8,
+    "articleIdHash": "ba703b1fed96c436",
+    "googleNewsUrlHash": "ba703b1fed96c43658434a1bc631b8ea88edd079d53f2aa9b1edaf657066c212",
+    "sourceName": "FIPP",
+    "sourceHost": "www.fipp.com",
+    "expectedTitle": "Exploring the importance of trust in the media on World News Day",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.fipp.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 183,
+    "candidateUrlHash": "f124142db5d7f4e04943f26e353ac8f88fc356f8c140d56df1cac9c1aad4231d",
+    "publisherHost": "www.fipp.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 96461,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "f124142db5d7f4e04943f26e353ac8f88fc356f8c140d56df1cac9c1aad4231d",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Exploring the importance of trust in the media on World News Day"
+      },
+      {
+        "kind": "og:title",
+        "value": "Exploring the importance of trust in the media on World News Day - FIPP"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Exploring the importance of trust in the media on World News Day"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-gb-09",
+    "cell": "q1-gb",
+    "query": "world news",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 9,
+    "articleIdHash": "7c5ae324e8725504",
+    "googleNewsUrlHash": "7c5ae324e8725504ccfb5f9a6419e3f9a6a04fb3c529fb97a5a481c5bcf2789e",
+    "sourceName": "bbc.co.uk",
+    "sourceHost": "www.bbc.co.uk",
+    "expectedTitle": "Watch: The world’s two most powerful men just met. How did it go?",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.bbc.co.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 187,
+    "candidateUrlHash": "d39f1c709cb50069304532e2950b9544c874975acdd705be405fa3fafa10e73e",
+    "publisherHost": "www.bbc.co.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "d39f1c709cb50069304532e2950b9544c874975acdd705be405fa3fafa10e73e",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "The world’s two most powerful men just met. How did it go?"
+      },
+      {
+        "kind": "og:title",
+        "value": "Watch: The world’s two most powerful men just met. How did it go?"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title",
+    "identityMatchedSignals": ["og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-gb-10",
+    "cell": "q1-gb",
+    "query": "world news",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 10,
+    "articleIdHash": "840a72a48642eef9",
+    "googleNewsUrlHash": "840a72a48642eef94b1592465731a69a1a9119b1e8aa5a626437b06b21ba9d66",
+    "sourceName": "The Guardian",
+    "sourceHost": "www.theguardian.com",
+    "expectedTitle": "Trump rejects Iran’s seven-day peace deal to reopen strait of Hormuz",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.theguardian.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 191,
+    "candidateUrlHash": "b96bad81ea96e8ac5cdfcc186168f6ec13173b16f7ccac9187ba3f176222d230",
+    "publisherHost": "www.theguardian.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "b96bad81ea96e8ac5cdfcc186168f6ec13173b16f7ccac9187ba3f176222d230",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "Trump rejects Iran’s seven-day peace deal to reopen strait of Hormuz"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Trump rejects Iran’s seven-day peace deal to reopen strait of Hormuz"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title,jsonld:headline",
+    "identityMatchedSignals": ["og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-us-01",
+    "cell": "q1-us",
+    "query": "world news",
+    "country": "US",
+    "language": "en-US",
+    "position": 1,
+    "articleIdHash": "136cb2057a2b6ef7",
+    "googleNewsUrlHash": "136cb2057a2b6ef77c0bfdd7d9dc8b7b691ae157972335eb349b2ce3a315e748",
+    "sourceName": "Texas Christian University",
+    "sourceHost": "www.tcu.edu",
+    "expectedTitle": "TCU Climbs in 2027 U.S. News & World Report Rankings",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.tcu.edu",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 181,
+    "candidateUrlHash": "1b7b0ee96323226ccaadbd441ec52c9c0b70df72657d6b3628a3d505c2b85560",
+    "publisherHost": "www.tcu.edu",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 65141,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "1b7b0ee96323226ccaadbd441ec52c9c0b70df72657d6b3628a3d505c2b85560",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "TCU Climbs in 2027 U.S. News & World Report Rankings"
+      },
+      {
+        "kind": "og:title",
+        "value": "TCU Climbs in 2027 U.S. News & World Report Rankings"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "TCU Climbs in 2027 U.S. News & World Report Rankings"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-us-02",
+    "cell": "q1-us",
+    "query": "world news",
+    "country": "US",
+    "language": "en-US",
+    "position": 2,
+    "articleIdHash": "dc4a3d0a50399131",
+    "googleNewsUrlHash": "dc4a3d0a50399131be739874756b03f4db7f639946a48b2763091ff8145db4c7",
+    "sourceName": "PBS",
+    "sourceHost": "www.pbs.org",
+    "expectedTitle": "WATCH: Trump addresses 2026 United Nations General Assembly",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.pbs.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 191,
+    "candidateUrlHash": "20ffc8874d426bf7bc3e3160efa5b65a71f63677602ffc3b7cb8e880fee53101",
+    "publisherHost": "www.pbs.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "20ffc8874d426bf7bc3e3160efa5b65a71f63677602ffc3b7cb8e880fee53101",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "WATCH: Trump addresses 2026 United Nations General Assembly"
+      },
+      {
+        "kind": "og:title",
+        "value": "WATCH: Trump addresses 2026 United Nations General Assembly"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-us-03",
+    "cell": "q1-us",
+    "query": "world news",
+    "country": "US",
+    "language": "en-US",
+    "position": 3,
+    "articleIdHash": "11540b7072d5e2db",
+    "googleNewsUrlHash": "11540b7072d5e2db6574fff8e6a6523baeaf4e121bee61359acce1f9926c5cdb",
+    "sourceName": "University of Pittsburgh",
+    "sourceHost": "www.pittwire.pitt.edu",
+    "expectedTitle": "Pitt ranks No. 24 among the nation’s public universities, says U.S. News & World Report",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.pittwire.pitt.edu",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 135,
+    "candidateUrlHash": "a95e367689561e27823d86445ac04101057db661565d78b31e78818bbd134aae",
+    "publisherHost": "www.pittwire.pitt.edu",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 57637,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "a95e367689561e27823d86445ac04101057db661565d78b31e78818bbd134aae",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Pitt ranks No. 24 among the nation’s public universities, says U.S. News & World Report"
+      },
+      {
+        "kind": "og:title",
+        "value": "Pitt ranks No. 24 among the nation’s public universities, says U.S. News & World Report"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-us-04",
+    "cell": "q1-us",
+    "query": "world news",
+    "country": "US",
+    "language": "en-US",
+    "position": 4,
+    "articleIdHash": "b51631275ebd3822",
+    "googleNewsUrlHash": "b51631275ebd3822e145730603edcb820466db55f564d7f34455ab536300dade",
+    "sourceName": "Holy Cross Magazine",
+    "sourceHost": "magazine.holycross.edu",
+    "expectedTitle": "Holy Cross Earns Highest-Ever Ranking From U.S. News & World Report",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 301,
+        "host": "magazine.holycross.edu",
+        "locationHost": "magazine.holycross.edu"
+      },
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "magazine.holycross.edu",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 176,
+    "candidateUrlHash": "72f00950f315c7ef0d029393f72680603bba1e2309ea9203c9cc054349818232",
+    "publisherHost": "magazine.holycross.edu",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 36778,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "72f00950f315c7ef0d029393f72680603bba1e2309ea9203c9cc054349818232",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Holy Cross Earns Highest-Ever Ranking From U.S. News & World Report"
+      },
+      {
+        "kind": "og:title",
+        "value": "Holy Cross Earns Highest-Ever Ranking From U.S. News & World Report"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-us-05",
+    "cell": "q1-us",
+    "query": "world news",
+    "country": "US",
+    "language": "en-US",
+    "position": 5,
+    "articleIdHash": "0351082857ad7291",
+    "googleNewsUrlHash": "0351082857ad72918a5ec6c81d5362df440901fb2651852d686dcdbeda138841",
+    "sourceName": "UN News",
+    "sourceHost": "news.un.org",
+    "expectedTitle": "World News in Brief: ‘New intensity’ to Russian attacks on Ukraine, Yemen, Gaza and Colombia updates",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "news.un.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 139,
+    "candidateUrlHash": "3d7796522890ee4da7cb22713609fb4f05e6dac0e6964d9acf5063cfc8d8ba0b",
+    "publisherHost": "news.un.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 98470,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "3d7796522890ee4da7cb22713609fb4f05e6dac0e6964d9acf5063cfc8d8ba0b",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "World News in Brief: ‘New intensity’ to Russian attacks on Ukraine, Yemen, Gaza and Colombia updates"
+      },
+      {
+        "kind": "og:title",
+        "value": "World News in Brief: ‘New intensity’ to Russian attacks on Ukraine, Yemen, Gaza and Colombia updates"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "World News in Brief: ‘New intensity’ to Russian attacks on Ukraine, Yemen, Gaza and Colombia updates"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-us-06",
+    "cell": "q1-us",
+    "query": "world news",
+    "country": "US",
+    "language": "en-US",
+    "position": 6,
+    "articleIdHash": "a32dd1a22ce36892",
+    "googleNewsUrlHash": "a32dd1a22ce3689241ecef9fc96f7ff1e86d76c51809b785307030b220f962b2",
+    "sourceName": "news8000.com",
+    "sourceHost": "www.news8000.com",
+    "expectedTitle": "USA-VANCE/",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.news8000.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 167,
+    "candidateUrlHash": "63efddfc8f11d732f3c36629f7eb849b2c82a0fd1b75dc730a17d92cd0b8c8cc",
+    "publisherHost": "www.news8000.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 237536,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "63efddfc8f11d732f3c36629f7eb849b2c82a0fd1b75dc730a17d92cd0b8c8cc",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "USA-VANCE/"
+      },
+      {
+        "kind": "og:title",
+        "value": "USA-VANCE/"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-us-07",
+    "cell": "q1-us",
+    "query": "world news",
+    "country": "US",
+    "language": "en-US",
+    "position": 7,
+    "articleIdHash": "db78446aff6f8603",
+    "googleNewsUrlHash": "db78446aff6f860332d3f285f194d86b7a6e99bcd55a940958eaec02e7054dcb",
+    "sourceName": "World Health Organization (WHO)",
+    "sourceHost": "www.who.int",
+    "expectedTitle": "World leaders renew commitment to protect the world from future pandemics",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.who.int",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 157,
+    "candidateUrlHash": "9d2c1f6ea2e944ff82d1bb4a31f01ee049167a31fad3357a913436a0eb69297c",
+    "publisherHost": "www.who.int",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 105741,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "9d2c1f6ea2e944ff82d1bb4a31f01ee049167a31fad3357a913436a0eb69297c",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "World leaders renew commitment to protect the world from future pandemics"
+      },
+      {
+        "kind": "og:title",
+        "value": "World leaders renew commitment to protect the world from future pandemics"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-us-08",
+    "cell": "q1-us",
+    "query": "world news",
+    "country": "US",
+    "language": "en-US",
+    "position": 8,
+    "articleIdHash": "81ff9dd8257d0234",
+    "googleNewsUrlHash": "81ff9dd8257d0234cc40322f892a01f39ba46d76a543bf2563653531c678559f",
+    "sourceName": "University of California, Berkeley",
+    "sourceHost": "news.berkeley.edu",
+    "expectedTitle": "UC Berkeley again ranked top public university by U.S. News & World Report",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "news.berkeley.edu",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 153,
+    "candidateUrlHash": "16efef76c69e327cc086c1f64c6bc3439d3b2c6fc9bc145e3c2fec5df1787ae2",
+    "publisherHost": "news.berkeley.edu",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 54145,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "16efef76c69e327cc086c1f64c6bc3439d3b2c6fc9bc145e3c2fec5df1787ae2",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "UC Berkeley again ranked top public university by U.S. News & World Report"
+      },
+      {
+        "kind": "og:title",
+        "value": "UC Berkeley again ranked top public university by U.S. News & World Report - Berkeley News"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "UC Berkeley again ranked top public university by U.S. News & World Report"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,jsonld:headline",
+    "identityMatchedSignals": ["h1", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-us-09",
+    "cell": "q1-us",
+    "query": "world news",
+    "country": "US",
+    "language": "en-US",
+    "position": 9,
+    "articleIdHash": "700a1ae93e85131f",
+    "googleNewsUrlHash": "700a1ae93e85131f0fee36cc6c716b46a6830651a92a0640433f796a715c0077",
+    "sourceName": "Daily Bruin",
+    "sourceHost": "dailybruin.com",
+    "expectedTitle": "UCLA regains No. 1 spot in U.S. News & World Report public universities rankings",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "dailybruin.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 138,
+    "candidateUrlHash": "ad24ffa7d5ac0c397e3aafcaafbef7aa9e92e4acded61cec8a964cd77fcf7e3a",
+    "publisherHost": "dailybruin.com",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "ad24ffa7d5ac0c397e3aafcaafbef7aa9e92e4acded61cec8a964cd77fcf7e3a",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q1-us-10",
+    "cell": "q1-us",
+    "query": "world news",
+    "country": "US",
+    "language": "en-US",
+    "position": 10,
+    "articleIdHash": "3234120480db5976",
+    "googleNewsUrlHash": "3234120480db5976be92a5d4929d0ee2af935fe87697f41c2dceb8dca85d1118",
+    "sourceName": "VCU News",
+    "sourceHost": "news.vcu.edu",
+    "expectedTitle": "VCU ranked among top 100 public universities, recognized as a ‘best value’ by U.S. News & World Report",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "news.vcu.edu",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 152,
+    "candidateUrlHash": "8d67ea2417c423a3c394f4e4faada15f9426bcb975e143baa562ae107172d9e7",
+    "publisherHost": "news.vcu.edu",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 30557,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "8d67ea2417c423a3c394f4e4faada15f9426bcb975e143baa562ae107172d9e7",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "VCU ranked among top 100 public universities, recognized as a ‘best value’ by U.S. News & World Report"
+      },
+      {
+        "kind": "og:title",
+        "value": "VCU ranked among top 100 public universities, recognized as a ‘best value’ by U.S. News & World Report"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-gb-01",
+    "cell": "q2-gb",
+    "query": "politics",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 1,
+    "articleIdHash": "cb9b8cbc9748ef7f",
+    "googleNewsUrlHash": "cb9b8cbc9748ef7f71f9196aa74dc86904ba9e9071ca1fcaad93c6d38d2301b3",
+    "sourceName": "The Economist",
+    "sourceHost": "www.economist.com",
+    "expectedTitle": "AI-written speeches are taking over politics",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "www.economist.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 157,
+    "candidateUrlHash": "4aa5e245118082442d9cdc6c6c485f07f4bbb8396f56d871affdfa6287da5e5c",
+    "publisherHost": "www.economist.com",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "4aa5e245118082442d9cdc6c6c485f07f4bbb8396f56d871affdfa6287da5e5c",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-gb-02",
+    "cell": "q2-gb",
+    "query": "politics",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 2,
+    "articleIdHash": "822fcba52299a2b4",
+    "googleNewsUrlHash": "822fcba52299a2b4c3a9586c48fdec8ef261db7cabdb8d7df726864672e914c7",
+    "sourceName": "Financial Times",
+    "sourceHost": "www.ft.com",
+    "expectedTitle": "School politics class: Lobbyists move to Manchester for closer access to Number 10 North",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "www.ft.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 154,
+    "candidateUrlHash": "c078877ed96dca6613d104b7e7096e0965f178f72a906d5faefa0f643a954fda",
+    "publisherHost": "www.ft.com",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "c078877ed96dca6613d104b7e7096e0965f178f72a906d5faefa0f643a954fda",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-gb-03",
+    "cell": "q2-gb",
+    "query": "politics",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 3,
+    "articleIdHash": "71066541eaa1db31",
+    "googleNewsUrlHash": "71066541eaa1db31b06494ab2e77462e74c3ebaeba7f29a4866a8f932330cef3",
+    "sourceName": "LSE Blogs",
+    "sourceHost": "blogs.lse.ac.uk",
+    "expectedTitle": "Donald Trump: Triple Threat corrupter of presidential power",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "blogs.lse.ac.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 157,
+    "candidateUrlHash": "944fcbfcf8f94d3c1e618e3eb348ee1251296fd0ebeaede45678d9ea87243a17",
+    "publisherHost": "blogs.lse.ac.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 163768,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "944fcbfcf8f94d3c1e618e3eb348ee1251296fd0ebeaede45678d9ea87243a17",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Donald Trump: Triple Threat corrupter of presidential power"
+      },
+      {
+        "kind": "h1",
+        "value": "LSE United States Politics and Policy"
+      },
+      {
+        "kind": "h1",
+        "value": "Connect with LSE"
+      },
+      {
+        "kind": "og:title",
+        "value": "Donald Trump: Triple Threat corrupter of presidential power | LSE United States Politics and Policy"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Donald Trump: Triple Threat corrupter of presidential power"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,jsonld:headline",
+    "identityMatchedSignals": ["h1", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-gb-04",
+    "cell": "q2-gb",
+    "query": "politics",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 4,
+    "articleIdHash": "cf14764e332e8b95",
+    "googleNewsUrlHash": "cf14764e332e8b957e900a2563c39f6e7591995a10d7026d2ae0420d151dd72c",
+    "sourceName": "Politics Home",
+    "sourceHost": "www.politicshome.com",
+    "expectedTitle": "Andy Burnham Says Early Election Would Be \"Self-Serving Politics\"",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.politicshome.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 163,
+    "candidateUrlHash": "0da67c4753c2b55ec9c1c1644bce64438be97293a15c441d991ef86bc8c67f70",
+    "publisherHost": "www.politicshome.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 122682,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "0da67c4753c2b55ec9c1c1644bce64438be97293a15c441d991ef86bc8c67f70",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Andy Burnham Says Early Election Would Be \"Self-Serving Politics\""
+      },
+      {
+        "kind": "og:title",
+        "value": "Andy Burnham Says Early Election Would Be 'Self-Serving Politics'"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-gb-05",
+    "cell": "q2-gb",
+    "query": "politics",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 5,
+    "articleIdHash": "4c87a8774ac961aa",
+    "googleNewsUrlHash": "4c87a8774ac961aacce09b7bce74d523c02d445f11d697d1dd39cbab0f80cc27",
+    "sourceName": "The-Buyer.net",
+    "sourceHost": "www.the-buyer.net",
+    "expectedTitle": "Abbie Bennington on Series 2 of break out Vintage Politics podcast",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.the-buyer.net",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 136,
+    "candidateUrlHash": "9636a613f925ef9e37f926306702a3834c76b4ccbe9511abca716023a0cdc96f",
+    "publisherHost": "www.the-buyer.net",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "9636a613f925ef9e37f926306702a3834c76b4ccbe9511abca716023a0cdc96f",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Abbie Bennington on Series 2 of break out Vintage Politics podcast"
+      },
+      {
+        "kind": "og:title",
+        "value": "The Buyer | Abbie Bennington on Series 2 of break out Vintage Politics podcast"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Abbie Bennington on Series 2 of break out Vintage Politics podcast"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,jsonld:headline",
+    "identityMatchedSignals": ["h1", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-gb-06",
+    "cell": "q2-gb",
+    "query": "politics",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 6,
+    "articleIdHash": "67bf9628b59d4593",
+    "googleNewsUrlHash": "67bf9628b59d45936411545a7c92564245995b35b973f2289cdb21c7ceea4c31",
+    "sourceName": "Novara Media",
+    "sourceHost": "novaramedia.com",
+    "expectedTitle": "Politics Is a Greasy Poll – And For Now, It’s Nigel Farage Who’s Slipping",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "novaramedia.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 144,
+    "candidateUrlHash": "6cd81d3d0bb231f47db6e36ea9cd529403cd71a066b2b8631bb8c3e1603bbad8",
+    "publisherHost": "novaramedia.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 78069,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "6cd81d3d0bb231f47db6e36ea9cd529403cd71a066b2b8631bb8c3e1603bbad8",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Politics Is a Greasy Poll – And For Now, It’s Nigel Farage Who’s Slipping"
+      },
+      {
+        "kind": "og:title",
+        "value": "Politics Is a Greasy Poll – And For Now, It’s Nigel Farage Who’s Slipping"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Politics Is a Greasy Poll – And For Now, It’s Nigel Farage Who’s Slipping"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-gb-07",
+    "cell": "q2-gb",
+    "query": "politics",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 7,
+    "articleIdHash": "1e22e3c6fed81b46",
+    "googleNewsUrlHash": "1e22e3c6fed81b46639938e9c6112e058a419f4109588b824e3d8258103b8dd9",
+    "sourceName": "The Guardian",
+    "sourceHost": "www.theguardian.com",
+    "expectedTitle": "Burnham refreshes the parts others can’t reach on the Andy and Laura show | John Crace",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.theguardian.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 158,
+    "candidateUrlHash": "3d895f4cef3efaea14ad2165364089a68e418c1fdecc9b689b401ded7220f04a",
+    "publisherHost": "www.theguardian.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "3d895f4cef3efaea14ad2165364089a68e418c1fdecc9b689b401ded7220f04a",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "Burnham refreshes the parts others can’t reach on the Andy and Laura show | John Crace"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Burnham refreshes the parts others can’t reach on the Andy and Laura show"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title",
+    "identityMatchedSignals": ["og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-gb-08",
+    "cell": "q2-gb",
+    "query": "politics",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 8,
+    "articleIdHash": "e6994f0a5fe914e4",
+    "googleNewsUrlHash": "e6994f0a5fe914e4b71064b62b3ffd5571e5862d2b0b5ef75279fba5fffc0258",
+    "sourceName": "Financial Times",
+    "sourceHost": "www.ft.com",
+    "expectedTitle": "Germany’s economic recovery is under way if politics doesn’t spoil it",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "www.ft.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 146,
+    "candidateUrlHash": "d44701eeae1f931b282b2c50eb6286269f87b36fc13a9555cea43a31ffb0a006",
+    "publisherHost": "www.ft.com",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "d44701eeae1f931b282b2c50eb6286269f87b36fc13a9555cea43a31ffb0a006",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-gb-09",
+    "cell": "q2-gb",
+    "query": "politics",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 9,
+    "articleIdHash": "8f39a3b4b16b81f9",
+    "googleNewsUrlHash": "8f39a3b4b16b81f9162d5cc9f6cfa4c61a42113c289de8df1daf83613dc68ea0",
+    "sourceName": "The Guardian",
+    "sourceHost": "www.theguardian.com",
+    "expectedTitle": "‘Rip the plaster off’: Andy Burnham sets out vision for universal free social care",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.theguardian.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 152,
+    "candidateUrlHash": "21257b98be724d1fdb0fff24e9ec84773e311145094e3a536f57a90d6ca00d21",
+    "publisherHost": "www.theguardian.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "21257b98be724d1fdb0fff24e9ec84773e311145094e3a536f57a90d6ca00d21",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "‘Rip the plaster off’: Andy Burnham sets out vision for universal free social care"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "‘Rip the plaster off’: Andy Burnham sets out vision for universal free social care"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title,jsonld:headline",
+    "identityMatchedSignals": ["og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-gb-10",
+    "cell": "q2-gb",
+    "query": "politics",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 10,
+    "articleIdHash": "abd90e0d5ed0b609",
+    "googleNewsUrlHash": "abd90e0d5ed0b6096604d4eeffc69f14c2f905ba2181cdca70b48217eb373da4",
+    "sourceName": "The Guardian",
+    "sourceHost": "www.theguardian.com",
+    "expectedTitle": "‘We will get stuff done’: Burnham seeks to banish ghosts of Starmerism at Labour conference",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.theguardian.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 138,
+    "candidateUrlHash": "ac56bf13161fc27eca5c6244b456f4c3973345445d155fbed2527531fe94d22b",
+    "publisherHost": "www.theguardian.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "ac56bf13161fc27eca5c6244b456f4c3973345445d155fbed2527531fe94d22b",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "‘We will get stuff done’: Burnham seeks to banish ghosts of Starmerism at Labour conference"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "‘We will get stuff done’: Burnham seeks to banish ghosts of Starmerism at Labour conference"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title,jsonld:headline",
+    "identityMatchedSignals": ["og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-us-01",
+    "cell": "q2-us",
+    "query": "politics",
+    "country": "US",
+    "language": "en-US",
+    "position": 1,
+    "articleIdHash": "98636144683627c1",
+    "googleNewsUrlHash": "98636144683627c1790e80a16200a8041cc35d588862f299b8468f586e70a38c",
+    "sourceName": "Brookings",
+    "sourceHost": "www.brookings.edu",
+    "expectedTitle": "Three state elections throw German politics into disarray",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.brookings.edu",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 153,
+    "candidateUrlHash": "35083b42d62164743f7626351102790186247276541080073ac8e46929a7956a",
+    "publisherHost": "www.brookings.edu",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 224289,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "35083b42d62164743f7626351102790186247276541080073ac8e46929a7956a",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Three state elections throw German politics into disarray"
+      },
+      {
+        "kind": "og:title",
+        "value": "Three state elections throw German politics into disarray | Brookings"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Three state elections throw German politics into disarray"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-us-02",
+    "cell": "q2-us",
+    "query": "politics",
+    "country": "US",
+    "language": "en-US",
+    "position": 2,
+    "articleIdHash": "630ba5b4c5e200cd",
+    "googleNewsUrlHash": "630ba5b4c5e200cd9a2371492eefd1b497e07a42588b8616baa3b5edec2351ba",
+    "sourceName": "Reuters",
+    "sourceHost": "www.reuters.com",
+    "expectedTitle": "COMMENTARY: Trump's diesel export dilemma — Good politics, bad economics",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 401,
+        "host": "www.reuters.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 128,
+    "candidateUrlHash": "28d3b0ed32f494044f52e7b1cf53afd9ab47e36646d5d70f61c4a4429be00d27",
+    "publisherHost": "www.reuters.com",
+    "accessStatus": "http_401",
+    "httpStatus": 401,
+    "contentType": "text/html;charset=utf-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "28d3b0ed32f494044f52e7b1cf53afd9ab47e36646d5d70f61c4a4429be00d27",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-us-03",
+    "cell": "q2-us",
+    "query": "politics",
+    "country": "US",
+    "language": "en-US",
+    "position": 3,
+    "articleIdHash": "27b499ff2954a574",
+    "googleNewsUrlHash": "27b499ff2954a574679f37ac2c76ab529fd876ceb8aec0ade23815f364bb0df2",
+    "sourceName": "Ohio Capital Journal",
+    "sourceHost": "ohiocapitaljournal.com",
+    "expectedTitle": "Commentary: 30 years of Republican dominance of Ohio politics: The results",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "ohiocapitaljournal.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 146,
+    "candidateUrlHash": "667985d6cfb0fb32525f8e4fa20465ab680daca932e23e2929d9f4c3fb56c5dc",
+    "publisherHost": "ohiocapitaljournal.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 170288,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "667985d6cfb0fb32525f8e4fa20465ab680daca932e23e2929d9f4c3fb56c5dc",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "30 years of Republican dominance of Ohio politics: The results"
+      },
+      {
+        "kind": "h1",
+        "value": "Republish Post"
+      },
+      {
+        "kind": "og:title",
+        "value": "Commentary: 30 years of Republican dominance of Ohio politics: The results • Ohio Capital Journal"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "30 years of Republican dominance of Ohio politics: The results"
+      }
+    ],
+    "identityStatus": "unverifiable",
+    "identityReason": "conflicting_nonmatching_title_signals",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-us-04",
+    "cell": "q2-us",
+    "query": "politics",
+    "country": "US",
+    "language": "en-US",
+    "position": 4,
+    "articleIdHash": "8e51a4b4736a6403",
+    "googleNewsUrlHash": "8e51a4b4736a64035f0c42a8095425a3b965f394276042bd802f109acfdc9a1f",
+    "sourceName": "USC Today",
+    "sourceHost": "today.usc.edu",
+    "expectedTitle": "U.S. Sen. Gary Peters to lead USC Dornsife’s Center for the Political Future",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "today.usc.edu",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 128,
+    "candidateUrlHash": "cce9a88a7b598a390180671a9d0e253101cb315ffd67e388e1b0130d49b10a71",
+    "publisherHost": "today.usc.edu",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 211633,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "cce9a88a7b598a390180671a9d0e253101cb315ffd67e388e1b0130d49b10a71",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "U.S. Sen. Gary Peters to lead USC Dornsife’s Center for the Political Future"
+      },
+      {
+        "kind": "og:title",
+        "value": "U.S. Sen. Gary Peters to lead USC Dornsife's Center for the Political Future"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "U.S. Sen. Gary Peters to lead USC Dornsife’s Center for the Political Future"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-us-05",
+    "cell": "q2-us",
+    "query": "politics",
+    "country": "US",
+    "language": "en-US",
+    "position": 5,
+    "articleIdHash": "30ba5edbd25f11e5",
+    "googleNewsUrlHash": "30ba5edbd25f11e549e94131adc6e56c125528b074c9c8c435f4975db9cb05cd",
+    "sourceName": "spectrumlocalnews.com",
+    "sourceHost": "spectrumlocalnews.com",
+    "expectedTitle": "Republicans push for temporary export ban to lower diesel costs",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "spectrumlocalnews.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 195,
+    "candidateUrlHash": "61fb4c35cc7eece168c2543c4476276f54c71541b006dc4d8e1f26c6796f9b8a",
+    "publisherHost": "spectrumlocalnews.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html;charset=utf-8",
+    "responseBytes": 80133,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "61fb4c35cc7eece168c2543c4476276f54c71541b006dc4d8e1f26c6796f9b8a",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Republicans push for temporary export ban to lower diesel costs"
+      },
+      {
+        "kind": "og:title",
+        "value": "Republicans push for temporary export ban to lower diesel costs"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Republicans push for temporary export ban to lower diesel costs"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-us-06",
+    "cell": "q2-us",
+    "query": "politics",
+    "country": "US",
+    "language": "en-US",
+    "position": 6,
+    "articleIdHash": "0a3061bfb53106ab",
+    "googleNewsUrlHash": "0a3061bfb53106abd85b5c0712e0a3c814ccbb186cb229b228fc918f0c85a270",
+    "sourceName": "Politico",
+    "sourceHost": "www.politico.com",
+    "expectedTitle": "The nation’s cartoonists on the week in politics",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "www.politico.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 160,
+    "candidateUrlHash": "4a2555d20933387018bde92c23ec5d9e7e94e58e45db1b137b81ecd454ca36ae",
+    "publisherHost": "www.politico.com",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "4a2555d20933387018bde92c23ec5d9e7e94e58e45db1b137b81ecd454ca36ae",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-us-07",
+    "cell": "q2-us",
+    "query": "politics",
+    "country": "US",
+    "language": "en-US",
+    "position": 7,
+    "articleIdHash": "cb9b8cbc9748ef7f",
+    "googleNewsUrlHash": "cb9b8cbc9748ef7f71f9196aa74dc86904ba9e9071ca1fcaad93c6d38d2301b3",
+    "sourceName": "economist.com",
+    "sourceHost": "www.economist.com",
+    "expectedTitle": "AI-written speeches are taking over politics",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "www.economist.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 145,
+    "candidateUrlHash": "4aa5e245118082442d9cdc6c6c485f07f4bbb8396f56d871affdfa6287da5e5c",
+    "publisherHost": "www.economist.com",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "4aa5e245118082442d9cdc6c6c485f07f4bbb8396f56d871affdfa6287da5e5c",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-us-08",
+    "cell": "q2-us",
+    "query": "politics",
+    "country": "US",
+    "language": "en-US",
+    "position": 8,
+    "articleIdHash": "ab042ad69b2cfeea",
+    "googleNewsUrlHash": "ab042ad69b2cfeea0313236be1454b26dd3a34ef5bf3d8f835caaf3de3dbf947",
+    "sourceName": "NPR",
+    "sourceHost": "www.npr.org",
+    "expectedTitle": "Week in Politics: Trump faces Republican defections; U.S.-China summit; press feud",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.npr.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 144,
+    "candidateUrlHash": "4c4f609b042d6976baf9d543f08bc20407cd17f25354ce18eef3feb62175bbe6",
+    "publisherHost": "www.npr.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 144289,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "4c4f609b042d6976baf9d543f08bc20407cd17f25354ce18eef3feb62175bbe6",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Week in Politics: Trump faces Republican defections; U.S.-China summit; press feud"
+      },
+      {
+        "kind": "og:title",
+        "value": "Week in Politics: Trump faces Republican defections; U.S.-China summit; press feud"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Week in Politics: Trump faces Republican defections; U.S.-China summit; press feud"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-us-09",
+    "cell": "q2-us",
+    "query": "politics",
+    "country": "US",
+    "language": "en-US",
+    "position": 9,
+    "articleIdHash": "0ae4f517a41649da",
+    "googleNewsUrlHash": "0ae4f517a41649dadd0fe1dde0549424a5b651a6a3dc5831e09ba27786024884",
+    "sourceName": "CT Mirror",
+    "sourceHost": "ctmirror.org",
+    "expectedTitle": "Blumenthal forum on ICE shootings, AI risks: CT politics news",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "ctmirror.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 167,
+    "candidateUrlHash": "c5442a6e1cea4e697873a22985101a4825a84b536c7dd1e1a7768f748050d69e",
+    "publisherHost": "ctmirror.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 257005,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "c5442a6e1cea4e697873a22985101a4825a84b536c7dd1e1a7768f748050d69e",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Blumenthal forum on ICE shootings, AI risks: CT politics news"
+      },
+      {
+        "kind": "h1",
+        "value": "Keep reading CT Mirror."
+      },
+      {
+        "kind": "og:title",
+        "value": "Blumenthal forum on ICE shootings, AI risks: CT politics news"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Blumenthal forum on ICE shootings, AI risks: CT politics news"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q2-us-10",
+    "cell": "q2-us",
+    "query": "politics",
+    "country": "US",
+    "language": "en-US",
+    "position": 10,
+    "articleIdHash": "7703bf8ebf723b20",
+    "googleNewsUrlHash": "7703bf8ebf723b2071c26cbbb2aea361bc15c2318dbf03ef3fe9a8d460fd88d1",
+    "sourceName": "Spectrum News",
+    "sourceHost": "spectrumnews1.com",
+    "expectedTitle": "Hardwood Hardship: Pressures pile up on Kentucky's sawmills",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "spectrumnews1.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 147,
+    "candidateUrlHash": "c0cec239274665ef10e11a3efdf17ab1910f0cd9b2d62f9dfa308f0e98082b2f",
+    "publisherHost": "spectrumnews1.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html;charset=utf-8",
+    "responseBytes": 97795,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "c0cec239274665ef10e11a3efdf17ab1910f0cd9b2d62f9dfa308f0e98082b2f",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Hardwood Hardship: Pressures pile up on Kentucky's sawmills"
+      },
+      {
+        "kind": "og:title",
+        "value": "Hardwood Hardship: Pressures pile up on Kentucky's sawmills"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Hardwood Hardship: Pressures pile up on Kentucky's sawmills"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-gb-01",
+    "cell": "q3-gb",
+    "query": "business",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 1,
+    "articleIdHash": "83ff02e3c4175a81",
+    "googleNewsUrlHash": "83ff02e3c4175a81f5a0765bcf8d3be97749f6e7c181943d42f987eec681af74",
+    "sourceName": "UK Parliament",
+    "sourceHost": "committees.parliament.uk",
+    "expectedTitle": "Meta, Google, OpenAI and Anthropic invited to appear before Business Committee amid growing AI safety concerns",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "committees.parliament.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 145,
+    "candidateUrlHash": "b5f8378bf6b6b62210dbb15aca4d56e19f78e56e4be47a84f8554d44d5dfce5b",
+    "publisherHost": "committees.parliament.uk",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "b5f8378bf6b6b62210dbb15aca4d56e19f78e56e4be47a84f8554d44d5dfce5b",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-gb-02",
+    "cell": "q3-gb",
+    "query": "business",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 2,
+    "articleIdHash": "f191f78dd335b6ad",
+    "googleNewsUrlHash": "f191f78dd335b6adc0d8c407fbd2634e657c0aad2d60c5eec949139a30387891",
+    "sourceName": "bbc.co.uk",
+    "sourceHost": "www.bbc.co.uk",
+    "expectedTitle": "Andy Burnham not doing enough to boost growth, says former business secretary",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.bbc.co.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 172,
+    "candidateUrlHash": "380f7513fa7ed195e2cd4c06447a878d91bd28231be40f58965ada96dcce38d9",
+    "publisherHost": "www.bbc.co.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "380f7513fa7ed195e2cd4c06447a878d91bd28231be40f58965ada96dcce38d9",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Burnham not doing enough to boost growth, says former business secretary"
+      },
+      {
+        "kind": "og:title",
+        "value": "Andy Burnham not doing enough to boost growth, says former business secretary"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Andy Burnham not doing enough to boost growth, says former business secretary"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title,jsonld:headline",
+    "identityMatchedSignals": ["og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-gb-03",
+    "cell": "q3-gb",
+    "query": "business",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 3,
+    "articleIdHash": "14a63dc312006a98",
+    "googleNewsUrlHash": "14a63dc312006a980f4fb941d4a689088cf9fb152e42bfd52ccb577505fcb12d",
+    "sourceName": "saffery.com",
+    "sourceHost": "www.saffery.com",
+    "expectedTitle": "Why sustainability matters to your business and where to start",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.saffery.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 153,
+    "candidateUrlHash": "5721525febd5d120b105e83686513d1958299e067041378bd0586db420b3e58d",
+    "publisherHost": "www.saffery.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 183104,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "5721525febd5d120b105e83686513d1958299e067041378bd0586db420b3e58d",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Why sustainability matters to your business and where to start"
+      },
+      {
+        "kind": "og:title",
+        "value": "Why sustainability matters to your business and where to start"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "FAQ"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Why sustainability matters to your business and where to start"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-gb-04",
+    "cell": "q3-gb",
+    "query": "business",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 4,
+    "articleIdHash": "6922cc1d5cb28fb4",
+    "googleNewsUrlHash": "6922cc1d5cb28fb4e7cc1cd2ad54049191915738c8fde250b66181265500ffa7",
+    "sourceName": "Financial Times",
+    "sourceHost": "www.ft.com",
+    "expectedTitle": "AI pressure grows for law firm business models",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "www.ft.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 161,
+    "candidateUrlHash": "520da1ab0b9b2a02367650ba2439abb89630f5ffee14d36577463394f2a75780",
+    "publisherHost": "www.ft.com",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "520da1ab0b9b2a02367650ba2439abb89630f5ffee14d36577463394f2a75780",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-gb-05",
+    "cell": "q3-gb",
+    "query": "business",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 5,
+    "articleIdHash": "42e7a0d6f3fbc611",
+    "googleNewsUrlHash": "42e7a0d6f3fbc6112aae0179c21c65b79a22094ef276e3f4d3203dc0c2e24352",
+    "sourceName": "The Economist",
+    "sourceHost": "www.economist.com",
+    "expectedTitle": "Business in the Gulf is making a slow recovery",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "www.economist.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 169,
+    "candidateUrlHash": "303988a5c686051d18c0bf537340f6a45b05aa48df4fd0325301c81ca488628c",
+    "publisherHost": "www.economist.com",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "303988a5c686051d18c0bf537340f6a45b05aa48df4fd0325301c81ca488628c",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-gb-06",
+    "cell": "q3-gb",
+    "query": "business",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 6,
+    "articleIdHash": "156040e19178f2b1",
+    "googleNewsUrlHash": "156040e19178f2b1dfece39ee71c2636f7f157a057037864f0fcca5ee772b349",
+    "sourceName": "The Guardian",
+    "sourceHost": "www.theguardian.com",
+    "expectedTitle": "Job interviews are a weird business – but what’s the alternative? | Emma Beddington",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.theguardian.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 129,
+    "candidateUrlHash": "ff42d8c12c7197d06b58d29890415e574b3d38acfb4712a81962d7c12084ccd5",
+    "publisherHost": "www.theguardian.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "ff42d8c12c7197d06b58d29890415e574b3d38acfb4712a81962d7c12084ccd5",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "Job interviews are a weird business – but what’s the alternative? | Emma Beddington"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Job interviews are a weird business – but what’s the alternative?"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title",
+    "identityMatchedSignals": ["og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-gb-07",
+    "cell": "q3-gb",
+    "query": "business",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 7,
+    "articleIdHash": "e69777b0fdb1abd2",
+    "googleNewsUrlHash": "e69777b0fdb1abd2138272d0384ef9305d197303b6c1af2ea749894afb13228e",
+    "sourceName": "Nottingham Panthers",
+    "sourceHost": "www.panthers.co.uk",
+    "expectedTitle": "BUSINESS CLUB: SPOTLIGHT ON AUTOKARL ADI",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.panthers.co.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 142,
+    "candidateUrlHash": "4c7c2182003f42d141baa9439e2b12123e9426b0e12fa2749d556dc306fd083b",
+    "publisherHost": "www.panthers.co.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html",
+    "responseBytes": 23750,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "4c7c2182003f42d141baa9439e2b12123e9426b0e12fa2749d556dc306fd083b",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "BUSINESS CLUB: SPOTLIGHT ON AUTOKARL ADI"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1",
+    "identityMatchedSignals": ["h1"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-gb-08",
+    "cell": "q3-gb",
+    "query": "business",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 8,
+    "articleIdHash": "86af45b5120fc216",
+    "googleNewsUrlHash": "86af45b5120fc2160655bed6965e84a81031a19bc2df6caf6a20d098f2fa2c88",
+    "sourceName": "Simply Business",
+    "sourceHost": "www.simplybusiness.co.uk",
+    "expectedTitle": "Autumn Budget 2026: what should landlords look out for?",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.simplybusiness.co.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 145,
+    "candidateUrlHash": "92268bc017d033400a8c87ff13d3eaf06c12a54f08b74bc5b0b807acb88ecde6",
+    "publisherHost": "www.simplybusiness.co.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 195286,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "92268bc017d033400a8c87ff13d3eaf06c12a54f08b74bc5b0b807acb88ecde6",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Autumn Budget 2026: what should landlords look out for?"
+      },
+      {
+        "kind": "og:title",
+        "value": "Autumn Budget 2026: what should landlords look out for?"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Autumn Budget 2026: what should landlords look out for?"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-gb-09",
+    "cell": "q3-gb",
+    "query": "business",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 9,
+    "articleIdHash": "126679b9255da2ac",
+    "googleNewsUrlHash": "126679b9255da2ac3f9fd162dd72039e2db8c59de8947c95b7025f6c868d9a7f",
+    "sourceName": "Imperial College London",
+    "sourceHost": "www.imperial.ac.uk",
+    "expectedTitle": "Imperial Business School welcomes new faculty for 2026–27",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.imperial.ac.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 140,
+    "candidateUrlHash": "92f01e90184cf7a5ec2a41d782827a1af83e8168d24900f4e10ee5c04ac2cd08",
+    "publisherHost": "www.imperial.ac.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 209990,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "92f01e90184cf7a5ec2a41d782827a1af83e8168d24900f4e10ee5c04ac2cd08",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Imperial Business School"
+      },
+      {
+        "kind": "h1",
+        "value": "Imperial Business School welcomes new faculty for 2026–27"
+      },
+      {
+        "kind": "og:title",
+        "value": "Imperial Business School welcomes new faculty for 2026–27"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-gb-10",
+    "cell": "q3-gb",
+    "query": "business",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 10,
+    "articleIdHash": "5bf2ad8791cd18e9",
+    "googleNewsUrlHash": "5bf2ad8791cd18e9ffd643580821a0750ff5ef640495640947afa96b3fc54bde",
+    "sourceName": "The Spirits Business",
+    "sourceHost": "www.thespiritsbusiness.com",
+    "expectedTitle": "GlenWyvis Distillery to call in administrators",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.thespiritsbusiness.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 190,
+    "candidateUrlHash": "1c1022940c9a30a4ea4f497cfc5506f84bea904755a63d79712d6d9ae590d0fd",
+    "publisherHost": "www.thespiritsbusiness.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 151196,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "1c1022940c9a30a4ea4f497cfc5506f84bea904755a63d79712d6d9ae590d0fd",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "GlenWyvis Distillery to call in administrators"
+      },
+      {
+        "kind": "og:title",
+        "value": "GlenWyvis Distillery to call in administrators - The Spirits Business"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "GlenWyvis Distillery to call in administrators"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-us-01",
+    "cell": "q3-us",
+    "query": "business",
+    "country": "US",
+    "language": "en-US",
+    "position": 1,
+    "articleIdHash": "4feb756219298d4c",
+    "googleNewsUrlHash": "4feb756219298d4cf56131395b11a94e5b51a6655689969827482678b0e69b2a",
+    "sourceName": "The Harvard Crimson",
+    "sourceHost": "www.thecrimson.com",
+    "expectedTitle": "Harvard Business School Ends Required Global Immersion for First-Year MBAs",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.thecrimson.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 142,
+    "candidateUrlHash": "9899630ea8f3214440d69067d9a56a9d81c5755c568073e7511daf3f928288d8",
+    "publisherHost": "www.thecrimson.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 67092,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "9899630ea8f3214440d69067d9a56a9d81c5755c568073e7511daf3f928288d8",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Harvard Business School Ends Required Global Immersion for First-Year MBAs"
+      },
+      {
+        "kind": "og:title",
+        "value": "Harvard Business School Ends Required Global Immersion for First-Year MBAs | The Harvard Crimson"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Harvard Business School Ends Required Global Immersion for First-Year MBAs | The Harvard Crimson"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-us-02",
+    "cell": "q3-us",
+    "query": "business",
+    "country": "US",
+    "language": "en-US",
+    "position": 2,
+    "articleIdHash": "f59b3c0e5da1c3fc",
+    "googleNewsUrlHash": "f59b3c0e5da1c3fc3bd7c7ed5422fc0c67dcf654b882488d7188c0eac89b91bf",
+    "sourceName": "Business Insider",
+    "sourceHost": "www.businessinsider.com",
+    "expectedTitle": "I'm 21 and make up to $280,000 a month reselling sneakers. I don't see my friends much and still live at home.",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.businessinsider.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 159,
+    "candidateUrlHash": "31824d789ae52f33609b8aeb9350500b5421a7884053bd2bbacd2a38e74d49be",
+    "publisherHost": "www.businessinsider.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "31824d789ae52f33609b8aeb9350500b5421a7884053bd2bbacd2a38e74d49be",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "I'm 21 and make up to $280,000 a month reselling sneakers. I don't see my friends much and still live at home."
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "I'm 21 and sold $280K of sneakers in a month. I still live at home."
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title",
+    "identityMatchedSignals": ["og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-us-03",
+    "cell": "q3-us",
+    "query": "business",
+    "country": "US",
+    "language": "en-US",
+    "position": 3,
+    "articleIdHash": "12d3a0a19c731767",
+    "googleNewsUrlHash": "12d3a0a19c73176768c1dd15accdb90d3256dca26f0f3d207538cb8b62aaa278",
+    "sourceName": "Department of Energy (.gov)",
+    "sourceHost": "www.energy.gov",
+    "expectedTitle": "DOE Small Business Innovation Research (SBIR) and Small Business Technology Transfer (STTR)",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.energy.gov",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 141,
+    "candidateUrlHash": "1c130b88e9d0e2336101ccc94d0211670206565b52b23d067cbad7f5ad4ca64f",
+    "publisherHost": "www.energy.gov",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 151655,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "1c130b88e9d0e2336101ccc94d0211670206565b52b23d067cbad7f5ad4ca64f",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "DOE Small Business Innovation Research (SBIR) and Small Business Technology Transfer (STTR)"
+      },
+      {
+        "kind": "og:title",
+        "value": "DOE Small Business Innovation Research (SBIR) and Small Business Technology Transfer (STTR)"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "DOE Small Business Innovation Research (SBIR) and Small Business Technology Transfer (STTR)"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-us-04",
+    "cell": "q3-us",
+    "query": "business",
+    "country": "US",
+    "language": "en-US",
+    "position": 4,
+    "articleIdHash": "39e500a08456e91d",
+    "googleNewsUrlHash": "39e500a08456e91d574201118a0c97a1e1de44d72f9b4659235370bcd9473c1b",
+    "sourceName": "Reuters",
+    "sourceHost": "www.reuters.com",
+    "expectedTitle": "US core capital goods orders point to robust growth in business spending on equipment",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 401,
+        "host": "www.reuters.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 141,
+    "candidateUrlHash": "14dad01105e7525f36d8c31ce3e159ea0981b4c8aaef7156354a4457964da4d7",
+    "publisherHost": "www.reuters.com",
+    "accessStatus": "http_401",
+    "httpStatus": 401,
+    "contentType": "text/html;charset=utf-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "14dad01105e7525f36d8c31ce3e159ea0981b4c8aaef7156354a4457964da4d7",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-us-05",
+    "cell": "q3-us",
+    "query": "business",
+    "country": "US",
+    "language": "en-US",
+    "position": 5,
+    "articleIdHash": "3800a4d854536248",
+    "googleNewsUrlHash": "3800a4d854536248aee3fb367b5ee81ac6929420736d51a8d0db3dbdb40fd226",
+    "sourceName": "Poets&Quants for Undergrads",
+    "sourceHost": "poetsandquantsforundergrads.com",
+    "expectedTitle": "U.S. News 2027 Best Business Schools Ranking: Wharton Reclaims The Solo Crown",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "poetsandquantsforundergrads.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 141,
+    "candidateUrlHash": "c16be3dd7af76802ec56e3c246e4d533e33a9470af09d4d5b59daaa492e5520d",
+    "publisherHost": "poetsandquantsforundergrads.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 172170,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "c16be3dd7af76802ec56e3c246e4d533e33a9470af09d4d5b59daaa492e5520d",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "U.S. News 2027 Best Business Schools Ranking: Wharton Reclaims The Solo Crown"
+      },
+      {
+        "kind": "og:title",
+        "value": "U.S. News 2027 Best Business Schools Ranking: Wharton Reclaims The Solo Crown"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "U.S. News 2027 Best Business Schools Ranking: Wharton Reclaims The Solo Crown"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-us-06",
+    "cell": "q3-us",
+    "query": "business",
+    "country": "US",
+    "language": "en-US",
+    "position": 6,
+    "articleIdHash": "cefa9738a215c432",
+    "googleNewsUrlHash": "cefa9738a215c432121643524e530b8f1251578fc988bdc85bca5df838760e06",
+    "sourceName": "CNBC",
+    "sourceHost": "www.cnbc.com",
+    "expectedTitle": "Why McDonald's is following Walmart and Amazon into the advertising business",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.cnbc.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 137,
+    "candidateUrlHash": "bfafabe6d353b0c8e2f1d278e31cdf5401f753d6111be3772a169a8eb66091dd",
+    "publisherHost": "www.cnbc.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "bfafabe6d353b0c8e2f1d278e31cdf5401f753d6111be3772a169a8eb66091dd",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "Why McDonald's is following Walmart and Amazon into the advertising business"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title",
+    "identityMatchedSignals": ["og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-us-07",
+    "cell": "q3-us",
+    "query": "business",
+    "country": "US",
+    "language": "en-US",
+    "position": 7,
+    "articleIdHash": "6703cefee3d7fac1",
+    "googleNewsUrlHash": "6703cefee3d7fac199a994e532c41b8b0f4ddc44802fc1b587d9e4f156e79d93",
+    "sourceName": "WSJ",
+    "sourceHost": "www.wsj.com",
+    "expectedTitle": "See How Elon Musk’s Sunbelt Investments Are Reshaping His Business Empire",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 401,
+        "host": "www.wsj.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 133,
+    "candidateUrlHash": "a775fa36c8b93d3f3b4592e666770cd1e9f3d21435b85d2d7af08b37b7d7164c",
+    "publisherHost": "www.wsj.com",
+    "accessStatus": "http_401",
+    "httpStatus": 401,
+    "contentType": "text/html;charset=utf-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "a775fa36c8b93d3f3b4592e666770cd1e9f3d21435b85d2d7af08b37b7d7164c",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-us-08",
+    "cell": "q3-us",
+    "query": "business",
+    "country": "US",
+    "language": "en-US",
+    "position": 8,
+    "articleIdHash": "42e7a0d6f3fbc611",
+    "googleNewsUrlHash": "42e7a0d6f3fbc6112aae0179c21c65b79a22094ef276e3f4d3203dc0c2e24352",
+    "sourceName": "economist.com",
+    "sourceHost": "www.economist.com",
+    "expectedTitle": "Business in the Gulf is making a slow recovery",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "www.economist.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 144,
+    "candidateUrlHash": "303988a5c686051d18c0bf537340f6a45b05aa48df4fd0325301c81ca488628c",
+    "publisherHost": "www.economist.com",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "303988a5c686051d18c0bf537340f6a45b05aa48df4fd0325301c81ca488628c",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-us-09",
+    "cell": "q3-us",
+    "query": "business",
+    "country": "US",
+    "language": "en-US",
+    "position": 9,
+    "articleIdHash": "f2d6a116e86e7bfd",
+    "googleNewsUrlHash": "f2d6a116e86e7bfd3f1b5baf6efa222fa57b61a8f0e8b3c08731af6042da6700",
+    "sourceName": "ABC7 Chicago",
+    "sourceHost": "abc7chicago.com",
+    "expectedTitle": "Chicago burglaries: At least 6 businesses burglarized in Bronzeville, Hyde Park, CPD says | Video",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "abc7chicago.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 176,
+    "candidateUrlHash": "011942498fab54595fb2180a08152e19cb5826e415dedb4cb3f726159ac286d7",
+    "publisherHost": "abc7chicago.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "011942498fab54595fb2180a08152e19cb5826e415dedb4cb3f726159ac286d7",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "At least 6 businesses burglarized in Bronzeville, Hyde Park, Chicago police say | Video"
+      },
+      {
+        "kind": "og:title",
+        "value": "At least 6 businesses burglarized in Bronzeville, Hyde Park, Chicago police say | Video"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "At least 6 businesses burglarized in Bronzeville, Hyde Park, Chicago police say | Video"
+      }
+    ],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_match_in_capped_prefix_or_no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q3-us-10",
+    "cell": "q3-us",
+    "query": "business",
+    "country": "US",
+    "language": "en-US",
+    "position": 10,
+    "articleIdHash": "272339105d47809e",
+    "googleNewsUrlHash": "272339105d47809e0b5ad3ff7a9aa38241dc950e28afeb3e6ea2d32780a00d68",
+    "sourceName": "Oregon Public Broadcasting - OPB",
+    "sourceHost": "www.opb.org",
+    "expectedTitle": "Oregon Gov. Kotek and state Sen. Drazan share a stage in Portland and talk business, taxes, Trump",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.opb.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 146,
+    "candidateUrlHash": "f44f60302b243bf0df10cbb49fec46ce6a2cbd35a7555b03ed76e553177609d7",
+    "publisherHost": "www.opb.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 245448,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "f44f60302b243bf0df10cbb49fec46ce6a2cbd35a7555b03ed76e553177609d7",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Oregon Gov. Kotek and state Sen. Drazan share a stage in Portland and talk business, taxes, Trump"
+      },
+      {
+        "kind": "og:title",
+        "value": "Oregon Gov. Kotek and state Sen. Drazan share a stage in Portland and talk business, taxes, Trump"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Oregon Gov. Kotek and state Sen. Drazan share a stage in Portland and talk business, taxes, Trump"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-gb-01",
+    "cell": "q4-gb",
+    "query": "technology",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 1,
+    "articleIdHash": "9400e46fc9dda54f",
+    "googleNewsUrlHash": "9400e46fc9dda54f5a3fa5bc4b2e4181260cab0706578c733914d59c96bf7c4f",
+    "sourceName": "ember-energy.org",
+    "sourceHost": "ember-energy.org",
+    "expectedTitle": "The electro-fortification of Britain꞉ the next national technology transition",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "ember-energy.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 141,
+    "candidateUrlHash": "c09c77f6cd565840aeecc593e3584c61245cf4906d5427c4fe70261162e95669",
+    "publisherHost": "ember-energy.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 111918,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "c09c77f6cd565840aeecc593e3584c61245cf4906d5427c4fe70261162e95669",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "The electro-fortification of Britain: the next national technology transition"
+      },
+      {
+        "kind": "og:title",
+        "value": "The electro-fortification of Britain꞉ the next national technology transition | Ember"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1",
+    "identityMatchedSignals": ["h1"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-gb-02",
+    "cell": "q4-gb",
+    "query": "technology",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 2,
+    "articleIdHash": "bacd5a68cf4bfeeb",
+    "googleNewsUrlHash": "bacd5a68cf4bfeebedc5aa872c15cafd90e3c70a314493a7a9f4ac61e9cbb7bb",
+    "sourceName": "The Official Microsoft Blog",
+    "sourceHost": "blogs.microsoft.com",
+    "expectedTitle": "Microsoft strengthens its commitment to the Middle East by investing in technology, digital resilience, and people",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "blogs.microsoft.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 151,
+    "candidateUrlHash": "b6184dda036e73a3aaf21b5c48d9f299c099d70d51cf30d6a47ddd58a7cbb336",
+    "publisherHost": "blogs.microsoft.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 172810,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "b6184dda036e73a3aaf21b5c48d9f299c099d70d51cf30d6a47ddd58a7cbb336",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Microsoft strengthens its commitment to the Middle East by investing in technology, digital resilience, and people"
+      },
+      {
+        "kind": "og:title",
+        "value": "Microsoft strengthens its commitment to the Middle East by investing in technology, digital resilience, and people - Microsoft On the Issues"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Microsoft strengthens its commitment to the Middle East by investing in technology, digital resilience, and people"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,jsonld:headline",
+    "identityMatchedSignals": ["h1", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-gb-03",
+    "cell": "q4-gb",
+    "query": "technology",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 3,
+    "articleIdHash": "ed15ccf4f7c82385",
+    "googleNewsUrlHash": "ed15ccf4f7c8238571732a82ab05a892f43a3bf5cabf22b0227c90a3745e8005",
+    "sourceName": "energy.ec.europa.eu",
+    "sourceHost": "energy.ec.europa.eu",
+    "expectedTitle": "20th Strategic Energy Technology Plan",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "energy.ec.europa.eu",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 162,
+    "candidateUrlHash": "ea7422aebe119213db34424d9be32259910d9a192d1a48e64b3f796befa83747",
+    "publisherHost": "energy.ec.europa.eu",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 87008,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "ea7422aebe119213db34424d9be32259910d9a192d1a48e64b3f796befa83747",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "20th Strategic Energy Technology Plan"
+      },
+      {
+        "kind": "og:title",
+        "value": "20th Strategic Energy Technology Plan"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-gb-04",
+    "cell": "q4-gb",
+    "query": "technology",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 4,
+    "articleIdHash": "e1145941a4787d9e",
+    "googleNewsUrlHash": "e1145941a4787d9e441d6ef1a2682b8ed632ae61f463f0f265d6b3fbc3932b12",
+    "sourceName": "bbc.co.uk",
+    "sourceHost": "www.bbc.co.uk",
+    "expectedTitle": "Apple ordered to pay $5.7bn in haptic tech patent case",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.bbc.co.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 138,
+    "candidateUrlHash": "7aede3a9618b2ea54c7db5b61b75841fe96093796ea856dad1d961694b6591f3",
+    "publisherHost": "www.bbc.co.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "7aede3a9618b2ea54c7db5b61b75841fe96093796ea856dad1d961694b6591f3",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Apple ordered to pay $5.7bn after losing vibration tech patent suit"
+      },
+      {
+        "kind": "og:title",
+        "value": "Apple ordered to pay $5.7bn in haptic tech patent case"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Apple ordered to pay $5.7bn in haptic tech patent case"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title,jsonld:headline",
+    "identityMatchedSignals": ["og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-gb-05",
+    "cell": "q4-gb",
+    "query": "technology",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 5,
+    "articleIdHash": "eaf7b87f669067cf",
+    "googleNewsUrlHash": "eaf7b87f669067cf1dbc5bfd6a83779648bc2f0c09cd85eaa3d23ed9007d5e5a",
+    "sourceName": "The Guardian",
+    "sourceHost": "www.theguardian.com",
+    "expectedTitle": "‘Charming and disarming’ … how Meta’s technology-packed Muse harnesses the power of cuteness",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.theguardian.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 142,
+    "candidateUrlHash": "4c282d02d3ee14417651b240a4e98978420075f98a76aec8cd7ffd9af5f0fdc0",
+    "publisherHost": "www.theguardian.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "4c282d02d3ee14417651b240a4e98978420075f98a76aec8cd7ffd9af5f0fdc0",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "‘Charming and disarming’ … how Meta’s technology-packed Muse harnesses the power of cuteness"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "‘Charming and disarming’ … how Meta’s technology-packed Muse harnesses the power of cuteness"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title,jsonld:headline",
+    "identityMatchedSignals": ["og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-gb-06",
+    "cell": "q4-gb",
+    "query": "technology",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 6,
+    "articleIdHash": "f6371f69bd0312d2",
+    "googleNewsUrlHash": "f6371f69bd0312d299681c97901c3932b76e8942582b26aa32fb85e71da8c1c2",
+    "sourceName": "bristol.ac.uk",
+    "sourceHost": "www.bristol.ac.uk",
+    "expectedTitle": "September: bristol robotics team | News and features",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.bristol.ac.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 150,
+    "candidateUrlHash": "0d925d601a8fb64518bd48ac2f78363346c0c4e729d16c8bbd95a5cfc877337f",
+    "publisherHost": "www.bristol.ac.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 83173,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "0d925d601a8fb64518bd48ac2f78363346c0c4e729d16c8bbd95a5cfc877337f",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Bristol robotics team awarded international XPRIZE for wildfire drone technology"
+      },
+      {
+        "kind": "og:title",
+        "value": "September: bristol robotics team | News and features | University of Bristol"
+      }
+    ],
+    "identityStatus": "unverifiable",
+    "identityReason": "conflicting_nonmatching_title_signals",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-gb-07",
+    "cell": "q4-gb",
+    "query": "technology",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 7,
+    "articleIdHash": "65eacbe2d99ab1cc",
+    "googleNewsUrlHash": "65eacbe2d99ab1cc18d48dba631c03c391c55e049945899ffebd60669f653bd5",
+    "sourceName": "Queen Victoria Hospital",
+    "sourceHost": "www.qvh.nhs.uk",
+    "expectedTitle": "QVH invests in latest technology for cataract surgery",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.qvh.nhs.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 154,
+    "candidateUrlHash": "167d9c9df48cc391043b022dcdef076f63396f227518dbfeea22af8042dc4c7d",
+    "publisherHost": "www.qvh.nhs.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 91570,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "167d9c9df48cc391043b022dcdef076f63396f227518dbfeea22af8042dc4c7d",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "QVH invests in latest technology for cataract surgery"
+      },
+      {
+        "kind": "og:title",
+        "value": "QVH invests in latest technology for cataract surgery - Queen Victoria Hospital"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "QVH invests in latest technology for cataract surgery"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-gb-08",
+    "cell": "q4-gb",
+    "query": "technology",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 8,
+    "articleIdHash": "af8195733b8f3d1a",
+    "googleNewsUrlHash": "af8195733b8f3d1a42df873222b6ed531545c8f3eafa8b28bb6e27a4b6e29f9e",
+    "sourceName": "Tesco PLC",
+    "sourceHost": "www.tescoplc.com",
+    "expectedTitle": "Tesco trials virtual try-on technology as part of new F&F in-store shopping experience",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.tescoplc.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 148,
+    "candidateUrlHash": "ddb2137d11943a195551a6861ed471f8b13fb93f35c3674a4bf697671c274d8f",
+    "publisherHost": "www.tescoplc.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 64300,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "ddb2137d11943a195551a6861ed471f8b13fb93f35c3674a4bf697671c274d8f",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "Tesco trials virtual try-on technology as part of new F&F in-store shopping experience"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title",
+    "identityMatchedSignals": ["og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-gb-09",
+    "cell": "q4-gb",
+    "query": "technology",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 9,
+    "articleIdHash": "48ac5cf6538f7afc",
+    "googleNewsUrlHash": "48ac5cf6538f7afc8402bad05dc1797011b1caaf43dc5e831a856706a7be6c36",
+    "sourceName": "Imperial College London",
+    "sourceHost": "www.imperial.ac.uk",
+    "expectedTitle": "Imperial researcher awarded prestigious fellowship to advance battery recycling technology",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.imperial.ac.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 163,
+    "candidateUrlHash": "40330a1fec135db7ab83fb40b04ae02351d6f30a53323c561e6e1a7dfb26c65d",
+    "publisherHost": "www.imperial.ac.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 48448,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "40330a1fec135db7ab83fb40b04ae02351d6f30a53323c561e6e1a7dfb26c65d",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Imperial researcher awarded prestigious fellowship to advance battery recycling technology"
+      },
+      {
+        "kind": "og:title",
+        "value": "Imperial researcher awarded prestigious fellowship to advance battery recycling technology"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Imperial researcher awarded prestigious fellowship to advance battery recycling technology"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-gb-10",
+    "cell": "q4-gb",
+    "query": "technology",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 10,
+    "articleIdHash": "51a16aaa8af355d3",
+    "googleNewsUrlHash": "51a16aaa8af355d366680a7840b142c41d76933df15ef563472458142f5bb2c4",
+    "sourceName": "politico.eu",
+    "sourceHost": "www.politico.eu",
+    "expectedTitle": "EU’s top AI adviser urges commissioners to use the technology to fix bloc’s economy",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.politico.eu",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 173,
+    "candidateUrlHash": "537fe3132f1913b18426b1bdbc33e3675ce33c9d731553657093f5740a0ba629",
+    "publisherHost": "www.politico.eu",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "537fe3132f1913b18426b1bdbc33e3675ce33c9d731553657093f5740a0ba629",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "EU’s top AI adviser urges commissioners to use the technology to fix bloc’s economy"
+      },
+      {
+        "kind": "og:title",
+        "value": "EU’s top AI adviser urges commissioners to use the technology to fix bloc’s economy"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "EU’s top AI adviser urges commissioners to use the technology to fix bloc’s economy"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-us-01",
+    "cell": "q4-us",
+    "query": "technology",
+    "country": "US",
+    "language": "en-US",
+    "position": 1,
+    "articleIdHash": "0f859cc4f52a49b2",
+    "googleNewsUrlHash": "0f859cc4f52a49b2462157735365571ce95fb6201c653ec92c3a2e025ecaecb8",
+    "sourceName": "Department of Energy (.gov)",
+    "sourceHost": "www.energy.gov",
+    "expectedTitle": "Energy Technology Innovation Partnership Project",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.energy.gov",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 150,
+    "candidateUrlHash": "12abc5eec98fce586b76a9b6306265f3741b16170509b5534a48bc8b19fd1429",
+    "publisherHost": "www.energy.gov",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 114232,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "12abc5eec98fce586b76a9b6306265f3741b16170509b5534a48bc8b19fd1429",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Energy Technology Innovation Partnership Project"
+      },
+      {
+        "kind": "og:title",
+        "value": "Energy Technology Innovation Partnership Project"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Energy Technology Innovation Partnership Project"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-us-02",
+    "cell": "q4-us",
+    "query": "technology",
+    "country": "US",
+    "language": "en-US",
+    "position": 2,
+    "articleIdHash": "40c671d4f3946110",
+    "googleNewsUrlHash": "40c671d4f39461107cc575f29c99af9230735ab1ce4bdd0435de996e79e29c50",
+    "sourceName": "Ondas Holdings",
+    "sourceHost": "ir.ondas.com",
+    "expectedTitle": "Ondas Acquires Three Defense Technology Businesses to Expand Its Integrated Autonomous Defense Systems Platform",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "ir.ondas.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 149,
+    "candidateUrlHash": "c8d1eb0251f4d18aa91727c6710c2c0b68784354504d062890caae30b27d032d",
+    "publisherHost": "ir.ondas.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 32577,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "c8d1eb0251f4d18aa91727c6710c2c0b68784354504d062890caae30b27d032d",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Press Releases"
+      },
+      {
+        "kind": "h1",
+        "value": "Ondas Acquires Three Defense Technology Businesses to Expand Its Integrated Autonomous Defense Systems Platform"
+      },
+      {
+        "kind": "og:title",
+        "value": "Ondas Acquires Three Defense Technology Businesses to Expand Its Integrated Autonomous Defense Systems Platform"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-us-03",
+    "cell": "q4-us",
+    "query": "technology",
+    "country": "US",
+    "language": "en-US",
+    "position": 3,
+    "articleIdHash": "bacd5a68cf4bfeeb",
+    "googleNewsUrlHash": "bacd5a68cf4bfeebedc5aa872c15cafd90e3c70a314493a7a9f4ac61e9cbb7bb",
+    "sourceName": "The Official Microsoft Blog",
+    "sourceHost": "blogs.microsoft.com",
+    "expectedTitle": "Microsoft strengthens its commitment to the Middle East by investing in technology, digital resilience, and people",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "blogs.microsoft.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 209,
+    "candidateUrlHash": "b6184dda036e73a3aaf21b5c48d9f299c099d70d51cf30d6a47ddd58a7cbb336",
+    "publisherHost": "blogs.microsoft.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 172810,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "b6184dda036e73a3aaf21b5c48d9f299c099d70d51cf30d6a47ddd58a7cbb336",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Microsoft strengthens its commitment to the Middle East by investing in technology, digital resilience, and people"
+      },
+      {
+        "kind": "og:title",
+        "value": "Microsoft strengthens its commitment to the Middle East by investing in technology, digital resilience, and people - Microsoft On the Issues"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Microsoft strengthens its commitment to the Middle East by investing in technology, digital resilience, and people"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,jsonld:headline",
+    "identityMatchedSignals": ["h1", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-us-04",
+    "cell": "q4-us",
+    "query": "technology",
+    "country": "US",
+    "language": "en-US",
+    "position": 4,
+    "articleIdHash": "c3b2edcd5f53c82f",
+    "googleNewsUrlHash": "c3b2edcd5f53c82fb81957728180571b524ffa98e0dbc71b4e3528850b05f5b2",
+    "sourceName": "kpmg.com",
+    "sourceHost": "kpmg.com",
+    "expectedTitle": "KPMG Announces Client Technology & Innovation Group to Build AI-Native Businesses",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "kpmg.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 141,
+    "candidateUrlHash": "65f759f98cfeb2668b92c7ccc9df827a0c5192dd4fe8424df9bf3753a1b34fb6",
+    "publisherHost": "kpmg.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html;charset=utf-8",
+    "responseBytes": 205190,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "65f759f98cfeb2668b92c7ccc9df827a0c5192dd4fe8424df9bf3753a1b34fb6",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "KPMG Announces Client Technology & Innovation Group to Build AI-Native Businesses"
+      },
+      {
+        "kind": "og:title",
+        "value": "KPMG Announces Client Technology & Innovation Group to Build AI-Native Businesses"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-us-05",
+    "cell": "q4-us",
+    "query": "technology",
+    "country": "US",
+    "language": "en-US",
+    "position": 5,
+    "articleIdHash": "411c064063b4a6d4",
+    "googleNewsUrlHash": "411c064063b4a6d4c11089db3c59c942cf9e8a2727874b69ab077bf748b63403",
+    "sourceName": "Reuters",
+    "sourceHost": "www.reuters.com",
+    "expectedTitle": "US jury says Apple owes record $5.7 billion in haptic technology patent case",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 401,
+        "host": "www.reuters.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 154,
+    "candidateUrlHash": "56b99e225ee757f42a539238a34b7a8ea4907bd1b9e511541df5f933203fa91e",
+    "publisherHost": "www.reuters.com",
+    "accessStatus": "http_401",
+    "httpStatus": 401,
+    "contentType": "text/html;charset=utf-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "56b99e225ee757f42a539238a34b7a8ea4907bd1b9e511541df5f933203fa91e",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-us-06",
+    "cell": "q4-us",
+    "query": "technology",
+    "country": "US",
+    "language": "en-US",
+    "position": 6,
+    "articleIdHash": "a65552f9ad8a4215",
+    "googleNewsUrlHash": "a65552f9ad8a4215276451ff11e5dad1291592870ecf80e3d00e8e117d48b52b",
+    "sourceName": "MIT Technology Review",
+    "sourceHost": "www.technologyreview.com",
+    "expectedTitle": "Don’t be fooled by this summer of AI hype",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.technologyreview.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 142,
+    "candidateUrlHash": "5abcd11803083fe364aaff443266fef5117c58322e22139d840b0261190791dc",
+    "publisherHost": "www.technologyreview.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "5abcd11803083fe364aaff443266fef5117c58322e22139d840b0261190791dc",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "Don’t be fooled by this summer of AI hype"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title",
+    "identityMatchedSignals": ["og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-us-07",
+    "cell": "q4-us",
+    "query": "technology",
+    "country": "US",
+    "language": "en-US",
+    "position": 7,
+    "articleIdHash": "4d1d107fcb8cd8d5",
+    "googleNewsUrlHash": "4d1d107fcb8cd8d531008e407d77af2f89ee293d2495fdd3571eef7db4acefce",
+    "sourceName": "Prince William County Government (.gov)",
+    "sourceHost": "www.pwcva.gov",
+    "expectedTitle": "Duane Prophet Appointed Director of Information Technology for Prince William County",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.pwcva.gov",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 144,
+    "candidateUrlHash": "4e0950276456afbb8bfebbb1c973c610253f37dcf70b5f87dad6ebcfc9e723a0",
+    "publisherHost": "www.pwcva.gov",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "4e0950276456afbb8bfebbb1c973c610253f37dcf70b5f87dad6ebcfc9e723a0",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "Duane Prophet Appointed Director of Information Technology for Prince William County"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title",
+    "identityMatchedSignals": ["og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-us-08",
+    "cell": "q4-us",
+    "query": "technology",
+    "country": "US",
+    "language": "en-US",
+    "position": 8,
+    "articleIdHash": "a37fca3c0380f9d7",
+    "googleNewsUrlHash": "a37fca3c0380f9d77e8ff88b387109ee43adbe556c8dfb4ea529a90d713fd7e3",
+    "sourceName": "Cybersecurity Dive",
+    "sourceHost": "www.cybersecuritydive.com",
+    "expectedTitle": "Businesses expand AI’s cybersecurity uses as comfort with technology grows",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "www.cybersecuritydive.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 164,
+    "candidateUrlHash": "7eab531cbb6bf7d3b9c4e8eda9d3a98cf52f8d417c2689c1ff6e1ff144caf605",
+    "publisherHost": "www.cybersecuritydive.com",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "7eab531cbb6bf7d3b9c4e8eda9d3a98cf52f8d417c2689c1ff6e1ff144caf605",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-us-09",
+    "cell": "q4-us",
+    "query": "technology",
+    "country": "US",
+    "language": "en-US",
+    "position": 9,
+    "articleIdHash": "56e7fe04be6c5216",
+    "googleNewsUrlHash": "56e7fe04be6c5216423c311007b17406ee1cb6840c61658935f7b42b5efcae8d",
+    "sourceName": "City and County of Honolulu (.gov)",
+    "sourceHost": "www.honolulu.gov",
+    "expectedTitle": "City receives three technology awards at Hawai‘i Government Summit | Office of the Mayor",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.honolulu.gov",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 155,
+    "candidateUrlHash": "f99f5bda9ab4884b8a91462e8bab06874f688e0b07731be3bc6a93cd80785f7e",
+    "publisherHost": "www.honolulu.gov",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 177122,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "f99f5bda9ab4884b8a91462e8bab06874f688e0b07731be3bc6a93cd80785f7e",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Office of the MAYOR"
+      },
+      {
+        "kind": "og:title",
+        "value": "City receives three technology awards at Hawai‘i Government Summit | Office of the Mayor"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "City receives three technology awards at Hawai‘i Government Summit"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title",
+    "identityMatchedSignals": ["og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q4-us-10",
+    "cell": "q4-us",
+    "query": "technology",
+    "country": "US",
+    "language": "en-US",
+    "position": 10,
+    "articleIdHash": "38f22c1f6787571e",
+    "googleNewsUrlHash": "38f22c1f6787571e108252e3823b227c3518d49366f1dafddd6b90d9e97263b8",
+    "sourceName": "spectrumlocalnews.com",
+    "sourceHost": "spectrumlocalnews.com",
+    "expectedTitle": "OpenAI says its models engaged with U.S. gov­ernment websites in new model mis­be­havior dis­closure",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "spectrumlocalnews.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 156,
+    "candidateUrlHash": "c91f29553112027a062c1d2f063061bd9961e56a2b2c3377d8a4578b4069a94b",
+    "publisherHost": "spectrumlocalnews.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html;charset=utf-8",
+    "responseBytes": 94294,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "c91f29553112027a062c1d2f063061bd9961e56a2b2c3377d8a4578b4069a94b",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "OpenAI says its models engaged with U.S. government websites in new model misbehavior disclosure"
+      },
+      {
+        "kind": "og:title",
+        "value": "OpenAI says its models engaged with U.S. government websites"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "OpenAI says its models engaged with U.S. government websites in new model misbehavior disclosure"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,jsonld:headline",
+    "identityMatchedSignals": ["h1", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-gb-01",
+    "cell": "q5-gb",
+    "query": "climate change",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 1,
+    "articleIdHash": "a1cbfe60dc989017",
+    "googleNewsUrlHash": "a1cbfe60dc9890172f471225c1450aa8d03d02909b7452630e77fa917f38c9de",
+    "sourceName": "bbc.co.uk",
+    "sourceHost": "www.bbc.co.uk",
+    "expectedTitle": "Spain battles climate change on several fronts",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.bbc.co.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 163,
+    "candidateUrlHash": "ecf8896e0116131ccada28e7ba6eff6c218dc3170b5fcf032af2eb33e3b1ccec",
+    "publisherHost": "www.bbc.co.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "ecf8896e0116131ccada28e7ba6eff6c218dc3170b5fcf032af2eb33e3b1ccec",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Spain battles climate change on several fronts"
+      },
+      {
+        "kind": "og:title",
+        "value": "Spain battles climate change on several fronts"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Spain battles climate change on several fronts"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-gb-02",
+    "cell": "q5-gb",
+    "query": "climate change",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 2,
+    "articleIdHash": "6895f10144a29c85",
+    "googleNewsUrlHash": "6895f10144a29c85f01b5b792814e9d7753f51306f2115177776fcd3a806a99c",
+    "sourceName": "GOV.UK",
+    "sourceHost": "www.gov.uk",
+    "expectedTitle": "Press statement by co-hosts of the UNGA Foreign Ministers Dialogue on Climate Change and Ecosystem Degradation as National Security Risks",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.gov.uk",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 137,
+    "candidateUrlHash": "0c4a1f19f9fcb9687d6ff1d826bbc4093b79559e2d80cc4ced533fb275323ca8",
+    "publisherHost": "www.gov.uk",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 78004,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "0c4a1f19f9fcb9687d6ff1d826bbc4093b79559e2d80cc4ced533fb275323ca8",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Press statement by co-hosts of the UNGA Foreign Ministers Dialogue on Climate Change and Ecosystem Degradation as National Security Risks"
+      },
+      {
+        "kind": "og:title",
+        "value": "Press statement by co-hosts of the UNGA Foreign Ministers Dialogue on Climate Change and Ecosystem Degradation as National Security Risks"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title",
+    "identityMatchedSignals": ["h1", "og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-gb-03",
+    "cell": "q5-gb",
+    "query": "climate change",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 3,
+    "articleIdHash": "8d16227fa0e9fe13",
+    "googleNewsUrlHash": "8d16227fa0e9fe130f44b9702378555c073f170368f70767a33c784923f2e6f1",
+    "sourceName": "UN News",
+    "sourceHost": "news.un.org",
+    "expectedTitle": "LIVE: Climate change is here - What happens next is still in our hands",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "news.un.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 144,
+    "candidateUrlHash": "0863e56c405d7018c72ed16f825bc1b2552e2e6bd101baf760838c9ac8fad36a",
+    "publisherHost": "news.un.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 94987,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "0863e56c405d7018c72ed16f825bc1b2552e2e6bd101baf760838c9ac8fad36a",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "LIVE: Climate change is here - What happens next is still in our hands"
+      },
+      {
+        "kind": "og:title",
+        "value": "LIVE: Climate change is here - What happens next is still in our hands"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "LIVE: Climate change is here - What happens next is still in our hands"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-gb-04",
+    "cell": "q5-gb",
+    "query": "climate change",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 4,
+    "articleIdHash": "50e9da231d346681",
+    "googleNewsUrlHash": "50e9da231d3466818dab377c034ab39eacaeeee3e982e85c2e219e50b559a4ba",
+    "sourceName": "Energy Live News",
+    "sourceHost": "www.energylivenews.com",
+    "expectedTitle": "UN says solving climate change is a ‘decisive test of global solidarity’",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.energylivenews.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 189,
+    "candidateUrlHash": "1244bcfd7201c090c50b632ddee009634c9fffe726e3c580820f6e09f3572355",
+    "publisherHost": "www.energylivenews.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 135430,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "1244bcfd7201c090c50b632ddee009634c9fffe726e3c580820f6e09f3572355",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "UN says solving climate change is a ‘decisive test of global solidarity’"
+      },
+      {
+        "kind": "og:title",
+        "value": "UN says solving climate change is a ‘decisive test of global solidarity’ - Energy Live News"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "UN says solving climate change is a ‘decisive test of global solidarity’"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "\"UN says solving climate change is a \\u2018decisive test of global solidarity\\u2019\""
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-gb-05",
+    "cell": "q5-gb",
+    "query": "climate change",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 5,
+    "articleIdHash": "a2480797bc5ebb3f",
+    "googleNewsUrlHash": "a2480797bc5ebb3ff6ea206182c4a1b736da1709137536a98ba07c49b6f8b578",
+    "sourceName": "The Guardian",
+    "sourceHost": "www.theguardian.com",
+    "expectedTitle": "Nepal’s PM says flash flood was ‘warning to world’ as he scolds leaders at UN over climate change",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.theguardian.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 171,
+    "candidateUrlHash": "8896ed122abea8be40aa10812c6bdebb2f36f7aca40bbb5c2001d3ca799b65fc",
+    "publisherHost": "www.theguardian.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "8896ed122abea8be40aa10812c6bdebb2f36f7aca40bbb5c2001d3ca799b65fc",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "Nepal’s PM says flash flood was ‘warning to world’ as he scolds leaders at UN over climate change"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Nepal’s PM says flash flood was ‘warning to world’ as he scolds leaders at UN over climate change"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title,jsonld:headline",
+    "identityMatchedSignals": ["og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-gb-06",
+    "cell": "q5-gb",
+    "query": "climate change",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 6,
+    "articleIdHash": "1e58588bc4a461c5",
+    "googleNewsUrlHash": "1e58588bc4a461c5b243823844d7f989128ebfc8f22f19726a68c3c0bcdd6cb9",
+    "sourceName": "LabourList",
+    "sourceHost": "labourlist.org",
+    "expectedTitle": "‘Climate change threatens our food security – Labour must act on global supply chains’",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "labourlist.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 146,
+    "candidateUrlHash": "119f00917a7964f73083bbf3e44b3315c80b05462fdf100c2d32f5c24cc2de97",
+    "publisherHost": "labourlist.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "119f00917a7964f73083bbf3e44b3315c80b05462fdf100c2d32f5c24cc2de97",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "‘Climate change threatens our food security – Labour must act on global supply chains’"
+      },
+      {
+        "kind": "og:title",
+        "value": "'Climate change threatens our food security – Labour must act on global supply chains' - LabourList"
+      },
+      {
+        "kind": "og:title",
+        "value": "‘Climate change threatens our food security – Labour must act on global supply chains’ – LabourList"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "‘Climate change threatens our food security – Labour must act on global supply chains’"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-gb-07",
+    "cell": "q5-gb",
+    "query": "climate change",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 7,
+    "articleIdHash": "cf6507c3dbfcc18f",
+    "googleNewsUrlHash": "cf6507c3dbfcc18f75347b36431d3ebf6fb87fbca2a1fddb6ef586128cb6d9e5",
+    "sourceName": "Climate Outreach",
+    "sourceHost": "climateoutreach.org",
+    "expectedTitle": "New polling: climate change is back in people’s top priorities",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "climateoutreach.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 137,
+    "candidateUrlHash": "19d1c38b2cb8ba0920247c925a9d08c4c904e053a353b2d04234f84897decb76",
+    "publisherHost": "climateoutreach.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 115220,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "19d1c38b2cb8ba0920247c925a9d08c4c904e053a353b2d04234f84897decb76",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "New polling: climate change is back in people’s top priorities"
+      },
+      {
+        "kind": "og:title",
+        "value": "New polling: climate change is back in people’s top priorities"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "New polling: climate change is back in people’s top priorities"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-gb-08",
+    "cell": "q5-gb",
+    "query": "climate change",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 8,
+    "articleIdHash": "80f4ccf11c7f48ca",
+    "googleNewsUrlHash": "80f4ccf11c7f48caa8378f169b28fb51c94550e1e2fd7f77240a1731ac8e8e3d",
+    "sourceName": "Copernicus Climate Change",
+    "sourceHost": "climate.copernicus.eu",
+    "expectedTitle": "C3S behind the scenes: making climate data visible",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 503,
+        "host": "climate.copernicus.eu",
+        "locationHost": null
+      },
+      {
+        "attempt": 2,
+        "status": 503,
+        "host": "climate.copernicus.eu",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 149,
+    "candidateUrlHash": "ff2c4984264b6823b26345c74a1ae2f57313c6f33977961cd49282fa15b99bc2",
+    "publisherHost": "climate.copernicus.eu",
+    "accessStatus": "http_503",
+    "httpStatus": 503,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "ff2c4984264b6823b26345c74a1ae2f57313c6f33977961cd49282fa15b99bc2",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": true,
+    "retryReason": "http_503",
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-gb-09",
+    "cell": "q5-gb",
+    "query": "climate change",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 9,
+    "articleIdHash": "7d2978f602e006eb",
+    "googleNewsUrlHash": "7d2978f602e006eb5be53f368bff9325bab2fa2e4202d8ac49c70c693b990a7f",
+    "sourceName": "FoodNavigator.com",
+    "sourceHost": "www.foodnavigator.com",
+    "expectedTitle": "Climate change fuelling mycotoxin risks with ‘no known solution’",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.foodnavigator.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 157,
+    "candidateUrlHash": "280ea1fb66885825429382693082a91c1f1abe10ef3f883ca5ea096e876866bd",
+    "publisherHost": "www.foodnavigator.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "280ea1fb66885825429382693082a91c1f1abe10ef3f883ca5ea096e876866bd",
+    "pageTitleSignals": [
+      {
+        "kind": "og:title",
+        "value": "Climate change fuelling mycotoxin risks with ‘no known solution’"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title",
+    "identityMatchedSignals": ["og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-gb-10",
+    "cell": "q5-gb",
+    "query": "climate change",
+    "country": "GB",
+    "language": "en-GB",
+    "position": 10,
+    "articleIdHash": "e1d85fc72296ab78",
+    "googleNewsUrlHash": "e1d85fc72296ab78d7b97a2284240387c02c1e1fefa4dcf80de8601ef894e2c2",
+    "sourceName": "Oceanographic Magazine",
+    "sourceHost": "oceanographicmagazine.com",
+    "expectedTitle": "Wild animals are our climate allies, peer-reviewed study reaffirms",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "oceanographicmagazine.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 136,
+    "candidateUrlHash": "880d629d98ea7fbbd7b53b97d0fefde3ee8be3af96779dc48978181cc07603bd",
+    "publisherHost": "oceanographicmagazine.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 145155,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "880d629d98ea7fbbd7b53b97d0fefde3ee8be3af96779dc48978181cc07603bd",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Wild animals are our climate allies, peer-reviewed study reaffirms"
+      },
+      {
+        "kind": "h1",
+        "value": "10% off your first order!"
+      },
+      {
+        "kind": "og:title",
+        "value": "Wild animals are our climate allies, peer-reviewed study reaffirms - Oceanographic"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Wild animals are our climate allies, peer-reviewed study reaffirms"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,jsonld:headline",
+    "identityMatchedSignals": ["h1", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-us-01",
+    "cell": "q5-us",
+    "query": "climate change",
+    "country": "US",
+    "language": "en-US",
+    "position": 1,
+    "articleIdHash": "2d445df19e973495",
+    "googleNewsUrlHash": "2d445df19e973495cac6d9370041d97ecffbac0984b5b78fa42ab1dfca470d9e",
+    "sourceName": "SCOTUSblog",
+    "sourceHost": "www.scotusblog.com",
+    "expectedTitle": "The court’s coming climate-change case and the very confused doctrine of preemption",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.scotusblog.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 162,
+    "candidateUrlHash": "8e7ddb5482b301dcb6fb8af0774a9d8d598c1d7b875a63b408e90d3e2048826b",
+    "publisherHost": "www.scotusblog.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "8e7ddb5482b301dcb6fb8af0774a9d8d598c1d7b875a63b408e90d3e2048826b",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "The court’s coming climate-change case and the very confused doctrine of preemption"
+      },
+      {
+        "kind": "og:title",
+        "value": "The court’s coming climate-change case and the very confused doctrine of preemption"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "The court’s coming climate-change case and the very confused doctrine of preemption"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-us-02",
+    "cell": "q5-us",
+    "query": "climate change",
+    "country": "US",
+    "language": "en-US",
+    "position": 2,
+    "articleIdHash": "8d16227fa0e9fe13",
+    "googleNewsUrlHash": "8d16227fa0e9fe130f44b9702378555c073f170368f70767a33c784923f2e6f1",
+    "sourceName": "UN News",
+    "sourceHost": "news.un.org",
+    "expectedTitle": "LIVE: Climate change is here - What happens next is still in our hands",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "news.un.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 166,
+    "candidateUrlHash": "0863e56c405d7018c72ed16f825bc1b2552e2e6bd101baf760838c9ac8fad36a",
+    "publisherHost": "news.un.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 94987,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "0863e56c405d7018c72ed16f825bc1b2552e2e6bd101baf760838c9ac8fad36a",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "LIVE: Climate change is here - What happens next is still in our hands"
+      },
+      {
+        "kind": "og:title",
+        "value": "LIVE: Climate change is here - What happens next is still in our hands"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "LIVE: Climate change is here - What happens next is still in our hands"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-us-03",
+    "cell": "q5-us",
+    "query": "climate change",
+    "country": "US",
+    "language": "en-US",
+    "position": 3,
+    "articleIdHash": "557c2accb6217618",
+    "googleNewsUrlHash": "557c2accb6217618a9a8cc4cd0f05d782702dfbfaa24b6e5482889712b692d66",
+    "sourceName": "The New York Times",
+    "sourceHost": "www.nytimes.com",
+    "expectedTitle": "The Big Threat Has Been Climate Change. Now Comes A.I.",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 403,
+        "host": "www.nytimes.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 158,
+    "candidateUrlHash": "d82cc9518c7fb50a4985bdc89fa6cddef45ebf12bbe32a8715f47cd09a31b782",
+    "publisherHost": "www.nytimes.com",
+    "accessStatus": "http_403",
+    "httpStatus": 403,
+    "contentType": "text/html;charset=utf-8",
+    "responseBytes": 0,
+    "responsePrefixCapped": false,
+    "articleLike": false,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "d82cc9518c7fb50a4985bdc89fa6cddef45ebf12bbe32a8715f47cd09a31b782",
+    "pageTitleSignals": [],
+    "identityStatus": "unverifiable",
+    "identityReason": "no_supported_title_signal",
+    "identityMatchedSignals": [],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-us-04",
+    "cell": "q5-us",
+    "query": "climate change",
+    "country": "US",
+    "language": "en-US",
+    "position": 4,
+    "articleIdHash": "1bd1d40a43a8d93d",
+    "googleNewsUrlHash": "1bd1d40a43a8d93dad889c84cfe04ec0ec59c400a53638e6d5f9c55aa2920739",
+    "sourceName": "California State Portal | CA.gov",
+    "sourceHost": "www.gov.ca.gov",
+    "expectedTitle": "Ahead of Climate Week NYC, Governor Newsom announces California cut climate pollution again as economy keeps growing",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.gov.ca.gov",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 139,
+    "candidateUrlHash": "b0fe9a53de307bd986c40576697e9a48f5f69e51f5eda17f413a276a577d184c",
+    "publisherHost": "www.gov.ca.gov",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "b0fe9a53de307bd986c40576697e9a48f5f69e51f5eda17f413a276a577d184c",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Ahead of Climate Week NYC, Governor Newsom announces California cut climate pollution again as economy keeps growing"
+      },
+      {
+        "kind": "og:title",
+        "value": "Ahead of Climate Week NYC, Governor Newsom announces California cut climate pollution again as economy keeps growing | Governor of California"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1",
+    "identityMatchedSignals": ["h1"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-us-05",
+    "cell": "q5-us",
+    "query": "climate change",
+    "country": "US",
+    "language": "en-US",
+    "position": 5,
+    "articleIdHash": "07e1c30cf654bb0e",
+    "googleNewsUrlHash": "07e1c30cf654bb0e8c6212aac839410d086701c579fca1031b4e8c03c1dcc29b",
+    "sourceName": "Time Magazine",
+    "sourceHost": "time.com",
+    "expectedTitle": "How Does Climate Change Impact Nor'easters?",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "time.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 143,
+    "candidateUrlHash": "e3555122ebb9e821f6870ca7a7cdd941d81ec9f5a416cdedab39856a53948156",
+    "publisherHost": "time.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 262144,
+    "responsePrefixCapped": true,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "e3555122ebb9e821f6870ca7a7cdd941d81ec9f5a416cdedab39856a53948156",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "How Does Climate Change Impact Nor'easters?"
+      },
+      {
+        "kind": "og:title",
+        "value": "How Does Climate Change Impact Nor'easters?"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "How Does Climate Change Impact Nor'easters?"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-us-06",
+    "cell": "q5-us",
+    "query": "climate change",
+    "country": "US",
+    "language": "en-US",
+    "position": 6,
+    "articleIdHash": "8e602a1b2acfaaf0",
+    "googleNewsUrlHash": "8e602a1b2acfaaf0fd5bb536881e57ac61d1fef782f5942c623c44d831d51fbf",
+    "sourceName": "Yale Climate Connections",
+    "sourceHost": "yaleclimateconnections.org",
+    "expectedTitle": "We need to rethink how we talk about climate change",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "yaleclimateconnections.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 164,
+    "candidateUrlHash": "67f29d606e62962240dcb63fc9273f039cbac84fede5636a26e843f2710c42f7",
+    "publisherHost": "yaleclimateconnections.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 226635,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "67f29d606e62962240dcb63fc9273f039cbac84fede5636a26e843f2710c42f7",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "We need to rethink how we talk about climate change"
+      },
+      {
+        "kind": "og:title",
+        "value": "We need to rethink how we talk about climate change » Yale Climate Connections"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "We need to rethink how we talk about climate change"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,jsonld:headline",
+    "identityMatchedSignals": ["h1", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-us-07",
+    "cell": "q5-us",
+    "query": "climate change",
+    "country": "US",
+    "language": "en-US",
+    "position": 7,
+    "articleIdHash": "13bb01cb8f1875b4",
+    "googleNewsUrlHash": "13bb01cb8f1875b4fcacff9ca14c7ecd52b43d185d09bcfb0329768ee1a89003",
+    "sourceName": "Scientific American",
+    "sourceHost": "www.scientificamerican.com",
+    "expectedTitle": "Trump rejects AI regulation, citing parallels with climate change, in U.N. address",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "www.scientificamerican.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 143,
+    "candidateUrlHash": "663a57642e9c8766e16c924ec86b8e46734b8e6d1061713db9dd233e895955a5",
+    "publisherHost": "www.scientificamerican.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 128415,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "663a57642e9c8766e16c924ec86b8e46734b8e6d1061713db9dd233e895955a5",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Trump rejects AI regulation, citing parallels with climate change, in U.N. address"
+      },
+      {
+        "kind": "og:title",
+        "value": "Trump rejects AI regulation, citing parallels with climate change, in U.N. address"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Trump rejects AI regulation, citing parallels with climate change, in U.N. address"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-us-08",
+    "cell": "q5-us",
+    "query": "climate change",
+    "country": "US",
+    "language": "en-US",
+    "position": 8,
+    "articleIdHash": "591f64236e01db1f",
+    "googleNewsUrlHash": "591f64236e01db1fd5f5c9fc18526bb20f0265cb02fe33e82920c8e7b67ae435",
+    "sourceName": "Yale Program on Climate Change Communication",
+    "sourceHost": "climatecommunication.yale.edu",
+    "expectedTitle": "Software Developers on Climate Change, AI, and Sustainable Software: A survey of GitHub users, Summer 2026",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "climatecommunication.yale.edu",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 152,
+    "candidateUrlHash": "94159f5ad888d37418fa9da255bad7f928c8ed95ea1843ef204bba2a23e787cd",
+    "publisherHost": "climatecommunication.yale.edu",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "responseBytes": 156901,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "94159f5ad888d37418fa9da255bad7f928c8ed95ea1843ef204bba2a23e787cd",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Yale Program on Climate Change Communication"
+      },
+      {
+        "kind": "og:title",
+        "value": "Software Developers on Climate Change, AI, and Sustainable Software: A survey of GitHub users, Summer 2026"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title",
+    "identityMatchedSignals": ["og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-us-09",
+    "cell": "q5-us",
+    "query": "climate change",
+    "country": "US",
+    "language": "en-US",
+    "position": 9,
+    "articleIdHash": "78fb3308c0c161bf",
+    "googleNewsUrlHash": "78fb3308c0c161bf6e0cbc85230d5d42a40df95b9b21c4b945d3663e149f1b6f",
+    "sourceName": "The Nevada Independent",
+    "sourceHost": "thenevadaindependent.com",
+    "expectedTitle": "Climate change is getting worse in Nevada. Why did Democrats stop talking about it?",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "thenevadaindependent.com",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 144,
+    "candidateUrlHash": "108e8be5426684b9222357c0bdcb33bc98287c3fe3e37e6abf198929ad523fb5",
+    "publisherHost": "thenevadaindependent.com",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=utf-8",
+    "responseBytes": 146606,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "108e8be5426684b9222357c0bdcb33bc98287c3fe3e37e6abf198929ad523fb5",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "Climate change is getting worse in Nevada. Why did Democrats stop talking about it?"
+      },
+      {
+        "kind": "og:title",
+        "value": "Climate change is getting worse in Nevada. Why did Democrats stop talking about it? - The Nevada Independent"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "Climate change is getting worse in Nevada. Why did Democrats stop talking about it?"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:h1,og:title,jsonld:headline",
+    "identityMatchedSignals": ["h1", "og:title", "jsonld:headline"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  },
+  {
+    "rowId": "q5-us-10",
+    "cell": "q5-us",
+    "query": "climate change",
+    "country": "US",
+    "language": "en-US",
+    "position": 10,
+    "articleIdHash": "b6e493d73771d9bd",
+    "googleNewsUrlHash": "b6e493d73771d9bdfdcaf4482582edeb7c7da787e60a35da62f70b5d8f3cda62",
+    "sourceName": "Chemical & Engineering News",
+    "sourceHost": "cen.acs.org",
+    "expectedTitle": "At Climate Week, C&EN reporters found that technology is still seen as a solution to our climate problem",
+    "candidateStatus": "success_rpc",
+    "stages": [
+      {
+        "attempt": 1,
+        "status": 200,
+        "host": "cen.acs.org",
+        "locationHost": null
+      }
+    ],
+    "elapsedMs": 148,
+    "candidateUrlHash": "0d5cc57b62b8075ff30e8b5c6e35d00b274b02e8b5e96483aee7837dc2e69a6e",
+    "publisherHost": "cen.acs.org",
+    "accessStatus": "http_200_html",
+    "httpStatus": 200,
+    "contentType": "text/html;charset=utf-8",
+    "responseBytes": 218953,
+    "responsePrefixCapped": false,
+    "articleLike": true,
+    "sourceHostMatch": true,
+    "publisherUrlHash": "0d5cc57b62b8075ff30e8b5c6e35d00b274b02e8b5e96483aee7837dc2e69a6e",
+    "pageTitleSignals": [
+      {
+        "kind": "h1",
+        "value": "At Climate Week, technology is still a solution to climate change"
+      },
+      {
+        "kind": "og:title",
+        "value": "At Climate Week, C&EN reporters found that technology is still seen as a solution to our climate problem"
+      },
+      {
+        "kind": "jsonld:headline",
+        "value": "At Climate Week, technology is still a solution to climate change"
+      }
+    ],
+    "identityStatus": "confirmed_match",
+    "identityReason": "normalized_exact_match:og:title",
+    "identityMatchedSignals": ["og:title"],
+    "retryUsed": false,
+    "retryReason": null,
+    "recordType": "row"
+  }
+]

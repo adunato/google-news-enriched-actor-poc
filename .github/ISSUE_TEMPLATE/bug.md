@@ -10,8 +10,17 @@
 
 ## Acceptance Criteria
 
-- [ ] <observable condition that proves the defect is corrected>
-- [ ] <relevant regression condition>
+- [ ] <positive observable condition that proves the defect is corrected>
+- [ ] <relevant regression, edge-case, or failure condition>
+
+Acceptance criteria must prove the corrected real behaviour, not only mocked or conditional handling. When the defect involves an external system, live data, deployed runtime, or platform integration, include the externally observable condition that demonstrates the defect is actually resolved.
+
+If correcting the defect depends on an undocumented, reverse-engineered, materially volatile, or otherwise unknown external/runtime boundary, do not infer its specification during issue refinement. The `assess-change` step determines whether prerequisite Technical Spike is required.
+
+## Validation Expectations
+
+- **Acceptance evidence:** <Identify the evidence needed to prove each material correction/regression criterion.>
+- **External/runtime evidence:** <Identify representative live or in-environment evidence required for the affected external/runtime boundary, or "Not applicable" with rationale.>
 
 ## Product / Architecture Context
 
@@ -25,6 +34,10 @@
 
 > Populated by the `assess-change` step after Issue refinement. Leave as `Pending` when the Issue is created.
 
+- **Technical Spike:** Pending
+  - **Rationale:** Pending
+  - **Prerequisite Issue:** Pending
+  - **Status:** Pending
 - **HLD:** Pending
   - **Rationale:** Pending
 - **Implementation Plan:** Pending

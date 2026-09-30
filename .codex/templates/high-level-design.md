@@ -9,6 +9,7 @@
 **GitHub Issue:** `<#issue or URL>`  
 **Product Definition:** `<path / requirement references or None>`  
 **Architecture Definition:** `<path / section references or None>`  
+**Technical Spike:** `<completed Spike Issue/artifact reference | Not required>`  
 **Traceability:** `<other upstream requirement or decision links, or None>`
 
 ## 1. Summary
@@ -17,7 +18,7 @@
 
 ## 2. Current State
 
-<Describe only the current behaviour and architecture relevant to this change, including material limitations.>
+<Describe only the current behaviour and architecture relevant to this change, including material limitations. When prerequisite Technical Spike was required, summarize only the established findings needed by this design and reference the Spike artifact rather than reinterpreting it.>
 
 ## 3. Requirements
 
@@ -73,9 +74,17 @@
 
 <Material failures, invalid input, partial failure, retries, degraded behaviour, and recovery expectations.>
 
-## 11. Validation Considerations
+## 11. Validation and Feasibility Considerations
 
-<Behaviours to prove through unit, integration, end-to-end, or manual validation.>
+<Identify the behaviours that must be proved and the boundary at which they must be proved. Distinguish local/mocked evidence from representative live, deployed, or platform evidence where the real external boundary is material to acceptance.>
+
+### Discovery-backed external / runtime contract
+
+<State the external/runtime behaviour that completed Technical Spike or authoritative specifications establish and that this design is allowed to rely on. If Spike was not required, identify the authoritative basis. Do not treat third-party/community code as a specification.>
+
+### Residual assumptions and bounded feasibility gates
+
+<List only residual assumptions narrow enough to validate inside the implementation lifecycle without determining the fundamental integration approach. For each, define the evidence required before dependent implementation. If a material unknown would determine basic viability or the integration contract, stop and return to `assess-change` for Technical Spike rather than keeping it here. If none: "None.">
 
 ## 12. Open Questions
 
@@ -95,4 +104,4 @@
 
 ### Completion contract
 
-The HLD is substantively complete only when the material requirements, proposed design, validation considerations, durable Product/Architecture impacts, and open questions are resolved. Set **Status** to `Approved` only when the design is ready to constrain downstream implementation.
+The HLD is substantively complete only when required prerequisite Technical Spike is complete, the material requirements, proposed design, validation and bounded-feasibility considerations, external/runtime contract, durable Product/Architecture impacts, and open questions are resolved. An HLD must not select an integration design while the material external/runtime contract or basic viability remains an unresolved Spike question. Set **Status** to `Approved` only when the design is ready to constrain downstream implementation.

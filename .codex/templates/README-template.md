@@ -51,7 +51,7 @@ Repository-specific agent instructions are in [AGENTS.md](AGENTS.md).
 - [Product Definition](docs/product.md) — current approved product intent, scope, capabilities and externally meaningful behaviour.
 - [Architecture Definition](docs/architecture.md) — current approved technical architecture.
 
-Change-specific HLD, Implementation Plan and LLD artifacts are stored under `docs/changes/<issue-number>/` only when the SideGig Development Lifecycle requires them.
+Change-specific Technical Spike, HLD, Implementation Plan and LLD artifacts are stored under `docs/changes/<issue-number>/` only when the SideGig Development Lifecycle requires them. Technical Spike evidence is produced by a separate prerequisite Issue when a material unknown technical boundary must be established before downstream design/implementation.
 
 ## Deployment
 

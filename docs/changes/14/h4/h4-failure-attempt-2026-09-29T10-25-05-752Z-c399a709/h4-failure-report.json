@@ -1,0 +1,43 @@
+{
+  "artifact": "issue14-h4-calibration-failure-v1",
+  "recordedAtUtc": "2026-09-29T10:25:05.751Z",
+  "gateReason": "fewer_than_76_eligible_positive_controls",
+  "inputHashes": {
+    "manifestFileSha": "d1ed2bea31efc54358ac24d991a9037ec0f0840ccd50547c01bd794c64389f3c",
+    "manifestRowsSha256": "fdbab474e5764350c547080c0002f042b062e03f157a270d5b9474d846ad2f2a",
+    "historicalLabelsFileSha": "00bce29a5d0582f0cb82f6d8e685d60075932b9e9659247233566c4fb88b4788",
+    "historicalHostedManifestSha256": "aaa88dc26c22f9ae31c559f5bd6deb0f2b74da1985444bdb456b49b43b04dc5c",
+    "aliasConfigSha": "2913d219900778d4c94f44571403ed085be7bedd90e58c3b38c1107dcd6829fd"
+  },
+  "codeHashes": {
+    "h4-capture.mjs": "1bc4844ee55867807d6dc3851e4d9b0f990018dcd1742656d60059f3f556137f",
+    "h4-core.mjs": "e687cc1325e736b4c06bbc445487f7698850eb680975f53098260fefe3afb87e",
+    "h4-core.check.mjs": "5d5263c4a57e4a2ab0257ab00c8e3ae54943f49206a4778d37dfc3708e01050a",
+    "h4-storage.check.mjs": "26e78159f1cd078e3b3cb4449f82743935c94f88ce5a0a24e2bd9dcdd79c9483",
+    "h4-apply.mjs": "0705da71341b84f5464c3d78be84912ebb2030ffcaea5d060d435754e042407a",
+    "h4-storage.mjs": "d1836f71271aec6e1916bf37e2be9aafa2d0540c227b0560349c6282f304deb1",
+    "aliases.json": "2913d219900778d4c94f44571403ed085be7bedd90e58c3b38c1107dcd6829fd",
+    "package.json": "8c4db7037f2d1265f60675ad2b71abc4ef71c025f75bffd207cb341f549c1a06",
+    "package-lock.json": "9c251ffe50f7c9645b582180c7ecd7a81c30e37d10cf4c06df758a82ba09dd9b"
+  },
+  "operationalBounds": {
+    "timeoutMs": 10000,
+    "maxRedirects": 5,
+    "maxResponseBytes": 2097152,
+    "concurrency": 4,
+    "maxRequestsPerRow": 1
+  },
+  "positiveControlDiagnostics": {
+    "positiveControlsExpected": 79,
+    "positiveControlsWithCandidate": 0,
+    "historicalCandidateHashStable": 0,
+    "markerBindingMatched": 0,
+    "sourceDomainMatched": 0,
+    "titlePathEligible": 0,
+    "eligiblePositiveControls": 0,
+    "requestErrors": 79,
+    "failureReasonCounts": {
+      "unexpected_redirect_destination": 79
+    }
+  }
+}
