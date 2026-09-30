@@ -2,7 +2,7 @@
 
 **Issue:** [#22](https://github.com/adunato/google-news-enriched-actor-poc/issues/22)
 
-**Status:** Iteration 7 plan prepared for owner review; the Spike remains open.
+**Status:** Iteration 7's single approved hosted attempt was aborted before cohort measurement; the Spike remains open and Inconclusive.
 
 **Iteration result:** Inconclusive for the original Technical Question.
 
@@ -149,7 +149,7 @@ Nine cases completed and reported `networkAttempts: 0`; three unique/low-markup 
 **Owner decision requested:** Approve the exact proposed Iteration 7 hosted eligibility/gate-discordance run below. No human review, raw-content retention or extra extraction run is proposed. This requires separate explicit approval because Iteration 6 authorization was local-only.
 ## Iteration 7 proposed plan — hosted eligibility and gate/proxy discordance
 
-**Status:** Prepared for owner review only. The user approved Iteration 6 only. No Iteration 7 run, Actor build or publisher request is authorized.
+**Status:** The user approved one Iteration 7 hosted attempt on 2026-09-30. The attempt was started with the approved limits but promptly aborted before cohort measurement. The operator reports the likely cause was an initial response check of the user-set charge flag at the wrong JSON level; the exact launch/abort gate was not separately retained, so this is not independently proven. The approval does not authorize another attempt or production adoption.
 
 **Hypothesis:** A fresh bounded cohort may have a different permitted-HTML eligibility rate. Comparing the pre-existing challenge/gate signal with the structural proxy on the same fetched response will show aggregate disagreement candidates. A gate-positive row passing the proxy is not a proven false positive; a proxy pass is not evidence of true readability.
 
@@ -167,9 +167,11 @@ Nine cases completed and reported `networkAttempts: 0`; three unique/low-markup 
 
 **Operational bounds and stop conditions:** Exactly one private disposable Actor/build/run if approved; verify private visibility and a server-enforced user-set `$1` maximum charge, 256 MiB, 900-second timeout and restart disabled before launch. Stop if privacy allow-list, visibility or any bound cannot be confirmed, if the cohort is incomplete, or if an unexpected paid/access service or raw persistence is required. No retry or second run.
 
-**Local-only preflight:** `experiments/07-hosted-eligibility/src/preflight.mjs` tests synthetic ten-cell/100-row denominator accounting, aggregate-only serialization, cross-tabs and the implemented proxy's lack of a nav/chrome filter. It makes no network request, builds no Actor and fetches no feed or publisher page.
+**Local-only preflight:** `experiments/07-hosted-eligibility/src/preflight.mjs` tests synthetic ten-cell/100-row denominator accounting, aggregate-only serialization, cross-tabs and the implemented proxy's lack of a nav/chrome filter. `run-options-preflight.mjs` validates sanitized API run-detail metadata at the correct nested `options` path, including the user-set cap flag and exact build. Both make no network request and fetch no feed or publisher page.
 
-**Owner decision requested:** **Approve Iteration 7: one fresh private Node 20, 100-row hosted access/eligibility and gate/proxy-discordance run exactly as bounded above, extracting once from every permitted 2xx HTML response including gate-positive responses, using the implemented optimistic structural proxy without a nav/chrome ratio, aggregate-only persistence, and verified server-enforced `$1`/256 MiB/900-second/no-restart limits.** Approval covers this experiment only, not production use or any later run. If declined or any bound cannot be verified, do not launch or collect publisher data; retain the conditional 44/100 ceiling and Inconclusive conclusion.
+**Approval and outcome:** The user approved exactly one Iteration 7 hosted attempt on 2026-09-30. The private Actor and `LIMITED_PERMISSIONS` setting were verified; build `Sn04suuqSPfk4aiFJ`/`0.7.1` used `apify/actor-node:20`. Run `ivjPy5JwYppT1sCWq` recorded nested options with a `$1` cap, `isMaxTotalChargeUsdSetByUser=true`, 256 MiB, 900 seconds and restart disabled. The operator reports the likely abort cause was checking the flag at the root instead of under `options`; the exact launch/abort gate was not separately retained, so this cause is not independently proven. Final status was `ABORTED` after 1 second; platform metrics report 0 network bytes in/out and usage `$0.0000638889`. Average/peak memory and average CPU were reported as zero and are not a useful resource measurement. Dataset `W0boJKkPdqOpKkq7Z` has 0 items; no completion marker or URL pattern was found in the log scan. Raw logs were discarded and the disposable Actor was deleted. A malformed CLI creation request also briefly created a default empty Actor (`my-actor`); it was deleted immediately without a build or run. This failed attempt is an operational execution problem, not evidence for or against extraction quality. The single-run authorization is consumed.
+
+**Next action and owner decision:** The highest-value next step is the offline run-options parser test at `experiments/07-hosted-eligibility/src/run-options-preflight.mjs`, which checks the real nested API shape and exact build plus a synthetic failure where the flag is only at root. After it passes, request a new explicit approval for exactly one replacement Iteration 7 cohort; do not build/run under the consumed approval. This prerequisite is operational and does not require a product decision. Without new approval, the cohort eligibility/gate relationship remains unmeasured and the Spike stays Inconclusive.
 ## Iteration 3 plan — local readability-method evaluation
 
 **Current understanding:** Iteration 2 showed HTTP 200 HTML for 72/100 rows in one fresh Apify Node 20 sample. Neither hosted iteration retained page HTML or measured readable article text. Issue #5's acceptance criterion remains at least 50% readable full-text extraction on a representative 100-row sample. No extraction algorithm or dependency is approved for production use.

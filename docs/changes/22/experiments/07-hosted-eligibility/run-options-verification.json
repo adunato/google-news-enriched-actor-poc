@@ -1,0 +1,47 @@
+{
+  "evidenceSource": "Sanitized fields from Apify Actor/build/run/dataset API records; log scans were performed in memory and raw logs were discarded.",
+  "actor": {
+    "id": "Bfr473LGEb7zdZca5",
+    "isPublic": false,
+    "permission": "LIMITED_PERMISSIONS",
+    "deletedAfterInspection": true
+  },
+  "build": {
+    "id": "Sn04suuqSPfk4aiFJ",
+    "number": "0.7.1",
+    "status": "SUCCEEDED",
+    "baseImage": "apify/actor-node:20"
+  },
+  "run": {
+    "id": "ivjPy5JwYppT1sCWq",
+    "status": "ABORTED",
+    "buildNumber": "0.7.1",
+    "startedAt": "2026-09-30T06:05:15.495Z",
+    "finishedAt": "2026-09-30T06:05:15.900Z",
+    "recordedDurationMillis": 1000,
+    "options": {
+      "build": "0.7.1",
+      "maxTotalChargeUsd": 1,
+      "isMaxTotalChargeUsdSetByUser": true,
+      "memoryMbytes": 256,
+      "timeoutSecs": 900,
+      "restartOnError": false
+    },
+    "memAvgBytes": 0,
+    "memMaxBytes": 0,
+    "netRxBytes": 0,
+    "netTxBytes": 0,
+    "cpuAvgUsage": 0,
+    "usageTotalUsd": 0.0000638888888888889,
+    "completionMarkerCount": 0,
+    "failureMarkerCount": 0,
+    "logUrlPatternCount": 0,
+    "operatorReportedLikelyAbortCause": "The initial response check looked for the user-set cap flag at the run root instead of under options. The run was aborted before cohort results were produced.",
+    "abortCauseProvenance": "Operator-reported; the exact launch/abort gate was not separately retained, so this cause is likely but not independently proven."
+  },
+  "dataset": {
+    "id": "W0boJKkPdqOpKkq7Z",
+    "itemCount": 0
+  },
+  "interpretation": "No cohort result was measured. Zero network bytes and empty logs/dataset indicate no recorded network transfer or output; they do not establish whether any request was attempted before abort."
+}

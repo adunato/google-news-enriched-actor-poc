@@ -1,6 +1,12 @@
 # Iteration 7 -- hosted eligibility and gate/proxy discordance
 
-**Status:** Proposed for owner review only. Iteration 6 approval does not authorize this hosted experiment. No Actor build/run or publisher request has occurred.
+**Status:** One approved hosted attempt was started and promptly aborted before cohort execution. The operator reports the likely cause was an initial response check looking for the user-set cap flag at the wrong JSON level; the exact launch/abort gate was not separately retained, so this cause is not independently proven. The run record has since confirmed the requested options. The approval did not authorize a replacement run; no retry or production adoption is authorized.
+
+## Approval and launch gate
+
+The approval covered one fresh 100-row cohort with private visibility, `LIMITED_PERMISSIONS`, Node 20, a server-enforced user-set `$1` maximum charge, 256 MiB, 900 seconds and restart disabled. The run was started with those options. The operator reports an initial check looked for `isMaxTotalChargeUsdSetByUser` at the run object's root rather than `options`; this is the likely abort cause, but was not independently recorded. The actual run record confirms the nested cap, user-set flag and resource options. No second run is authorized.
+
+`src/verify-run-options.mjs` and `src/run-options-preflight.mjs` now validate the nested API response shape, exact build number and every required run bound using synthetic input plus sanitized run metadata. They reject missing or root-level-only cap flags before a run is considered verified.
 
 ## Purpose and hypothesis
 
@@ -47,12 +53,14 @@ Report aggregate counts and conditional ceilings with the full 100-row denominat
 
 ## Result
 
-Not run. Waiting for explicit approval of this exact Iteration 7 only.
+**Inconclusive; no cohort was measured.** Private Actor `Bfr473LGEb7zdZca5` (`LIMITED_PERMISSIONS`) was built as `Sn04suuqSPfk4aiFJ`, build `0.7.1`, from `apify/actor-node:20`. The single launched run `ivjPy5JwYppT1sCWq` returned options `maxTotalChargeUsd=1`, `isMaxTotalChargeUsdSetByUser=true`, memory 256 MiB, timeout 900 seconds and restart disabled. It was aborted after the initial response was misread; the final status is `ABORTED`, with a recorded 1-second duration, $0.0000638889 usage, 0 received/0 sent network bytes, and platform-reported average/peak memory and average CPU all zero. These zero resource metrics are not a useful measurement of normal Actor memory use. Its default dataset `W0boJKkPdqOpKkq7Z` contains 0 items. In-memory log inspection found no completion/failure marker and no URL patterns; raw logs were discarded. The telemetry shows no network bytes, but does not establish a completed publisher-request cohort. Sanitized metadata is retained in `run-options-verification.json`; no raw input, URL, page content or logs were retained. The disposable Actor was deleted; the aborted run and empty dataset remain available.
+
+An earlier malformed CLI Actor-creation request unexpectedly created a default empty Actor named `my-actor`; it was deleted immediately, with no build/run.
 
 ## Next checkpoint
 
-After the one approved run, update the sampled access ceiling and recommend the next highest-value investigation. Do not infer production adoption or authorize another hosted run.
+The highest-value next action is an offline run-options shape test before attempting the cohort again. That test is now added. The original approval was consumed by the aborted hosted attempt, so request a new approval for exactly one replacement 100-row cohort only after the offline check passes. Do not infer production adoption or start another run under the prior approval.
 
 ## Learning checkpoint
 
-Pending execution.
+The run API nests `isMaxTotalChargeUsdSetByUser` under `options`; checking a guessed root-level location caused this one attempt to be aborted. The regression is captured in the local offline run-options helper/test. No broader project learning record was added.
