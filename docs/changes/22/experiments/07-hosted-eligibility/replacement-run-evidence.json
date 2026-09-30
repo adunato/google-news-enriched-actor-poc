@@ -1,0 +1,68 @@
+{
+  "iteration": 7,
+  "approvalDate": "2026-09-30",
+  "runId": "HODLEJIYZ5ESj4FWG",
+  "actorId": "92K6tvwsserxl729y",
+  "actorVisibility": "private",
+  "actorPermissionLevel": "LIMITED_PERMISSIONS",
+  "buildId": "tz0HwMbSVyJkP95ab",
+  "buildNumber": "0.7.1",
+  "runtimeImage": "apify/actor-node:20",
+  "sourceDigest": null,
+  "status": "SUCCEEDED",
+  "durationMillis": 498429,
+  "options": {
+    "build": "0.7.1",
+    "maxTotalChargeUsd": 1,
+    "isMaxTotalChargeUsdSetByUser": true,
+    "memoryMbytes": 256,
+    "timeoutSecs": 900,
+    "restartOnError": false
+  },
+  "usageTotalUsd": 0.007152507775172592,
+  "stats": {
+    "memAvgBytes": 74184643.35314599,
+    "memMaxBytes": 111677440,
+    "cpuAvgUsagePercent": 4.870149609448525,
+    "netRxBytesTotalRun": 34652070,
+    "netTxBytesTotalRun": 939481
+  },
+  "dataset": {
+    "id": "snsmC79RVurc4fB0f",
+    "itemCount": 1,
+    "denominator": 100,
+    "cells": 10,
+    "eligible2xxHtml": 78,
+    "notEligible": 22,
+    "extractionTimeout": 78,
+    "extractionNotAttempted": 22,
+    "acceptedProxy": 0,
+    "gatePositive": 33,
+    "gateClear": 45,
+    "gateUnavailable": 22,
+    "eligiblePrefixBins": {
+      "lt_16KiB": 1,
+      "16_to_lt_64KiB": 9,
+      "64_to_lt_128KiB": 19,
+      "128_to_lt_256KiB": 15,
+      "256KiB_cap": 34
+    },
+    "allRowPrefixBinsInclude22NonEligibleZeroByteRows": true
+  },
+  "privacyReview": {
+    "aggregateAllowListValidation": "passed",
+    "datasetItems": 1,
+    "urlLikeLogPatternsFound": false,
+    "sensitiveLogMarkersFound": false,
+    "perRowPhaseTimingsAvailable": false,
+    "rawLogsRetained": false,
+    "actorDeleted": true,
+    "actorDeletionApiNotFoundConfirmed": true
+  },
+  "notes": [
+    "Network counters cover the entire run and are not publisher-only.",
+    "Run/build metadata did not expose a source digest or exact Node patch version.",
+    "All eligible rows timed out at the five-second worker bound; no extraction output was scored, so the proxy count is not an extraction-quality result.",
+    "No gate/proxy discordance or Issue 5 readable-text result was measured."
+  ]
+}

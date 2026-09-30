@@ -1,0 +1,1177 @@
+{
+    "schemaVersion":  "issue22-iteration7-aggregate-v2",
+    "proxyDefinition":  "implemented_optimistic_structural_proxy_without_navigation_ratio",
+    "denominator":  100,
+    "cells":  [
+                  {
+                      "cellId":  "q1-gb",
+                      "plannedRows":  10,
+                      "candidate":  {
+                                        "resolved":  10,
+                                        "not_resolved":  0
+                                    },
+                      "robots":  {
+                                     "allowed":  7,
+                                     "not_found":  2,
+                                     "disallowed":  0,
+                                     "unavailable":  1,
+                                     "truncated_unknown":  0,
+                                     "not_checked":  0
+                                 },
+                      "fetch":  {
+                                    "http_2xx_html":  8,
+                                    "http_other":  1,
+                                    "transport_error":  0,
+                                    "not_attempted":  1
+                                },
+                      "eligible2xxHtml":  8,
+                      "gateSignal":  {
+                                         "positive":  2,
+                                         "clear":  6,
+                                         "unavailable":  2
+                                     },
+                      "extraction":  {
+                                         "not_attempted":  2,
+                                         "timeout":  8,
+                                         "error":  0,
+                                         "empty":  0,
+                                         "oversize":  0,
+                                         "too_short":  0,
+                                         "quality_rejected":  0,
+                                         "accepted_proxy":  0
+                                     },
+                      "proxy":  {
+                                    "not_scored":  10,
+                                    "empty":  0,
+                                    "oversize":  0,
+                                    "too_short":  0,
+                                    "quality_rejected":  0,
+                                    "accepted_proxy":  0,
+                                    "error":  0
+                                },
+                      "gateProxyComparison":  {
+                                                  "gate_positive":  {
+                                                                        "not_attempted":  0,
+                                                                        "timeout":  2,
+                                                                        "error":  0,
+                                                                        "empty":  0,
+                                                                        "oversize":  0,
+                                                                        "too_short":  0,
+                                                                        "quality_rejected":  0,
+                                                                        "accepted_proxy":  0
+                                                                    },
+                                                  "gate_clear":  {
+                                                                     "not_attempted":  0,
+                                                                     "timeout":  6,
+                                                                     "error":  0,
+                                                                     "empty":  0,
+                                                                     "oversize":  0,
+                                                                     "too_short":  0,
+                                                                     "quality_rejected":  0,
+                                                                     "accepted_proxy":  0
+                                                                 },
+                                                  "gate_unavailable":  {
+                                                                           "not_attempted":  2,
+                                                                           "timeout":  0,
+                                                                           "error":  0,
+                                                                           "empty":  0,
+                                                                           "oversize":  0,
+                                                                           "too_short":  0,
+                                                                           "quality_rejected":  0,
+                                                                           "accepted_proxy":  0
+                                                                       }
+                                              },
+                      "extractionTimingBins":  {
+                                                   "lt_500ms":  0,
+                                                   "500ms_to_lt_1s":  0,
+                                                   "1s_to_lt_2s":  0,
+                                                   "2s_to_lt_5s":  0,
+                                                   "gte_5s":  8,
+                                                   "unavailable":  2
+                                               },
+                      "prefixSizeBins":  {
+                                             "lt_16KiB":  2,
+                                             "16_to_lt_64KiB":  1,
+                                             "64_to_lt_128KiB":  3,
+                                             "128_to_lt_256KiB":  0,
+                                             "256KiB_cap":  4,
+                                             "unavailable":  0
+                                         },
+                      "feed":  {
+                                   "status":  {
+                                                  "http_2xx":  1,
+                                                  "http_other":  0,
+                                                  "transport_error":  0
+                                              },
+                                   "responseSizeBins":  {
+                                                            "lt_64KiB":  0,
+                                                            "64_to_lt_256KiB":  1,
+                                                            "256KiB_to_lt_1MiB":  0,
+                                                            "1MiB_to_lt_2MiB":  0,
+                                                            "2MiB_cap":  0,
+                                                            "unavailable":  0
+                                                        },
+                                   "itemCountBins":  {
+                                                         "zero":  0,
+                                                         "1_to_4":  0,
+                                                         "5_to_9":  0,
+                                                         "gte_10":  1
+                                                     },
+                                   "retainedRows":  10
+                               }
+                  },
+                  {
+                      "cellId":  "q1-us",
+                      "plannedRows":  10,
+                      "candidate":  {
+                                        "resolved":  10,
+                                        "not_resolved":  0
+                                    },
+                      "robots":  {
+                                     "allowed":  9,
+                                     "not_found":  0,
+                                     "disallowed":  0,
+                                     "unavailable":  1,
+                                     "truncated_unknown":  0,
+                                     "not_checked":  0
+                                 },
+                      "fetch":  {
+                                    "http_2xx_html":  9,
+                                    "http_other":  0,
+                                    "transport_error":  0,
+                                    "not_attempted":  1
+                                },
+                      "eligible2xxHtml":  9,
+                      "gateSignal":  {
+                                         "positive":  2,
+                                         "clear":  7,
+                                         "unavailable":  1
+                                     },
+                      "extraction":  {
+                                         "not_attempted":  1,
+                                         "timeout":  9,
+                                         "error":  0,
+                                         "empty":  0,
+                                         "oversize":  0,
+                                         "too_short":  0,
+                                         "quality_rejected":  0,
+                                         "accepted_proxy":  0
+                                     },
+                      "proxy":  {
+                                    "not_scored":  10,
+                                    "empty":  0,
+                                    "oversize":  0,
+                                    "too_short":  0,
+                                    "quality_rejected":  0,
+                                    "accepted_proxy":  0,
+                                    "error":  0
+                                },
+                      "gateProxyComparison":  {
+                                                  "gate_positive":  {
+                                                                        "not_attempted":  0,
+                                                                        "timeout":  2,
+                                                                        "error":  0,
+                                                                        "empty":  0,
+                                                                        "oversize":  0,
+                                                                        "too_short":  0,
+                                                                        "quality_rejected":  0,
+                                                                        "accepted_proxy":  0
+                                                                    },
+                                                  "gate_clear":  {
+                                                                     "not_attempted":  0,
+                                                                     "timeout":  7,
+                                                                     "error":  0,
+                                                                     "empty":  0,
+                                                                     "oversize":  0,
+                                                                     "too_short":  0,
+                                                                     "quality_rejected":  0,
+                                                                     "accepted_proxy":  0
+                                                                 },
+                                                  "gate_unavailable":  {
+                                                                           "not_attempted":  1,
+                                                                           "timeout":  0,
+                                                                           "error":  0,
+                                                                           "empty":  0,
+                                                                           "oversize":  0,
+                                                                           "too_short":  0,
+                                                                           "quality_rejected":  0,
+                                                                           "accepted_proxy":  0
+                                                                       }
+                                              },
+                      "extractionTimingBins":  {
+                                                   "lt_500ms":  0,
+                                                   "500ms_to_lt_1s":  0,
+                                                   "1s_to_lt_2s":  0,
+                                                   "2s_to_lt_5s":  0,
+                                                   "gte_5s":  9,
+                                                   "unavailable":  1
+                                               },
+                      "prefixSizeBins":  {
+                                             "lt_16KiB":  1,
+                                             "16_to_lt_64KiB":  2,
+                                             "64_to_lt_128KiB":  3,
+                                             "128_to_lt_256KiB":  3,
+                                             "256KiB_cap":  1,
+                                             "unavailable":  0
+                                         },
+                      "feed":  {
+                                   "status":  {
+                                                  "http_2xx":  1,
+                                                  "http_other":  0,
+                                                  "transport_error":  0
+                                              },
+                                   "responseSizeBins":  {
+                                                            "lt_64KiB":  0,
+                                                            "64_to_lt_256KiB":  1,
+                                                            "256KiB_to_lt_1MiB":  0,
+                                                            "1MiB_to_lt_2MiB":  0,
+                                                            "2MiB_cap":  0,
+                                                            "unavailable":  0
+                                                        },
+                                   "itemCountBins":  {
+                                                         "zero":  0,
+                                                         "1_to_4":  0,
+                                                         "5_to_9":  0,
+                                                         "gte_10":  1
+                                                     },
+                                   "retainedRows":  10
+                               }
+                  },
+                  {
+                      "cellId":  "q2-gb",
+                      "plannedRows":  10,
+                      "candidate":  {
+                                        "resolved":  10,
+                                        "not_resolved":  0
+                                    },
+                      "robots":  {
+                                     "allowed":  10,
+                                     "not_found":  0,
+                                     "disallowed":  0,
+                                     "unavailable":  0,
+                                     "truncated_unknown":  0,
+                                     "not_checked":  0
+                                 },
+                      "fetch":  {
+                                    "http_2xx_html":  7,
+                                    "http_other":  3,
+                                    "transport_error":  0,
+                                    "not_attempted":  0
+                                },
+                      "eligible2xxHtml":  7,
+                      "gateSignal":  {
+                                         "positive":  4,
+                                         "clear":  3,
+                                         "unavailable":  3
+                                     },
+                      "extraction":  {
+                                         "not_attempted":  3,
+                                         "timeout":  7,
+                                         "error":  0,
+                                         "empty":  0,
+                                         "oversize":  0,
+                                         "too_short":  0,
+                                         "quality_rejected":  0,
+                                         "accepted_proxy":  0
+                                     },
+                      "proxy":  {
+                                    "not_scored":  10,
+                                    "empty":  0,
+                                    "oversize":  0,
+                                    "too_short":  0,
+                                    "quality_rejected":  0,
+                                    "accepted_proxy":  0,
+                                    "error":  0
+                                },
+                      "gateProxyComparison":  {
+                                                  "gate_positive":  {
+                                                                        "not_attempted":  0,
+                                                                        "timeout":  4,
+                                                                        "error":  0,
+                                                                        "empty":  0,
+                                                                        "oversize":  0,
+                                                                        "too_short":  0,
+                                                                        "quality_rejected":  0,
+                                                                        "accepted_proxy":  0
+                                                                    },
+                                                  "gate_clear":  {
+                                                                     "not_attempted":  0,
+                                                                     "timeout":  3,
+                                                                     "error":  0,
+                                                                     "empty":  0,
+                                                                     "oversize":  0,
+                                                                     "too_short":  0,
+                                                                     "quality_rejected":  0,
+                                                                     "accepted_proxy":  0
+                                                                 },
+                                                  "gate_unavailable":  {
+                                                                           "not_attempted":  3,
+                                                                           "timeout":  0,
+                                                                           "error":  0,
+                                                                           "empty":  0,
+                                                                           "oversize":  0,
+                                                                           "too_short":  0,
+                                                                           "quality_rejected":  0,
+                                                                           "accepted_proxy":  0
+                                                                       }
+                                              },
+                      "extractionTimingBins":  {
+                                                   "lt_500ms":  0,
+                                                   "500ms_to_lt_1s":  0,
+                                                   "1s_to_lt_2s":  0,
+                                                   "2s_to_lt_5s":  0,
+                                                   "gte_5s":  7,
+                                                   "unavailable":  3
+                                               },
+                      "prefixSizeBins":  {
+                                             "lt_16KiB":  3,
+                                             "16_to_lt_64KiB":  0,
+                                             "64_to_lt_128KiB":  1,
+                                             "128_to_lt_256KiB":  0,
+                                             "256KiB_cap":  6,
+                                             "unavailable":  0
+                                         },
+                      "feed":  {
+                                   "status":  {
+                                                  "http_2xx":  1,
+                                                  "http_other":  0,
+                                                  "transport_error":  0
+                                              },
+                                   "responseSizeBins":  {
+                                                            "lt_64KiB":  0,
+                                                            "64_to_lt_256KiB":  1,
+                                                            "256KiB_to_lt_1MiB":  0,
+                                                            "1MiB_to_lt_2MiB":  0,
+                                                            "2MiB_cap":  0,
+                                                            "unavailable":  0
+                                                        },
+                                   "itemCountBins":  {
+                                                         "zero":  0,
+                                                         "1_to_4":  0,
+                                                         "5_to_9":  0,
+                                                         "gte_10":  1
+                                                     },
+                                   "retainedRows":  10
+                               }
+                  },
+                  {
+                      "cellId":  "q2-us",
+                      "plannedRows":  10,
+                      "candidate":  {
+                                        "resolved":  10,
+                                        "not_resolved":  0
+                                    },
+                      "robots":  {
+                                     "allowed":  8,
+                                     "not_found":  0,
+                                     "disallowed":  1,
+                                     "unavailable":  1,
+                                     "truncated_unknown":  0,
+                                     "not_checked":  0
+                                 },
+                      "fetch":  {
+                                    "http_2xx_html":  7,
+                                    "http_other":  1,
+                                    "transport_error":  0,
+                                    "not_attempted":  2
+                                },
+                      "eligible2xxHtml":  7,
+                      "gateSignal":  {
+                                         "positive":  5,
+                                         "clear":  2,
+                                         "unavailable":  3
+                                     },
+                      "extraction":  {
+                                         "not_attempted":  3,
+                                         "timeout":  7,
+                                         "error":  0,
+                                         "empty":  0,
+                                         "oversize":  0,
+                                         "too_short":  0,
+                                         "quality_rejected":  0,
+                                         "accepted_proxy":  0
+                                     },
+                      "proxy":  {
+                                    "not_scored":  10,
+                                    "empty":  0,
+                                    "oversize":  0,
+                                    "too_short":  0,
+                                    "quality_rejected":  0,
+                                    "accepted_proxy":  0,
+                                    "error":  0
+                                },
+                      "gateProxyComparison":  {
+                                                  "gate_positive":  {
+                                                                        "not_attempted":  0,
+                                                                        "timeout":  5,
+                                                                        "error":  0,
+                                                                        "empty":  0,
+                                                                        "oversize":  0,
+                                                                        "too_short":  0,
+                                                                        "quality_rejected":  0,
+                                                                        "accepted_proxy":  0
+                                                                    },
+                                                  "gate_clear":  {
+                                                                     "not_attempted":  0,
+                                                                     "timeout":  2,
+                                                                     "error":  0,
+                                                                     "empty":  0,
+                                                                     "oversize":  0,
+                                                                     "too_short":  0,
+                                                                     "quality_rejected":  0,
+                                                                     "accepted_proxy":  0
+                                                                 },
+                                                  "gate_unavailable":  {
+                                                                           "not_attempted":  3,
+                                                                           "timeout":  0,
+                                                                           "error":  0,
+                                                                           "empty":  0,
+                                                                           "oversize":  0,
+                                                                           "too_short":  0,
+                                                                           "quality_rejected":  0,
+                                                                           "accepted_proxy":  0
+                                                                       }
+                                              },
+                      "extractionTimingBins":  {
+                                                   "lt_500ms":  0,
+                                                   "500ms_to_lt_1s":  0,
+                                                   "1s_to_lt_2s":  0,
+                                                   "2s_to_lt_5s":  0,
+                                                   "gte_5s":  7,
+                                                   "unavailable":  3
+                                               },
+                      "prefixSizeBins":  {
+                                             "lt_16KiB":  3,
+                                             "16_to_lt_64KiB":  0,
+                                             "64_to_lt_128KiB":  3,
+                                             "128_to_lt_256KiB":  2,
+                                             "256KiB_cap":  2,
+                                             "unavailable":  0
+                                         },
+                      "feed":  {
+                                   "status":  {
+                                                  "http_2xx":  1,
+                                                  "http_other":  0,
+                                                  "transport_error":  0
+                                              },
+                                   "responseSizeBins":  {
+                                                            "lt_64KiB":  0,
+                                                            "64_to_lt_256KiB":  1,
+                                                            "256KiB_to_lt_1MiB":  0,
+                                                            "1MiB_to_lt_2MiB":  0,
+                                                            "2MiB_cap":  0,
+                                                            "unavailable":  0
+                                                        },
+                                   "itemCountBins":  {
+                                                         "zero":  0,
+                                                         "1_to_4":  0,
+                                                         "5_to_9":  0,
+                                                         "gte_10":  1
+                                                     },
+                                   "retainedRows":  10
+                               }
+                  },
+                  {
+                      "cellId":  "q3-gb",
+                      "plannedRows":  10,
+                      "candidate":  {
+                                        "resolved":  10,
+                                        "not_resolved":  0
+                                    },
+                      "robots":  {
+                                     "allowed":  8,
+                                     "not_found":  2,
+                                     "disallowed":  0,
+                                     "unavailable":  0,
+                                     "truncated_unknown":  0,
+                                     "not_checked":  0
+                                 },
+                      "fetch":  {
+                                    "http_2xx_html":  8,
+                                    "http_other":  2,
+                                    "transport_error":  0,
+                                    "not_attempted":  0
+                                },
+                      "eligible2xxHtml":  8,
+                      "gateSignal":  {
+                                         "positive":  3,
+                                         "clear":  5,
+                                         "unavailable":  2
+                                     },
+                      "extraction":  {
+                                         "not_attempted":  2,
+                                         "timeout":  8,
+                                         "error":  0,
+                                         "empty":  0,
+                                         "oversize":  0,
+                                         "too_short":  0,
+                                         "quality_rejected":  0,
+                                         "accepted_proxy":  0
+                                     },
+                      "proxy":  {
+                                    "not_scored":  10,
+                                    "empty":  0,
+                                    "oversize":  0,
+                                    "too_short":  0,
+                                    "quality_rejected":  0,
+                                    "accepted_proxy":  0,
+                                    "error":  0
+                                },
+                      "gateProxyComparison":  {
+                                                  "gate_positive":  {
+                                                                        "not_attempted":  0,
+                                                                        "timeout":  3,
+                                                                        "error":  0,
+                                                                        "empty":  0,
+                                                                        "oversize":  0,
+                                                                        "too_short":  0,
+                                                                        "quality_rejected":  0,
+                                                                        "accepted_proxy":  0
+                                                                    },
+                                                  "gate_clear":  {
+                                                                     "not_attempted":  0,
+                                                                     "timeout":  5,
+                                                                     "error":  0,
+                                                                     "empty":  0,
+                                                                     "oversize":  0,
+                                                                     "too_short":  0,
+                                                                     "quality_rejected":  0,
+                                                                     "accepted_proxy":  0
+                                                                 },
+                                                  "gate_unavailable":  {
+                                                                           "not_attempted":  2,
+                                                                           "timeout":  0,
+                                                                           "error":  0,
+                                                                           "empty":  0,
+                                                                           "oversize":  0,
+                                                                           "too_short":  0,
+                                                                           "quality_rejected":  0,
+                                                                           "accepted_proxy":  0
+                                                                       }
+                                              },
+                      "extractionTimingBins":  {
+                                                   "lt_500ms":  0,
+                                                   "500ms_to_lt_1s":  0,
+                                                   "1s_to_lt_2s":  0,
+                                                   "2s_to_lt_5s":  0,
+                                                   "gte_5s":  8,
+                                                   "unavailable":  2
+                                               },
+                      "prefixSizeBins":  {
+                                             "lt_16KiB":  2,
+                                             "16_to_lt_64KiB":  3,
+                                             "64_to_lt_128KiB":  3,
+                                             "128_to_lt_256KiB":  0,
+                                             "256KiB_cap":  2,
+                                             "unavailable":  0
+                                         },
+                      "feed":  {
+                                   "status":  {
+                                                  "http_2xx":  1,
+                                                  "http_other":  0,
+                                                  "transport_error":  0
+                                              },
+                                   "responseSizeBins":  {
+                                                            "lt_64KiB":  0,
+                                                            "64_to_lt_256KiB":  1,
+                                                            "256KiB_to_lt_1MiB":  0,
+                                                            "1MiB_to_lt_2MiB":  0,
+                                                            "2MiB_cap":  0,
+                                                            "unavailable":  0
+                                                        },
+                                   "itemCountBins":  {
+                                                         "zero":  0,
+                                                         "1_to_4":  0,
+                                                         "5_to_9":  0,
+                                                         "gte_10":  1
+                                                     },
+                                   "retainedRows":  10
+                               }
+                  },
+                  {
+                      "cellId":  "q3-us",
+                      "plannedRows":  10,
+                      "candidate":  {
+                                        "resolved":  10,
+                                        "not_resolved":  0
+                                    },
+                      "robots":  {
+                                     "allowed":  8,
+                                     "not_found":  0,
+                                     "disallowed":  2,
+                                     "unavailable":  0,
+                                     "truncated_unknown":  0,
+                                     "not_checked":  0
+                                 },
+                      "fetch":  {
+                                    "http_2xx_html":  6,
+                                    "http_other":  2,
+                                    "transport_error":  0,
+                                    "not_attempted":  2
+                                },
+                      "eligible2xxHtml":  6,
+                      "gateSignal":  {
+                                         "positive":  2,
+                                         "clear":  4,
+                                         "unavailable":  4
+                                     },
+                      "extraction":  {
+                                         "not_attempted":  4,
+                                         "timeout":  6,
+                                         "error":  0,
+                                         "empty":  0,
+                                         "oversize":  0,
+                                         "too_short":  0,
+                                         "quality_rejected":  0,
+                                         "accepted_proxy":  0
+                                     },
+                      "proxy":  {
+                                    "not_scored":  10,
+                                    "empty":  0,
+                                    "oversize":  0,
+                                    "too_short":  0,
+                                    "quality_rejected":  0,
+                                    "accepted_proxy":  0,
+                                    "error":  0
+                                },
+                      "gateProxyComparison":  {
+                                                  "gate_positive":  {
+                                                                        "not_attempted":  0,
+                                                                        "timeout":  2,
+                                                                        "error":  0,
+                                                                        "empty":  0,
+                                                                        "oversize":  0,
+                                                                        "too_short":  0,
+                                                                        "quality_rejected":  0,
+                                                                        "accepted_proxy":  0
+                                                                    },
+                                                  "gate_clear":  {
+                                                                     "not_attempted":  0,
+                                                                     "timeout":  4,
+                                                                     "error":  0,
+                                                                     "empty":  0,
+                                                                     "oversize":  0,
+                                                                     "too_short":  0,
+                                                                     "quality_rejected":  0,
+                                                                     "accepted_proxy":  0
+                                                                 },
+                                                  "gate_unavailable":  {
+                                                                           "not_attempted":  4,
+                                                                           "timeout":  0,
+                                                                           "error":  0,
+                                                                           "empty":  0,
+                                                                           "oversize":  0,
+                                                                           "too_short":  0,
+                                                                           "quality_rejected":  0,
+                                                                           "accepted_proxy":  0
+                                                                       }
+                                              },
+                      "extractionTimingBins":  {
+                                                   "lt_500ms":  0,
+                                                   "500ms_to_lt_1s":  0,
+                                                   "1s_to_lt_2s":  0,
+                                                   "2s_to_lt_5s":  0,
+                                                   "gte_5s":  6,
+                                                   "unavailable":  4
+                                               },
+                      "prefixSizeBins":  {
+                                             "lt_16KiB":  4,
+                                             "16_to_lt_64KiB":  0,
+                                             "64_to_lt_128KiB":  0,
+                                             "128_to_lt_256KiB":  2,
+                                             "256KiB_cap":  4,
+                                             "unavailable":  0
+                                         },
+                      "feed":  {
+                                   "status":  {
+                                                  "http_2xx":  1,
+                                                  "http_other":  0,
+                                                  "transport_error":  0
+                                              },
+                                   "responseSizeBins":  {
+                                                            "lt_64KiB":  0,
+                                                            "64_to_lt_256KiB":  1,
+                                                            "256KiB_to_lt_1MiB":  0,
+                                                            "1MiB_to_lt_2MiB":  0,
+                                                            "2MiB_cap":  0,
+                                                            "unavailable":  0
+                                                        },
+                                   "itemCountBins":  {
+                                                         "zero":  0,
+                                                         "1_to_4":  0,
+                                                         "5_to_9":  0,
+                                                         "gte_10":  1
+                                                     },
+                                   "retainedRows":  10
+                               }
+                  },
+                  {
+                      "cellId":  "q4-gb",
+                      "plannedRows":  10,
+                      "candidate":  {
+                                        "resolved":  10,
+                                        "not_resolved":  0
+                                    },
+                      "robots":  {
+                                     "allowed":  10,
+                                     "not_found":  0,
+                                     "disallowed":  0,
+                                     "unavailable":  0,
+                                     "truncated_unknown":  0,
+                                     "not_checked":  0
+                                 },
+                      "fetch":  {
+                                    "http_2xx_html":  9,
+                                    "http_other":  1,
+                                    "transport_error":  0,
+                                    "not_attempted":  0
+                                },
+                      "eligible2xxHtml":  9,
+                      "gateSignal":  {
+                                         "positive":  5,
+                                         "clear":  4,
+                                         "unavailable":  1
+                                     },
+                      "extraction":  {
+                                         "not_attempted":  1,
+                                         "timeout":  9,
+                                         "error":  0,
+                                         "empty":  0,
+                                         "oversize":  0,
+                                         "too_short":  0,
+                                         "quality_rejected":  0,
+                                         "accepted_proxy":  0
+                                     },
+                      "proxy":  {
+                                    "not_scored":  10,
+                                    "empty":  0,
+                                    "oversize":  0,
+                                    "too_short":  0,
+                                    "quality_rejected":  0,
+                                    "accepted_proxy":  0,
+                                    "error":  0
+                                },
+                      "gateProxyComparison":  {
+                                                  "gate_positive":  {
+                                                                        "not_attempted":  0,
+                                                                        "timeout":  5,
+                                                                        "error":  0,
+                                                                        "empty":  0,
+                                                                        "oversize":  0,
+                                                                        "too_short":  0,
+                                                                        "quality_rejected":  0,
+                                                                        "accepted_proxy":  0
+                                                                    },
+                                                  "gate_clear":  {
+                                                                     "not_attempted":  0,
+                                                                     "timeout":  4,
+                                                                     "error":  0,
+                                                                     "empty":  0,
+                                                                     "oversize":  0,
+                                                                     "too_short":  0,
+                                                                     "quality_rejected":  0,
+                                                                     "accepted_proxy":  0
+                                                                 },
+                                                  "gate_unavailable":  {
+                                                                           "not_attempted":  1,
+                                                                           "timeout":  0,
+                                                                           "error":  0,
+                                                                           "empty":  0,
+                                                                           "oversize":  0,
+                                                                           "too_short":  0,
+                                                                           "quality_rejected":  0,
+                                                                           "accepted_proxy":  0
+                                                                       }
+                                              },
+                      "extractionTimingBins":  {
+                                                   "lt_500ms":  0,
+                                                   "500ms_to_lt_1s":  0,
+                                                   "1s_to_lt_2s":  0,
+                                                   "2s_to_lt_5s":  0,
+                                                   "gte_5s":  9,
+                                                   "unavailable":  1
+                                               },
+                      "prefixSizeBins":  {
+                                             "lt_16KiB":  2,
+                                             "16_to_lt_64KiB":  1,
+                                             "64_to_lt_128KiB":  0,
+                                             "128_to_lt_256KiB":  2,
+                                             "256KiB_cap":  5,
+                                             "unavailable":  0
+                                         },
+                      "feed":  {
+                                   "status":  {
+                                                  "http_2xx":  1,
+                                                  "http_other":  0,
+                                                  "transport_error":  0
+                                              },
+                                   "responseSizeBins":  {
+                                                            "lt_64KiB":  0,
+                                                            "64_to_lt_256KiB":  1,
+                                                            "256KiB_to_lt_1MiB":  0,
+                                                            "1MiB_to_lt_2MiB":  0,
+                                                            "2MiB_cap":  0,
+                                                            "unavailable":  0
+                                                        },
+                                   "itemCountBins":  {
+                                                         "zero":  0,
+                                                         "1_to_4":  0,
+                                                         "5_to_9":  0,
+                                                         "gte_10":  1
+                                                     },
+                                   "retainedRows":  10
+                               }
+                  },
+                  {
+                      "cellId":  "q4-us",
+                      "plannedRows":  10,
+                      "candidate":  {
+                                        "resolved":  10,
+                                        "not_resolved":  0
+                                    },
+                      "robots":  {
+                                     "allowed":  7,
+                                     "not_found":  1,
+                                     "disallowed":  1,
+                                     "unavailable":  1,
+                                     "truncated_unknown":  0,
+                                     "not_checked":  0
+                                 },
+                      "fetch":  {
+                                    "http_2xx_html":  7,
+                                    "http_other":  1,
+                                    "transport_error":  0,
+                                    "not_attempted":  2
+                                },
+                      "eligible2xxHtml":  7,
+                      "gateSignal":  {
+                                         "positive":  3,
+                                         "clear":  4,
+                                         "unavailable":  3
+                                     },
+                      "extraction":  {
+                                         "not_attempted":  3,
+                                         "timeout":  7,
+                                         "error":  0,
+                                         "empty":  0,
+                                         "oversize":  0,
+                                         "too_short":  0,
+                                         "quality_rejected":  0,
+                                         "accepted_proxy":  0
+                                     },
+                      "proxy":  {
+                                    "not_scored":  10,
+                                    "empty":  0,
+                                    "oversize":  0,
+                                    "too_short":  0,
+                                    "quality_rejected":  0,
+                                    "accepted_proxy":  0,
+                                    "error":  0
+                                },
+                      "gateProxyComparison":  {
+                                                  "gate_positive":  {
+                                                                        "not_attempted":  0,
+                                                                        "timeout":  3,
+                                                                        "error":  0,
+                                                                        "empty":  0,
+                                                                        "oversize":  0,
+                                                                        "too_short":  0,
+                                                                        "quality_rejected":  0,
+                                                                        "accepted_proxy":  0
+                                                                    },
+                                                  "gate_clear":  {
+                                                                     "not_attempted":  0,
+                                                                     "timeout":  4,
+                                                                     "error":  0,
+                                                                     "empty":  0,
+                                                                     "oversize":  0,
+                                                                     "too_short":  0,
+                                                                     "quality_rejected":  0,
+                                                                     "accepted_proxy":  0
+                                                                 },
+                                                  "gate_unavailable":  {
+                                                                           "not_attempted":  3,
+                                                                           "timeout":  0,
+                                                                           "error":  0,
+                                                                           "empty":  0,
+                                                                           "oversize":  0,
+                                                                           "too_short":  0,
+                                                                           "quality_rejected":  0,
+                                                                           "accepted_proxy":  0
+                                                                       }
+                                              },
+                      "extractionTimingBins":  {
+                                                   "lt_500ms":  0,
+                                                   "500ms_to_lt_1s":  0,
+                                                   "1s_to_lt_2s":  0,
+                                                   "2s_to_lt_5s":  0,
+                                                   "gte_5s":  7,
+                                                   "unavailable":  3
+                                               },
+                      "prefixSizeBins":  {
+                                             "lt_16KiB":  3,
+                                             "16_to_lt_64KiB":  1,
+                                             "64_to_lt_128KiB":  2,
+                                             "128_to_lt_256KiB":  2,
+                                             "256KiB_cap":  2,
+                                             "unavailable":  0
+                                         },
+                      "feed":  {
+                                   "status":  {
+                                                  "http_2xx":  1,
+                                                  "http_other":  0,
+                                                  "transport_error":  0
+                                              },
+                                   "responseSizeBins":  {
+                                                            "lt_64KiB":  0,
+                                                            "64_to_lt_256KiB":  1,
+                                                            "256KiB_to_lt_1MiB":  0,
+                                                            "1MiB_to_lt_2MiB":  0,
+                                                            "2MiB_cap":  0,
+                                                            "unavailable":  0
+                                                        },
+                                   "itemCountBins":  {
+                                                         "zero":  0,
+                                                         "1_to_4":  0,
+                                                         "5_to_9":  0,
+                                                         "gte_10":  1
+                                                     },
+                                   "retainedRows":  10
+                               }
+                  },
+                  {
+                      "cellId":  "q5-gb",
+                      "plannedRows":  10,
+                      "candidate":  {
+                                        "resolved":  10,
+                                        "not_resolved":  0
+                                    },
+                      "robots":  {
+                                     "allowed":  8,
+                                     "not_found":  0,
+                                     "disallowed":  0,
+                                     "unavailable":  2,
+                                     "truncated_unknown":  0,
+                                     "not_checked":  0
+                                 },
+                      "fetch":  {
+                                    "http_2xx_html":  8,
+                                    "http_other":  0,
+                                    "transport_error":  0,
+                                    "not_attempted":  2
+                                },
+                      "eligible2xxHtml":  8,
+                      "gateSignal":  {
+                                         "positive":  3,
+                                         "clear":  5,
+                                         "unavailable":  2
+                                     },
+                      "extraction":  {
+                                         "not_attempted":  2,
+                                         "timeout":  8,
+                                         "error":  0,
+                                         "empty":  0,
+                                         "oversize":  0,
+                                         "too_short":  0,
+                                         "quality_rejected":  0,
+                                         "accepted_proxy":  0
+                                     },
+                      "proxy":  {
+                                    "not_scored":  10,
+                                    "empty":  0,
+                                    "oversize":  0,
+                                    "too_short":  0,
+                                    "quality_rejected":  0,
+                                    "accepted_proxy":  0,
+                                    "error":  0
+                                },
+                      "gateProxyComparison":  {
+                                                  "gate_positive":  {
+                                                                        "not_attempted":  0,
+                                                                        "timeout":  3,
+                                                                        "error":  0,
+                                                                        "empty":  0,
+                                                                        "oversize":  0,
+                                                                        "too_short":  0,
+                                                                        "quality_rejected":  0,
+                                                                        "accepted_proxy":  0
+                                                                    },
+                                                  "gate_clear":  {
+                                                                     "not_attempted":  0,
+                                                                     "timeout":  5,
+                                                                     "error":  0,
+                                                                     "empty":  0,
+                                                                     "oversize":  0,
+                                                                     "too_short":  0,
+                                                                     "quality_rejected":  0,
+                                                                     "accepted_proxy":  0
+                                                                 },
+                                                  "gate_unavailable":  {
+                                                                           "not_attempted":  2,
+                                                                           "timeout":  0,
+                                                                           "error":  0,
+                                                                           "empty":  0,
+                                                                           "oversize":  0,
+                                                                           "too_short":  0,
+                                                                           "quality_rejected":  0,
+                                                                           "accepted_proxy":  0
+                                                                       }
+                                              },
+                      "extractionTimingBins":  {
+                                                   "lt_500ms":  0,
+                                                   "500ms_to_lt_1s":  0,
+                                                   "1s_to_lt_2s":  0,
+                                                   "2s_to_lt_5s":  0,
+                                                   "gte_5s":  8,
+                                                   "unavailable":  2
+                                               },
+                      "prefixSizeBins":  {
+                                             "lt_16KiB":  2,
+                                             "16_to_lt_64KiB":  1,
+                                             "64_to_lt_128KiB":  3,
+                                             "128_to_lt_256KiB":  1,
+                                             "256KiB_cap":  3,
+                                             "unavailable":  0
+                                         },
+                      "feed":  {
+                                   "status":  {
+                                                  "http_2xx":  1,
+                                                  "http_other":  0,
+                                                  "transport_error":  0
+                                              },
+                                   "responseSizeBins":  {
+                                                            "lt_64KiB":  0,
+                                                            "64_to_lt_256KiB":  1,
+                                                            "256KiB_to_lt_1MiB":  0,
+                                                            "1MiB_to_lt_2MiB":  0,
+                                                            "2MiB_cap":  0,
+                                                            "unavailable":  0
+                                                        },
+                                   "itemCountBins":  {
+                                                         "zero":  0,
+                                                         "1_to_4":  0,
+                                                         "5_to_9":  0,
+                                                         "gte_10":  1
+                                                     },
+                                   "retainedRows":  10
+                               }
+                  },
+                  {
+                      "cellId":  "q5-us",
+                      "plannedRows":  10,
+                      "candidate":  {
+                                        "resolved":  10,
+                                        "not_resolved":  0
+                                    },
+                      "robots":  {
+                                     "allowed":  10,
+                                     "not_found":  0,
+                                     "disallowed":  0,
+                                     "unavailable":  0,
+                                     "truncated_unknown":  0,
+                                     "not_checked":  0
+                                 },
+                      "fetch":  {
+                                    "http_2xx_html":  9,
+                                    "http_other":  1,
+                                    "transport_error":  0,
+                                    "not_attempted":  0
+                                },
+                      "eligible2xxHtml":  9,
+                      "gateSignal":  {
+                                         "positive":  4,
+                                         "clear":  5,
+                                         "unavailable":  1
+                                     },
+                      "extraction":  {
+                                         "not_attempted":  1,
+                                         "timeout":  9,
+                                         "error":  0,
+                                         "empty":  0,
+                                         "oversize":  0,
+                                         "too_short":  0,
+                                         "quality_rejected":  0,
+                                         "accepted_proxy":  0
+                                     },
+                      "proxy":  {
+                                    "not_scored":  10,
+                                    "empty":  0,
+                                    "oversize":  0,
+                                    "too_short":  0,
+                                    "quality_rejected":  0,
+                                    "accepted_proxy":  0,
+                                    "error":  0
+                                },
+                      "gateProxyComparison":  {
+                                                  "gate_positive":  {
+                                                                        "not_attempted":  0,
+                                                                        "timeout":  4,
+                                                                        "error":  0,
+                                                                        "empty":  0,
+                                                                        "oversize":  0,
+                                                                        "too_short":  0,
+                                                                        "quality_rejected":  0,
+                                                                        "accepted_proxy":  0
+                                                                    },
+                                                  "gate_clear":  {
+                                                                     "not_attempted":  0,
+                                                                     "timeout":  5,
+                                                                     "error":  0,
+                                                                     "empty":  0,
+                                                                     "oversize":  0,
+                                                                     "too_short":  0,
+                                                                     "quality_rejected":  0,
+                                                                     "accepted_proxy":  0
+                                                                 },
+                                                  "gate_unavailable":  {
+                                                                           "not_attempted":  1,
+                                                                           "timeout":  0,
+                                                                           "error":  0,
+                                                                           "empty":  0,
+                                                                           "oversize":  0,
+                                                                           "too_short":  0,
+                                                                           "quality_rejected":  0,
+                                                                           "accepted_proxy":  0
+                                                                       }
+                                              },
+                      "extractionTimingBins":  {
+                                                   "lt_500ms":  0,
+                                                   "500ms_to_lt_1s":  0,
+                                                   "1s_to_lt_2s":  0,
+                                                   "2s_to_lt_5s":  0,
+                                                   "gte_5s":  9,
+                                                   "unavailable":  1
+                                               },
+                      "prefixSizeBins":  {
+                                             "lt_16KiB":  1,
+                                             "16_to_lt_64KiB":  0,
+                                             "64_to_lt_128KiB":  1,
+                                             "128_to_lt_256KiB":  3,
+                                             "256KiB_cap":  5,
+                                             "unavailable":  0
+                                         },
+                      "feed":  {
+                                   "status":  {
+                                                  "http_2xx":  1,
+                                                  "http_other":  0,
+                                                  "transport_error":  0
+                                              },
+                                   "responseSizeBins":  {
+                                                            "lt_64KiB":  0,
+                                                            "64_to_lt_256KiB":  1,
+                                                            "256KiB_to_lt_1MiB":  0,
+                                                            "1MiB_to_lt_2MiB":  0,
+                                                            "2MiB_cap":  0,
+                                                            "unavailable":  0
+                                                        },
+                                   "itemCountBins":  {
+                                                         "zero":  0,
+                                                         "1_to_4":  0,
+                                                         "5_to_9":  0,
+                                                         "gte_10":  1
+                                                     },
+                                   "retainedRows":  10
+                               }
+                  }
+              ]
+}

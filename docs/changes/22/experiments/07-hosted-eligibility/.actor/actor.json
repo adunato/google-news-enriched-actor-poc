@@ -1,11 +1,11 @@
 {
-  "actorSpecification": 1,
-  "name": "issue22-i7-e77e705a",
-  "title": "Spike 22 Iteration 7 Eligibility",
-  "description": "Private disposable technical spike evaluation. One approved run only.",
-  "version": "0.7",
-  "buildTag": "latest",
-  "minMemoryMbytes": 256,
-  "maxMemoryMbytes": 256,
-  "dockerfile": "./Dockerfile"
+    "minMemoryMbytes":  256,
+    "description":  "Private disposable technical spike evaluation. One replacement run only.",
+    "dockerfile":  "./Dockerfile",
+    "version":  "0.7",
+    "title":  "Spike 22 Iteration 7 Eligibility",
+    "name":  "issue22-i7-9e198683",
+    "maxMemoryMbytes":  256,
+    "actorSpecification":  1,
+    "buildTag":  "latest"
 }
