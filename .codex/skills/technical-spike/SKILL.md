@@ -38,20 +38,36 @@ from the canonical template.
 
 Use one long-lived Spike branch/workspace for the controlling Issue. Open a draft pull request early, reference the Spike with `Refs #<issue>`, and keep it open while the Spike remains unresolved. Do not use a closing keyword until final Spike completion.
 
+## Option discovery and prioritisation
+
+Before selecting the first experimental hypothesis, perform a **proportionate option scan** for the bounded Technical Question.
+
+The goal is to identify the materially credible ways to resolve the blocking uncertainty before committing to one implementation path. Use the smallest useful combination of:
+
+- official/provider documentation;
+- current repository and retained evidence;
+- established libraries, mechanisms or implementation approaches;
+- relevant upstream issues/releases and community experience where they illuminate maturity, reliability or known limitations.
+
+Record the credible option set, evidence/rationale, material known limitations, and investigation priority in the living Spike artifact. Do not select a candidate merely because it is easy to install, familiar, or the first plausible search result.
+
+This is a lightweight technical-research step, **not a replacement for the SideGig Research Methodology**. Keep it proportionate to the downstream development question. If a responsible scan would require broad/open-ended domain research, many provider classes, commercial-market analysis or a materially wider objective, state that boundary and return to the owner instead of expanding the Spike silently. Respect any explicit owner instruction to keep the investigation at Spike depth.
+
 ## Iteration planning
 
 Before executing an iteration, update the living Spike artifact with:
 
 1. the current understanding;
-2. the ordered investigation backlog;
-3. the selected hypothesis/approach;
-4. why it is the next useful test;
-5. the exact bounded experiment;
-6. representative environment/data;
-7. expected evidence and interpretation;
-8. operational bounds and stop conditions.
+2. the current ranked option set and status;
+3. the ordered hypothesis backlog for the selected option;
+4. the selected option and hypothesis;
+5. why it is the next useful test;
+6. the exact bounded experiment;
+7. representative environment/data;
+8. expected evidence and interpretation;
+9. operational bounds and stop conditions.
 
-The Issue body holds the stable problem/outcome. The living Spike artifact holds the evolving investigation design.
+The Issue body holds the stable problem/outcome. The living Spike artifact holds the evolving option selection, investigation design and evidence.
 
 ## Owner checkpoint
 
@@ -63,7 +79,7 @@ After each completed iteration:
 
 1. record the evidence and result in the Experiment Log;
 2. update Current Understanding, Supported Technical Specification and Remaining Uncertainty;
-3. select and **recommend** the next hypothesis/experiment with the highest current information value; do not hand the owner an unranked list unless a genuine product/architecture choice exists;
+3. decide whether the evidence still justifies the current option or triggers an option-viability checkpoint; if the option remains viable, select and **recommend** the next hypothesis/experiment with the highest current information value; if not, return to the ranked option set and recommend the next option;
 4. explain why that recommendation is next and what uncertainty it resolves;
 5. identify any prerequisite, blocker or execution problem and classify it explicitly:
    - whether it affected the completed iteration;
@@ -86,6 +102,22 @@ The project owner may explicitly authorize autonomous continuation across multip
 - security, privacy, legal or safety posture;
 - representative environment/data in a way that changes what the evidence means.
 
+## Option-viability checkpoint
+
+Do not respond to repeated or unexplained failure by automatically adding progressively deeper diagnostics to the same candidate.
+
+Trigger an option-viability checkpoint when evidence materially raises doubt about whether the selected option is itself suitable, including repeated timeouts/failures, behaviour inconsistent with its expected maturity or documented use, or a growing need for candidate-specific workarounds.
+
+At that checkpoint:
+
+1. summarize what is failing and what has already been ruled out;
+2. inspect proportionate upstream evidence such as official documentation, release notes, issue trackers and community reports;
+3. distinguish evidence for an environment/integration-specific problem from evidence of a candidate-level reliability, compatibility or maintenance problem;
+4. compare the cost/information value of deeper diagnosis with returning to the next ranked credible option;
+5. record an explicit option decision: `Continue`, `Deprioritise`, or `Reject`, with evidence.
+
+A rejected/deprioritised option remains part of the Spike evidence. Return to the existing ranked option set; do not create a new Spike merely because one option failed.
+
 ## Investigation discipline
 
 For each iteration:
@@ -94,11 +126,12 @@ For each iteration:
 2. Prefer direct observation of the real boundary when legally, safely and practically possible.
 3. Use representative environments/data/permissions/providers/protocol variants proportionate to the question.
 4. Make the experiment reproducible before drawing conclusions.
-5. Compare materially credible alternatives when the technical question is about choosing an integration approach.
-6. Preserve enough evidence to audit the result without retaining secrets or unnecessary sensitive/raw content.
-7. Record variability and limitations; do not generalise beyond the evidence.
-8. Classify the experiment result as `Supported`, `Rejected`, or `Inconclusive`.
-9. Update the investigation backlog from what was learned.
+5. Keep hypotheses tied to the currently selected option and return to the ranked option set when the option-viability checkpoint says deeper diagnosis is no longer justified.
+6. Compare materially credible alternatives proportionately; the initial option scan establishes the comparison set and later evidence may add/remove options.
+7. Preserve enough evidence to audit the result without retaining secrets or unnecessary sensitive/raw content.
+8. Record variability and limitations; do not generalise beyond the evidence.
+9. Classify the experiment result as `Supported`, `Rejected`, or `Inconclusive`.
+10. Update the option status and investigation backlog from what was learned.
 
 A third-party library, script, blog post, issue, or reverse-engineered implementation is evidence about a possible approach. It is not the external system's specification. Validate material behaviour independently before downstream design relies on it.
 
