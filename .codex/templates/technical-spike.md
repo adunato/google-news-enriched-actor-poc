@@ -44,19 +44,36 @@
 
 Third-party/community implementations are leads, not authoritative specifications unless the external provider explicitly documents them as such.
 
-## 4. Investigation Backlog
+## 4. Option Scan and Prioritisation
 
-Maintain the candidate hypotheses/approaches still worth testing. Order them by expected information value and cost.
+Before the first experimental hypothesis, perform a proportionate technical search for credible options that could resolve the bounded Technical Question. This is not a full domain-research exercise.
 
-| ID  | Hypothesis / approach | Why test it | Evidence that would support/refute it | Status                                                              |
-| --- | --------------------- | ----------- | ------------------------------------- | ------------------------------------------------------------------- |
-| H1  | <hypothesis>          | <reason>    | <observable evidence>                 | <Proposed / Approved / Running / Supported / Rejected / Superseded> |
+**Investigation depth / owner constraint:** <default proportionate Spike depth | owner-specified boundary>  
+**Sources / evidence boundary:** <official docs, repository evidence, established approaches, upstream/community evidence consulted>
 
-A failed hypothesis normally leads to another hypothesis in this same Spike. Create a separate Spike only when a genuinely independent technical question emerges with its own completion condition.
+| Option | Approach | Evidence / rationale for inclusion | Material known limitation | Priority / status |
+| --- | --- | --- | --- | --- |
+| O1 | <candidate approach> | <why it is credible> | <known limitation / None known> | <1 — Selected / Proposed / Deprioritised / Rejected / Supported> |
+| O2 | <candidate approach> | <why it is credible> | <known limitation / None known> | <2 — Proposed / ...> |
 
-## 5. Current Iteration
+Explain the prioritisation briefly. Do not select an option solely because it was the first plausible implementation found.
+
+If responsible option discovery would require a materially broader/open-ended research exercise, record the boundary and return to the owner rather than expanding this Spike into the SideGig Research Methodology.
+
+## 5. Investigation Backlog
+
+Maintain hypotheses for the **currently selected option**. Order them by expected information value and cost. If an option is rejected/deprioritised, preserve its completed hypotheses in the Experiment Log and return to the ranked option set.
+
+| ID  | Option | Hypothesis | Why test it | Evidence that would support/refute it | Status |
+| --- | --- | --- | --- | --- | --- |
+| H1 | O1 | <hypothesis> | <reason> | <observable evidence> | <Proposed / Approved / Running / Supported / Rejected / Superseded> |
+
+A failed hypothesis normally leads to another hypothesis within the same option only while that option remains justified. Repeated, stubborn or surprising failures trigger an option-viability checkpoint before deeper diagnostics. Create a separate Spike only when a genuinely independent technical question emerges with its own completion condition.
+
+## 6. Current Iteration
 
 **Iteration:** `<number>`  
+**Selected option:** `<O# / description>`  
 **Hypothesis / approach:** `<H# / description>`  
 **Executor:** `<Codex | ChatGPT | Human | Other>`  
 **Owner approval:** `<Approved YYYY-MM-DD | Autonomous continuation authorized | Pending>`
@@ -81,12 +98,13 @@ A failed hypothesis normally leads to another hypothesis in this same Spike. Cre
 
 <Conditions that require stopping and returning to the owner before continuing, including material changes to scope, constraints, dependencies, cost, product/architecture assumptions or risk.>
 
-## 6. Experiment Log
+## 7. Experiment Log
 
 Append one subsection per completed iteration. Do not delete failed experiments; they are part of the evidence trail.
 
 ### Iteration <N> — <short name>
 
+**Option:** <O# / approach>  
 **Hypothesis:** <what was tested>  
 **Executor:** <who/tool executed this iteration>  
 **Environment/data:** <representative runtime/input/sample>  
@@ -94,13 +112,14 @@ Append one subsection per completed iteration. Do not delete failed experiments;
 **Evidence:** <stable repository references and key observations>  
 **Result:** `<Supported | Rejected | Inconclusive>`  
 **Learning:** <what changed in the current understanding>  
+**Option viability:** <Not triggered | Continue — rationale | Deprioritise — rationale/evidence | Reject — rationale/evidence>  
 **Recommended next iteration/action:** <one clear recommendation, or "None — Spike ready to conclude">  
 **Why this is next:** <uncertainty resolved / information value>  
 **Prerequisite/blocker status:** <None | item: effect on completed iteration; effect on next iteration; concrete recovery/action>  
 **Owner decision requested:** <Approve Iteration N: ... | Redirect to ... | Decide ...>  
 **Owner checkpoint outcome:** <Pending | Approved | Redirected | Stop | Autonomous continuation>
 
-## 7. Supported Technical Specification
+## 8. Supported Technical Specification
 
 > This section is the accumulating output that downstream engineering may eventually rely on. Include only behaviour supported by authoritative documentation or retained evidence.
 
@@ -127,11 +146,11 @@ Append one subsection per completed iteration. Do not delete failed experiments;
 
 If the Spike is still Open, this section may be partial. Clearly mark unsupported or unresolved points rather than filling gaps by assumption.
 
-## 8. Remaining Uncertainty
+## 9. Remaining Uncertainty
 
 <List only uncertainties that still matter to the original Technical Question. Ordinary implementation choices belong downstream in HLD/Implementation Planning.>
 
-## 9. Final Conclusion
+## 10. Final Conclusion
 
 **Result:** `<Feasible | Not feasible | Pending>`
 
@@ -145,7 +164,7 @@ If the Spike is still Open, this section may be partial. Clearly mark unsupporte
 
 The Spike is not complete while the result is Pending. An inconclusive experiment is recorded in the Experiment Log and feeds the next iteration; it is not a terminal Spike result.
 
-## 10. Downstream Implications
+## 11. Downstream Implications
 
 - <blocked Feature/Bug Issue and required reassessment>
 - <Product Definition / Architecture Definition / POC decision required, if any>
@@ -153,7 +172,7 @@ The Spike is not complete while the result is Pending. An inconclusive experimen
 
 After the final Spike evidence is integrated, rerun `assess-change` on every blocked downstream Issue before HLD, Implementation Planning or production implementation resumes.
 
-## 11. Reproducibility
+## 12. Reproducibility
 
 Record:
 
