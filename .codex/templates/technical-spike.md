@@ -51,10 +51,10 @@ Before the first experimental hypothesis, perform a proportionate technical sear
 **Investigation depth / owner constraint:** <default proportionate Spike depth | owner-specified boundary>  
 **Sources / evidence boundary:** <official docs, repository evidence, established approaches, upstream/community evidence consulted>
 
-| Option | Approach | Evidence / rationale for inclusion | Material known limitation | Priority / status |
-| --- | --- | --- | --- | --- |
-| O1 | <candidate approach> | <why it is credible> | <known limitation / None known> | <1 — Selected / Proposed / Deprioritised / Rejected / Supported> |
-| O2 | <candidate approach> | <why it is credible> | <known limitation / None known> | <2 — Proposed / ...> |
+| Option | Approach             | Evidence / rationale for inclusion | Material known limitation       | Priority / status                                                |
+| ------ | -------------------- | ---------------------------------- | ------------------------------- | ---------------------------------------------------------------- |
+| O1     | <candidate approach> | <why it is credible>               | <known limitation / None known> | <1 — Selected / Proposed / Deprioritised / Rejected / Supported> |
+| O2     | <candidate approach> | <why it is credible>               | <known limitation / None known> | <2 — Proposed / ...>                                             |
 
 Explain the prioritisation briefly. Do not select an option solely because it was the first plausible implementation found.
 
@@ -64,9 +64,9 @@ If responsible option discovery would require a materially broader/open-ended re
 
 Maintain hypotheses for the **currently selected option**. Order them by expected information value and cost. If an option is rejected/deprioritised, preserve its completed hypotheses in the Experiment Log and return to the ranked option set.
 
-| ID  | Option | Hypothesis | Why test it | Evidence that would support/refute it | Status |
-| --- | --- | --- | --- | --- | --- |
-| H1 | O1 | <hypothesis> | <reason> | <observable evidence> | <Proposed / Approved / Running / Supported / Rejected / Superseded> |
+| ID  | Option | Hypothesis   | Why test it | Evidence that would support/refute it | Status                                                              |
+| --- | ------ | ------------ | ----------- | ------------------------------------- | ------------------------------------------------------------------- |
+| H1  | O1     | <hypothesis> | <reason>    | <observable evidence>                 | <Proposed / Approved / Running / Supported / Rejected / Superseded> |
 
 A failed hypothesis normally leads to another hypothesis within the same option only while that option remains justified. Repeated, stubborn or surprising failures trigger an option-viability checkpoint before deeper diagnostics. Create a separate Spike only when a genuinely independent technical question emerges with its own completion condition.
 
