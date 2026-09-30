@@ -146,13 +146,15 @@ export function buildRowAudit(row, result, diagnostic, matrixComplete) {
   const predicate = matrixComplete
     ? successPredicate(record, result)
     : { valid: false, category: undefined, hostClass: "unknown" };
+  const failureCategory = predicate.valid
+    ? undefined
+    : (predicate.category ?? diagnostic?.failureCategory ?? (matrixComplete ? "other" : undefined));
   return {
     ordinal: row.ordinal,
     sourceHash: safeHash(record.googleNewsUrl),
     outcome: result?.urlResolutionStatus ?? "not_run_incomplete_matrix",
     validSuccess: predicate.valid,
-    failureCategory:
-      predicate.category ?? diagnostic?.failureCategory ?? (matrixComplete ? "other" : undefined),
+    ...(failureCategory ? { failureCategory } : {}),
     publisherHostClass: predicate.valid
       ? predicate.hostClass
       : (diagnostic?.resultHostClass ?? predicate.hostClass),

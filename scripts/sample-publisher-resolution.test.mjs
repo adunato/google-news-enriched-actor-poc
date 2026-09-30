@@ -124,6 +124,47 @@ describe("publisher resolution live sample harness", () => {
     expect(serialized).not.toContain("Private snippet");
   });
 
+  it("adds failure categories only to failed complete rows", () => {
+    const row = {
+      ordinal: 1,
+      candidate: {
+        record: { googleNewsUrl: "https://news.google.com/rss/articles/sample" },
+        edition: { hl: "en-GB", gl: "GB", ceid: "GB:en-GB" },
+      },
+    };
+    const success = {
+      googleNewsUrl: row.candidate.record.googleNewsUrl,
+      urlResolved: true,
+      urlResolutionStatus: "success",
+      publisherUrl: "https://publisher.example/story",
+      publisherDomain: "publisher.example",
+    };
+
+    const successAudit = buildRowAudit(
+      row,
+      success,
+      { failureCategory: "other", requests: [] },
+      true,
+    );
+    const failedAudit = buildRowAudit(
+      row,
+      {
+        googleNewsUrl: row.candidate.record.googleNewsUrl,
+        urlResolved: false,
+        urlResolutionStatus: "failure",
+      },
+      { failureCategory: "network", requests: [] },
+      true,
+    );
+    const incompleteAudit = buildRowAudit(row, undefined, undefined, false);
+
+    expect(successAudit.validSuccess).toBe(true);
+    expect(successAudit).not.toHaveProperty("failureCategory");
+    expect(failedAudit.failureCategory).toBe("network");
+    expect(incompleteAudit.outcome).toBe("not_run_incomplete_matrix");
+    expect(incompleteAudit).not.toHaveProperty("failureCategory");
+  });
+
   it("sums failure categories across cells", () => {
     expect(
       aggregateFailures([
