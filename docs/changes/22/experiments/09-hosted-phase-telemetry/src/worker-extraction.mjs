@@ -33,13 +33,16 @@ export function runWorkerAttempt(html, url, {
 } = {}) {
   return new Promise((resolve) => {
     const startedAt = now();
+    const deadlineAt = startedAt + Math.max(0, deadlineMs);
     let worker;
     try {
       worker = new WorkerClass(new URL("./extract-worker.mjs", import.meta.url), {
         workerData: { html, url, ...(extractorSpecifier ? { extractorSpecifier } : {}) },
       });
     } catch {
-      resolve(fixedOutcome("worker_error", "startup", {}, "error"));
+      resolve(now() >= deadlineAt
+        ? fixedOutcome("timeout", "startup", {})
+        : fixedOutcome("worker_error", "startup", {}, "error"));
       return;
     }
 
@@ -50,9 +53,18 @@ export function runWorkerAttempt(html, url, {
     let resultReceivedAt = null;
     let extractCompleteReceivedAt = null;
     let pendingOutcome = null;
-    let pendingIsError = false;
     let protocolError = false;
     let timer;
+
+    const timeoutOutcome = () => pendingOutcome
+      ? fixedOutcome("worker_exit_timeout", "worker_exit", timing, pendingOutcome.proxyStatus)
+      : fixedOutcome("timeout", phaseForLast(lastPhase), timing);
+
+    const expireIfLate = () => {
+      if (now() < deadlineAt) return false;
+      void finish(timeoutOutcome());
+      return true;
+    };
 
     const finish = async (outcome, terminate = true) => {
       if (settled) return;
@@ -69,16 +81,11 @@ export function runWorkerAttempt(html, url, {
       void finish(fixedOutcome("protocol_error", "protocol", timing, "error"));
     };
 
-    timer = setTimeout(() => {
-      const stage = phaseForLast(lastPhase);
-      const result = pendingOutcome
-        ? fixedOutcome("worker_exit_timeout", "worker_exit", timing, pendingOutcome.proxyStatus)
-        : fixedOutcome("timeout", stage, timing);
-      void finish(result);
-    }, Math.max(0, deadlineMs - (now() - startedAt)));
+    timer = setTimeout(() => void finish(timeoutOutcome()), Math.max(0, deadlineAt - now()));
 
     worker.on("message", (message) => {
       if (settled) return;
+      if (expireIfLate()) return;
       if (!message || typeof message !== "object" || Array.isArray(message)) return protocolFailure();
 
       if (message.kind === "phase") {
@@ -118,7 +125,6 @@ export function runWorkerAttempt(html, url, {
           timing,
           message.errorClass === "oversize_result" ? "oversize" : "error",
         );
-        pendingIsError = true;
         return;
       }
 
@@ -132,14 +138,12 @@ export function runWorkerAttempt(html, url, {
         try { proxyStatus = classify(message.content).status; } catch {
           timing.resultDeliveryMs = Number((now() - (extractCompleteReceivedAt ?? resultAt)).toFixed(3));
           resultReceivedAt = now();
-          pendingIsError = true;
           pendingOutcome = fixedOutcome("worker_error", "result_delivery", timing, "error");
           return;
         }
         timing.resultDeliveryMs = Number((now() - (extractCompleteReceivedAt ?? resultAt)).toFixed(3));
         resultReceivedAt = now();
-        pendingIsError = proxyStatus === "error";
-        pendingOutcome = pendingIsError
+        pendingOutcome = proxyStatus === "error"
           ? fixedOutcome("worker_error", "result_delivery", timing, "error")
           : fixedOutcome(proxyStatus, "worker_exit", timing, proxyStatus);
         return;
@@ -149,20 +153,19 @@ export function runWorkerAttempt(html, url, {
     });
 
     worker.on("error", () => {
-      if (!settled) void finish(fixedOutcome("worker_error", phaseForLast(lastPhase), timing, "error"));
+      if (settled || expireIfLate()) return;
+      void finish(fixedOutcome("worker_error", pendingOutcome ? "worker_exit" : phaseForLast(lastPhase), timing, "error"));
     });
     worker.on("messageerror", () => {
-      if (!settled) void finish(fixedOutcome("message_error", phaseForLast(lastPhase), timing, "error"));
+      if (settled || expireIfLate()) return;
+      void finish(fixedOutcome("message_error", pendingOutcome ? "worker_exit" : phaseForLast(lastPhase), timing, "error"));
     });
     worker.on("exit", (code) => {
       if (settled) return;
+      if (expireIfLate()) return;
       if (protocolError) return void finish(fixedOutcome("protocol_error", "protocol", timing, "error"), false);
-      if (!pendingOutcome || code !== 0) {
-        const outcome = pendingIsError && code === 0
-          ? pendingOutcome
-          : fixedOutcome("worker_exit_error", "worker_exit", timing, "error");
-        return void finish(outcome, false);
-      }
+      if (!pendingOutcome) return void finish(fixedOutcome("worker_exit_error", "worker_exit", timing, "error"), false);
+      if (code !== 0) return void finish(fixedOutcome("worker_exit_error", "worker_exit", timing, "error"), false);
       if (resultReceivedAt !== null)
         timing.workerExitMs = Number((now() - resultReceivedAt).toFixed(3));
       void finish(pendingOutcome, false);

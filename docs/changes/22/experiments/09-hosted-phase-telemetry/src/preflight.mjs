@@ -193,6 +193,39 @@ try {
     await new Promise((resolve) => setTimeout(resolve, 15));
     assert.equal(WorkerClass.terminateCount, 1);
   });
+  await check("construction_delay_late_message_deadline", async () => {
+    class BlockedConstructorWorker extends EventEmitter {
+      static terminateCount = 0;
+      constructor() {
+        super();
+        for (const item of successful) {
+          const emit = () => this.emit(item.type, item.value);
+          if (item.delayMs) setTimeout(emit, item.delayMs);
+          else queueMicrotask(emit);
+        }
+        Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 30);
+      }
+      async terminate() { BlockedConstructorWorker.terminateCount += 1; return 1; }
+    }
+    const got = await runWorkerAttempt("blocked-construction", "https://fixture.invalid/a", {
+      WorkerClass: BlockedConstructorWorker, deadlineMs: 10, classify: () => ({ status: "quality_rejected" }),
+    });
+    assert.equal(got.status, "timeout"); assert.equal(got.terminalPhase, "startup");
+    assert.equal(BlockedConstructorWorker.terminateCount, 1);
+  });
+  await check("result_then_worker_terminal_precedence", async () => {
+    const run = async (key, trailing, expectedStatus, expectedPhase) => {
+      const got = await runWorkerAttempt(key, "https://fixture.invalid/a", {
+        WorkerClass: fakeClass({ [key]: [...fullPhases, event("message", resultMessage), ...trailing] }),
+        deadlineMs: 100, classify: () => ({ status: "quality_rejected" }),
+      });
+      assert.equal(got.status, expectedStatus); assert.equal(got.terminalPhase, expectedPhase);
+    };
+    await run("result_error_after", [event("error", new Error(sentinel)), event("exit", 0)], "worker_error", "worker_exit");
+    await run("result_messageerror_after", [event("messageerror", new Error(sentinel)), event("exit", 0)], "message_error", "worker_exit");
+    await run("result_nonzero_exit_after", [event("exit", 1)], "worker_exit_error", "worker_exit");
+    await run("result_duplicate_phase_after", [phase("worker_ready"), event("exit", 0)], "protocol_error", "protocol");
+  });
 
   await check("real_extractor_semantic_smoke", async () => {
     const html = `<article><h1>Fixture heading</h1><p>${"Synthetic prose held only in memory. ".repeat(100)}</p></article>`;
@@ -257,6 +290,15 @@ try {
     await assert.rejects(async () => persistAggregateOnly(observationsFromProbe(cohort.rows, cohort.resolutions.slice(0, 99), cohort.checkedRows), async () => { sinks += 1; }));
     assert.equal(sinks, 0);
   });
+  await check("missing_checked_candidate_zero_sink", async () => {
+    const cohort = makeCohort(); cohort.checkedRows.pop();
+    let sinks = 0;
+    await assert.rejects(async () => {
+      const observations = observationsFromProbe(cohort.rows, cohort.resolutions, cohort.checkedRows);
+      await persistAggregateOnly(observations, async () => { sinks += 1; });
+    }, /checked_candidate_results_incomplete/);
+    assert.equal(sinks, 0);
+  });
   await check("inconsistent_terminal_zero_sink", async () => {
     const cohort = makeCohort();
     cohort.checkedRows[0].extraction.terminalPhase = "not_attempted";
@@ -273,7 +315,7 @@ try {
     assert.equal(sinks, 0);
   });
 
-  assert.equal(checks.length, 24);
+  assert.equal(checks.length, 27);
   assert.equal(networkAttempts, 0);
   assert.ok(peakRssBytes <= 256 * 1024 * 1024);
   const elapsedMs = Date.now() - startedAt;
@@ -298,7 +340,7 @@ try {
     futureRunOptionsValidShapeChecked: true,
     sourceManifestSha256,
     preflightBaseCommit,
-    plannedCheckCount: 24,
+    plannedCheckCount: 27,
     completedCheckCount: checks.length,
     totalElapsedMs: elapsedMs,
     totalDeadlineMs: CHECK_LIMIT_MS,
@@ -311,7 +353,7 @@ try {
   };
   assert.ok(!JSON.stringify(report).includes(sentinel));
   await writeFile(join(experimentDir, "preflight-report.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8");
-  console.log(`I9 offline preflight passed: 24 checks, ${elapsedMs}ms, zero network attempts, sink gating verified.`);
+  console.log(`I9 offline preflight passed: 27 checks, ${elapsedMs}ms, zero network attempts, sink gating verified.`);
 } finally {
   clearInterval(rssSampler);
   globalThis.fetch = originals.fetch;

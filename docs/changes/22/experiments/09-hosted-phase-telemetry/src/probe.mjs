@@ -696,8 +696,8 @@ export async function runActorSafely({
     await init();
     initialized = true;
     const aggregate = await execute();
-    logComplete(aggregate);
     succeeded = true;
+    try { logComplete(aggregate); } catch { /* the aggregate is already persisted; logging cannot make it retryable */ }
   } catch {
     logError("iteration9_failed");
   } finally {
@@ -706,7 +706,6 @@ export async function runActorSafely({
         await exit();
       } catch {
         logError("iteration9_exit_failed");
-        succeeded = false;
       }
     }
   }

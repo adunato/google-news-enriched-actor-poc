@@ -7,14 +7,14 @@
   "baselinePackageLockSha256": "7853c09187e1687763b4678f02a7aa516e86737f1149f52b200185854323f370",
   "transitiveLockRecordsMatch": true,
   "futureRunOptionsValidShapeChecked": true,
-  "sourceManifestSha256": "dc3c4f70101adae71dbbf8dffd8d825a230fd6637b487e5d8902049894b0cfd3",
-  "preflightBaseCommit": "196ec79e2255b5c10f0eefe1e2398b46256b6a80",
-  "plannedCheckCount": 24,
-  "completedCheckCount": 24,
-  "totalElapsedMs": 803,
+  "sourceManifestSha256": "21707378d1197e9fd34e848cbc6ed393ec5173edc2d06bd17cbf39b40eb9439e",
+  "preflightBaseCommit": "4254edae108ecf0fb7d674ebb3d50058fd948dda",
+  "plannedCheckCount": 27,
+  "completedCheckCount": 27,
+  "totalElapsedMs": 922,
   "totalDeadlineMs": 90000,
   "maxRssBytes": 268435456,
-  "peakRssBytes": 76910592,
+  "peakRssBytes": 74076160,
   "configuredHostedWorkerDeadlineMs": 5000,
   "networkAttempts": 0,
   "aggregateSinkChecks": {
@@ -97,6 +97,14 @@
       "status": "passed"
     },
     {
+      "id": "construction_delay_late_message_deadline",
+      "status": "passed"
+    },
+    {
+      "id": "result_then_worker_terminal_precedence",
+      "status": "passed"
+    },
+    {
       "id": "real_extractor_semantic_smoke",
       "status": "passed"
     },
@@ -110,6 +118,10 @@
     },
     {
       "id": "partial_cohort_zero_sink",
+      "status": "passed"
+    },
+    {
+      "id": "missing_checked_candidate_zero_sink",
       "status": "passed"
     },
     {

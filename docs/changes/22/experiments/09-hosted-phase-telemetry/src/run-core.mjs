@@ -32,11 +32,17 @@ function fetchClass(outcome, hasCandidate, robots) {
 }
 
 export function observationsFromProbe(rows, resolutions, checkedRows) {
-  if (!Array.isArray(rows) || rows.length !== 100 || !Array.isArray(resolutions) || resolutions.length !== 100)
+  if (!Array.isArray(rows) || rows.length !== 100 || !Array.isArray(resolutions) || resolutions.length !== 100 || !Array.isArray(checkedRows))
     throw new Error("probe_cohort_incomplete");
   const rowIds = new Set(rows.map((row) => row?.rowId));
-  if (rowIds.size !== 100 || rowIds.has(undefined) || checkedRows.some((row) => !rowIds.has(row.rowId)))
+  if (rowIds.size !== 100 || rowIds.has(undefined))
     throw new Error("probe_row_identity_inconsistent");
+  const expectedCheckedIds = new Set(rows.flatMap((row, index) => resolutions[index]?.candidateUrl ? [row.rowId] : []));
+  const checkedIds = checkedRows.map((row) => row?.rowId);
+  if (checkedIds.some((id) => !rowIds.has(id)) || new Set(checkedIds).size !== checkedIds.length)
+    throw new Error("checked_row_identity_inconsistent");
+  if (checkedIds.length !== expectedCheckedIds.size || checkedIds.some((id) => !expectedCheckedIds.has(id)))
+    throw new Error("checked_candidate_results_incomplete");
   const rowsPerCell = new Map();
   for (const row of rows) rowsPerCell.set(row.cell, (rowsPerCell.get(row.cell) ?? 0) + 1);
   if (rowsPerCell.size !== 10 || [...rowsPerCell.values()].some((count) => count !== 10))
