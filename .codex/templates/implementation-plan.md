@@ -51,6 +51,8 @@
 
 The strategy must prove every material acceptance criterion at the lowest level that can actually establish the claimed behaviour. Mocked tests may prove local logic and failure handling, but they do not prove a material external/runtime integration works.
 
+For required acceptance gates, use `fail -> diagnose -> relevant correction -> retest`. A failed candidate remains `Hold/Fail`; repeating the unchanged candidate cannot supersede that result. Record the failure cause and the acceptance-relevant change that makes the corrected candidate eligible for retest.
+
 ### Acceptance Evidence Matrix
 
 | Acceptance criterion / behaviour | Risk or boundary                   | Test level                                              | Environment / data                   | Pass evidence                  |
