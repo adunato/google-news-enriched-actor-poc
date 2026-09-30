@@ -45,12 +45,15 @@ For a Technical Spike, capture the stable parts of the investigation:
 - the Required Outcome that must be known well enough for downstream engineering to proceed;
 - starting evidence already established;
 - approved constraints and prohibited techniques;
-- initial investigation directions/hypotheses worth testing;
+- the intended investigation boundary, including any owner instruction to keep the Spike to a lightweight/proportionate search;
+- known leads, sources or candidate approaches worth including in the initial option scan, without preselecting a solution or committing hypotheses;
 - completion criteria;
 - blocked downstream Feature/Bug Issue(s);
 - the canonical living artifact path `docs/changes/<issue>/technical-spike.md`.
 
-Do **not** try to design every experiment in the Issue body. The Issue is the stable problem statement. The evolving investigation design, current iteration, experiment backlog, experiment log, and accumulating technical specification belong in `technical-spike.md`.
+Do **not** perform or pre-empt the option selection in the Issue body. The Issue is the stable problem statement and investigation boundary. The proportionate option scan, ranked option set, hypotheses, current iteration, experiment backlog/log and accumulating technical specification belong in `technical-spike.md`.
+
+A Spike is not a substitute for the SideGig Research Methodology. If refinement shows that answering the request would require broad/open-ended domain, provider, commercial or market research rather than a bounded technical investigation tied to the downstream issue, surface that boundary for an owner decision instead of silently expanding the Spike.
 
 A Technical Spike must remain open until its original Technical Question is resolved with a supported `Feasible` or `Not feasible` conclusion. A failed or inconclusive experiment is not a new Issue and does not complete the Spike.
 

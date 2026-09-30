@@ -23,6 +23,10 @@ If Feature/Bug validation exposes a material product, architecture, scope, desig
 
 ## Technical Spike iteration validation
 
+Before validating the first experimental iteration, confirm the living Spike artifact contains a proportionate option scan, a materially credible ranked option set, and a reasoned selection of the current option. This is a bounded technical search, not an exhaustive research requirement.
+
+When repeated, stubborn or surprising failures materially question the selected option, validation must also confirm that the proposed next step includes an option-viability checkpoint rather than automatically deepening candidate-specific diagnostics. The checkpoint should use proportionate upstream/community evidence to distinguish environment-specific failure from candidate-level weakness and should explicitly decide whether to continue, deprioritise or reject the option.
+
 An individual Spike iteration is valid when:
 
 - the approved hypothesis/experiment was executed within its stated bounds;
@@ -30,8 +34,8 @@ An individual Spike iteration is valid when:
 - observations and inference are clearly separated;
 - retained evidence supports the recorded experiment result;
 - limitations/variability are explicit;
-- the living Spike document has been updated consistently;
-- the proposed next iteration follows from the evidence.
+- the living Spike document has been updated consistently, including option status where material;
+- the proposed next iteration follows from the evidence and does not continue a materially doubtful option without the required viability reassessment.
 
 Classify an experiment result as `Supported`, `Rejected`, or `Inconclusive`.
 
@@ -47,7 +51,8 @@ A Spike may be validated as ready to close only when:
 
 - the original Technical Question is resolved;
 - the Required Outcome is either demonstrated or shown not feasible within the approved constraints;
-- material hypotheses/alternatives were investigated proportionately;
+- the initial option scan was proportionate to the bounded question and material credible options were prioritised explicitly;
+- material selected options/hypotheses were investigated proportionately;
 - the Supported Technical Specification contains only evidence-backed behaviour;
 - representative variability/limitations are explicit;
 - the final conclusion is `Feasible` or `Not feasible`;
