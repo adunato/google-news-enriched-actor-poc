@@ -1,8 +1,93 @@
 # Implementation Plan: Publisher URL Resolution
 
-## Addendum: Early Feasibility Gate and Executable Sample (2026-09-28)
+**Artifact ID:** `implementation-plan-4-publisher-url-resolution`<br>
+**Status:** `Approved`<br>
+**Owner:** Project owner<br>
+**Created / updated:** `2026-09-30`<br>
+**GitHub Issue:** [#4](https://github.com/adunato/google-news-enriched-actor-poc/issues/4)<br>
+**HLD reference:** `docs/changes/4/hld.md` — `hld-4-publisher-url-resolution`<br>
+**Technical Spike:** Issue [#14](https://github.com/adunato/google-news-enriched-actor-poc/issues/14), Feasible conclusion integrated by PR #21; `docs/changes/14/technical-spike.md`<br>
+**Context references:** `docs/product.md` PR-006, PR-007, PR-010, PR-011, PR-013; `docs/architecture.md` Sections 3–5 and 8–9; `docs/changes/4/live-sample.json`
 
-The Issue #4 acceptance criterion now requires **at least 95 valid publisher URLs from exactly 100 retained rows** across the fixed matrix below. This live gate is independent of mocked tests and CI. Do not treat the earlier three-link BBC/Telegraph/Reuters smoke as representative evidence.
+## 1. Implementation Summary
+
+Carry internal Google News edition context from RSS discovery through deduplication and parameter-page acquisition. Use the fixed H5-tested `US:en` context for every `Fbv4je` / `garturlreq` RPC; do not derive RPC context from RSS edition. Preserve the existing public row contract, ordering, fail-soft behavior, and request bounds. The hosted known-positive `GB:en` q1 RPC result is limited corroboration and does not establish a general locale mapping. The mandatory fixed 100-row matrix remains required. Issue #4 remains unaccepted until the sample retains all 100 rows and yields at least 95 valid publisher URLs.
+
+The independent publisher accessibility/title-confirmation evidence must be reported separately from resolver success. Do not fetch publisher pages as part of this work or attempt the access techniques assigned to Spike #22.
+
+## 2. HLD Reference
+
+The approved HLD `hld-4-publisher-url-resolution` constrains implementation to the article-ID-bound marker/RPC mechanism and owner-approved H5 success rule. Markers must match the source row's article ID; the RPC uses fixed `US:en` context for every row and must return a parseable non-Google HTTP(S) URL. Preserve the input Google News URL. Carry internal `{hl, gl, ceid}` from RSS request to parameter-page request and strip it before constructing the public result row. Record the actual RPC context and an outside-tested-GB/US-English flag in internal diagnostics. Treat consent/interstitial outcomes as bounded failures without cookies, browser rendering, proxies, or access workarounds. Keep the 10-second row deadline, 2 MiB response cap, five-redirect maximum, and concurrency cap of four.
+
+## 3. Repository Assessment
+
+- `src/google-news.ts` owns RSS retrieval, per-query limiting, and deduplication. It must retain the edition associated with each retrieved record without adding locale fields to the public discovery record.
+- `src/publisher-url.ts` owns the bounded resolver, edition-specific marker/RPC request and parsing, row status, and injectable Fetch seam.
+- `src/index.ts` passes discovery candidates to the resolver and hands flattened result rows, with no edition context, to the current processing seam.
+- `src/publisher-url.test.ts` covers resolver behavior; `src/google-news.test.ts` and `src/index.test.ts` cover discovery and orchestration behavior.
+- `scripts/sample-publisher-resolution.mjs` and the retained `docs/changes/4/live-sample.json` provide the live-sample harness/evidence path; the harness must pass candidates including edition context to the resolver and continue auditing only the nested discovery record and flattened result.
+- The current retained live sample has 100 rows but 0 valid resolutions because all requests redirect to a consent/interstitial host before marker retrieval. It is a failed acceptance sample, not evidence against the article-ID marker/RPC path.
+- `npm run validate` is the local quality contract. Dataset delivery is not part of this Issue.
+
+## 4. Implementation Approach
+
+### 4.1 Internal edition context
+
+Define an internal `GoogleNewsEdition` containing `hl`, `gl`, and `ceid`, and pair it with each unchanged `GoogleNewsArticleRecord` in an internal candidate type. Derive the context from the exact `ActorInput` values used to build that RSS request. Carry the candidate through URL-based deduplication so the first retained record keeps its associated edition. Do not parse edition from `googleNewsUrl` or guess from `oc=5`.
+
+### 4.2 Resolver acquisition and public row contract
+
+Change single-row and batch resolver interfaces to accept candidates. Construct the explicit article-ID parameter-page request from the candidate edition. Keep `US:en` as the fixed RPC context for every candidate, replacing the unproven attempt to pass the candidate's RSS `ceid`. Preserve strict marker/article-ID matching, the source-backed `Fbv4je` / `garturlreq` request, and framed `garturlres` parsing. Validate result scheme and host, derive `publisherDomain` from the lowercased hostname, and maintain one success/failure/not-requested outcome per input row. Build results from the nested record only; do not spread or serialize edition context into the public result. Internal diagnostics record RPC context and whether the source edition is outside tested GB/US English. Keep diagnostics bounded and outside the public schema.
+
+### 4.3 Failure isolation and regression coverage
+
+Keep every network, redirect, timeout, metadata, RPC, and result-validation failure local to its row. Missing edition context is a row-level failure, with no guessed fallback. Verify an interstitial is classified and returned as failure without consent handling. Verify the mapper preserves row order and continues after a failure. Preserve zero resolver calls when resolution is disabled and ensure this path does not expose edition metadata either.
+
+### 4.4 Live evidence and architecture reconciliation
+
+Run the exact Issue #4 matrix against the candidate commit after local validation. Record the commit SHA, UTC collection time, exact inputs/configuration, Node/runtime, all ten cell counts, total denominator, valid successes, failures by bounded category, and request metrics. The gate passes only at 100 retained rows and >=95 valid successes. Report publisher-page title confirmations/unverifiable rows separately using existing evidence; no publisher-page requests are needed for the H5 resolution rule. Update `docs/architecture.md` after the implemented acquisition path is established, including the undocumented endpoint maintenance risk. Do not change `docs/product.md` unless the implementation reveals a product behavior change requiring a separate approved decision.
+
+## 5. Implementation Sequence
+
+1. Define the internal edition/candidate types and make discovery attach exact RSS `hl`/`gl`/`ceid` values; ensure first-seen URL deduplication retains the whole candidate.
+2. Update resolver signatures and use the carried edition for parameter-page context while keeping RPC context fixed at `US:en`. Keep returned success/failure/not-requested rows flattened to the existing public schema.
+3. Update `src/index.ts` and the live sample harness for candidate flow. Update discovery, resolver, and orchestration tests for GB/US context, dedupe association, disabled behavior, failure isolation, and no edition leakage.
+4. Run the repository integrity checks and correct in-scope defects.
+5. Execute the fixed 100-row live sample on the exact candidate commit. If incomplete or below 95/100, record the evidence and keep #4 on hold; do not substitute rows or lower the threshold.
+6. Reconcile `docs/architecture.md` with the implemented edition-aware acquisition path and update the durable evidence record with the final live outcome.
+7. Hand off the implementation, integrity results, architecture diff, and live evidence for Issue #4 validation. Do not treat hosted known-positive evidence or mocked checks as a live matrix pass.
+
+## 6. Development Integrity Checks
+
+- Run `npm run validate` (format check, lint, typecheck, unit tests, and build).
+- Review the resolver and diagnostics for the approved bounds and ensure no response body, cookie, credential, or article text is retained in reports.
+- Check that `docs/architecture.md` reflects implemented behavior and still distinguishes resolution from publisher access and dataset delivery.
+- Run `git diff --check` on the change before handoff.
+
+## 7. Test and Validation Strategy
+
+### Acceptance Evidence Matrix
+
+| Acceptance criterion / behaviour                            | Risk or boundary                                                                      | Test level                                   | Environment / data                               | Pass evidence                                                                                                                                        |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Every eligible retained row is attempted when enabled       | Orchestration may skip or misassociate rows                                           | Unit/integration plus live matrix            | Mocked records; fixed live sample                | One ordered outcome per eligible row; exact 100 retained live rows                                                                                   |
+| At least 95 valid publisher URLs from 100 rows              | Current Google acquisition/RPC behavior can change or be blocked                      | Mandatory representative live evidence       | Five queries × GB/US English × 10 rows per cell  | All ten cells contain 10 rows; at least 95 rows meet the Issue/HLD validity rule                                                                     |
+| Success status, URL and domain agree                        | Parsing may accept invalid scheme/host or mismatched metadata                         | Unit/contract tests plus live classification | Mock RPC responses; live outcomes                | `urlResolved=true`, success status, matching article-ID marker, parseable HTTP(S) non-Google URL, lowercased parsed hostname                         |
+| Failure preserves Google News URL and does not fail the run | HTTP, redirect, marker, timeout, or RPC failure may leak across rows                  | Unit/integration tests                       | Injected Fetch and adjacent success/failure rows | Failed row preserves provenance and explicit failure; neighboring rows complete; run continues                                                       |
+| Disabled mode makes no resolver request                     | Disabled input might still invoke external HTTP                                       | Unit test with Fetch spy                     | Mocked                                           | `not_requested` outcome on each row and zero resolver calls                                                                                          |
+| Correct discovery edition is used through parameter-page    | Lost or guessed locale context can change marker acquisition                          | Unit/integration tests for GB and US         | Mocked RSS records and Fetch                     | Each candidate carries exact RSS `hl`/`gl`/`ceid`; parameter page uses that context; duplicates retain the first candidate's context                 |
+| RPC context matches the evidence-backed design              | RSS locale might be an unproven RPC locale mapping                                    | Unit/contract tests                          | Mocked Fetch                                     | Every RPC uses fixed `US:en`; diagnostics record it and flag editions outside GB/US English; no claim of general locale compatibility                |
+| Edition context stays internal                              | Candidate wrapper or object spread can leak internal locale data into output          | Contract tests at resolver/orchestration     | Mocked candidates, enabled and disabled paths    | Public result rows contain original discovery/enrichment fields and no `edition` or candidate wrapper                                                |
+| HTTP-first bounds and excluded methods are preserved        | Drift could add excessive work or excluded access mechanisms                          | Unit checks and implementation review        | Mocked requests plus code review                 | 10-second deadline, 2 MiB response cap, five redirects, concurrency four; no browser, proxy, paid service, paywall bypass, or publisher-body request |
+| Publisher access/title evidence is represented separately   | URL resolution could be conflated with page accessibility or exact-title confirmation | Evidence review                              | Integrated #14/#18 reports and live manifest     | Existing 79 confirmed / 21 unverifiable / 0 confirmed mismatch distinction retained; no claim of 100 independent title confirmations                 |
+
+### Bounded Residual Feasibility Gates
+
+**Bounded evidence gate:** Retained H5 evidence from the mixed GB/US 100-row matrix used RPC context `US:en` and produced 100/100 mechanism-level candidates. A hosted q1 check also succeeded for `GB:en`, but does not establish a general RSS-edition-to-RPC mapping. Therefore implementation uses the fixed H5-tested `US:en` RPC context on every row and marks non-GB/US-English editions in internal diagnostics as outside tested locale coverage. The exact Issue #4 100-row gate remains mandatory. During implementation, any consent/interstitial response is a row failure under existing bounds; do not add cookies, browser interaction, proxying, publisher access probes, or another resolver family.
+
+### Representative End-to-End / Live Coverage
+
+After implementation and local validation, run the same frozen matrix used for every #4 acceptance attempt. Each edition/query cell must retain the edition attached to the exact RSS request that produced its records:
 
 | Query        | GB (`en-GB`, `GB`) | US (`en-US`, `US`) |
 | ------------ | -----------------: | -----------------: |
@@ -12,94 +97,47 @@ The Issue #4 acceptance criterion now requires **at least 95 valid publisher URL
 | `technology` |                 10 |                 10 |
 | `health`     |                 10 |                 10 |
 
-### Procedure
+Use `maxItemsPerQuery=10`, `dedupe=false`, `resolvePublisherUrls=true`, and one shared date-range/configuration for the run. Record accepted inputs and collection UTC time. Do not replace a missing cell row with another query/edition. A valid success requires `urlResolved=true`, explicit success status, preserved `googleNewsUrl`, a parseable HTTP(S) `publisherUrl` on a non-Google host, and `publisherDomain` equal to the parsed lowercased hostname. Consent/interstitial, malformed, ambiguous, Google-owned, or asset destinations fail. Pass only with denominator 100 and at least 95 successes.
 
-1. Freeze the matrix above before the first run. For each edition, call the existing retrieval export with the five queries, `maxItemsPerQuery=10`, `dedupe=false`, resolution enabled, and the same date range for the full run. Record the exact accepted input values and collection UTC time. Require ten retained rows in each of the ten cells; do not replace missing rows from another cell.
-2. Resolve the 100 collected rows through the existing resolver export in original order. Use the resolver's current 10-second per-row deadline, 2 MiB per-response cap, five-redirect limit, and concurrency cap of four. The harness calls retrieval/resolution exports directly; it does not invoke Actor persistence or write to a dataset (Issue #6 scope).
-3. Before this run, add only the internal diagnostic visibility needed to classify failures if it cannot be captured reliably at the injected Fetch seam. Keep it out of the public row fields. Record per row/cell outcome, resolution stage, bounded failure category, response status/host class, and elapsed time/bytes where available. Never retain response bodies or article text in the report.
-4. Count a success only if `urlResolved=true`, status is success, `googleNewsUrl` remains present, `publisherUrl` parses as HTTP(S) and is not a Google-owned, consent, captcha, or interstitial target, and `publisherDomain` equals the lowercased parsed hostname. Treat malformed, unresolved, ambiguous, Google-host, and consent/interstitial outcomes as failures.
-5. Record a compact run manifest with commit SHA, UTC time, Node version, exact query/locale/configuration, per-cell retained counts, total denominator, successful count, failures by cell/category, and bounded request metrics. Keep row-level evidence sufficient to audit classification without including raw HTML/RPC bodies; attach a durable summary under `docs/changes/4/`.
-6. If fewer than 100 rows are available, any cell is incomplete, or valid successes are below 95, the gate fails. Keep Issue #4 and PR #11 draft/on hold. Use the measured failure categories to make the smallest HTTP-first correction, add focused regression coverage, then rerun the **same matrix** against the new exact commit. If the gate passes, record the evidence and continue normal validation; do not merge or promote as part of this gate.
+Publisher accessibility and title confirmation are separate reporting dimensions. Use the retained #18 evidence (79 title-confirmed, 21 unverifiable, zero confirmed mismatches) as contextual evidence; do not fetch publisher pages or infer that a URL-resolution pass proves the publisher is currently accessible. If no independent confirmation evidence is collected during this run, state that plainly.
 
-This sample is safe to run before an algorithm change. The present implementation and green CI do not prove current Google News compatibility, but no evidence yet justifies changing the resolver strategy before measuring the matrix. Measurement-only diagnostic instrumentation is permitted; dataset/public-schema work is not. If the current implementation returns a generic failure without a classifiable stage, add an internal diagnostic callback/result that does not alter the public row shape, then run the sample.
+### Regression and Edge Coverage
 
-### Failure Categories
+- RSS request construction and returned candidates preserve exact `hl`, `gl`, and `ceid`; the explicit parameter-page URL uses that candidate edition.
+- Every decoder RPC uses fixed `US:en` regardless of candidate edition; diagnostics report this context and flag source editions outside GB/US English.
+- URL-based deduplication keeps the first retained candidate intact, including its edition.
+- Marker acceptance requires exact source article-ID agreement; missing and mismatched markers fail before RPC.
+- Correct `Fbv4je` form key/body handling and valid framed `garturlres` response produce a validated success.
+- Consent/interstitial redirect, bad status, malformed response, timeout, network error, redirect limit, oversized response, Google-owned destination, and invalid scheme produce row failure with original URL preserved.
+- One failed row beside successful rows does not change output count/order or block completion.
+- Disabled resolution makes zero Fetch calls, emits `not_requested`, and does not leak edition context.
+- Both successful and failed resolution outputs omit internal edition data and preserve the established public row shape.
+- Bounded concurrency and request deadline/response caps remain enforced.
 
-Use at least: `consent_or_interstitial`, `invalid_publisher_url`, `google_host`, `metadata_missing_or_mismatch`, `rpc_http_error`, `rpc_parse_or_result_error`, `timeout`, `network`, `redirect_limit`, and `other`. Record HTTP status and host class when observed. A category is diagnostic evidence; it does not make the row successful.
+## 8. Open Implementation Questions
 
-### Gate Status
+No material design question remains. Retained hosted known-positive evidence covers one query with both GB and US RPC locales; the broader mixed-edition evidence supports fixed `US:en` as best effort, not a general mapping. The internal edition context is used for RSS/parameter-page requests. The full 100-row live sample remains a mandatory acceptance gate. An incomplete/sub-threshold sample keeps Issue #4 on hold and requires evidence-based reassessment; it does not permit lowering the acceptance criterion or extending the work into consent circumvention or publisher access.
 
-The required matrix ran from clean commit `7c8780ec1686bfb5c250ca98d7f69a1c54032208` at `2026-09-28T06:57:21.690Z`. It retained 100/100 rows (10 in every cell) and produced 0 valid publisher URLs; all 100 failures were classified as `consent_or_interstitial`. At the `google_page` stage, each request returned HTTP 302 to a consent/interstitial host before marker retrieval or RPC. The sample is recorded in `docs/changes/4/live-sample.json`. The gate is **hold** because the threshold is at least 95/100; do not treat mocked success or automated validation as a live pass. The next action is to run from an authorized validation environment that can reach Google News without this interstitial, or obtain approval for an alternate HTTP-first resolution method, then rerun the same matrix against the exact clean commit.
+## 9. Low-Level Design Decision
 
-## Implementation Summary
+**LLD required:** `Yes`
 
-Add a native Fetch based publisher resolver for each retained Google News record, preserve all discovery data, and integrate row-level success/failure/not-requested outcomes into the existing processing flow.
+### Rationale
 
-## HLD Reference
+The internal edition context crosses discovery/deduplication, resolver request construction, and orchestration/public-row projection. Keeping it beside the record without changing the stable output schema requires explicit file-level types, function signatures, first-seen deduplication behavior, and a projection/leak invariant. The LLD records those coupled responsibilities and tests.
 
-`docs/changes/4/hld.md` — required. It defines the row contract, decoder flow, limits, and fail-soft invariants.
+## 10. Implementation Checklist
 
-## Repository Assessment
+- [ ] Carry internal edition context through discovery, deduplication, and resolver calls
+- [ ] Use edition context in parameter-page and RPC construction without public-row leakage
+- [ ] Add/update deterministic GB/US, dedupe, disabled, failure-isolation, and projection coverage
+- [ ] Run `npm run validate` and `git diff --check`
+- [ ] Run the exact live 100-row matrix on the candidate commit
+- [ ] Record live outcome, including explicit hold if fewer than 100 rows or fewer than 95 valid successes
+- [ ] Reconcile `docs/architecture.md` and prepare validation handoff
 
-`src/input.ts` already validates `resolvePublisherUrls` and defaults it to true. `src/google-news.ts` returns discovery records and has an injectable Fetch seam, a 10 second request timeout, a 2 MiB bounded reader, and ordered query processing. `src/index.ts` retrieves records then invokes the current logging processor. Existing tests cover input and RSS retrieval but not publisher resolution. `package.json` exposes `vitest run` and `npm run validate` (format, lint, typecheck, tests, build).
+### Approval
 
-## Implementation Approach
-
-Add an enriched record type and resolver module. Keep single-row request/parse failures local; use an ordered bounded mapper for retained records. Disabled mode creates not-requested outcomes without invoking Fetch. Enabled mode first validates the Google News URL, handles bounded redirects, then uses article ID/signature/timestamp metadata and the source-backed `Fbv4je` request when the response remains on Google News. A successful result must be an HTTP(S) URL outside the Google News host. Do not fetch publisher bodies or expose unapproved failure-reason fields.
-
-## Implementation Sequence
-
-1. Add resolver types and pure helpers for URL validation, page marker extraction, `f.req` construction, and framed decoder response parsing.
-2. Add bounded single-row resolution with one 10 second deadline, a five-redirect limit, and 2 MiB per-response cap. Cancel unused bodies.
-3. Add an ordered mapper with concurrency capped at four and per-row failure conversion.
-4. Integrate the mapper after `retrieveGoogleNewsArticles` and before the existing processing/logging seam; preserve input ordering and every discovery field.
-5. Add focused tests for direct redirect and decoder success, per-row failure isolation, disabled zero requests, and parser/bound failures.
-6. Update `docs/architecture.md` if implementation establishes the resolver method as current architecture; retain its undocumented-endpoint maintenance risk.
-
-## Development Integrity Checks
-
-Run repository formatting, lint, typecheck, unit tests, and build through `npm run validate` after implementation. A current-link live smoke check is required to resolve the known protocol risk; keep its request bounded and do not return page content or article text.
-
-## Validation Requirements
-
-### Unit
-
-- Direct redirect and modern RPC paths yield success, `urlResolved:true`, valid HTTP(S) `publisherUrl`, and lowercased `publisherDomain`.
-- Network, HTTP, timeout, redirect, marker, and response-parse failures yield failure while preserving the Google News URL.
-- One failed record does not prevent adjacent records from completing; output order and discovery fields remain unchanged.
-- Disabled mode yields not_requested and an injected Fetch spy records zero calls.
-- Oversized response and deadline/redirect bounds are enforced.
-
-### End-to-End
-
-- Run the Actor against mocked RSS and decoder HTTP responses to confirm RSS retrieval → resolver → processing data flow.
-- **Current-link smoke outcome:** The bounded live checks did not establish a successful resolution. Three current publisher links (BBC, Telegraph, Reuters) returned failure; the BBC request redirected to `consent.google.com` before article markers could be retrieved. The decoder success path remains unverified against a current link.
-
-### Other
-
-- Run `npm run validate`.
-- Review the durable architecture update for consistency with the implemented request flow and limits.
-
-## Open Implementation Questions
-
-- The documented upstream decoder request uses a literal form key `f.req` and URL-encodes only its JSON value. A live successful decode is not yet verified; confirm during implementation/validation and report any endpoint drift.
-- Ensure response reader cancellation and deadline cleanup behave correctly for redirects and malformed responses.
-
-## Low-Level Design Decision
-
-**LLD required: Yes.** The exact form encoding, three-level nested request JSON, article marker binding, framed response parsing, redirect/deadline interaction, and cross-file typed row changes are brittle file-level details. Record these in `docs/changes/4/low-level-design.md` before coding.
-
-## Implementation Checklist
-
-- [x] Resolver module and types added
-- [x] Bounded ordered row mapping integrated
-- [x] Success, failure, and not-requested tests added
-- [ ] 100-row live matrix reaches at least 95 valid publisher URLs
-- [x] Architecture definition reconciled if required
-- [x] `npm run validate` passes
-
-**Implementation status:** The resolver module and types are implemented. `npm run validate` passed formatting, lint, typecheck, 59 tests, and build. The 100-row live acceptance gate remains on hold as recorded above.
-
-## Approval
-
-Proceed under the user's authorization to implement Issue #4. Escalate only if the corrected source-backed request cannot be made to work within the existing HTTP-first product boundary.
+**Decision:** `Approve implementation`<br>
+**Rationale:** The #14 prerequisite is complete and integrated; the HLD resolves the mechanism and contract. Implementation is authorized subject to the edition-context invariants, deterministic checks, and unchanged live acceptance gate.<br>
+**Required follow-up:** Complete implementation, integrity checks, live evidence, and architecture reconciliation before validation handoff.

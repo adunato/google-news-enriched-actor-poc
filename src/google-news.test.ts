@@ -77,6 +77,12 @@ describe("Google News RSS retrieval and normalization", () => {
     const records = await retrieveGoogleNewsArticles(input, fetchMock);
 
     expect(records).toHaveLength(1);
+    expect(records[0]).toEqual({
+      record: expect.objectContaining({
+        googleNewsUrl: "https://news.google.com/rss/articles/example-id?oc=5",
+      }),
+      edition: { hl: "en-GB", gl: "GB", ceid: "GB:en-GB" },
+    });
     expect(new URL(fetchMock.mock.calls[0]![0] as string).searchParams.get("q")).toBe(
       "climate policy when:7d",
     );
@@ -98,7 +104,7 @@ describe("Google News RSS retrieval and normalization", () => {
     const records = await retrieveGoogleNewsArticles(input, fetchMock);
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(records.map((record) => record.query)).toEqual(["first", "second"]);
+    expect(records.map(({ record }) => record.query)).toEqual(["first", "second"]);
   });
 
   it("deduplicates exact Google News URLs across and within queries, keeping the first record", async () => {
@@ -114,7 +120,7 @@ describe("Google News RSS retrieval and normalization", () => {
 
     const records = await retrieveGoogleNewsArticles(input, fetchMock);
 
-    expect(records.map(({ query, googleNewsUrl }) => [query, googleNewsUrl])).toEqual([
+    expect(records.map(({ record: { query, googleNewsUrl } }) => [query, googleNewsUrl])).toEqual([
       ["first", "https://news.google.com/a"],
       ["second", "https://news.google.com/b"],
     ]);
@@ -133,8 +139,8 @@ describe("Google News RSS retrieval and normalization", () => {
     );
 
     expect(records).toHaveLength(2);
-    expect(records[0]).toMatchObject({ title: "Same title", sourceName: "Same source" });
-    expect(records[1]).toMatchObject({ title: "Same title", sourceName: "Same source" });
+    expect(records[0]?.record).toMatchObject({ title: "Same title", sourceName: "Same source" });
+    expect(records[1]?.record).toMatchObject({ title: "Same title", sourceName: "Same source" });
   });
 
   it("deduplicates by URL when optional metadata is missing", async () => {
@@ -153,9 +159,8 @@ describe("Google News RSS retrieval and normalization", () => {
 
     expect(records).toHaveLength(1);
     expect(records[0]).toEqual({
-      query: "one",
-      title: "Story",
-      googleNewsUrl: "https://news.google.com/a",
+      record: { query: "one", title: "Story", googleNewsUrl: "https://news.google.com/a" },
+      edition: { hl: "en-GB", gl: "GB", ceid: "GB:en-GB" },
     });
   });
 
@@ -178,7 +183,7 @@ describe("Google News RSS retrieval and normalization", () => {
       fetchMock,
     );
 
-    expect(records.map((record) => [record.query, record.googleNewsUrl])).toEqual([
+    expect(records.map(({ record }) => [record.query, record.googleNewsUrl])).toEqual([
       ["first", "https://news.google.com/a"],
     ]);
   });
@@ -196,7 +201,7 @@ describe("Google News RSS retrieval and normalization", () => {
       fetchMock,
     );
 
-    expect(records.map((record) => [record.query, record.googleNewsUrl])).toEqual([
+    expect(records.map(({ record }) => [record.query, record.googleNewsUrl])).toEqual([
       ["first", "https://news.google.com/a"],
       ["first", "https://news.google.com/a"],
       ["second", "https://news.google.com/a"],
@@ -212,6 +217,28 @@ describe("Google News RSS retrieval and normalization", () => {
       retrieveGoogleNewsArticles(validateActorInput({ queries: ["query"] }), failedFetch),
     ).rejects.toThrow("HTTP 503");
   });
+
+  it.each([
+    ["en-GB", "GB", "GB:en-GB"],
+    ["en-US", "US", "US:en-US"],
+  ])(
+    "attaches the exact %s edition from the finalized RSS request",
+    async (language, country, ceid) => {
+      const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(new Response(sampleFeed));
+      const candidates = await retrieveGoogleNewsArticles(
+        validateActorInput({ queries: ["news"], language, country }),
+        fetchMock,
+      );
+      const requestedUrl = new URL(fetchMock.mock.calls[0]![0] as string);
+
+      expect(candidates[0]?.edition).toEqual({
+        hl: requestedUrl.searchParams.get("hl"),
+        gl: requestedUrl.searchParams.get("gl"),
+        ceid: requestedUrl.searchParams.get("ceid"),
+      });
+      expect(candidates[0]?.edition).toEqual({ hl: language, gl: country, ceid });
+    },
+  );
 
   it("rejects an oversized feed before parsing it", async () => {
     const fetchMock = vi

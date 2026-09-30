@@ -16,6 +16,17 @@ export interface GoogleNewsArticleRecord {
   snippet?: string;
 }
 
+export interface GoogleNewsEdition {
+  hl: string;
+  gl: string;
+  ceid: string;
+}
+
+export interface GoogleNewsArticleCandidate {
+  record: GoogleNewsArticleRecord;
+  edition: GoogleNewsEdition;
+}
+
 const parser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: "@",
@@ -176,33 +187,42 @@ export type FetchLike = typeof fetch;
 export async function retrieveGoogleNewsArticles(
   input: ActorInput,
   fetchImpl: FetchLike = fetch,
-): Promise<GoogleNewsArticleRecord[]> {
-  const records: GoogleNewsArticleRecord[] = [];
+): Promise<GoogleNewsArticleCandidate[]> {
+  const candidates: GoogleNewsArticleCandidate[] = [];
   for (const query of input.queries) {
-    const response = await fetchImpl(
-      buildGoogleNewsRssUrl({
-        query,
-        language: input.language,
-        country: input.country,
-        dateRange: input.dateRange,
-      }),
-      {
-        headers: { accept: "application/rss+xml, application/xml, text/xml" },
-        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-      },
-    );
+    const requestUrl = buildGoogleNewsRssUrl({
+      query,
+      language: input.language,
+      country: input.country,
+      dateRange: input.dateRange,
+    });
+    const request = new URL(requestUrl);
+    const edition: GoogleNewsEdition = {
+      hl: request.searchParams.get("hl") ?? "",
+      gl: request.searchParams.get("gl") ?? "",
+      ceid: request.searchParams.get("ceid") ?? "",
+    };
+    const response = await fetchImpl(requestUrl, {
+      headers: { accept: "application/rss+xml, application/xml, text/xml" },
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
     if (!response.ok)
       throw new Error(`Google News RSS request failed with HTTP ${response.status}.`);
 
     const xml = await readBoundedBody(response);
-    records.push(...parseGoogleNewsRss(xml, query).slice(0, input.maxItemsPerQuery));
+    candidates.push(
+      ...parseGoogleNewsRss(xml, query)
+        .slice(0, input.maxItemsPerQuery)
+        .map((record) => ({ record, edition })),
+    );
   }
-  if (!input.dedupe) return records;
+  if (!input.dedupe) return candidates;
 
   const seenGoogleNewsUrls = new Set<string>();
-  return records.filter((record) => {
-    if (seenGoogleNewsUrls.has(record.googleNewsUrl)) return false;
-    seenGoogleNewsUrls.add(record.googleNewsUrl);
+  return candidates.filter((candidate) => {
+    const googleNewsUrl = candidate.record.googleNewsUrl;
+    if (seenGoogleNewsUrls.has(googleNewsUrl)) return false;
+    seenGoogleNewsUrls.add(googleNewsUrl);
     return true;
   });
 }

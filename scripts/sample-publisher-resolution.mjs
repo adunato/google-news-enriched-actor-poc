@@ -142,12 +142,13 @@ export function aggregateFailures(cells) {
 }
 
 export function buildRowAudit(row, result, diagnostic, matrixComplete) {
+  const record = row.candidate.record;
   const predicate = matrixComplete
-    ? successPredicate(row.record, result)
+    ? successPredicate(record, result)
     : { valid: false, category: undefined, hostClass: "unknown" };
   return {
     ordinal: row.ordinal,
-    sourceHash: safeHash(row.record.googleNewsUrl),
+    sourceHash: safeHash(record.googleNewsUrl),
     outcome: result?.urlResolutionStatus ?? "not_run_incomplete_matrix",
     validSuccess: predicate.valid,
     failureCategory:
@@ -157,6 +158,8 @@ export function buildRowAudit(row, result, diagnostic, matrixComplete) {
       : (diagnostic?.resultHostClass ?? predicate.hostClass),
     publisherDomain: predicate.valid ? result.publisherDomain : undefined,
     elapsedMs: diagnostic?.elapsedMs,
+    rpcContext: diagnostic?.rpcContext,
+    outsideTestedGbUsEnglish: diagnostic?.outsideTestedGbUsEnglish,
     requests: diagnostic?.requests ?? [],
   };
 }
@@ -198,18 +201,18 @@ async function main() {
 
   const matrixComplete = isMatrixComplete(cells);
   const rows = cells.flatMap((cell, cellIndex) =>
-    cell.records.map((record, ordinal) => ({
+    cell.records.map((candidate, ordinal) => ({
       cellIndex,
       ordinal: ordinal + 1,
       cell: `${cell.query}|${cell.edition.id}`,
-      record,
+      candidate,
     })),
   );
   const diagnostics = new Array(rows.length);
   let resolved = [];
   if (matrixComplete) {
     resolved = await resolvePublisherUrls(
-      rows.map((row) => row.record),
+      rows.map((row) => row.candidate),
       true,
       fetch,
       (index, diagnostic) => {

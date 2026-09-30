@@ -90,10 +90,13 @@ describe("publisher resolution live sample harness", () => {
     const audit = buildRowAudit(
       {
         ordinal: 1,
-        record: {
-          title: "Private title",
-          snippet: "Private snippet",
-          googleNewsUrl: sourceUrl,
+        candidate: {
+          record: {
+            title: "Private title",
+            snippet: "Private snippet",
+            googleNewsUrl: sourceUrl,
+          },
+          edition: { hl: "en-GB", gl: "GB", ceid: "GB:en-GB" },
         },
       },
       {
@@ -102,12 +105,19 @@ describe("publisher resolution live sample harness", () => {
         googleNewsUrl: sourceUrl,
         publisherUrl,
       },
-      { elapsedMs: 12, failureCategory: "consent_or_interstitial", requests: [] },
+      {
+        elapsedMs: 12,
+        rpcContext: "US:en",
+        outsideTestedGbUsEnglish: false,
+        failureCategory: "consent_or_interstitial",
+        requests: [],
+      },
       true,
     );
     const serialized = JSON.stringify(audit);
 
     expect(audit.failureCategory).toBe("consent_or_interstitial");
+    expect(audit).toMatchObject({ rpcContext: "US:en", outsideTestedGbUsEnglish: false });
     expect(serialized).not.toContain(sourceUrl);
     expect(serialized).not.toContain(publisherUrl);
     expect(serialized).not.toContain("Private title");

@@ -1,101 +1,94 @@
-# Low-Level Design: Publisher URL Resolution
+# Low-Level Design: Edition-Aware Publisher URL Resolution
 
-## Addendum: Live Sample Harness and Diagnostic Contract (2026-09-28)
+**Artifact ID:** `low-level-design-4-edition-aware-publisher-resolution`<br>
+**Status:** `Approved`<br>
+**Owner:** Project owner<br>
+**Created / updated:** `2026-09-30`<br>
+**GitHub Issue:** [#4](https://github.com/adunato/google-news-enriched-actor-poc/issues/4)<br>
+**Implementation Plan:** `docs/changes/4/implementation-plan.md` — `implementation-plan-4-publisher-url-resolution`<br>
+**HLD reference:** `docs/changes/4/hld.md` — `hld-4-publisher-url-resolution`<br>
+**Technical Spike:** Issue [#14](https://github.com/adunato/google-news-enriched-actor-poc/issues/14), Feasible conclusion integrated by PR #21; `docs/changes/14/technical-spike.md`
 
-The Issue acceptance gate is 95 valid resolutions out of 100 retained rows across the fixed matrix in `hld.md` and `implementation-plan.md`. The harness must run before any substantial resolver algorithm change, call the retrieval and resolver exports directly, and avoid Actor dataset delivery.
+## 1. Change Overview
 
-The current resolver output exposes only `success`, `failure`, or `not_requested`; it has no failure reason field. Add a measurement-only internal diagnostic path (for example, an optional callback or a detailed internal result) that reports row index/cell, stage, bounded reason category, observed HTTP status, final host class, elapsed time, and response bytes. Do not add diagnostic fields to public enriched rows or persist response bodies. Keep the existing public resolver result and order unchanged.
+Carry the exact Google News edition used for each RSS record into resolver calls. Use the edition for explicit parameter-page acquisition. Keep the RPC context fixed at H5-tested `US:en` for every row. Preserve the discovery record and public enriched-row schema; record the RPC context and unsupported-locale flag in internal diagnostics only.
 
-Use categories `consent_or_interstitial`, `invalid_publisher_url`, `google_host`, `metadata_missing_or_mismatch`, `rpc_http_error`, `rpc_parse_or_result_error`, `timeout`, `network`, `redirect_limit`, and `other`. Derive a success independently from output fields: `urlResolved===true`, successful status, unchanged `googleNewsUrl`, valid HTTP(S) `publisherUrl` outside Google/consent/interstitial hosts, and `publisherDomain` equal to the parsed lowercased host. Ambiguous results count as failure until manually resolved under the stated predicate.
+## 2. File Changes
 
-The harness manifest pins the code SHA and UTC run time, captures all ten matrix cells and input settings, requires exactly ten rows in every cell, and summarizes denominator, successes, failures per cell/category, timing, and response limits. It must not collapse records across cells or fill a short cell from another query. Record only minimal row audit data (cell, ordinal or stable hash, outcome, publisher host class/domain, and category); exclude article text and raw HTML/RPC bodies.
+### `src/google-news.ts`
 
-The present evidence supports running this sample against the current resolver before changing its algorithm. If measurement shows fewer than 95 valid rows or an incomplete matrix, leave Issue #4 and PR #11 on hold/draft; classify the failure distribution, make a targeted bounded HTTP-first correction, and rerun the identical matrix against the resulting commit.
+**Action:** `Modify`
 
-## Change Overview
+Add and export the internal types:
 
-Implement a typed per-row resolver using native Fetch and integrate it between RSS retrieval and the current processing seam. Preserve Google News provenance, row ordering, bounded resource use, and failure isolation.
+- `GoogleNewsEdition` with `hl`, `gl`, and `ceid` string fields.
+- `GoogleNewsArticleCandidate` with `record: GoogleNewsArticleRecord` and `edition: GoogleNewsEdition`.
 
-## File Changes
+Keep `GoogleNewsArticleRecord` unchanged. Change `retrieveGoogleNewsArticles` to return `GoogleNewsArticleCandidate[]`. For each RSS response, construct the edition from the finalized URL returned by `buildGoogleNewsRssUrl` by reading its exact `hl`, `gl`, and `ceid` query values, then pair each normalized record with it. This keeps context identical to the discovery request. Keep per-query limiting unchanged. When dedupe is enabled, compare `candidate.record.googleNewsUrl` and retain the first whole candidate so its originating edition remains attached. Do not infer locale from the article link or `oc` parameter.
 
 ### `src/publisher-url.ts`
 
-**Action:** Add.
+**Action:** `Modify`
 
-**Responsibilities:**
+Accept `GoogleNewsArticleCandidate` in `resolvePublisherUrl` and `resolvePublisherUrls`; preserve the injected Fetch and diagnostic callback interfaces. Use `candidate.record` for article-ID parsing, failure construction, and public result creation.
 
-- Export an enriched article type extending the discovery record with `urlResolved`, `urlResolutionStatus`, and optional `publisherUrl`/`publisherDomain`.
-- Export a single-row resolver that accepts an injectable Fetch implementation and produces an enriched result even when resolution fails.
-- Validate the input host as Google News and schemes as HTTP(S). Extract the opaque article ID from the supported RSS article path.
-- Follow at most five Google News redirects manually under one 10 second row deadline. If a validated non-Google-News HTTP(S) redirect target is reached, return it as the publisher URL without fetching the publisher body.
-- If the response remains on Google News, read at most 2 MiB, extract `data-n-a-id`, `data-n-a-ts`, and `data-n-a-sg` from the relevant article metadata element, and verify the ID is tied to the input article.
-- Construct the `Fbv4je` / `garturlreq` nested JSON request. Form-encode only the JSON value and preserve the literal `f.req` key. Use a bounded POST to `https://news.google.com/_/DotsSplashUi/data/batchexecute`.
-- Parse the bounded framed response for `garturlres`, validate the result as an HTTP(S) non-Google-News URL, and derive `publisherDomain` from lowercased `URL.hostname`.
-- Convert all thrown request and parse errors to an internal failure result. Do not expose a separate public failure-reason field.
-- Export an ordered batch resolver with concurrency capped at four; a disabled flag maps every row to `not_requested` without calling Fetch.
+Build the explicit article-ID parameter-page URL using candidate `hl`, `gl`, and `ceid`. Require the page marker article ID to equal the nested record's article ID. For every RPC, set the `Fbv4je` / `garturlreq` request context to the fixed H5-tested `US:en`, regardless of candidate edition. Do not pass candidate `ceid` to the RPC or infer a locale mapping. Keep the request deadline, response cap, redirect limit, and concurrency unchanged.
+
+Extend `PublisherResolutionDiagnostic` with internal `rpcContext: "US:en"` and `outsideTestedGbUsEnglish: boolean` fields. Set the flag to false only for exact GB English (`hl=en-GB`, `gl=GB`) and US English (`hl=en-US`, `gl=US`) candidates; set it to true for other or missing edition values. Preserve diagnostic callback isolation so diagnostics cannot change resolver outcomes. Do not add a new public status or row field.
+
+Return `PublisherResolvedArticle` by spreading only `candidate.record` and adding the existing resolution fields. Apply this to success, failure, and `not_requested` outcomes. Missing/invalid edition context is a row-level failure; do not infer or fall back to another edition. The result must not contain `edition` or a candidate wrapper.
 
 ### `src/index.ts`
 
-**Action:** Update.
+**Action:** `Modify`
 
-**Responsibilities:**
+Pass discovery candidates directly into `resolvePublisherUrls`. Continue handing flattened `PublisherResolvedArticle[]` results to `processActorInput`. Do not spread candidates or attach edition to processing/public-output rows.
 
-- Call the batch resolver immediately after `retrieveGoogleNewsArticles` and before the existing processing/logging call.
-- Pass `input.resolvePublisherUrls` and the injectable Fetch seam where appropriate.
-- Preserve order and ensure a resolver failure never rejects the Actor run.
+### `src/google-news.test.ts`
 
-### `src/input.ts`
+**Action:** `Modify`
 
-**Action:** Update only if required by the processing boundary.
-
-**Responsibilities:**
-
-- Adjust processing types to accept enriched records if the existing `processActorInput` seam is extended to receive records.
-- Retain input validation and defaults without changing unrelated options.
+Assert each returned candidate has the unchanged nested discovery record and exact `hl`/`gl`/`ceid` values read from its finalized RSS request URL. Cover GB (`en-GB`, `GB`) and US (`en-US`, `US`) inputs. Retain request construction, row limit, order, and first-seen deduplication coverage; assert dedupe retains the complete first candidate.
 
 ### `src/publisher-url.test.ts`
 
-**Action:** Add.
+**Action:** `Modify`
 
-**Responsibilities:**
-
-- Test direct redirect and decoder RPC success, including status/URL/domain consistency.
-- Test a row failure beside an independent successful row and provenance preservation.
-- Test disabled mode with a Fetch spy proving zero calls and explicit not-requested status.
-- Test invalid/missing markers, malformed framed response, oversized response, redirect limit, and deadline/network failure as row-local failures.
-- Assert discovery metadata and ordered output are preserved.
+Pass candidate wrappers to resolver tests. Verify GB and US editions produce matching parameter-page query values, while both generate RPC requests using fixed `US:en`. Verify diagnostics report `rpcContext: "US:en"` and set `outsideTestedGbUsEnglish` false for the two tested edition pairs and true for another locale or missing context. Keep article-ID matching, result validation, row failure isolation, order, bounds, and disabled zero-call coverage. Assert successful, failed, and `not_requested` outputs contain no `edition`, candidate `record` wrapper, or new public status.
 
 ### `src/index.test.ts`
 
-**Action:** Extend if orchestration assertions are not naturally covered by resolver tests.
+**Action:** `Modify`
 
-**Responsibilities:**
+Update orchestration coverage for candidate resolver input and flattened processing output. Assert edition is absent at the processing seam and that order/counts remain intact. Verify GB and US candidate editions reach parameter-page construction while resolver RPC context remains `US:en`.
 
-- Verify the Actor path passes retained RSS records through resolution before processing and honors the disabled flag.
+### `scripts/sample-publisher-resolution.mjs`
 
-### `docs/architecture.md`
+**Action:** `Modify`
 
-**Action:** Reconcile after implementation if the previously open resolver method is now durable current architecture.
+Retain edition context in cell candidates and pass candidates unchanged to `resolvePublisherUrls`. For hashes and success-predicate comparisons, read the original record from `candidate.record`; compare resolved output with its `googleNewsUrl`. Preserve the run manifest's cell edition fields and row audit format, including the internal RPC context and outside-tested-GB/US-English flag from resolver diagnostics. Do not write candidate wrappers or diagnostics into public result rows.
 
-**Responsibilities:**
+## 3. Cross-File Dependencies
 
-- Record the actual HTTP resolution flow, row status behavior, bounds, and internal endpoint maintenance risk without expanding product scope.
+1. `src/google-news.ts` pairs each discovery record with exact finalized RSS `hl`/`gl`/`ceid` values; first-seen dedupe retains the full pair.
+2. `src/index.ts` forwards candidates unchanged to the resolver.
+3. `src/publisher-url.ts` uses candidate edition only for parameter-page acquisition, uses fixed `US:en` for each RPC, records internal diagnostic context, then returns a result built from the nested record only.
+4. Discovery/resolver/orchestration tests verify the two locale contexts, constant RPC context, diagnostic flags, dedupe association, fail-soft/disabled behavior, and no-leak invariant. The live sample harness preserves this internal context in its evidence path.
 
-## Cross-File Dependencies
+`GoogleNewsEdition`, `GoogleNewsArticleCandidate`, and diagnostic fields are internal contracts only. No edition metadata, diagnostic fields, or new status values enter the public row schema.
 
-- `publisher-url.ts` consumes the `GoogleNewsArticleRecord` contract from `google-news.ts` and returns its enriched extension.
-- `index.ts` is the orchestration boundary and passes records to downstream processing.
-- `input.ts` changes only if its current processor signature needs to receive rows.
-- Tests use injected Fetch responses to cover redirects, article metadata, form requests, and framed decoder results without relying on live network calls.
-- Architecture documentation follows implemented behavior and does not lead the code to a new product boundary.
+## 4. File Change Summary
 
-## File Change Summary
+| File                                      | Action | Purpose                                                                                                             |
+| ----------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------- |
+| `src/google-news.ts`                      | Modify | Pair records with exact RSS edition context; preserve the pair through dedupe.                                      |
+| `src/publisher-url.ts`                    | Modify | Use candidate edition for page requests, fixed `US:en` for RPC, record diagnostics, and strip context from results. |
+| `src/index.ts`                            | Modify | Pass internal candidates to resolution and flattened rows onward.                                                   |
+| `src/google-news.test.ts`                 | Modify | Prove edition association, GB/US values, and first-seen candidate retention.                                        |
+| `src/publisher-url.test.ts`               | Modify | Prove page locale, fixed RPC context, diagnostic flags, no leakage, and fail-soft behavior.                         |
+| `src/index.test.ts`                       | Modify | Prove orchestration keeps internal edition context out of result rows.                                              |
+| `scripts/sample-publisher-resolution.mjs` | Modify | Carry candidates through the fixed live matrix and retain internal diagnostics.                                     |
 
-| File                        | Action             | Responsibility                                                  |
-| --------------------------- | ------------------ | --------------------------------------------------------------- |
-| `src/publisher-url.ts`      | Add                | Typed single-row resolver and bounded ordered mapper            |
-| `src/index.ts`              | Update             | Integrate resolution in the Actor flow                          |
-| `src/input.ts`              | Conditional update | Adapt processing contract if rows are passed through it         |
-| `src/publisher-url.test.ts` | Add                | Resolver success, failure, bounds, and disabled behavior        |
-| `src/index.test.ts`         | Conditional update | Orchestration order/flag behavior                               |
-| `docs/architecture.md`      | Reconcile          | Persist implemented resolver architecture if materially changed |
+### Completion contract
+
+The design is approved against the Issue, HLD, and Implementation Plan. No unresolved file-level decision remains. Implementation must preserve the existing HTTP bounds, H5 URL-resolution rule, fixed RPC context, row-level failure isolation, original URL provenance, and public output shape. Compatibility outside GB/US English remains unverified and must be visible in internal diagnostics.

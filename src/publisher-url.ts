@@ -1,4 +1,9 @@
-import type { FetchLike, GoogleNewsArticleRecord } from "./google-news.js";
+import type {
+  FetchLike,
+  GoogleNewsArticleCandidate,
+  GoogleNewsArticleRecord,
+  GoogleNewsEdition,
+} from "./google-news.js";
 
 const GOOGLE_NEWS_HOST = "news.google.com";
 const BATCHEXECUTE_URL = "https://news.google.com/_/DotsSplashUi/data/batchexecute";
@@ -6,6 +11,7 @@ const ROW_TIMEOUT_MS = 10_000;
 const MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
 const MAX_REDIRECTS = 5;
 const MAX_CONCURRENCY = 4;
+const RPC_CONTEXT = "US:en";
 
 export type UrlResolutionStatus = "success" | "failure" | "not_requested";
 export type ResolutionFailureCategory =
@@ -31,6 +37,8 @@ export interface ResolutionRequestObservation {
 
 export interface PublisherResolutionDiagnostic {
   elapsedMs: number;
+  rpcContext: typeof RPC_CONTEXT;
+  outsideTestedGbUsEnglish: boolean;
   failureCategory?: ResolutionFailureCategory;
   resultHostClass?: ResolutionRequestObservation["hostClass"];
   requests: ResolutionRequestObservation[];
@@ -87,13 +95,33 @@ function validHttpUrl(value: string, rejectGoogleNews = true): URL | undefined {
   }
 }
 
-function googleArticleId(value: string): { id: string; url: URL } | undefined {
+function googleArticleId(value: string): string | undefined {
   const url = validHttpUrl(value, false);
   if (!url || url.hostname.toLowerCase() !== GOOGLE_NEWS_HOST) return undefined;
   const parts = url.pathname.split("/").filter(Boolean);
   const markerIndex = parts.findIndex((part) => part === "articles" || part === "read");
-  const id = markerIndex >= 0 ? parts[markerIndex + 1] : undefined;
-  return id ? { id, url } : undefined;
+  const encodedId = markerIndex >= 0 ? parts[markerIndex + 1] : undefined;
+  if (!encodedId) return undefined;
+  try {
+    return decodeURIComponent(encodedId);
+  } catch {
+    return undefined;
+  }
+}
+
+function validEdition(edition: GoogleNewsEdition | undefined): edition is GoogleNewsEdition {
+  if (typeof edition !== "object" || edition === null) return false;
+  return [edition.hl, edition.gl, edition.ceid].every(
+    (value) => typeof value === "string" && value.trim().length > 0,
+  );
+}
+
+function articleParameterPage(articleId: string, edition: GoogleNewsEdition): URL {
+  const url = new URL(`/articles/${encodeURIComponent(articleId)}`, `https://${GOOGLE_NEWS_HOST}`);
+  url.searchParams.set("hl", edition.hl);
+  url.searchParams.set("gl", edition.gl);
+  url.searchParams.set("ceid", edition.ceid);
+  return url;
 }
 
 function extractMarkers(html: string, expectedId: string): Markers | undefined {
@@ -187,7 +215,25 @@ async function fetchGooglePage(
 
 function buildRpcBody(markers: Markers): string {
   const context = [
-    ["X", "X", ["X", "X"], null, null, 1, 1, "US:en", null, 1, null, null, null, null, null, 0, 1],
+    [
+      "X",
+      "X",
+      ["X", "X"],
+      null,
+      null,
+      1,
+      1,
+      RPC_CONTEXT,
+      null,
+      1,
+      null,
+      null,
+      null,
+      null,
+      null,
+      0,
+      1,
+    ],
     "X",
     "X",
     1,
@@ -252,10 +298,11 @@ function parseRpcResponse(body: string): string | undefined {
 
 /** Resolve one Google News record. All network and parsing errors become row-local failure outcomes. */
 export async function resolvePublisherUrl(
-  record: GoogleNewsArticleRecord,
+  candidate: GoogleNewsArticleCandidate,
   fetchImpl: FetchLike = fetch,
   onDiagnostic?: (diagnostic: PublisherResolutionDiagnostic) => void,
 ): Promise<PublisherResolvedArticle> {
+  const { record, edition } = candidate;
   const startedAt = Date.now();
   const requests: ResolutionRequestObservation[] = [];
   let latestObservation: ResolutionRequestObservation | undefined;
@@ -269,6 +316,13 @@ export async function resolvePublisherUrl(
     try {
       onDiagnostic?.({
         elapsedMs: Date.now() - startedAt,
+        rpcContext: RPC_CONTEXT,
+        outsideTestedGbUsEnglish:
+          !edition ||
+          !(
+            (edition.hl === "en-GB" && edition.gl === "GB") ||
+            (edition.hl === "en-US" && edition.gl === "US")
+          ),
         ...(failureCategory ? { failureCategory } : {}),
         ...(resultHostClass ? { resultHostClass } : {}),
         requests,
@@ -313,15 +367,18 @@ export async function resolvePublisherUrl(
   };
 
   try {
-    const article = googleArticleId(record.googleNewsUrl);
-    if (!article) return report(failed(record), "invalid_publisher_url");
+    const articleId = googleArticleId(record.googleNewsUrl);
+    if (!articleId || !validEdition(edition))
+      return report(failed(record), "invalid_publisher_url");
     signal = AbortSignal.timeout(ROW_TIMEOUT_MS);
-    const page = await fetchGooglePage(article.url, observedFetch, signal);
+    const page = await fetchGooglePage(
+      articleParameterPage(articleId, edition),
+      observedFetch,
+      signal,
+    );
     if (page.destination) {
       const destination = new URL(page.destination);
       const hostClass = classifyHost(destination.hostname);
-      const resolved = successful(record, page.destination);
-      if (resolved) return report(resolved, undefined, hostClass);
       const category =
         hostClass === "interstitial"
           ? "consent_or_interstitial"
@@ -341,7 +398,7 @@ export async function resolvePublisherUrl(
     const html = await readBounded(page.response, (bytes) => {
       latestObservation!.responseBytes = (latestObservation!.responseBytes ?? 0) + bytes;
     });
-    const markers = extractMarkers(html, article.id);
+    const markers = extractMarkers(html, articleId);
     if (!markers) return report(failed(record), "metadata_missing_or_mismatch");
 
     const rpcResponse = await observedFetch(BATCHEXECUTE_URL, {
@@ -387,29 +444,29 @@ export async function resolvePublisherUrl(
 
 /** Resolve rows concurrently while preserving their input order and fail-soft behavior. */
 export async function resolvePublisherUrls(
-  records: GoogleNewsArticleRecord[],
+  candidates: GoogleNewsArticleCandidate[],
   enabled: boolean,
   fetchImpl: FetchLike = fetch,
   onDiagnostic?: (index: number, diagnostic: PublisherResolutionDiagnostic) => void,
 ): Promise<PublisherResolvedArticle[]> {
   if (!enabled) {
-    return records.map((record) => ({
+    return candidates.map(({ record }) => ({
       ...record,
       urlResolved: false,
       urlResolutionStatus: "not_requested",
     }));
   }
-  const results = new Array<PublisherResolvedArticle>(records.length);
+  const results = new Array<PublisherResolvedArticle>(candidates.length);
   let nextIndex = 0;
   const worker = async (): Promise<void> => {
     while (true) {
       const index = nextIndex++;
-      if (index >= records.length) return;
-      results[index] = await resolvePublisherUrl(records[index]!, fetchImpl, (diagnostic) => {
+      if (index >= candidates.length) return;
+      results[index] = await resolvePublisherUrl(candidates[index]!, fetchImpl, (diagnostic) => {
         onDiagnostic?.(index, diagnostic);
       });
     }
   };
-  await Promise.all(Array.from({ length: Math.min(MAX_CONCURRENCY, records.length) }, worker));
+  await Promise.all(Array.from({ length: Math.min(MAX_CONCURRENCY, candidates.length) }, worker));
   return results;
 }
