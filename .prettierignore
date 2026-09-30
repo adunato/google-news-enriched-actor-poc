@@ -3,3 +3,6 @@ node_modules/
 dist/
 coverage/
 package-lock.json
+
+# Retained Technical Spike experiment evidence/probes; preserve bytes and recorded hashes.
+docs/changes/*/experiments/**
