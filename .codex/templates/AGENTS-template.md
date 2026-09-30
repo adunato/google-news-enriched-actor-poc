@@ -66,6 +66,7 @@ Product-specific lessons may be resolved through normal local artifacts and chan
 - Do not push normal changes directly to `dev`, `staging` or `main`.
 - After validation, use `merge-change` to commit all intended changes, push the source branch, and create or update the pull request. Do not stop after a branch push when no pull request exists.
 - Pull requests must include Issue, design, validation, durable-document and learning-record traceability.
+- A failed required acceptance test puts the tested candidate on Hold. Do not rerun an unchanged candidate merely to obtain a pass; diagnose the failure and make a relevant corrective change before retesting.
 - Use `ci-diagnostics` for failed automated gates rather than weakening checks.
 - Do not bypass required CI or branch protection.
 - Do not merge or promote your own change; those remain explicit human actions.
