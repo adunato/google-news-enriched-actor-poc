@@ -141,6 +141,21 @@ export function aggregateFailures(cells) {
   return failures;
 }
 
+export function redirectDestinationClass(diagnostic) {
+  if (!diagnostic) return undefined;
+  const pageRequests = diagnostic.requests.filter((request) => request.stage === "google_page");
+  let lastRedirectIndex = -1;
+  for (let index = 0; index < pageRequests.length; index += 1) {
+    const status = pageRequests[index].status;
+    if (status !== undefined && status >= 300 && status < 400) lastRedirectIndex = index;
+  }
+  if (lastRedirectIndex < 0) return undefined;
+
+  // The resolver follows redirects only while the destination remains news.google.com.
+  if (lastRedirectIndex < pageRequests.length - 1) return "google_news";
+  return diagnostic.resultHostClass ?? "unknown";
+}
+
 export function buildRowAudit(row, result, diagnostic, matrixComplete) {
   const record = row.candidate.record;
   const predicate = matrixComplete
@@ -149,6 +164,7 @@ export function buildRowAudit(row, result, diagnostic, matrixComplete) {
   const failureCategory = predicate.valid
     ? undefined
     : (predicate.category ?? diagnostic?.failureCategory ?? (matrixComplete ? "other" : undefined));
+  const redirectClass = redirectDestinationClass(diagnostic);
   return {
     ordinal: row.ordinal,
     sourceHash: safeHash(record.googleNewsUrl),
@@ -162,6 +178,7 @@ export function buildRowAudit(row, result, diagnostic, matrixComplete) {
     elapsedMs: diagnostic?.elapsedMs,
     rpcContext: diagnostic?.rpcContext,
     outsideTestedGbUsEnglish: diagnostic?.outsideTestedGbUsEnglish,
+    ...(redirectClass ? { redirectDestinationClass: redirectClass } : {}),
     requests: diagnostic?.requests ?? [],
   };
 }

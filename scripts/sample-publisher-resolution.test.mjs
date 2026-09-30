@@ -7,6 +7,7 @@ import {
   createMatrix,
   hostClass,
   isMatrixComplete,
+  redirectDestinationClass,
   successPredicate,
 } from "./sample-publisher-resolution.mjs";
 
@@ -110,7 +111,8 @@ describe("publisher resolution live sample harness", () => {
         rpcContext: "US:en",
         outsideTestedGbUsEnglish: false,
         failureCategory: "consent_or_interstitial",
-        requests: [],
+        resultHostClass: "interstitial",
+        requests: [{ stage: "google_page", status: 302, hostClass: "google" }],
       },
       true,
     );
@@ -118,10 +120,46 @@ describe("publisher resolution live sample harness", () => {
 
     expect(audit.failureCategory).toBe("consent_or_interstitial");
     expect(audit).toMatchObject({ rpcContext: "US:en", outsideTestedGbUsEnglish: false });
+    expect(audit.redirectDestinationClass).toBe("interstitial");
     expect(serialized).not.toContain(sourceUrl);
     expect(serialized).not.toContain(publisherUrl);
     expect(serialized).not.toContain("Private title");
     expect(serialized).not.toContain("Private snippet");
+  });
+
+  it("distinguishes redirect destination classes without retaining URLs", () => {
+    expect(
+      redirectDestinationClass({
+        requests: [
+          { stage: "google_page", status: 302, hostClass: "google" },
+          { stage: "google_page", status: 200, hostClass: "google" },
+        ],
+      }),
+    ).toBe("google_news");
+    expect(
+      redirectDestinationClass({
+        resultHostClass: "interstitial",
+        requests: [{ stage: "google_page", status: 302, hostClass: "google" }],
+      }),
+    ).toBe("interstitial");
+    expect(
+      redirectDestinationClass({
+        resultHostClass: "google",
+        requests: [{ stage: "google_page", status: 302, hostClass: "google" }],
+      }),
+    ).toBe("google");
+    expect(
+      redirectDestinationClass({
+        resultHostClass: "publisher",
+        requests: [{ stage: "google_page", status: 302, hostClass: "google" }],
+      }),
+    ).toBe("publisher");
+    expect(
+      redirectDestinationClass({
+        resultHostClass: "publisher",
+        requests: [{ stage: "decoder_rpc", status: 200, hostClass: "google" }],
+      }),
+    ).toBeUndefined();
   });
 
   it("adds failure categories only to failed complete rows", () => {
