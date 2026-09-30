@@ -1,10 +1,10 @@
 # Iteration 7 -- hosted eligibility and gate/proxy discordance
 
-**Status:** One approved hosted attempt was started and promptly aborted before cohort execution. The operator reports the likely cause was an initial response check looking for the user-set cap flag at the wrong JSON level; the exact launch/abort gate was not separately retained, so this cause is not independently proven. The run record has since confirmed the requested options. The approval did not authorize a replacement run; no retry or production adoption is authorized.
+**Status:** The first approved attempt was started and promptly aborted before cohort execution. The user approved exactly one replacement attempt on 2026-09-30; pre-run verification is underway and no replacement run has started. The replacement approval does not authorize another run or production adoption.
 
 ## Approval and launch gate
 
-The approval covered one fresh 100-row cohort with private visibility, `LIMITED_PERMISSIONS`, Node 20, a server-enforced user-set `$1` maximum charge, 256 MiB, 900 seconds and restart disabled. The run was started with those options. The operator reports an initial check looked for `isMaxTotalChargeUsdSetByUser` at the run object's root rather than `options`; this is the likely abort cause, but was not independently recorded. The actual run record confirms the nested cap, user-set flag and resource options. No second run is authorized.
+The first approval covered one fresh 100-row cohort with private visibility, `LIMITED_PERMISSIONS`, Node 20, a server-enforced user-set `$1` maximum charge, 256 MiB, 900 seconds and restart disabled. The run record confirms those options. The operator reports an initial check looked for `isMaxTotalChargeUsdSetByUser` at the run object's root rather than `options`; this is the likely abort cause, but was not independently recorded. The user approved exactly one replacement attempt on 2026-09-30 with the same cohort and bounds. Do not start until the new Actor/build and nested run options verify; no further run is authorized.
 
 `src/verify-run-options.mjs` and `src/run-options-preflight.mjs` now validate the nested API response shape, exact build number and every required run bound using synthetic input plus sanitized run metadata. They reject missing or root-level-only cap flags before a run is considered verified.
 

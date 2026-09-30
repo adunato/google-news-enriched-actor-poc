@@ -2,7 +2,7 @@
 
 **Issue:** [#22](https://github.com/adunato/google-news-enriched-actor-poc/issues/22)
 
-**Status:** Iteration 7's single approved hosted attempt was aborted before cohort measurement; the Spike remains open and Inconclusive.
+**Status:** The first Iteration 7 attempt was aborted before cohort measurement. The user approved exactly one replacement attempt on 2026-09-30; its pre-run verification is in progress. The Spike remains open and Inconclusive until a complete result resolves the Technical Question.
 
 **Iteration result:** Inconclusive for the original Technical Question.
 
@@ -163,7 +163,7 @@ Nine cases completed and reported `networkAttempts: 0`; three unique/low-markup 
 **Owner decision requested:** Approve the exact proposed Iteration 7 hosted eligibility/gate-discordance run below. No human review, raw-content retention or extra extraction run is proposed. This requires separate explicit approval because Iteration 6 authorization was local-only.
 ## Iteration 7 proposed plan — hosted eligibility and gate/proxy discordance
 
-**Status:** The user approved one Iteration 7 hosted attempt on 2026-09-30. The attempt was started with the approved limits but promptly aborted before cohort measurement. The operator reports the likely cause was an initial response check of the user-set charge flag at the wrong JSON level; the exact launch/abort gate was not separately retained, so this is not independently proven. The approval does not authorize another attempt or production adoption.
+**Status:** The user approved one Iteration 7 hosted attempt on 2026-09-30. The attempt was started with the approved limits but promptly aborted before cohort measurement. The operator reports the likely cause was an initial response check of the user-set charge flag at the wrong JSON level; the exact launch/abort gate was not separately retained, so this is not independently proven. The user subsequently approved exactly one replacement attempt on 2026-09-30. Pre-run verification is in progress; no replacement run has started. Neither approval authorizes production adoption.
 
 **Hypothesis:** A fresh bounded cohort may have a different permitted-HTML eligibility rate. Comparing the pre-existing challenge/gate signal with the structural proxy on the same fetched response will show aggregate disagreement candidates. A gate-positive row passing the proxy is not a proven false positive; a proxy pass is not evidence of true readability.
 
@@ -189,7 +189,7 @@ Nine cases completed and reported `networkAttempts: 0`; three unique/low-markup 
 
 **Prerequisite/blocker and recovery:** The client-side run-options parser issue is fixed and its offline test passes against both the sanitized actual response shape and synthetic valid/invalid cases. No Actor remains deployed. This operational prerequisite does not itself block planning. For a replacement, create a new disposable private `LIMITED_PERMISSIONS` Node 20 Actor, submit `$1`/256 MiB/900-second/no-restart in the same run request, then validate the detailed run record's nested options and exact build immediately. Stop on any mismatch; do not retry under the same approval. Zero bytes/empty dataset from the aborted run do not prove no request attempt, but no result is available to recover or reinterpret.
 
-**Owner decision requested:** **Approve exactly one replacement Iteration 7 run: a fresh five-query × GB/US × ten-row (100-row, ten-cell) cohort, with extraction once for every permitted already-fetched 2xx HTML including gate-positive responses, aggregate-only output, private `LIMITED_PERMISSIONS` Node 20 Actor, user-set server `$1` cap, 256 MiB, 900 seconds and restart disabled.** Approval covers this replacement only; no retry, further cohort, human review or production adoption. If approved, execute the one run and report the full denominator, gate/extraction table, settings, cost and memory, with the proxy caveat. If declined or redirected, do not build or collect publisher data; keep Issue #22 open and Inconclusive, with live eligibility/gate/proxy behavior unresolved.
+**Replacement approval recorded:** The user approved exactly one replacement Iteration 7 run on 2026-09-30, with the fresh 100-row cohort and limits stated above. The offline run-options parser test already passes against the sanitized actual shape and synthetic valid/invalid cases. Proceed only after verifying the newly created private `LIMITED_PERMISSIONS` Actor/build and the replacement run's detailed nested options. Stop on any mismatch; do not retry. This approval covers the replacement attempt only, not another run or production adoption.
 ## Iteration 3 plan — local readability-method evaluation
 
 **Current understanding:** Iteration 2 showed HTTP 200 HTML for 72/100 rows in one fresh Apify Node 20 sample. Neither hosted iteration retained page HTML or measured readable article text. Issue #5's acceptance criterion remains at least 50% readable full-text extraction on a representative 100-row sample. No extraction algorithm or dependency is approved for production use.
