@@ -1,0 +1,27 @@
+{
+  "mode": "offline lifecycle state-machine preflight; synthetic fake workers only",
+  "nodeVersion": "v20.19.0",
+  "extractorVersion": "9.0.1",
+  "realExtractorInvocations": 0,
+  "hostedBuildOrRun": false,
+  "publisherRequests": 0,
+  "networkRequestsMade": 0,
+  "plannedMatrixCases": 10,
+  "shapes": [
+    "semantic_article",
+    "generic_nested_div"
+  ],
+  "targetSizesBytes": [
+    8192,
+    32768,
+    98304,
+    196608,
+    262144
+  ],
+  "exactFixtureSizeChecksPassed": true,
+  "successLifecycleCaptured": true,
+  "timeoutStageAndTerminationCaptured": true,
+  "rawSentinelAbsentFromPreflightMetrics": true,
+  "caseDeadlineMs": 5000,
+  "totalDeadlineMs": 90000
+}

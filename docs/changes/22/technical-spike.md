@@ -2,7 +2,7 @@
 
 **Issue:** [#22](https://github.com/adunato/google-news-enriched-actor-poc/issues/22)
 
-**Status:** The first Iteration 7 attempt was aborted before cohort measurement. The user approved exactly one replacement attempt on 2026-09-30; that replacement completed its full 100-row cohort under the approved limits. Iteration 7 remains Inconclusive for the original Technical Question because all 78 eligible extraction calls hit the five-second worker deadline and no proxy output was scored. Issue #22 remains open.
+**Status:** Iteration 7's replacement cohort completed all 100 rows, but all 78 eligible extraction calls timed out before proxy scoring. The user then approved and completed one local-only Iteration 8 worker-lifecycle diagnostic. Iteration 8 is Inconclusive for the original Technical Question; Issue #22 remains open.
 
 **Iteration result:** Inconclusive for the original Technical Question.
 
@@ -10,19 +10,72 @@
 
 What automated web-access approaches can this news POC/product family responsibly rely on to retrieve public publisher pages at useful reliability, and where are the practical technical, cost, operational, policy or legal boundaries that should cause the product to stop, degrade gracefully, or use a different data source?
 
-## Living checkpoint after Iteration 7
+## Living checkpoint after Iteration 8
 
 ### Current Understanding
 
 The replacement Iteration 7 cohort completed all 100 planned rows across ten cells. In this one sample, 78 rows had permitted 2xx HTML and 22 were not eligible for extraction. All 78 eligible calls timed out at the five-second worker deadline; the remaining 22 were not attempted. Among eligible rows, the HTML prefix bins were 1 below 16 KiB, 9 from 16 to <64 KiB, 19 from 64 to <128 KiB, 15 from 128 to <256 KiB, and 34 at the 256 KiB cap. The stored raw prefix histogram uses all 100 rows, with the 22 noneligible rows assigned zero bytes; therefore its `<16 KiB` bin is 23. Therefore `accepted_proxy=0/100`, but the proxy did not score any extracted text. The outcome is a worker/runtime-bound failure for this sample, not evidence that Extractus produced low-quality text. The gate cross-tab was 33 positive + 33 timeouts, 45 clear + 45 timeouts, and 22 unavailable + 22 not-attempted; no discordant proxy result was observed. This one cohort does not establish population eligibility or classifier accuracy. The first attempt's operator-reported likely cause remains unproven and separate from the replacement result. Its zero network-byte and empty-dataset telemetry did not measure a cohort. Iteration 4's 44/100 conditional ceiling remains specific to that earlier cohort.
 
+Iteration 8 ran ten fresh local Node 20 workers on authored synthetic HTML, five sizes across two markup shapes. All three timeouts occurred inside extraction: semantic 256 KiB and generic nested-div 192/256 KiB. Seven smaller cases returned within five seconds. Worker startup was 30–57 ms and dynamic import 151–353 ms; for completed calls extraction ranged 44–3,952 ms, result delivery 0.018–0.194 ms, parent scoring 4.7–31.2 ms, and exit-after-result 8.2–31.4 ms. The semantic 192 KiB case completed with a 3,952 ms extraction phase; the generic 96 KiB case took 1,090 ms. This indicates that, on these fixtures, input shape/size can increase extraction time sharply, while measured startup/import and delivery were smaller. It does not explain Iteration 7: its sole eligible prefix below 16 KiB also timed out, and hosted phase data is absent. Synthetic profile, hosted runtime conditions, and actual publisher content differ. All seven outputs were rejected by the structural proxy because the authored text was deliberately repetitive; this is not publisher quality evidence.
+
 ### Supported Technical Specification
 
 The tested I7 implementation is locally runnable on Node 20.19 with the exact locked Extractus 9.0.1 dependency. It called extraction once on each of the 78 already-fetched permitted 2xx HTML responses, including gate-positive rows, using a serial five-second worker and persisted one validated aggregate after the complete cohort. The replacement run detail confirmed private `LIMITED_PERMISSIONS` Actor settings, exact build `0.7.1`, Node 20 base image, user-set `$1` maximum charge, 256 MiB, 900-second timeout and restart disabled. It completed in 498.429 seconds; final platform usage was $0.00715251, average/peak memory 74,184,643/111,677,440 bytes, average CPU 4.87%, and network counters were 34,652,070 bytes received and 939,481 sent for the whole run. The network counters do not distinguish feed and publisher traffic. The aggregate-only dataset contained one allow-listed item for 100 rows; raw logs were inspected in memory and discarded. The optimistic structural proxy cannot establish human readability, intended-article match, or Issue #5 acceptance.
 
+Iteration 8 establishes local lifecycle measurements for the tested synthetic cases only: with Node `v20.19.0` and the exact locked Extractus `9.0.1`, seven of ten returned and three timed out in extraction. The per-case timeout remained five seconds; termination handling caused the recorded wall-clock total for timed-out cases to reach 5,008.607–5,019.215 ms. The 90-second run bound was not approached (23,008.980 ms overall); peak RSS was 158,425,088 bytes, below 256 MiB. All ten worker network counters and parent intercepts reported zero attempts. The full metrics are in [`experiments/08-local-worker-lifecycle/results.json`](experiments/08-local-worker-lifecycle/results.json). These results cannot establish a universal safe HTML cap or deadline.
+
 ### Remaining Uncertainty
 
-The stage of the five-second failures is unknown: startup, import, parse, post, or worker exit. Hosted timing is only reported in coarse bins and no page content was retained. Fixed application log messages contain no per-row worker phase timings. All eligible rows timed out across the cohort's observed size bins, including the one eligible prefix below 16 KiB, so byte size alone cannot explain the failures. The aggregate does not provide a joint per-row size/phase trace. The build ID is `tz0HwMbSVyJkP95ab` (`0.7.1`); a source digest was not exposed in retained run/build metadata. The 0/100 proxy count is below the predeclared 50 threshold for this run, but it cannot be interpreted as 78 extraction-quality failures because no output was scored. No Issue #5 readability result or gate/proxy discordance was measured. A single sample cannot establish future cohort eligibility. The structural proxy also cannot establish readability or Issue #5 acceptance.
+The stage of Iteration 7's five-second failures remains unknown: startup, import, parse/extraction, post, or worker exit. Hosted timing is only reported in coarse bins and no page content was retained. Fixed application log messages contain no per-row worker phase timings. All eligible rows timed out across the cohort's observed size bins, including the one eligible prefix below 16 KiB, so byte size alone cannot explain the failures. The aggregate does not provide a joint per-row size/phase trace. Iteration 8 shows extraction-phase timeouts only on larger local synthetic cases, but does not locate the hosted failures. The build ID is `tz0HwMbSVyJkP95ab` (`0.7.1`); a source digest was not exposed in retained run/build metadata. The 0/100 proxy count is below the predeclared 50 threshold for this run, but it cannot be interpreted as 78 extraction-quality failures because no output was scored. No Issue #5 readability result or gate/proxy discordance was measured. A single sample cannot establish future cohort eligibility. The structural proxy also cannot establish readability or Issue #5 acceptance.
+
+## Iteration 8 result — local worker lifecycle timing
+
+**Status:** Completed once as approved. Ten of ten cases finished or reached the per-case timeout; no retry occurred.
+
+**Hypothesis:** The Iteration 7 five-second timeouts may be dominated by worker startup/import, HTML extraction, result transfer/scoring, or worker exit. The observed failures across all eligible size bins, including one prefix below 16 KiB, mean input bytes alone do not explain the result. Timings from the same fresh-worker protocol on authored inputs can identify the local stage that most often consumes the five-second budget.
+
+**Why this is next:** Iterations 5–6 measured startup/import and extraction on synthetic size/markup matrices, but the hosted I7 path emitted no phase timings. This bounded local diagnostic uses explicit lifecycle/exit counters and a size below 16 KiB plus larger bins. It can separate local worker-stage costs before proposing a worker or deadline change. It cannot explain all hosted behavior or establish publisher extraction quality.
+
+**Exact bounded experiment:** Run ten serial fresh-worker cases: semantic-article and generic nested-div markup at exact UTF-8 HTML sizes 8, 32, 96, 192 and 256 KiB. Generate authored synthetic English content in memory; use a reserved `fixture.invalid` URL. For each case, follow the current I7 worker flow and call `extractFromHtml(html, fixtureUrl)` once. Instrument parent-observed worker-ready/startup, dynamic import, extraction, result post/delivery, parent proxy scoring and worker exit; retain only phase durations, timeout/exit stage, input byte count, output character count and sanitized proxy counts. Per-case result delivery has a five-second deadline; enforce a 90-second overall bound. No retries.
+
+**Representative environment/data:** Local Windows Node `v20.19.0`, same `@extractus/article-extractor@9.0.1` resolved from the already installed Iteration 7 exact lock; no install or dependency changes. Two authored markup shapes × five sizes (8/32/96/192/256 KiB), all generated in memory and never written. At most 256 KiB input and 1 MiB extracted output per case.
+
+**Observed evidence:** Node `v20.19.0`; locked Extractus `9.0.1`; 10/10 serial cases; overall elapsed 23,008.980 ms, sum of case totals 22,988.194 ms, and 20.786 ms unallocated harness/setup overhead. Peak RSS was 158,425,088 bytes. All ten worker counters and parent network intercepts reported zero network attempts. Seven cases completed and three timed out during extraction; all seven completed outputs were `quality_rejected` by the structural proxy. Startup was 29.958–57.110 ms (median 50.982); dynamic import 151.341–353.252 ms (median 313.406); completed extraction 43.870–3,951.960 ms (median 196.782); result delivery 0.018–0.194 ms (median 0.038); parent scoring 4.727–31.237 ms (median 7.491); and exit after result 8.196–31.387 ms (median 13.788). Timeout case totals were 5,008.607–5,019.215 ms because the timer initiated worker termination at 5,000 ms and total timing includes teardown. This teardown overrun did not extend the processing deadline. Per-case size/shape and phase evidence is retained in [`experiments/08-local-worker-lifecycle/results.json`](experiments/08-local-worker-lifecycle/results.json).
+
+| Shape | Input | Extraction | Case outcome |
+| --- | ---: | ---: | --- |
+| Semantic article | 8 KiB | 43.870 ms | Returned; proxy rejected |
+| Semantic article | 32 KiB | 83.668 ms | Returned; proxy rejected |
+| Semantic article | 96 KiB | 458.627 ms | Returned; proxy rejected |
+| Semantic article | 192 KiB | 3,951.960 ms | Returned; proxy rejected |
+| Semantic article | 256 KiB | Timed out at 5 s | Terminated during extraction |
+| Generic nested div | 8 KiB | 50.997 ms | Returned; proxy rejected |
+| Generic nested div | 32 KiB | 196.782 ms | Returned; proxy rejected |
+| Generic nested div | 96 KiB | 1,090.185 ms | Returned; proxy rejected |
+| Generic nested div | 192 KiB | Timed out at 5 s | Terminated during extraction |
+| Generic nested div | 256 KiB | Timed out at 5 s | Terminated during extraction |
+
+**Interpretation:** Extraction was the measured dominant local phase for the cases that approached or exceeded the deadline. The semantic 192 KiB case completed just under the deadline; the generic nested-div 96 KiB case was substantially slower than semantic at that size, so both content shape and size may matter on these specific synthetic fixtures. Startup/import together were at most about 411 ms and post/delivery/scoring/exit phases were small among completed cases. These local results do not explain Iteration 7's 78/78 hosted timeouts: one hosted eligible prefix was below 16 KiB, while both 8 KiB local cases completed in under 0.5 seconds total. The runtime, workload, and content differ, and hosted phase telemetry is still required. The repetitive generated output failed the structural proxy by design; no Issue #5 outcome was measured.
+
+**Result:** `Inconclusive` for the original Technical Question. No universal safe byte cap or revised worker deadline follows from this synthetic matrix; keep the five-second bound unchanged until the hosted timeout stage is identified.
+
+**Operational bounds and stop conditions:** One worker at a time, fresh per case; five-second result deadline, 90 seconds overall, 128 MiB parent and worker old-space limits, stop above 256 MiB RSS, 256 KiB input and 1 MiB output caps. Block and count `fetch`, HTTP/HTTPS and socket network entry points in parent and worker before importing Extractus; stop on any attempted network call. Stop on privacy, schema, time, memory or output-bound failure; do not retry. No Actor/build/run, publisher data, browser, proxy, paid service or production changes.
+
+**Owner decision recorded:** The user approved exactly this one local-only Iteration 8 diagnostic. This does not authorize another hosted run or production change.
+
+## Owner checkpoint after Iteration 8
+
+**Recommended next action:** Prepare and request separate approval for one aggregate-only hosted phase-telemetry diagnostic on a fresh bounded 100-row cohort, after completing an offline preflight of the instrumented worker path. Keep the five-second per-row deadline, current direct-HTTP/robots/DNS/privacy controls and hosted $1/256 MiB/900-second/restart-disabled limits. Emit only aggregate phase/exit timing bins and eligibility/prefix-size denominators; do not retry rows.
+
+**Why this is next:** Iteration 8 locates extraction as the expensive local phase for the larger synthetic fixtures, but it does not explain Iteration 7: all 78 eligible hosted rows timed out, including one below 16 KiB, and the hosted run has no phase counters. Another synthetic ladder cannot resolve the actual target-runtime stage. Aggregate phase timing from the target runtime is the highest-value discriminator between startup/import, parsing, and result/worker-exit costs.
+
+**Prerequisite/blocker status:** No blocker affected Iteration 8. A hosted phase diagnostic is outside the consumed Iteration 7 approvals and local-only Iteration 8 approval. This is an authorization prerequisite. Recovery is to implement and validate the telemetry path offline, then obtain explicit approval for one exact cohort and cap before build/run. Keep the five-second timeout unchanged until the hosted stage is identified.
+
+**Owner decision requested:** Approve one separately capped hosted phase-telemetry diagnostic after its local preflight is reviewed, or decline/redirect. Approval should cover one fresh 100-row private Node 20 cohort, server-set $1 cap, 256 MiB, 900-second timeout, restart disabled, aggregate-only retention and no retries. It does not authorize a longer timeout or production adoption.
+
+**Consequence of approval:** Complete offline instrumentation/preflight, execute only the approved cohort, and return with sanitized phase/exit, eligibility/size-bin, cost, memory and run evidence.
+
+**Consequence of decline or redirect:** Keep Issue #22 Inconclusive and open. Iteration 8 supports only synthetic local timing; the cause of hosted timeouts and Issue #5 readability remain unresolved. Any different hosted method, longer deadline, or production change requires a separate decision.
 
 ## Iteration 4 plan — one hosted readability-proxy run
 
