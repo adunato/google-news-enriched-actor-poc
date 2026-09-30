@@ -128,13 +128,15 @@ The internal edition context crosses discovery/deduplication, resolver request c
 
 ## 10. Implementation Checklist
 
-- [ ] Carry internal edition context through discovery, deduplication, and resolver calls
-- [ ] Use edition context in parameter-page and RPC construction without public-row leakage
-- [ ] Add/update deterministic GB/US, dedupe, disabled, failure-isolation, and projection coverage
-- [ ] Run `npm run validate` and `git diff --check`
-- [ ] Run the exact live 100-row matrix on the candidate commit
-- [ ] Record live outcome, including explicit hold if fewer than 100 rows or fewer than 95 valid successes
-- [ ] Reconcile `docs/architecture.md` and prepare validation handoff
+- [x] Carry internal edition context through discovery, deduplication, and resolver calls
+- [x] Use edition context in parameter-page and RPC construction without public-row leakage
+- [x] Add/update deterministic GB/US, dedupe, disabled, failure-isolation, and projection coverage
+- [x] Run `npm run validate` and `git diff --check`
+- [x] Run the exact live 100-row matrix on the candidate commit; final candidate run `docs/changes/4/live-sample-20260930T083606Z.json` passed 100/100 on `30086115200285844a01f5090ebd50adc2dfb156` with all ten query/edition cells at 10/10
+- [x] Record live outcome and attempt chronology: `08:09Z` run on `52a67b2` was 100/100 but exposed an audit-category defect; `08:22Z` run on `2eec014` was 0/100 (`google_host`); final corrected run at `08:36Z` passed 100/100. The middle run shows material Google redirect/consent variability; it does not supersede the passing exact-candidate run, and the resolver must continue to fail soft under that condition. Manifests: `live-sample-20260930T080912Z.json`, `live-sample-20260930T082220Z.json`, and `live-sample-20260930T083606Z.json`.
+- [x] Reconcile `docs/architecture.md` with the implemented acquisition path and prepare the validation/PR review handoff
+
+**Implementation evidence status:** Local repository validation and the required representative live gate pass. The final live manifest is tied to the current candidate commit and records a clean working tree. The earlier failed redirect run is retained as a residual operational risk for review; it does not change the unchanged >=95/100 acceptance threshold or the final candidate run's result.
 
 ### Approval
 

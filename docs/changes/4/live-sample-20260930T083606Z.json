@@ -1,0 +1,3516 @@
+{
+  "issue": 4,
+  "status": "pass",
+  "collectedAtUtc": "2026-09-30T08:36:12.523Z",
+  "commitSha": "30086115200285844a01f5090ebd50adc2dfb156",
+  "workingTreeDirty": false,
+  "nodeVersion": "v20.20.2",
+  "configuration": {
+    "queries": ["world news", "politics", "business", "technology", "health"],
+    "editions": [
+      {
+        "id": "GB",
+        "language": "en-GB",
+        "country": "GB"
+      },
+      {
+        "id": "US",
+        "language": "en-US",
+        "country": "US"
+      }
+    ],
+    "maxItemsPerQuery": 10,
+    "dateRange": "7d",
+    "dedupe": false,
+    "resolvePublisherUrls": true,
+    "includeFullText": false,
+    "expectedCells": 10,
+    "rowsPerCell": 10,
+    "denominator": 100,
+    "requiredDenominator": 100,
+    "minimumSuccesses": 95
+  },
+  "denominator": 100,
+  "resolvedDenominator": 100,
+  "retainedRows": 100,
+  "successfulRows": 100,
+  "failuresByCategory": {},
+  "cells": [
+    {
+      "query": "world news",
+      "edition": "GB",
+      "language": "en-GB",
+      "country": "GB",
+      "retainedCount": 10,
+      "successCount": 10,
+      "failureCount": 0,
+      "failuresByCategory": {},
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "82aeb3e5dd5ae7880fe5",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bbc.co.uk",
+          "elapsedMs": 232,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1130436
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 172
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "f22e99d9286801978f23",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.churchtimes.co.uk",
+          "elapsedMs": 242,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131962
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 210
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "481cbff539e8be15ef95",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bbc.com",
+          "elapsedMs": 226,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1130200
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 167
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "0351082857ad72918a5e",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "news.un.org",
+          "elapsedMs": 237,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1130209
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 167
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "1ce2ad292308e5c66783",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bristol.ac.uk",
+          "elapsedMs": 187,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131295
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 196
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "ba703b1fed96c4365843",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.fipp.com",
+          "elapsedMs": 206,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132089
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 214
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "840a72a48642eef94b15",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.theguardian.com",
+          "elapsedMs": 210,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132092
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 216
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "e1eac952419607c9e808",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "world-nuclear-news.org",
+          "elapsedMs": 191,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131961
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 212
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "397504a4bf45e0571988",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "the-past.com",
+          "elapsedMs": 174,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1130074
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 164
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "485eef1faa3dced77f21",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "gijn.org",
+          "elapsedMs": 200,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132009
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 213
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "world news",
+      "edition": "US",
+      "language": "en-US",
+      "country": "US",
+      "retainedCount": 10,
+      "successCount": 10,
+      "failureCount": 0,
+      "failuresByCategory": {},
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "0351082857ad72918a5e",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "news.un.org",
+          "elapsedMs": 203,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1130204
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 168
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "a32dd1a22ce3689241ec",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.news8000.com",
+          "elapsedMs": 197,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132469
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 225
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "5e3814fd60400c108f70",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bbc.com",
+          "elapsedMs": 158,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1130226
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 169
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "9c738c2c9e9803257700",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.vaticannews.va",
+          "elapsedMs": 159,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132984
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 238
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "b425fbcf7d2dccfcd3a9",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "theconversation.com",
+          "elapsedMs": 168,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1134730
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 282
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "fc15f92f30623c6337fe",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.wral.com",
+          "elapsedMs": 155,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131789
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 208
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "e91932beb3ffeef45f41",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "wpln.org",
+          "elapsedMs": 261,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132852
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 235
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "661175e6aa82ce51ec31",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "physicsworld.com",
+          "elapsedMs": 2615,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132150
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 215
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "f266e9571e539f7799dd",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.kctv5.com",
+          "elapsedMs": 2705,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1137446
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 340
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "b53efb7f3646f4913cbc",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.gpb.org",
+          "elapsedMs": 1899,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132722
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 230
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "politics",
+      "edition": "GB",
+      "language": "en-GB",
+      "country": "GB",
+      "retainedCount": 10,
+      "successCount": 10,
+      "failureCount": 0,
+      "failuresByCategory": {},
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "410f167c65d2511fbddf",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bbc.com",
+          "elapsedMs": 3098,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1130354
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 169
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "cb9b8cbc9748ef7f71f9",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.economist.com",
+          "elapsedMs": 3000,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131991
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 213
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "822fcba52299a2b4c3a9",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.ft.com",
+          "elapsedMs": 2900,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131522
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 207
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "67bf9628b59d45936411",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "novaramedia.com",
+          "elapsedMs": 2900,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132615
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 227
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "f5f451a8d2b03ac386ed",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bbc.com",
+          "elapsedMs": 3101,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1130240
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 168
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "2f3c0d62dd3f584b0a2e",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.ft.com",
+          "elapsedMs": 2300,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131532
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 207
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "ed8f8923ce7b2d20cd8c",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.theguardian.com",
+          "elapsedMs": 2998,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133059
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 240
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "1e22e3c6fed81b466399",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.theguardian.com",
+          "elapsedMs": 3299,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132243
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 218
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "1e848c76a32a1bda7967",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.theguardian.com",
+          "elapsedMs": 3102,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132596
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 229
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "6ac863d1b844698d57b4",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.theguardian.com",
+          "elapsedMs": 2898,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132351
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 221
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "politics",
+      "edition": "US",
+      "language": "en-US",
+      "country": "US",
+      "retainedCount": 10,
+      "successCount": 10,
+      "failureCount": 0,
+      "failuresByCategory": {},
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "98636144683627c1790e",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.brookings.edu",
+          "elapsedMs": 2100,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132182
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 216
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "1d10139fa79125e67cef",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "calmatters.org",
+          "elapsedMs": 2399,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131191
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 192
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "630ba5b4c5e200cd9a23",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.reuters.com",
+          "elapsedMs": 1998,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133649
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 254
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "428ef1c4dbc6f0cf4f6d",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "spectrumlocalnews.com",
+          "elapsedMs": 1803,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1134098
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 267
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "32d7d0a6ff97ee14f1d0",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "today.marquette.edu",
+          "elapsedMs": 2200,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131800
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 208
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "0a3061bfb53106abd85b",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.politico.com",
+          "elapsedMs": 2502,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132417
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 224
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "d750bd26d4086f596507",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.npr.org",
+          "elapsedMs": 2601,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133188
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 244
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "2f0c7616369c28b540b9",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.pbs.org",
+          "elapsedMs": 2599,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1139603
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 389
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "cb9b8cbc9748ef7f71f9",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.economist.com",
+          "elapsedMs": 2713,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131999
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 212
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "693e7a752c661b908a29",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "ny1.com",
+          "elapsedMs": 3300,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132881
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 236
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "business",
+      "edition": "GB",
+      "language": "en-GB",
+      "country": "GB",
+      "retainedCount": 10,
+      "successCount": 10,
+      "failureCount": 0,
+      "failuresByCategory": {},
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "b089a5eeaa6083f14159",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.ft.com",
+          "elapsedMs": 2902,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131550
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 207
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "7ab33b162c9cdfcfdaf7",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.tendringdc.gov.uk",
+          "elapsedMs": 2998,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133787
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 259
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "f191f78dd335b6adc0d8",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bbc.co.uk",
+          "elapsedMs": 2688,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1130426
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 173
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "42e7a0d6f3fbc6112aae",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.economist.com",
+          "elapsedMs": 2097,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132137
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 215
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "94369ea46cd9a7c44e92",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.hartlepool.gov.uk",
+          "elapsedMs": 2099,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132492
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 223
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "17515ba589761fef1a9f",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.nelincs.gov.uk",
+          "elapsedMs": 2000,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133246
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 245
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "9c759f8a776cd3b95e2e",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.havering.gov.uk",
+          "elapsedMs": 2301,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133025
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 239
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "e69777b0fdb1abd21382",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.panthers.co.uk",
+          "elapsedMs": 2199,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131284
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 195
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "97533192270fd0733829",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.lboro.ac.uk",
+          "elapsedMs": 1800,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131640
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 204
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "9f99830ef0ea22d723ec",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.ebrd.com",
+          "elapsedMs": 2300,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133191
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 243
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "business",
+      "edition": "US",
+      "language": "en-US",
+      "country": "US",
+      "retainedCount": 10,
+      "successCount": 10,
+      "failureCount": 0,
+      "failuresByCategory": {},
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "f71b52b7aa5e77e7a98e",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "ir.usbank.com",
+          "elapsedMs": 2999,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1134948
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 289
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "21980e5f2b3fa86055c7",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.cnbc.com",
+          "elapsedMs": 3101,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1137892
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 343
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "12d3a0a19c73176768c1",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.energy.gov",
+          "elapsedMs": 3601,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132902
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 237
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "39e500a08456e91d5742",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.reuters.com",
+          "elapsedMs": 3302,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131857
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 210
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "b83ae1cbc6a9a23ce877",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.microsoft.com",
+          "elapsedMs": 2599,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1134040
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 265
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "9783449e42707a985dba",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.businessinsider.com",
+          "elapsedMs": 2399,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132348
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 223
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "d9a6815947bf3ae9ff71",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.wsj.com",
+          "elapsedMs": 2400,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131118
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 190
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "655fd08e01a66b7bf03f",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "poetsandquants.com",
+          "elapsedMs": 2301,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133393
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 247
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "42e7a0d6f3fbc6112aae",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.economist.com",
+          "elapsedMs": 2302,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132086
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 215
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "0ce749856faa4703d119",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.propublica.org",
+          "elapsedMs": 2401,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131096
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 191
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "technology",
+      "edition": "GB",
+      "language": "en-GB",
+      "country": "GB",
+      "retainedCount": 10,
+      "successCount": 10,
+      "failureCount": 0,
+      "failuresByCategory": {},
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "bacd5a68cf4bfeebedc5",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "blogs.microsoft.com",
+          "elapsedMs": 2900,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1134995
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 290
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "b5da16c140e16068fc3d",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.northlincs.gov.uk",
+          "elapsedMs": 3104,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131343
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 197
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "1d8f2e12533cb129c796",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.thurrock.gov.uk",
+          "elapsedMs": 2999,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132374
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 222
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "eaf7b87f669067cf1dbc",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.theguardian.com",
+          "elapsedMs": 2999,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133764
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 258
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "51a16aaa8af355d36668",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.politico.eu",
+          "elapsedMs": 2399,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133047
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 239
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "978f254c7682905aae53",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.watermagazine.co.uk",
+          "elapsedMs": 2492,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1134373
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 272
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "e4b4ac4647f3f1112d9a",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.fenews.co.uk",
+          "elapsedMs": 2300,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131617
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 202
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "91ca5232b946c49afe01",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bigtechnology.com",
+          "elapsedMs": 2399,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131286
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 195
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "bf5962ce2f7100268d34",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.telefonica.com",
+          "elapsedMs": 2501,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1134441
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 274
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "402e741fc37aa08ce051",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bbc.co.uk",
+          "elapsedMs": 2405,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132292
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 221
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "technology",
+      "edition": "US",
+      "language": "en-US",
+      "country": "US",
+      "retainedCount": 10,
+      "successCount": 10,
+      "failureCount": 0,
+      "failuresByCategory": {},
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "0f859cc4f52a49b24621",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.energy.gov",
+          "elapsedMs": 2603,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131481
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 200
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "40c671d4f39461107cc5",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "ir.ondas.com",
+          "elapsedMs": 3100,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132438
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 223
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "bacd5a68cf4bfeebedc5",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "blogs.microsoft.com",
+          "elapsedMs": 3199,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1135058
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 289
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "e837c1a79296bf224d1f",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.cnbc.com",
+          "elapsedMs": 3095,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1134089
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 249
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "411c064063b4a6d4c110",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.reuters.com",
+          "elapsedMs": 3397,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133383
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 247
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "f8f9600fa74c85d4375f",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bain.com",
+          "elapsedMs": 2701,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1136153
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 319
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "a54c8e3536af1bf2e3ef",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.technologyreview.com",
+          "elapsedMs": 2502,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1135599
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 286
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "ef430f8c3d53d194c933",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.nature.com",
+          "elapsedMs": 2701,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1130415
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 173
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "91ca5232b946c49afe01",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bigtechnology.com",
+          "elapsedMs": 2508,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131260
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 194
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "5bb80b94339605c2d630",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.forbes.com",
+          "elapsedMs": 2600,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133021
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 239
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "health",
+      "edition": "GB",
+      "language": "en-GB",
+      "country": "GB",
+      "retainedCount": 10,
+      "successCount": 10,
+      "failureCount": 0,
+      "failuresByCategory": {},
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "d757ab3db78b1a045b6e",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.gov.uk",
+          "elapsedMs": 2801,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132002
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 213
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "4c800fd8a05856fa8759",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bbc.co.uk",
+          "elapsedMs": 2803,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1130379
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 172
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "19264db7c4b64b2d794a",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.warwickshire.gov.uk",
+          "elapsedMs": 3493,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1135161
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 293
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "d3aac363dde791b7afb0",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "thenhsalliance.org",
+          "elapsedMs": 3100,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131678
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 203
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "acd994cc771669ee2b69",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.brighton-hove.gov.uk",
+          "elapsedMs": 2900,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132241
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 218
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "ea6becfc8443244bd612",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "newsroom.shropshire.gov.uk",
+          "elapsedMs": 2898,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132487
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 226
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "5225a941702e847b6ddb",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.ft.com",
+          "elapsedMs": 1999,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131570
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 207
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "ee5ae7b056d5ab4bc7ad",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.bma.org.uk",
+          "elapsedMs": 2100,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132618
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 228
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "79caf1456d13ad7a5e2d",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.unitetheunion.org",
+          "elapsedMs": 2301,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133642
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 254
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "3ebe2ca0aa775925cee1",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.theguardian.com",
+          "elapsedMs": 2599,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133477
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 250
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "health",
+      "edition": "US",
+      "language": "en-US",
+      "country": "US",
+      "retainedCount": 10,
+      "successCount": 10,
+      "failureCount": 0,
+      "failuresByCategory": {},
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "0571a17c0ce6a650a816",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "blog.google",
+          "elapsedMs": 2200,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132281
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 220
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "7e9f8335559f05326357",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.justice.gov",
+          "elapsedMs": 2300,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133056
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 240
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "28980e7630ecf21a240a",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.gov.ca.gov",
+          "elapsedMs": 2497,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1135065
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 290
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "539e27c465881f613491",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "governorsoffice.colorado.gov",
+          "elapsedMs": 3401,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132877
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 236
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "db78446aff6f860332d3",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.who.int",
+          "elapsedMs": 3798,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132983
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 237
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "486da573b0f8562abeaf",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.pbs.org",
+          "elapsedMs": 3500,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132242
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 219
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "cd4ed0761549166902af",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.npr.org",
+          "elapsedMs": 3100,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1131030
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 190
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "46802c1a229d1aec1eab",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.healthcaredive.com",
+          "elapsedMs": 2400,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1133158
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 242
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "dfddd1941aa06a49af20",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.nj.gov",
+          "elapsedMs": 2100,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1130811
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 183
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "948e8ae6431ba10a57c9",
+          "outcome": "success",
+          "validSuccess": true,
+          "publisherHostClass": "publisher",
+          "publisherDomain": "www.mprnews.org",
+          "elapsedMs": 2000,
+          "rpcContext": "US:en",
+          "outsideTestedGbUsEnglish": false,
+          "redirectDestinationClass": "google_news",
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            },
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 1132357
+            },
+            {
+              "stage": "decoder_rpc",
+              "hostClass": "google",
+              "status": 200,
+              "responseBytes": 222
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "hostedSourceFingerprint": {
+    "src/google-news.ts": "f53d0a0368defdb38f7644d50587d23f9331d77f2f20ff1d0031f6aa3e357fde",
+    "src/publisher-url.ts": "790b9cbdbb4cecb3f0b18aaef5d9d2eb4723d8f37eae4f81fd9d4d11c509a535",
+    "src/index.ts": "cc17394d1fbd0b5e60d9199a5cefc6b802dba2d1e5306a6bcc8a6c6716851167",
+    "src/input.ts": "dff1f0d6c890d94ab7371de874ba2bc5ba75709ba8f0dd7ad98ae8e559342710",
+    "scripts/sample-publisher-resolution.mjs": "ac63779464147940af43007b739ba8325faad225600442336283bbfdf28879f1",
+    "package-lock.json": "eb9b3a0cf07aded6370dca7a6f9f017e3b55e6b38a567ba37e4da7bc51caa40e",
+    "tsconfig.json": "de495c632c918c821ab6bdbd8c9c2702627e58a5e09e608e88a52a884bd41643"
+  },
+  "hostedRun": {
+    "platform": "Apify",
+    "actorId": "AeUC9idVAADoNhIrT",
+    "buildId": "YX1H5Q03XteJRKulK",
+    "buildNumber": "0.1.1",
+    "buildStatus": "SUCCEEDED",
+    "runId": "SPztGFlxNeBm0sgqI",
+    "runStatus": "SUCCEEDED",
+    "exitCode": 0,
+    "startedAtUtc": "2026-09-30T08:36:06.029Z",
+    "finishedAtUtc": "2026-09-30T08:37:17.194Z",
+    "durationSeconds": 71.165,
+    "memoryMbytes": 256,
+    "timeoutSeconds": 1200,
+    "usageTotalUsd": 0.0005380033545427852,
+    "usage": {
+      "ACTOR_COMPUTE_UNITS": 0.004932291666666666,
+      "DATASET_READS": 0,
+      "DATASET_WRITES": 1,
+      "KEY_VALUE_STORE_READS": 0,
+      "KEY_VALUE_STORE_WRITES": 1,
+      "KEY_VALUE_STORE_LISTS": 0,
+      "REQUEST_QUEUE_READS": 0,
+      "REQUEST_QUEUE_WRITES": 0,
+      "DATA_TRANSFER_INTERNAL_GBYTES": 0.0000071981921792030334,
+      "DATA_TRANSFER_EXTERNAL_GBYTES": 0.00040732044726610184,
+      "PROXY_RESIDENTIAL_TRANSFER_GBYTES": 0,
+      "PROXY_SERPS": 0,
+      "PROXY_UNBLOCKER_UNITS": 0
+    },
+    "defaultDatasetId": "g624RBwks6D6onoyF",
+    "defaultKeyValueStoreId": "W1pdfeOzi04gpIlnK",
+    "requestCounts": {
+      "google_page|google|200": 100,
+      "google_page|google|302": 100,
+      "decoder_rpc|google|200": 100
+    },
+    "redirectDestinationClassCounts": {
+      "google_news": 100
+    }
+  },
+  "evidenceRetrieval": {
+    "retrievedVia": "Apify default dataset API/CLI",
+    "datasetItemCount": 1,
+    "redactedManifest": true,
+    "sourceAndPublisherUrlsRetained": false
+  }
+}
