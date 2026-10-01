@@ -1,20 +1,20 @@
 import { Actor } from "apify";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { Worker } from "node:worker_threads";
-import http from "node:http";
-import https from "node:https";
-import net from "node:net";
-import dns from "node:dns";
-import dnsPromises from "node:dns/promises";
 import { extractBounded } from "../../10-direct-readability/src/extract.mjs";
 import { createSdkStub } from "./sdk-stub.mjs";
 import { inspectImportGraph } from "./import-graph-check.mjs";
 import { marker, state } from "./guard-preload.mjs";
 
 const FIXTURE_INPUT = Object.freeze({ mode: "fixture-only", fixtureId: "readability-positive-v1" });
+const FIXTURE_SHA256 = "cb58978a9ba481956d382e4fc153a666767a718a2e05d0ce5f5b3172fe1b5614";
+const EXPECTED_WORDS = 26;
+const EXPECTED_OUTPUT_CHARS = 186;
 const storeId = "issue22-h12-local-store";
 const stages = [];
 const aggregate = { schemaVersion: "issue22-h12-fixture-v1", fixtureCount: 0, workerStatus: "not_started", readabilityStatus: "not_scored", readabilityWords: 0, outputChars: 0 };
+let workerCount = 0;
 
 function stage(name) { stages.push(name); }
 function exactFixtureInput(input) {
@@ -29,61 +29,26 @@ const inputAllowlistVerified = exactFixtureInput(FIXTURE_INPUT) && [
 function privacySafe(value) {
   return JSON.stringify(value).length < 2048 && !/https?:|<script|fixture article|article text/i.test(JSON.stringify(value));
 }
-function resetCounters() {
-  state.allowedSdkByPhase = { sdk_init: 0, input_read: 0, aggregate_write: 0, other: 0 };
-  state.deniedApplication = 0; state.tupleMiss = 0; state.socketDenied = 0;
-  for (const key of Object.keys(state.socketHostClass)) state.socketHostClass[key] = 0;
-  for (const key of Object.keys(state.socketCallShape)) state.socketCallShape[key] = 0;
-  state.socketOptionKeySet = {};
-  for (const key of Object.keys(state.blockedApi)) state.blockedApi[key] = 0;
-}
-function parentNegativeChecks() {
-  const outcomes = [];
-  const attempt = (name, operation) => {
-    try { operation(); outcomes.push({ api: name, blocked: false }); }
-    catch (error) { outcomes.push({ api: name, blocked: error?.code === "H12_NETWORK_DENIED" }); }
-  };
-  process.env.H12_PHASE = "guard_probe";
-  attempt("fetch", () => fetch("https://news.google.com/"));
-  attempt("http.request", () => http.request("http://news.google.com/"));
-  attempt("http.get", () => http.get("http://news.google.com/"));
-  attempt("https.request", () => https.request("https://news.google.com/"));
-  attempt("https.get", () => https.get("https://news.google.com/"));
-  attempt("http.request.unlisted_loopback", () => http.request("http://127.0.0.1:43821/not-allowlisted"));
-  attempt("net.connect", () => net.connect(443, "news.google.com"));
-  attempt("net.connect.unscoped_loopback", () => net.connect(43821, "127.0.0.1"));
-  attempt("net.createConnection", () => net.createConnection(443, "news.google.com"));
-  attempt("net.Socket.connect", () => new net.Socket().connect(443, "news.google.com"));
-  attempt("dns.lookup", () => dns.lookup("news.google.com", () => {}));
-  attempt("dns.lookupService", () => dns.lookupService("127.0.0.1", 80, () => {}));
-  attempt("dns.resolve", () => dns.resolve("news.google.com", () => {}));
-  attempt("dns.promises.lookup", () => dnsPromises.lookup("news.google.com"));
-  attempt("dns.promises.resolve", () => dnsPromises.resolve("news.google.com"));
-  return outcomes;
-}
-function workerNegativeChecks() {
-  return new Promise((resolve, reject) => {
-    const worker = new Worker(new URL("./guard-probe-worker.mjs", import.meta.url), { type: "module" });
-    let finished = false;
-    const timer = setTimeout(() => { if (!finished) { finished = true; void worker.terminate(); reject(new Error("guard_worker_timeout")); } }, 5000);
-    worker.once("message", (message) => { finished = true; clearTimeout(timer); resolve(message); });
-    worker.once("error", (error) => { if (!finished) { finished = true; clearTimeout(timer); reject(error); } });
-  });
+class GuardedReadabilityWorker extends Worker {
+  constructor(url, options) {
+    if (!stages.includes("fixture_input_accepted")) throw new Error("worker_before_input_gate");
+    workerCount++;
+    super(url, { ...options, execArgv: ["--import", new URL("./guard-preload.mjs", import.meta.url).href] });
+  }
 }
 
+const malformedInput = process.env.H12_INPUT_MODE === "invalid";
+const fixtureInput = malformedInput ? { ...FIXTURE_INPUT, mode: "live" } : FIXTURE_INPUT;
 const stub = createSdkStub({
   expectedTuples: JSON.parse(await readFile(new URL("./tuple-manifest.json", import.meta.url), "utf8")).tuples,
-  input: FIXTURE_INPUT,
+  input: fixtureInput,
   discover: process.env.H12_DISCOVER_TUPLES === "1",
 });
 let persisted = false;
+let inputRejected = false;
 let exitCode = 0;
 let failureCode = "none";
-let parentNegative = [];
-let workerNegative = null;
-let stubCallsDuringNegativeChecks = null;
-let parentDeniedByApi = null;
-let workerDeniedByApi = null;
+let extractionDiagnostics = null;
 const importGraph = await inspectImportGraph();
 stage("application_entry");
 try {
@@ -101,16 +66,6 @@ try {
   process.env.H12_PHASE = "sdk_init";
   if (process.env.H12_GUARD_MARKER !== marker || globalThis.__ISSUE22_H12_GUARD__ !== marker) throw new Error("guard_marker_missing");
   stage("guard_ready");
-  const beforeNegativeStubCalls = stub.tuples().length;
-  parentNegative = parentNegativeChecks();
-  workerNegative = await workerNegativeChecks();
-  parentDeniedByApi = { ...state.blockedApi };
-  workerDeniedByApi = workerNegative.blockedApi;
-  stubCallsDuringNegativeChecks = stub.tuples().length - beforeNegativeStubCalls;
-  if (!parentNegative.length || parentNegative.some((item) => !item.blocked) || !workerNegative.marker || !workerNegative.allBlocked || workerNegative.attempted < 30 || workerNegative.blockedApplication !== workerNegative.attempted || stubCallsDuringNegativeChecks !== 0) throw new Error("negative_guard_checks_failed");
-  stage("parent_worker_guards_verified");
-  resetCounters();
-  process.env.H12_PHASE = "sdk_init";
   process.env.H12_REQUIRE_GUARD = "1";
   const client = Actor.apifyClient;
   if (client.httpClient && Number.isSafeInteger(client.httpClient.maxRetries)) client.httpClient.maxRetries = 0;
@@ -119,18 +74,37 @@ try {
   stage("sdk_initialized");
   process.env.H12_PHASE = "input_read";
   const input = await Actor.getInput();
-  if (!exactFixtureInput(input)) { stage("input_rejected"); exitCode = 2; throw new Error("fixture_input_rejected"); }
+  if (!exactFixtureInput(input)) {
+    inputRejected = true;
+    exitCode = 2;
+    stage("input_rejected");
+    throw new Error("fixture_input_rejected");
+  }
   stage("fixture_input_accepted");
+
+  // The first Worker is created only after the exact fixture-only Actor input gate.
   const fixture = await readFile(new URL("../fixtures/readability-positive-v1.html", import.meta.url), "utf8");
+  const fixtureHash = createHash("sha256").update(fixture).digest("hex");
+  if (fixtureHash !== FIXTURE_SHA256) throw new Error("fixture_hash_mismatch");
   process.env.H12_PHASE = "aggregate_write";
-  const extracted = await extractBounded(fixture, "https://fixture.invalid/article", { deadlineMs: 5000 });
+  const extracted = await extractBounded(fixture, "https://fixture.invalid/article", { WorkerClass: GuardedReadabilityWorker, deadlineMs: 5000 });
+  extractionDiagnostics = {
+    status: extracted.status,
+    readabilityStatus: extracted.readabilityStatus,
+    wordCount: extracted.readabilityWords,
+    outputCharCount: extracted.outputChars,
+    workerGuardMarker: extracted.guardMarker === true,
+    workerCount,
+  };
   aggregate.fixtureCount = 1;
   aggregate.workerStatus = extracted.status;
   aggregate.readabilityStatus = extracted.readabilityStatus;
   aggregate.readabilityWords = extracted.readabilityWords;
   aggregate.outputChars = extracted.outputChars;
   aggregate.guardMarker = extracted.guardMarker === true;
-  if (extracted.status !== "complete" || extracted.readabilityStatus !== "success" || extracted.readabilityWords < 1 || extracted.guardMarker !== true) throw new Error("fixture_extraction_failed");
+  if (extracted.status !== "complete" || extracted.readabilityStatus !== "success" ||
+      extracted.readabilityWords !== EXPECTED_WORDS || extracted.outputChars !== EXPECTED_OUTPUT_CHARS ||
+      extracted.guardMarker !== true || workerCount !== 1) throw new Error("fixture_extraction_failed");
   stage("fixture_extracted");
   if (!privacySafe(aggregate)) throw new Error("aggregate_privacy_failed");
   await Actor.pushData(aggregate);
@@ -138,8 +112,11 @@ try {
   persisted = true;
   stage("aggregate_persisted");
 } catch (error) {
-  failureCode = ["EADDRINUSE", "H12_NETWORK_DENIED", "H12_GUARD_FAILED", "ERR_INVALID_ARG_TYPE"].includes(error?.code) ? error.code : "unclassified";
-  stage("diagnostic_failed");
+  const knownFailures = new Set(["import_graph_gate_failed", "event_websocket_not_disabled", "guard_marker_missing", "fixture_input_rejected", "fixture_hash_mismatch", "fixture_extraction_failed", "aggregate_privacy_failed", "aggregate_write_verification_failed"]);
+  failureCode = ["EADDRINUSE", "H12_NETWORK_DENIED", "H12_GUARD_FAILED", "ERR_INVALID_ARG_TYPE"].includes(error?.code)
+    ? error.code
+    : inputRejected ? "fixture_input_rejected" : knownFailures.has(error?.message) ? error.message : "unclassified";
+  if (!inputRejected) stage("diagnostic_failed");
   if (exitCode === 0) exitCode = 1;
 } finally {
   try { if (Actor.getDefaultInstance?.().initialized) await Actor.exit({ exitCode, exit: false }); } catch { exitCode = 1; }
@@ -151,7 +128,7 @@ const stubTuples = stub.tuples();
 const counters = globalThis.__ISSUE22_H12_COUNTERS__;
 const result = {
   schemaVersion: "issue22-h12-local-result-v1",
-  outcome: persisted ? "fixture_complete" : "failed",
+  outcome: persisted ? "fixture_complete" : inputRejected ? "input_rejected" : "failed",
   failureCode,
   stages,
   aggregatePersisted: persisted,
@@ -166,22 +143,18 @@ const result = {
   deniedApplication: counters.deniedApplication,
   tupleMiss: counters.tupleMiss,
   socketDenied: counters.socketDenied,
-  socketHostClass: counters.socketHostClass,
-  socketCallShape: counters.socketCallShape,
-  socketOptionKeySet: counters.socketOptionKeySet,
   blockedApi: counters.blockedApi,
   externalNetwork: "disabled-by-runner-and-guard",
   fixtureOnly: true,
   inputAllowlistVerified,
   eventWebSocketDisabled: !Actor.config.get("actorEventsWsUrl"),
+  workerCount,
+  workerOnlyAfterInputGate: !stages.includes("fixture_extracted") || stages.indexOf("fixture_input_accepted") < stages.indexOf("fixture_extracted"),
+  normalGuardDenials: counters.deniedApplication + counters.tupleMiss + counters.socketDenied,
+  fixtureSha256: persisted ? FIXTURE_SHA256 : null,
   runtimeImageDigest: process.env.H12_IMAGE_DIGEST ?? "not_container_reported",
-  parentNegativeApiCount: parentNegative?.length ?? 0,
-  workerNegativeApiCount: workerNegative?.attempted ?? 0,
-  parentDeniedByApi,
-  workerDeniedByApi,
-  parentAndWorkerDeniedAll: !!parentNegative?.length && parentNegative.every((item) => item.blocked) && !!workerNegative?.allBlocked,
-  stubCallsDuringNegativeChecks: stubCallsDuringNegativeChecks ?? null,
   aggregateWriteVerified: stub.aggregateWriteVerified(),
+  extractionDiagnostics,
   fixtureResult: persisted ? {
     workerStatus: aggregate.workerStatus,
     readabilityStatus: aggregate.readabilityStatus,

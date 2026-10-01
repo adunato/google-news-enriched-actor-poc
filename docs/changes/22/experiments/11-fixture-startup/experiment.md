@@ -17,26 +17,35 @@ worker. A loopback stub emulates the five observed SDK API tuples. A preload
 guard freezes and enforces those tuples by origin, method, normalized path, and
 phase. It rejects unlisted application requests and external sockets, and
 replaces fetch, HTTP(S), DNS, and socket access with fail-closed checks. Proxy
-environment variables are removed. The SDK event WebSocket is disabled. Parent
-and worker negative probes run before the fixture flow, with the loopback stub
-checked for calls during those probes.
+environment variables are removed. The SDK event WebSocket is disabled. A
+malformed full Actor input run verifies rejection before any Worker starts.
+Separate runner processes perform the negative parent and Worker probes under
+the same preload; the loopback stub is checked for calls during those probes.
+The valid Actor run starts exactly one known Readability Worker, with the
+preload explicitly included in that Worker's `execArgv`.
 
-The import-graph check reviews the fixed entrypoint, guard, SDK stub, worker,
-I10 extraction modules, and supporting modules for live probe/network imports,
-dynamic or native loads, and direct Undici access. The output stores only fixed
-counts, stage names, and allowlisted aggregate fields; it contains no fixture
-article text or request query values.
+The import-graph check is a fixed seven-file lexical screen for selected
+forbidden import names, dynamic import syntax, native-load patterns, and a
+direct Undici import. It does not resolve the transitive dependency graph or
+prove the absence of APIs behind aliases, computed names, or dependency
+internals. It does not completely inspect TLS, HTTP/2, WebSocket,
+`child_process`, native addons, or arbitrary Worker behavior. The output stores
+only fixed counts, stage names, and allowlisted aggregate fields; it contains
+no fixture article text or request query values.
 
 ## Result
 
-The run completed through SDK initialization, exact fixture input acceptance,
-Readability extraction, and one verified aggregate write. The worker returned
-`complete` / `success` with a positive word count. All five frozen API tuples
-matched; allowed SDK calls were 1 initialization, 2 input reads, and 2 aggregate
-write calls. There were no unlisted application calls, tuple misses, denied
-sockets in the normal fixture flow, or stub calls during negative probes. The
-parent guard blocked all 15 probes and the worker guard blocked all 42 probes.
-The import graph passed for seven reviewed modules.
+The malformed input was rejected after SDK input retrieval and before any
+Worker started (`workerCount: 0`). Two valid fixture runs each started exactly
+one guarded Readability Worker after the input gate and returned `complete` /
+`success`, 26 words, and 186 output characters; the fixed fixture SHA-256 and
+both results matched between runs. Each run persisted one verified aggregate.
+All five frozen SDK tuples matched; allowed SDK calls were 1 initialization, 2
+input reads, and 2 aggregate write calls. The normal runs had zero denials,
+tuple misses, or denied sockets. In the separate negative-probe process, the
+parent guard blocked all 15 probes and the Worker guard blocked all 42; no
+request reached the stub. The seven-file lexical screen passed its stated
+patterns, subject to the exclusions above.
 
 The evidence record is [`evidence/local-result.json`](evidence/local-result.json).
 It was produced in the immutable Apify Actor Node image
@@ -55,14 +64,16 @@ $image = 'apify/actor-node@sha256:c475bc63b3e70488dfb574147d8e63e7f410480bb0a3ef
 docker run --rm --network none --mount "type=bind,source=$repoRoot,target=/workspace" --workdir /workspace -e H12_IMAGE_DIGEST=$image $image node docs/changes/22/experiments/11-fixture-startup/src/run-local.mjs --write-evidence
 ```
 
-The runner exits nonzero on any failed guard, unexpected SDK tuple, malformed
-fixture input, failed extraction, unexpected aggregate, or import-graph check.
+The runner exits nonzero unless the malformed-input rejection, separate
+negative probes, both repeatable valid fixture runs, tuple manifest, exact
+aggregate schema, and lexical-screen checks pass.
 
 ## Limits and decision
 
 This establishes that the bounded fixture path reaches and completes local
-SDK-backed extraction under a container with networking disabled. It does not
-prove zero wire egress at the operating-system level, parity with the hosted
+SDK-backed extraction under a container with networking disabled and the
+listed JavaScript API guards. It does not prove zero wire egress at the
+operating-system level, full transitive API coverage, parity with the hosted
 Apify runtime's SDK tuple set, successful publisher URL resolution or live
 article extraction, or a successful hosted Actor start. The loopback tuple set
 is evidence for this pinned local image only. The original I10 live 100-result

@@ -25,4 +25,12 @@ for (const name of ["lookup", "lookupService", "resolve", "resolve4", "resolve6"
   if (typeof dns[name] === "function") blocked(`dns.${name}`, () => dns[name]("news.google.com", () => {}));
   if (typeof dnsPromises[name] === "function") blocked(`dns.promises.${name}`, () => dnsPromises[name]("news.google.com"));
 }
-parentPort.postMessage({ marker: globalThis.__ISSUE22_H12_GUARD__ === marker, attempted: attempts.length, allBlocked: attempts.every((item) => item.blocked), blockedApplication: state.deniedApplication, tupleMiss: state.tupleMiss, socketDenied: state.socketDenied, blockedApi: state.blockedApi });
+parentPort.postMessage({
+  marker: globalThis.__ISSUE22_H12_GUARD__ === marker,
+  attempted: attempts.length,
+  allBlocked: attempts.length === 42 && attempts.every((item) => item.blocked),
+  blockedApplication: state.deniedApplication,
+  tupleMiss: state.tupleMiss,
+  socketDenied: state.socketDenied,
+  blockedApi: state.blockedApi,
+});
