@@ -17,16 +17,19 @@ export function buildAggregate(rows) {
   const perCell = new Map(CELLS.map((cellId) => [cellId, { cellId, plannedSlots: 10, returnedRows: 0, duplicateRows: 0, uniqueRows: 0, eligibleRows: 0, candidate: count(CANDIDATE), robots: count(ROBOTS), fetch: count(FETCH), readability: count(READABILITY), structured: count(STRUCTURED), overlap: count(OVERLAP), prefix: count(PREFIX), elapsed: count(ELAPSED), dom: count(DOM), workerTime: count(WORKER_TIME) }]));
   const seenSlot = new Set();
   for (const row of rows) {
-    const keys = ["cellId", "slot", "candidate", "robots", "fetch", "readability", "structured", "prefix", "elapsed", "dom", "workerTime"];
+    const keys = ["cellId", "slot", "candidate", "robots", "fetch", "readability", "readabilityWords", "structured", "structuredWords", "prefix", "elapsed", "dom", "workerTime"];
     if (!exact(row, keys)) throw new Error("observation_field_not_allowlisted");
     const cell = perCell.get(row.cellId);
     if (!cell || !Number.isSafeInteger(row.slot) || row.slot < 1 || row.slot > 10 || seenSlot.has(`${row.cellId}:${row.slot}`)) throw new Error("invalid_or_duplicate_slot");
     seenSlot.add(`${row.cellId}:${row.slot}`);
     for (const [value, allowed, field] of [[row.candidate, CANDIDATE, "candidate"], [row.robots, ROBOTS, "robots"], [row.fetch, FETCH, "fetch"], [row.readability, READABILITY, "readability"], [row.structured, STRUCTURED, "structured"], [row.prefix, PREFIX, "prefix"], [row.elapsed, ELAPSED, "elapsed"], [row.dom, DOM, "dom"], [row.workerTime, WORKER_TIME, "worker_time"]])
       if (!allowed.includes(value)) throw new Error(`invalid_${field}_status`);
-    if ((row.candidate === "not_returned" || row.candidate === "duplicate") && (row.robots !== "not_checked" || row.fetch !== "not_attempted" || row.readability !== "not_attempted" || row.structured !== "not_attempted" || row.prefix !== "unavailable" || row.dom !== "unavailable")) throw new Error("missing_or_duplicate_row_has_downstream_observation");
+    if (!Number.isSafeInteger(row.readabilityWords) || row.readabilityWords < 0 || !Number.isSafeInteger(row.structuredWords) || row.structuredWords < 0) throw new Error("invalid_word_count");
+    if ((row.readability === "success") !== (row.readabilityWords > 0) || (row.structured === "present") !== (row.structuredWords > 0)) throw new Error("extraction_status_word_count_mismatch");
+    if ((row.candidate === "not_returned" || row.candidate === "duplicate") && (row.robots !== "not_checked" || row.fetch !== "not_attempted" || row.readability !== "not_attempted" || row.readabilityWords !== 0 || row.structured !== "not_attempted" || row.structuredWords !== 0 || row.prefix !== "unavailable" || row.dom !== "unavailable")) throw new Error("missing_or_duplicate_row_has_downstream_observation");
     const eligible = row.fetch === "http_2xx_html" && ["allowed", "not_found"].includes(row.robots);
     if (row.readability === "success" && !eligible) throw new Error("readability_success_without_eligible_publisher_evidence");
+    if (row.structured === "present" && !eligible) throw new Error("structured_success_without_eligible_publisher_evidence");
     cell.candidate[row.candidate]++;
     if (row.candidate !== "not_returned") cell.returnedRows++;
     if (row.candidate === "duplicate") cell.duplicateRows++;

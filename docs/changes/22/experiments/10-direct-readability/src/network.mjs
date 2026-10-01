@@ -5,16 +5,33 @@ import https from "node:https";
 import { isIP } from "node:net";
 import { TextDecoder } from "node:util";
 import { URL } from "node:url";
+import { performance } from "node:perf_hooks";
 import ipaddr from "ipaddr.js";
 
 export const LIMITS = Object.freeze({
   timeoutMs: 10000, maxRedirects: 5, prefixBytes: 512 * 1024,
   structuredBytes: 64 * 1024, maxDomElements: 10000,
   maxOutputChars: 100000, concurrency: 4, perHostDelayMs: 250,
-  workerDeadlineMs: 5000, softStopMs: 780000, maxRows: 100,
+  workerDeadlineMs: 5000, softStopMs: 780000, flushDeadlineMs: 840000, maxRows: 100,
 });
 export const NETWORK_RETRIES = 0;
 export const mayFollowRedirect = (followed) => Number.isSafeInteger(followed) && followed >= 0 && followed < LIMITS.maxRedirects;
+
+export function createRunBudget({ softStopMs = LIMITS.softStopMs, flushDeadlineMs = LIMITS.flushDeadlineMs, now = () => performance.now() } = {}) {
+  const startedAt = now(), controller = new AbortController();
+  const error = () => { const value = new Error("run_soft_stop"); value.name = "TimeoutError"; return value; };
+  const softTimer = setTimeout(() => controller.abort(error()), Math.max(0, softStopMs));
+  return {
+    signal: controller.signal,
+    get aborted() { return controller.signal.aborted || now() - startedAt >= softStopMs; },
+    elapsedMs: () => Math.max(0, now() - startedAt),
+    remainingMs: () => Math.max(0, softStopMs - (now() - startedAt)),
+    flushRemainingMs: () => Math.max(0, flushDeadlineMs - (now() - startedAt)),
+    dispose: () => clearTimeout(softTimer),
+  };
+}
+
+function timeoutError() { const error = new Error("request_timeout"); error.name = "TimeoutError"; return error; }
 
 export function addressIsPublic(address) {
   try {
@@ -53,17 +70,26 @@ export function redirectUrl(location, current) {
   try { return new URL(location, current).href; } catch { return null; }
 }
 
-export async function requestPinned(value, { resolver = lookup, timeoutMs = LIMITS.timeoutMs, headers = {}, method = "GET", body, transports = { http, https } } = {}) {
+export async function requestPinned(value, { resolver = lookup, timeoutMs = LIMITS.timeoutMs, headers = {}, method = "GET", body, transports = { http, https }, signal } = {}) {
   return new Promise((resolve, reject) => {
     let request, response, settled = false, closed = false;
-    const timeoutError = () => { const error = new Error("request_timeout"); error.name = "TimeoutError"; return error; };
+    const remaining = signal ? Math.min(timeoutMs, Number(signal.remainingMs?.() ?? timeoutMs)) : timeoutMs;
+    if (signal?.aborted || remaining <= 0) { reject(timeoutError()); return; }
     const timer = setTimeout(() => {
       const error = timeoutError();
       request?.destroy(error);
       response?.destroy(error);
       if (!settled) { settled = true; reject(error); }
-    }, timeoutMs);
-    const cleanup = () => { if (!closed) { closed = true; clearTimeout(timer); } };
+    }, remaining);
+    const onAbort = () => {
+      const error = signal?.reason instanceof Error ? signal.reason : timeoutError();
+      request?.destroy(error);
+      response?.destroy(error);
+      if (!settled) { settled = true; cleanup(); reject(error); }
+    };
+    const cleanup = () => { if (!closed) { closed = true; clearTimeout(timer); signal?.removeEventListener("abort", onAbort); } };
+    signal?.addEventListener("abort", onAbort, { once: true });
+    if (signal?.aborted) { onAbort(); return; }
     (async () => {
       try {
         // The timer starts before DNS resolution, so a stalled resolver is bounded too.
@@ -91,13 +117,19 @@ export async function requestPinned(value, { resolver = lookup, timeoutMs = LIMI
   });
 }
 
-export async function boundedPrefix(response, cap = LIMITS.prefixBytes) {
+export async function boundedPrefix(response, cap = LIMITS.prefixBytes, { signal } = {}) {
   const encoding = String(response.headers["content-encoding"] ?? "identity").toLowerCase();
   if (encoding !== "identity") { response.destroy(); throw new Error("compressed_response_rejected"); }
   const declared = Number(response.headers["content-length"] ?? 0);
   const chunks = []; let size = 0, capped = declared > cap;
   return await new Promise((resolve, reject) => {
-    const done = () => resolve({ html: new TextDecoder().decode(Buffer.concat(chunks, size)), bytes: size, capped });
+    let terminal = false;
+    const done = () => { if (terminal) return; terminal = true; cleanup(); resolve({ html: new TextDecoder().decode(Buffer.concat(chunks, size)), bytes: size, capped }); };
+    const fail = (error) => { if (terminal) return; terminal = true; cleanup(); reject(error); };
+    const onAbort = () => { const error = signal.reason instanceof Error ? signal.reason : timeoutError(); response.destroy(error); fail(error); };
+    const cleanup = () => signal?.removeEventListener("abort", onAbort);
+    signal?.addEventListener("abort", onAbort, { once: true });
+    if (signal?.aborted) { onAbort(); return; }
     response.on("data", (chunk) => {
       const left = cap - size, take = chunk.subarray(0, Math.max(0, left));
       if (take.length) chunks.push(take);
@@ -105,7 +137,7 @@ export async function boundedPrefix(response, cap = LIMITS.prefixBytes) {
       if (take.length < chunk.length || size === cap) { capped = true; response.destroy(); done(); }
     });
     response.once("end", done);
-    response.once("error", (error) => { if (!capped) reject(error); });
+    response.once("error", (error) => { if (!capped) fail(error); });
   });
 }
 
@@ -126,22 +158,41 @@ export function robotsAllows(text, pathname, userAgent = "*") {
     ? matches.filter((match) => match.name.length === mostSpecific).map((match) => match.group)
     : groups.filter((group) => group.agents.includes("*"));
   const rulesForAgent = [...new Set(selected)].flatMap((group) => group.rules);
-  const matching = rulesForAgent.filter((r) => pathname.startsWith(r.path)).sort((a, b) => b.path.length - a.path.length);
+  const matching = rulesForAgent.filter((rule) => {
+    const terminal = rule.path.endsWith("$");
+    const pattern = rule.path.replace(/\$$/, "").split("*").map((piece) => piece.replace(/[|\\{}()[\]^$+?.]/g, "\\$&")).join(".*");
+    return new RegExp(`^${pattern}${terminal ? "$" : ""}`).test(pathname);
+  }).sort((a, b) => {
+    const length = (rule) => rule.path.replace(/\*/g, "").replace(/\$$/, "").length;
+    return length(b) - length(a) || Number(b.allow) - Number(a.allow);
+  });
   return !matching.length || matching[0].allow;
 }
 
 const nextAt = new Map();
 const queues = new Map();
-export async function paceHost(host, now = Date.now(), delay = LIMITS.perHostDelayMs, sleep = (ms) => new Promise((r) => setTimeout(r, ms))) {
+export async function paceHost(host, now = Date.now(), delay = LIMITS.perHostDelayMs, sleep = (ms) => new Promise((r) => setTimeout(r, ms)), signal) {
   const key = String(host).toLowerCase();
   const previous = queues.get(key) ?? Promise.resolve(); let release;
   const current = new Promise((resolve) => { release = resolve; }); queues.set(key, current);
   await previous;
-  const waitMs = Math.max(0, (nextAt.get(key) ?? now) - now);
-  if (waitMs) await sleep(waitMs);
-  nextAt.set(key, Math.max(now, nextAt.get(key) ?? now) + delay);
-  release();
-  return waitMs;
+  try {
+    if (signal?.aborted) throw signal.reason ?? timeoutError();
+    const waitMs = Math.max(0, (nextAt.get(key) ?? now) - now);
+    if (waitMs) {
+      if (!signal) await sleep(waitMs);
+      else await new Promise((resolve, reject) => {
+        const onAbort = () => { cleanup(); reject(signal.reason ?? timeoutError()); };
+        const cleanup = () => signal.removeEventListener("abort", onAbort);
+        signal.addEventListener("abort", onAbort, { once: true });
+        if (signal.aborted) { onAbort(); return; }
+        Promise.resolve(sleep(waitMs)).then((value) => { cleanup(); resolve(value); }, (error) => { cleanup(); reject(error); });
+      });
+    }
+    if (signal?.aborted) throw signal.reason ?? timeoutError();
+    nextAt.set(key, Math.max(now, nextAt.get(key) ?? now) + delay);
+    return waitMs;
+  } finally { release(); }
 }
 
 export function dedupeFirst(rows) {

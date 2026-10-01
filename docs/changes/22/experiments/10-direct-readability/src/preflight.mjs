@@ -4,20 +4,21 @@ import { EventEmitter } from "node:events";
 import { readFile, writeFile } from "node:fs/promises";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Readable } from "node:stream";
+import { PassThrough, Readable } from "node:stream";
 import http from "node:http";
 import https from "node:https";
 import net from "node:net";
 import dns from "node:dns";
 import dnsPromises from "node:dns/promises";
 import process from "node:process";
-import { LIMITS, NETWORK_RETRIES, addressIsPublic, boundedPrefix, dedupeFirst, mayFollowRedirect, paceHost, pinnedLookup, requestPinned, resolvePublicTarget, robotsAllows } from "./network.mjs";
+import { LIMITS, NETWORK_RETRIES, addressIsPublic, boundedPrefix, createRunBudget, dedupeFirst, mayFollowRedirect, paceHost, pinnedLookup, requestPinned, resolvePublicTarget, robotsAllows } from "./network.mjs";
 import { extractBounded } from "./extract.mjs";
 import { buildAggregate, persistAggregateOnly, validateAggregate } from "./aggregate.mjs";
 import { verifyFutureRunGates } from "./verify-run-options.mjs";
 import { mapLimit, readabilityOutcome } from "./probe.mjs";
 import { assertHostedRunGate, inspectHostedRunGate } from "./runtime-gate.mjs";
-import { createHostedRunPlan, executeHostedRunPlan, hashSourceFiles } from "./hosted-run-controller.mjs";
+import { createHostedRunPlan, executeHostedRunPlan, hashSourceFiles, sourceSnapshotsEqual } from "./hosted-run-controller.mjs";
+import { createApifyCliAdapter, runApifyCli } from "./apify-cli-adapter.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const started = Date.now(), checks = [];
@@ -26,9 +27,10 @@ const rssSampler = setInterval(() => { peakRssBytes = Math.max(peakRssBytes, pro
 rssSampler.unref();
 async function check(id, fn) { await fn(); checks.push({ id, status: "passed" }); }
 function row(cellIndex, slot) {
-  return { cellId: `q${Math.floor(cellIndex / 2) + 1}-${cellIndex % 2 ? "us" : "gb"}`, slot, candidate: "resolved", robots: "allowed", fetch: "http_2xx_html", readability: "success", structured: "present", prefix: "not_capped", elapsed: "100_to_lt_500ms", dom: "lt_1k", workerTime: "100_to_lt_500ms" };
+  return { cellId: `q${Math.floor(cellIndex / 2) + 1}-${cellIndex % 2 ? "us" : "gb"}`, slot, candidate: "resolved", robots: "allowed", fetch: "http_2xx_html", readability: "success", readabilityWords: 20, structured: "present", structuredWords: 12, prefix: "not_capped", elapsed: "100_to_lt_500ms", dom: "lt_1k", workerTime: "100_to_lt_500ms" };
 }
 function cohort() { return Array.from({ length: 100 }, (_, i) => row(Math.floor(i / 10), i % 10 + 1)); }
+function planlessSnapshot(content) { return [{ name: "src/test.mjs", format: "TEXT", content }]; }
 const fixture = `<!doctype html><html><head><title>Fixture article</title><script type="application/ld+json">{"@type":"NewsArticle","articleBody":"Structured fixture body with enough meaningful words to be detected."}</script></head><body><nav>Home World Business Technology</nav><article><h1>Fixture article title</h1><p>This synthetic article contains enough readable prose for Mozilla Readability to identify the article and return normalized text safely.</p><p>It has no real publisher data and exists only to prove direct parsing and aggregate measurement.</p></article></body></html>`;
 const sentinelUrl = "https://private-sentinel.invalid/story";
 const sentinelText = "forbidden sentinel article text";
@@ -46,7 +48,7 @@ if (!/^v20\./.test(process.version)) throw new Error(`expected Node 20 runtime; 
 if (Date.now() - started > 90000) throw new Error("preflight_startup_over_90_seconds");
 
 await check("fixed_configuration_and_no_retries", async () => {
-  assert.deepEqual(LIMITS, { timeoutMs: 10000, maxRedirects: 5, prefixBytes: 524288, structuredBytes: 65536, maxDomElements: 10000, maxOutputChars: 100000, concurrency: 4, perHostDelayMs: 250, workerDeadlineMs: 5000, softStopMs: 780000, maxRows: 100 });
+  assert.deepEqual(LIMITS, { timeoutMs: 10000, maxRedirects: 5, prefixBytes: 524288, structuredBytes: 65536, maxDomElements: 10000, maxOutputChars: 100000, concurrency: 4, perHostDelayMs: 250, workerDeadlineMs: 5000, softStopMs: 780000, flushDeadlineMs: 840000, maxRows: 100 });
   assert.equal(NETWORK_RETRIES, 0); assert.equal(mayFollowRedirect(0), true); assert.equal(mayFollowRedirect(4), true); assert.equal(mayFollowRedirect(5), false); assert.equal(mayFollowRedirect(-1), false);
 });
 await check("public_dns_validation_and_pinning", async () => {
@@ -61,6 +63,9 @@ await check("robots_allow_deny_unknown_and_specific_agent_precedence", async () 
   assert.equal(robotsAllows("User-agent: *\nDisallow: /private\nAllow: /private/public", "/private/a"), false);
   assert.equal(robotsAllows("User-agent: *\nDisallow: /private\nAllow: /private/public", "/private/public/a"), true);
   assert.equal(robotsAllows("User-agent: *\nDisallow:", "/article"), true);
+  assert.equal(robotsAllows("User-agent: *\nDisallow: /private/*/preview$", "/private/a/preview"), false);
+  assert.equal(robotsAllows("User-agent: *\nDisallow: /private/*/preview$", "/private/a/preview/more"), true);
+  assert.equal(robotsAllows("User-agent: *\nDisallow: /page\nAllow: /page", "/page"), true);
   const rules = "User-agent: *\nDisallow: /world\nUser-agent: GoogleNewsAccessSpike\nAllow: /world\nDisallow: /blocked\nUser-agent: OtherBot\nDisallow: /";
   const actualAgent = "GoogleNewsAccessSpike/0.1 (+https://example.org)";
   assert.equal(robotsAllows(rules, "/world/article", actualAgent), true);
@@ -88,6 +93,22 @@ await check("request_wall_clock_bounds_stalled_dns_and_response_body", async () 
   });
   await assert.rejects(() => boundedPrefix(opened.response, 1024), { name: "TimeoutError" });
   opened.close();
+});
+await check("global_monotonic_soft_stop_aborts_active_work", async () => {
+  const budget = createRunBudget({ softStopMs: 20, flushDeadlineMs: 80 });
+  const startedAt = Date.now();
+  await assert.rejects(() => requestPinned("https://publisher.example.org/a", { resolver: () => new Promise(() => {}), signal: budget.signal }), { name: "TimeoutError" });
+  assert.ok(Date.now() - startedAt < 500);
+  assert.equal(budget.aborted, true);
+  assert.ok(budget.flushRemainingMs() > 0);
+  budget.dispose();
+  let terminated = false;
+  class AbortedWorker extends EventEmitter { async terminate() { terminated = true; } }
+  const workerBudget = createRunBudget({ softStopMs: 20, flushDeadlineMs: 80 });
+  const extraction = await extractBounded(fixture, "https://fixture.invalid/article", { WorkerClass: AbortedWorker, signal: workerBudget.signal });
+  assert.equal(extraction.status, "timeout");
+  assert.equal(terminated, true);
+  workerBudget.dispose();
 });
 await check("startup_error_is_worker_error", async () => {
   assert.equal(readabilityOutcome({ status: "startup_error" }), "worker_error");
@@ -150,11 +171,15 @@ await check("aggregate_complete_and_threshold", async () => {
   assert.equal(aggregate.uniqueRows, 100); assert.equal(aggregate.eligibleRows, 100); assert.equal(aggregate.readabilitySuccesses, 100); assert.equal(aggregate.decision, "signal_threshold_met");
   const noRobotsFile = cohort(); noRobotsFile[0] = { ...noRobotsFile[0], robots: "not_found" };
   assert.equal(buildAggregate(noRobotsFile).eligibleRows, 100);
-  const belowSignal = cohort().map((item) => ({ ...item, readability: "empty" }));
+  const belowSignal = cohort().map((item) => ({ ...item, readability: "empty", readabilityWords: 0 }));
   assert.equal(buildAggregate(belowSignal).decision, "signal_threshold_not_met");
+  const contradictoryWords = cohort(); contradictoryWords[0] = { ...contradictoryWords[0], readabilityWords: 0 };
+  assert.throws(() => buildAggregate(contradictoryWords), /word_count_mismatch/);
+  const ineligibleStructured = cohort(); ineligibleStructured[0] = { ...ineligibleStructured[0], robots: "unavailable", readability: "empty", readabilityWords: 0 };
+  assert.throws(() => buildAggregate(ineligibleStructured), /structured_success_without_eligible/);
   const malformedSuccess = cohort(); malformedSuccess[0] = { ...malformedSuccess[0], robots: "unavailable" };
   assert.throws(() => buildAggregate(malformedSuccess), /success_without_eligible/);
-  const short = cohort(); short[1] = { ...short[1], candidate: "duplicate", robots: "not_checked", fetch: "not_attempted", readability: "not_attempted", structured: "not_attempted", prefix: "unavailable", elapsed: "unavailable", dom: "unavailable", workerTime: "unavailable" };
+  const short = cohort(); short[1] = { ...short[1], candidate: "duplicate", robots: "not_checked", fetch: "not_attempted", readability: "not_attempted", readabilityWords: 0, structured: "not_attempted", structuredWords: 0, prefix: "unavailable", elapsed: "unavailable", dom: "unavailable", workerTime: "unavailable" };
   assert.equal(buildAggregate(short).decision, "inconclusive_short_cohort");
 });
 await check("aggregate_privacy_and_reconciliation_before_sink", async () => {
@@ -214,12 +239,53 @@ await check("hosted_controller_mocked_api_order_exact_build_and_ambiguous_post",
     findRunsSince: async (_id, since) => { calls.push("reconcileRuns"); assert.ok(Number.isFinite(since)); return [run]; },
     getRun: async () => { calls.push("getRun"); return run; },
   };
-  const outcome = await executeHostedRunPlan(plan, api);
-  assert.deepEqual(calls, ["createActor", "setVersion", "getVersion", "buildVersion", "waitForBuild", "getActor", "startRun", "reconcileRuns", "getRun"]);
+  const outcome = await executeHostedRunPlan(plan, api, { sourceCheck: async () => ({ valid: true, sourceManifestSha256: plan.sourceManifestSha256 }) });
+  assert.deepEqual(calls, ["createActor", "setVersion", "getVersion", "buildVersion", "waitForBuild", "getActor", "startRun", "reconcileRuns", "getRun", "getActor"]);
   assert.equal(startAttempts, 1); assert.equal(outcome.status, "run_started_after_readback"); assert.equal(outcome.buildNumber, build.buildNumber);
 });
 
-assert.equal(checks.length, 20);
+await check("source_snapshot_byte_equality_and_gate_before_api", async () => {
+  assert.equal(sourceSnapshotsEqual(planlessSnapshot("a\n"), planlessSnapshot("a\n")), true);
+  assert.equal(sourceSnapshotsEqual(planlessSnapshot("a\n"), planlessSnapshot("a\r\n")), false);
+  const calls = [];
+  await assert.rejects(() => executeHostedRunPlan({ sourceManifestSha256: "expected" }, {
+    createPrivateActor: async () => { calls.push("create"); },
+  }, { sourceCheck: async () => ({ valid: false, sourceManifestSha256: "wrong" }) }), /source_continuity_gate_failed/);
+  assert.deepEqual(calls, []);
+});
+
+await check("apify_cli_adapter_uses_stdin_and_allowlisted_results", async () => {
+  const calls = [];
+  const adapter = await createApifyCliAdapter({ commandPath: "fixture-apify-cli", execute: async (command, args, input) => {
+    calls.push({ command, args, input });
+    return JSON.stringify({ data: { id: "actor_12345678", isPublic: false, actorPermissionLevel: "LIMITED_PERMISSIONS", token: "must-not-escape" } });
+  } });
+  const actor = await adapter.createPrivateActor({ name: "test" });
+  assert.deepEqual(actor, { id: "actor_12345678", isPublic: false, actorPermissionLevel: "LIMITED_PERMISSIONS" });
+  assert.deepEqual(calls[0].args, ["api", "POST", "acts", "-d", "-"]);
+  assert.deepEqual(JSON.parse(calls[0].input), { name: "test" });
+  assert.equal(JSON.stringify(actor).includes("must-not-escape"), false);
+});
+
+await check("apify_child_is_shell_free_and_stderr_is_discarded", async () => {
+  let options, received = "";
+  class FakeChild extends EventEmitter { constructor() { super(); this.stdin = new PassThrough(); this.stdout = new PassThrough(); this.stderr = new PassThrough(); } kill() {} }
+  const child = new FakeChild();
+  child.stdin.on("data", (chunk) => { received += chunk.toString("utf8"); });
+  child.stdin.once("finish", () => {
+    child.stdout.end('{"ok":true}');
+    child.stderr.end("APIFY_TOKEN=credential-sentinel");
+    setTimeout(() => child.emit("close", 0), 5);
+  });
+  const output = await runApifyCli("apify-cli", ["api", "GET", "users/me"], "safe-body", { spawnProcess: (_command, _args, spawnOptions) => { options = spawnOptions; return child; } });
+  assert.equal(options.shell, false);
+  assert.deepEqual(options.stdio, ["pipe", "pipe", "pipe"]);
+  assert.equal(received, "safe-body");
+  assert.equal(output, '{"ok":true}');
+  assert.equal(output.includes("credential-sentinel"), false);
+});
+
+assert.equal(checks.length, 24);
 const elapsedMs = Date.now() - started;
 assert.ok(elapsedMs <= 90000, "preflight exceeded 90 seconds");
 clearInterval(rssSampler);
@@ -227,14 +293,12 @@ assert.ok(peakRssBytes <= 256 * 1024 * 1024, "preflight exceeded 256 MiB RSS");
 const pkg = JSON.parse(await readFile(join(here, "../package.json"), "utf8"));
 assert.equal(pkg.dependencies["@mozilla/readability"], "0.6.0");
 assert.equal(pkg.dependencies.linkedom, "0.18.13");
-const sourcePaths = ["../Dockerfile", "../package.json", "../package-lock.json", "./aggregate.mjs", "./extract-worker.mjs", "./extract.mjs", "./hosted-run-controller.mjs", "./network.mjs", "./probe.mjs", "./preflight.mjs", "./runtime-gate.mjs", "./verify-run-options.mjs"];
-const sourceParts = [];
-for (const path of sourcePaths) sourceParts.push(`${path}\0${createHash("sha256").update(await readFile(join(here, path))).digest("hex")}\n`);
-const sourceManifestSha256 = createHash("sha256").update(sourceParts.join("")).digest("hex");
+const sourcePlan = await createHostedRunPlan({ sourceRoot: resolve(here, "..") });
+const sourceManifestSha256 = sourcePlan.sourceManifestSha256;
 const lockSha256 = createHash("sha256").update(await readFile(join(here, "../package-lock.json"))).digest("hex");
 const report = {
   schemaVersion: "issue22-iteration10-offline-preflight-v1", status: "passed", nodeVersion: process.version,
-  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 20,
+  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 24,
   completedCheckCount: checks.length, totalElapsedMs: elapsedMs, totalDeadlineMs: 90000,
   configured: { ...LIMITS, networkRetries: NETWORK_RETRIES, runtimeImage: "apify/actor-node:20", hostedRunStarted: false },
   packageLockSha256: lockSha256, sourceManifestSha256,

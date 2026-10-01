@@ -6,18 +6,22 @@ const phases = ["worker_ready", "parse_started", "parse_complete"];
 const statuses = new Set(["complete", "dom_limit", "output_limit", "worker_error", "network_attempt"]);
 function keysAre(value, keys) { return value && typeof value === "object" && !Array.isArray(value) && Object.keys(value).sort().join("|") === [...keys].sort().join("|"); }
 
-export function extractBounded(html, url, { WorkerClass = Worker, deadlineMs = LIMITS.workerDeadlineMs, now = () => performance.now() } = {}) {
+export function extractBounded(html, url, { WorkerClass = Worker, deadlineMs = LIMITS.workerDeadlineMs, now = () => performance.now(), signal } = {}) {
   return new Promise((resolve) => {
     const start = now(), deadline = start + deadlineMs;
     let worker, terminal = false, timer, nextPhase = 0, result = null;
     const finish = async (status, value = null) => {
       if (terminal) return;
       terminal = true; clearTimeout(timer);
+      signal?.removeEventListener("abort", onAbort);
       try { await worker?.terminate(); } catch { /* fixed outcome is already selected */ }
       resolve(value ?? { status, elapsedMs: Math.max(0, Number((now() - start).toFixed(3))), domElements: 0, structuredStatus: "unavailable", structuredWords: 0, readabilityStatus: "unavailable", readabilityWords: 0, outputChars: 0 });
     };
+    const onAbort = () => void finish("timeout");
+    if (signal?.aborted) { void finish("timeout"); return; }
+    signal?.addEventListener("abort", onAbort, { once: true });
     try { worker = new WorkerClass(new URL("./extract-worker.mjs", import.meta.url), { workerData: { html, url } }); }
-    catch { resolve({ status: "startup_error", elapsedMs: Math.max(0, Number((now() - start).toFixed(3))), domElements: 0, structuredStatus: "unavailable", structuredWords: 0, readabilityStatus: "unavailable", readabilityWords: 0, outputChars: 0 }); return; }
+    catch { signal?.removeEventListener("abort", onAbort); resolve({ status: "startup_error", elapsedMs: Math.max(0, Number((now() - start).toFixed(3))), domElements: 0, structuredStatus: "unavailable", structuredWords: 0, readabilityStatus: "unavailable", readabilityWords: 0, outputChars: 0 }); return; }
     timer = setTimeout(() => void finish("timeout"), Math.max(0, deadline - now()));
     const late = () => now() >= deadline;
     worker.on("message", (m) => {
@@ -37,6 +41,8 @@ export function extractBounded(html, url, { WorkerClass = Worker, deadlineMs = L
           !["success", "empty", "cap", "error", "not_scored"].includes(m.readabilityStatus) ||
           !Number.isSafeInteger(m.readabilityWords) || m.readabilityWords < 0 ||
           !Number.isSafeInteger(m.outputChars) || m.outputChars < 0 || m.outputChars > LIMITS.maxOutputChars) return void finish("protocol_error");
+      if ((m.readabilityStatus === "success") !== (m.readabilityWords > 0) ||
+          (m.structuredStatus === "present") !== (m.structuredWords > 0)) return void finish("protocol_error");
       result = m;
     });
     worker.on("error", () => void finish(late() ? "timeout" : "worker_error"));

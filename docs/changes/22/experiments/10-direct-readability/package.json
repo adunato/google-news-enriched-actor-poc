@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "node src/probe.mjs",
-    "preflight": "node src/preflight.mjs"
+    "preflight": "node src/preflight.mjs",
+    "launch-hosted": "node src/launch-hosted-run.mjs"
   },
   "dependencies": {
     "@mozilla/readability": "0.6.0",

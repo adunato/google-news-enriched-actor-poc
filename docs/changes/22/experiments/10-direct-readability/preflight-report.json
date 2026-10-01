@@ -4,9 +4,9 @@
   "nodeVersion": "v20.19.0",
   "readabilityVersion": "0.6.0",
   "domAdapter": "linkedom@0.18.13",
-  "plannedCheckCount": 20,
-  "completedCheckCount": 20,
-  "totalElapsedMs": 982,
+  "plannedCheckCount": 24,
+  "completedCheckCount": 24,
+  "totalElapsedMs": 980,
   "totalDeadlineMs": 90000,
   "configured": {
     "timeoutMs": 10000,
@@ -19,14 +19,15 @@
     "perHostDelayMs": 250,
     "workerDeadlineMs": 5000,
     "softStopMs": 780000,
+    "flushDeadlineMs": 840000,
     "maxRows": 100,
     "networkRetries": 0,
     "runtimeImage": "apify/actor-node:20",
     "hostedRunStarted": false
   },
   "packageLockSha256": "4598514fd8de26018a8a4253d65f9ac1927914ebca851a81c47fc17d3b8868c2",
-  "sourceManifestSha256": "27301269997a11df948c956ae350bce81f37afc2c778562022d221f21afb5d38",
-  "peakRssBytes": 100982784,
+  "sourceManifestSha256": "8eb8b6bd4946ae5bf1f496b5d239c8d12bb7a6480ba559162f8b503d5e133d24",
+  "peakRssBytes": 99950592,
   "networkProbeAttempts": 0,
   "aggregateSinkChecks": {
     "completeWrites": 1,
@@ -48,6 +49,10 @@
     },
     {
       "id": "request_wall_clock_bounds_stalled_dns_and_response_body",
+      "status": "passed"
+    },
+    {
+      "id": "global_monotonic_soft_stop_aborts_active_work",
       "status": "passed"
     },
     {
@@ -112,6 +117,18 @@
     },
     {
       "id": "hosted_controller_mocked_api_order_exact_build_and_ambiguous_post",
+      "status": "passed"
+    },
+    {
+      "id": "source_snapshot_byte_equality_and_gate_before_api",
+      "status": "passed"
+    },
+    {
+      "id": "apify_cli_adapter_uses_stdin_and_allowlisted_results",
+      "status": "passed"
+    },
+    {
+      "id": "apify_child_is_shell_free_and_stderr_is_discarded",
       "status": "passed"
     }
   ]
