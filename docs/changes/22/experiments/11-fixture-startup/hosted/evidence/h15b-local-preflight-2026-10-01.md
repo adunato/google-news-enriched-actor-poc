@@ -6,7 +6,7 @@
 - Source SHA-256 from launcher dry-run: `3c5a2c7240399578257b38d9b814f920701153da3d1e99d1d85ce6c7684d671c` across 19 deploy files.
 - Base image: `apify/actor-node@sha256:c475bc63b3e70488dfb574147d8e63e7f410480bb0a3ef5b7ccad54635299a63`.
 - Dry-run confirms private visibility, `LIMITED_PERMISSIONS`, 256 MiB, 180 seconds, restart disabled, `$0.10` run cap, exact fixture-only input, and no remote mutation.
-- The working package is intentionally uncommitted/dirty; the launcher therefore refuses execution until a clean reviewed commit and exact source digest are supplied.
+- The initial pre-commit dry-run saw a dirty package and correctly refused execution. After PR commit `8cdff607`, a fresh launcher dry-run confirmed `localPackageClean: true` with the same 19-file source digest above; this only establishes local launch readiness and does not claim that any hosted action occurred.
 - No Apify Actor, build, or run was created or started in this iteration.
 
 ## Origin gate and local tests
@@ -28,3 +28,10 @@
 ## Limits
 
 H15 observed only a private IPv4 URL shape alongside the Apify runtime signal; it did not establish origin provenance. H15-B relies on the bounded platform-injection assumption for one fixture diagnostic. If the hosted Actor lacks the required runtime signal, reports a proxy override, uses any other origin shape, misses a tuple, or exposes custom Actor environment variables, it must stop without broadening the gate. Hosted behavior remains untested, and this candidate makes no live publisher or Google News request.
+## Fresh revalidation and read-only configuration audit (2026-10-01)
+
+- Independent validator revalidated the exact committed candidate at `8cdff607421e6a948412717a7929726f96fffa54`: launcher/origin tests passed 14/14, preflight passed, and the Docker preflight passed with `--network none`. The source remained the same clean 19-file digest recorded above.
+- A fresh read-only name check found no H15-B Actor name collision or existing candidate Actor. The committed Actor definition and launcher payload specify no custom environment variables. The fixed input schema and run options cannot supply or override `APIFY_API_BASE_URL`.
+- The startup guard rejects recognized non-empty proxy override variables before SDK initialization; tests verify fixed error codes without echoing values. This is a fail-closed rule, not evidence that H15-A's runtime origin came from Apify.
+- The audit does not identify the origin's provider or prove platform injection. H15-B still relies on that bounded, unverified assumption. Independent code review remains pending. No H15-B Actor/build/run was created or started, and no hosted API mutation was made.
+- H15-A reported nonzero platform RX/TX counters. Neither its `networkDispatch: none` application result nor H15-B's network-denied local tests prove zero wire traffic or hosted behavior.
