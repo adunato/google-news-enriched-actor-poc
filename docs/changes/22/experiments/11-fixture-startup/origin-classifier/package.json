@@ -1,0 +1,11 @@
+{
+  "name": "issue-22-h15-origin-classifier",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.mjs",
+    "test": "node --test test/classify-origin.test.mjs test/hosted-launcher.test.mjs",
+    "preflight": "node test/preflight.mjs"
+  }
+}

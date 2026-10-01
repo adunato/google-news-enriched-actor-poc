@@ -1,0 +1,11 @@
+{
+  "privacy": "private Actor, LIMITED_PERMISSIONS",
+  "build": "exact immutable H15 build required before any future run",
+  "memoryMbytes": 256,
+  "timeoutSecs": 180,
+  "maxTotalChargeUsd": 0.1,
+  "restartOnError": false,
+  "sdkImported": false,
+  "applicationNetworkDispatch": false,
+  "input": {}
+}

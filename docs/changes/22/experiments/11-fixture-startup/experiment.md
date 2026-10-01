@@ -130,14 +130,57 @@ run log, dataset or hosted Readability result. The sanitized preparation
 evidence is
 [`evidence/attempt-2026-10-01-pre-run-stop.md`](evidence/attempt-2026-10-01-pre-run-stop.md).
 
-**Current run gate:** H14 remains authorized under the owner's expanded
+**Pre-first-run gate (resolved):** H14 remained authorized under the owner's expanded
 authority, but do not submit the run until the comparison is corrected,
 focused checks and independent review pass, and fresh readbacks confirm the
 same private Actor/build and bounded settings. Then resume against this same
 reviewed source build. If a later hosted run starts and fails, diagnose its
 evidence and change the candidate before another run; do not repeat an
 unchanged failed candidate. Each actual run remains capped at 256 MiB, 180
-seconds and $0.10, with restarts/retries disabled.
+seconds and $0.10, with restarts/retries disabled. This gate was cleared for
+the H14 run documented below; the current gate is H15.
+
+### H14 hosted run result (2026-10-01)
+
+After correcting the false-negative build readback, private run
+`Gs1W120Uqdic08LtY` started on Actor `6cJ0cY4Xe7d5xyjL3`, build
+`6lNNucwesR5s5YL5y` (`1.0.1`). Readbacks showed `LIMITED_PERMISSIONS`, 256 MiB,
+180 seconds, $0.10 maximum charge and restart disabled. The run failed with
+exit code 1 after 1.925 seconds, cost approximately $0.0000737073, and
+produced zero dataset items. Its fixed sanitized log code was
+`h14_api_origin_rejected`, before an application result. There is no
+Readability output or publisher evidence. Full sanitized evidence is
+[`evidence/resume-run-2026-10-01.md`](evidence/resume-run-2026-10-01.md).
+
+The candidate's guard pins the public Apify API origin. Pinned Apify SDK 3.7.2
+configuration and maintainer issue #744 indicate the platform may supply an
+internal API base through `APIFY_API_BASE_URL`; the actual runtime origin
+value was not retained, so this remains an unconfirmed explanation. The
+failure establishes an API-origin guard rejection before Readability
+processing, not an extraction failure. The tested H14 candidate is on HOLD
+and must not be retried unchanged.
+
+**Next diagnostic — H15-A:** run a changed no-dispatch startup diagnostic
+that emits only fixed stage codes and an allowlisted API-origin category. It
+must not initialize the Apify SDK, make network calls, or execute the fixture
+or Readability. Use a read-only audit of SDK/platform origin configuration
+alongside its result; do not log the actual origin value.
+
+**Conditional H15-B:** only if H15-A plus the read-only override audit
+establish a trusted exact runtime API origin, update the fixture candidate to
+allow that origin for only the required SDK operations while failing closed
+for all others. Independently review and validate the candidate before a
+bounded hosted run. If no exact trusted origin can be established, stop and
+report the platform/configuration blocker rather than widening the allowlist.
+The owner's expanded authority covers these changed diagnostic steps without
+per-run approval. Each actual run retains private `LIMITED_PERMISSIONS`, 256
+MiB, 180 seconds, $0.10 maximum, restarts/retries disabled, and no Google or
+publisher traffic in fixture mode. The live 100-slot publisher target remains
+untested.
+
+**Learning checkpoint:** None. The evidence currently points to a specific
+candidate guard/configuration mismatch; the internal-origin explanation is
+not confirmed and does not yet support a portable learning.
 
 **Learning checkpoint:** None. This is a specific launcher/API-shape defect,
 not a reusable cross-project learning beyond the existing startup-diagnostic

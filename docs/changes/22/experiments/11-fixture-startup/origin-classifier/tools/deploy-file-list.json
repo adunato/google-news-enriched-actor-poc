@@ -1,0 +1,11 @@
+[
+  ".actor/actor.json",
+  ".actorignore",
+  ".dockerignore",
+  "Dockerfile",
+  "INPUT_SCHEMA.json",
+  "package-lock.json",
+  "package.json",
+  "src/classify-origin.mjs",
+  "src/main.mjs"
+]
