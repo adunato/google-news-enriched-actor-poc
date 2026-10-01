@@ -440,6 +440,47 @@ await check("apify_error_metadata_is_allowlisted_and_sanitized", async () => {
   });
 });
 
+await check("apify_create_schema_validation_paths_are_sanitized_and_survive_launch_formatting", async () => {
+  class FailedChild extends EventEmitter { constructor() { super(); this.stdin = new PassThrough(); this.stdout = new PassThrough(); this.stderr = new PassThrough(); } kill() {} }
+  const child = new FailedChild();
+  const failed = runApifyCli("fixture", [], undefined, { spawnProcess: () => child });
+  child.stdin.once("finish", () => {
+    child.stderr.end('HTTP 400 Bad Request {"error":{"type":"schema-validation","message":"defaultRunOptions.timeoutSecs is invalid; APIFY_TOKEN=credential-sentinel","details":[{"field":"versions.0.sourceType","code":"invalid_enum","message":"private sourceType details"},{"path":"defaultRunOptions.timeoutSecs","code":"invalid_type","message":"private type details"},{"path":"secret.token","code":"required","message":"must stay private"}]},"requestId":"request_789"}');
+    setTimeout(() => child.emit("close", 1), 5);
+  });
+  await assert.rejects(failed, (error) => {
+    assert.deepEqual(error.diagnostic.validationIssues, [
+      { fieldPath: "versions.0.sourceType", reasonCategory: "invalid_choice" },
+      { fieldPath: "defaultRunOptions.timeoutSecs", reasonCategory: "invalid_type" },
+    ]);
+    assert.equal(JSON.stringify(error.diagnostic).includes("credential-sentinel"), false);
+    assert.equal(JSON.stringify(error.diagnostic).includes("private"), false);
+    assert.equal(JSON.stringify(error.diagnostic).includes("secret.token"), false);
+
+    const formatted = safeFailure(Object.assign(new Error("actor_create_failed"), {
+      diagnostic: { stage: "actor_create", ...error.diagnostic, method: "POST", endpoint: "acts" },
+    }));
+    assert.deepEqual(formatted.diagnostic.validationIssues, error.diagnostic.validationIssues);
+    assert.equal(JSON.stringify(formatted).includes("credential-sentinel"), false);
+    return true;
+  });
+});
+
+await check("apify_schema_validation_free_text_returns_only_known_field_path_and_category", async () => {
+  class FailedChild extends EventEmitter { constructor() { super(); this.stdin = new PassThrough(); this.stdout = new PassThrough(); this.stderr = new PassThrough(); } kill() {} }
+  const child = new FailedChild();
+  const failed = runApifyCli("fixture", [], undefined, { spawnProcess: () => child });
+  child.stdin.once("finish", () => {
+    child.stdout.end(JSON.stringify({ statusCode: 400, error: { type: "schema-validation", message: "Property defaultRunOptions.timeoutSecs must be a number. Input APIFY_TOKEN=credential-sentinel" } }));
+    setTimeout(() => child.emit("close", 1), 5);
+  });
+  await assert.rejects(failed, (error) => {
+    assert.deepEqual(error.diagnostic.validationIssues, [{ fieldPath: "defaultRunOptions.timeoutSecs", reasonCategory: "invalid_type" }]);
+    assert.equal(JSON.stringify(error.diagnostic).includes("credential-sentinel"), false);
+    return true;
+  });
+});
+
 await check("apify_cli_nonzero_stdout_json_error_is_sanitized_and_survives_launch_formatting", async () => {
   class FailedChild extends EventEmitter { constructor() { super(); this.stdin = new PassThrough(); this.stdout = new PassThrough(); this.stderr = new PassThrough(); } kill() {} }
   const child = new FailedChild();
@@ -491,7 +532,7 @@ await check("apify_timeout_waits_for_child_close_before_settling", async () => {
   assert.ok(Date.now() - startedAt >= 15, "timeout settled before the child close event");
 });
 
-assert.equal(checks.length, 34);
+assert.equal(checks.length, 36);
 const elapsedMs = Date.now() - started;
 assert.ok(elapsedMs <= 90000, "preflight exceeded 90 seconds");
 clearInterval(rssSampler);
@@ -504,7 +545,7 @@ const sourceManifestSha256 = sourcePlan.sourceManifestSha256;
 const lockSha256 = createHash("sha256").update(await readFile(join(here, "../package-lock.json"))).digest("hex");
 const report = {
   schemaVersion: "issue22-iteration10-offline-preflight-v1", status: "passed", nodeVersion: process.version,
-  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 34,
+  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 36,
   completedCheckCount: checks.length, totalElapsedMs: elapsedMs, totalDeadlineMs: 90000,
   configured: { ...LIMITS, networkRetries: NETWORK_RETRIES, runtimeImage: "apify/actor-node:20", hostedRunStarted: false },
   packageLockSha256: lockSha256, sourceManifestSha256,

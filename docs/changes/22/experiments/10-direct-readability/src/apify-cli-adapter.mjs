@@ -39,6 +39,70 @@ function parseErrorJson(text) {
   } catch { return null; }
 }
 
+const CREATE_FIELD_PATH = /^(?:name|title|description|isPublic|actorPermissionLevel|defaultRunOptions(?:\.(?:build|memoryMbytes|timeoutSecs|maxTotalChargeUsd|restartOnError|forcePermissionLevel))?|versions(?:\.\d+)?(?:\.(?:versionNumber|sourceType|sourceFiles(?:\.\d+)?(?:\.(?:name|format|content))?))?)$/;
+const FREE_TEXT_FIELD_TOKEN = /(?:^|[^A-Za-z0-9_])(defaultRunOptions|actorPermissionLevel|sourceFiles|sourceType|versionNumber|isPublic|name|title|description)(?:\.(?:\d+|build|memoryMbytes|timeoutSecs|maxTotalChargeUsd|restartOnError|forcePermissionLevel|versionNumber|sourceType|sourceFiles|name|format|content))*/g;
+
+function safeFieldPath(value) {
+  const path = Array.isArray(value) ? value.map((part) => String(part)).join(".") : typeof value === "string" ? value : "";
+  return CREATE_FIELD_PATH.test(path) ? path : undefined;
+}
+
+function reasonCategory(value) {
+  if (typeof value !== "string") return "validation";
+  const code = value.toLowerCase();
+  if (/required|missing/.test(code)) return "required";
+  if (/unknown|unexpected|additional|extra/.test(code)) return "unknown_field";
+  if (/type|expected|must be (?:a |an )?(?:number|string|boolean|array|object)/.test(code)) return "invalid_type";
+  if (/enum|choice/.test(code)) return "invalid_choice";
+  if (/format|pattern|length|range|min|max|constraint/.test(code)) return "constraint";
+  return "validation";
+}
+
+function safeValidationIssues(...outputs) {
+  const envelope = outputs.map(parseErrorJson).find(Boolean);
+  const error = envelope?.error && typeof envelope.error === "object" ? envelope.error : envelope;
+  const candidates = [];
+  const collect = (value) => {
+    if (Array.isArray(value)) for (const item of value) collect(item);
+    else if (value && typeof value === "object") candidates.push(value);
+  };
+  collect(error?.details);
+  collect(error?.issues);
+  collect(error?.validationErrors);
+  const safe = [];
+  const add = (fieldPath, category) => {
+    if (fieldPath && !safe.some((item) => item.fieldPath === fieldPath && item.reasonCategory === category)) {
+      safe.push({ fieldPath, reasonCategory: category });
+    }
+  };
+  for (const issue of candidates) {
+    const fieldPath = safeFieldPath(issue.path ?? issue.fieldPath ?? issue.field ?? issue.propertyName ?? issue.property);
+    const category = reasonCategory(issue.code ?? issue.type ?? issue.constraint);
+    add(fieldPath, category);
+    if (!fieldPath && typeof issue.message === "string") {
+      FREE_TEXT_FIELD_TOKEN.lastIndex = 0;
+      let match;
+      while ((match = FREE_TEXT_FIELD_TOKEN.exec(issue.message)) !== null) add(safeFieldPath(match[1] + match[0].slice(match[0].indexOf(match[1]) + match[1].length)), reasonCategory(issue.code ?? issue.type ?? issue.message));
+    }
+  }
+  // Some CLI/provider versions expose only a validation message. Return only
+  // recognized create-schema paths and a coarse category; never the message.
+  if (safe.length === 0) {
+    for (const output of outputs) {
+      const parsed = parseErrorJson(output);
+      const message = parsed?.error?.message ?? parsed?.message;
+      if (typeof message !== "string") continue;
+      FREE_TEXT_FIELD_TOKEN.lastIndex = 0;
+      let match;
+      while ((match = FREE_TEXT_FIELD_TOKEN.exec(message)) !== null) {
+        const start = match[0].indexOf(match[1]);
+        add(safeFieldPath(match[1] + match[0].slice(start + match[1].length)), reasonCategory(message));
+      }
+    }
+  }
+  return safe.slice(0, 8);
+}
+
 function safeErrorFields(...outputs) {
   const value = outputs.map(parseErrorJson).find(Boolean);
   if (!value) return {};
@@ -50,7 +114,8 @@ function safeErrorFields(...outputs) {
   const requestId = typeof rawRequestId === "string" && /^[A-Za-z0-9._:-]{1,128}$/.test(rawRequestId) ? rawRequestId : undefined;
   const rawTimestamp = value?.timestamp ?? value?.error?.timestamp;
   const timestamp = typeof rawTimestamp === "string" && Number.isFinite(Date.parse(rawTimestamp)) ? new Date(rawTimestamp).toISOString() : undefined;
-  return { ...(safeType ? { apifyErrorType: safeType } : {}), ...(code ? { apifyErrorCode: code } : {}), ...(requestId ? { requestId } : {}), ...(timestamp ? { apifyTimestamp: timestamp } : {}) };
+  const validationIssues = safeValidationIssues(...outputs);
+  return { ...(safeType ? { apifyErrorType: safeType } : {}), ...(code ? { apifyErrorCode: code } : {}), ...(requestId ? { requestId } : {}), ...(timestamp ? { apifyTimestamp: timestamp } : {}), ...(validationIssues.length ? { validationIssues } : {}) };
 }
 
 function cliExitError(exitCode, signal, stdout, stderr) {

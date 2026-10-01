@@ -4,9 +4,9 @@
   "nodeVersion": "v20.19.0",
   "readabilityVersion": "0.6.0",
   "domAdapter": "linkedom@0.18.13",
-  "plannedCheckCount": 34,
-  "completedCheckCount": 34,
-  "totalElapsedMs": 1628,
+  "plannedCheckCount": 36,
+  "completedCheckCount": 36,
+  "totalElapsedMs": 1686,
   "totalDeadlineMs": 90000,
   "configured": {
     "timeoutMs": 10000,
@@ -26,8 +26,8 @@
     "hostedRunStarted": false
   },
   "packageLockSha256": "4598514fd8de26018a8a4253d65f9ac1927914ebca851a81c47fc17d3b8868c2",
-  "sourceManifestSha256": "8b974fe21ec214d031fa10812437128dde6bb6a78680c44f84e5c00844875c18",
-  "peakRssBytes": 100208640,
+  "sourceManifestSha256": "4ddefdd911e60d0a8b02e3ebd7f340de82d2187da201e1a569d5862387be174d",
+  "peakRssBytes": 103718912,
   "networkProbeAttempts": 0,
   "aggregateSinkChecks": {
     "completeWrites": 1,
@@ -161,6 +161,14 @@
     },
     {
       "id": "apify_error_metadata_is_allowlisted_and_sanitized",
+      "status": "passed"
+    },
+    {
+      "id": "apify_create_schema_validation_paths_are_sanitized_and_survive_launch_formatting",
+      "status": "passed"
+    },
+    {
+      "id": "apify_schema_validation_free_text_returns_only_known_field_path_and_category",
       "status": "passed"
     },
     {

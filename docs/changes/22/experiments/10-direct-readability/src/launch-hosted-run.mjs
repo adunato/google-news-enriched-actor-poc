@@ -9,7 +9,7 @@ const root = experimentRootFromModule();
 const trustedHead = process.env.I10_TRUSTED_HEAD;
 const suppliedRoot = process.env.I10_EXPERIMENT_ROOT;
 const liveLaunch = process.env.I10_LIVE_LAUNCH === "APPROVED-ISSUE22-ITERATION10";
-const SAFE_DIAGNOSTIC_KEYS = ["kind", "stage", "status", "exitCode", "signal", "code", "apifyErrorType", "apifyErrorCode", "requestId", "apifyTimestamp", "requestTimestamp", "method", "endpoint"];
+const SAFE_DIAGNOSTIC_KEYS = ["kind", "stage", "status", "exitCode", "signal", "code", "apifyErrorType", "apifyErrorCode", "validationIssues", "requestId", "apifyTimestamp", "requestTimestamp", "method", "endpoint"];
 
 export function safeFailure(error) {
   const safeMessages = new Set(["actor_create_failed", "actor_privacy_or_permission_gate_failed", "version_source_snapshot_mismatch", "build_creation_failed", "build_snapshot_or_status_gate_failed", "actor_readback_privacy_or_permission_gate_failed", "run_start_ambiguous_aborted_no_retry", "run_readback_gate_failed", "run_gate_record_not_observed", "run_abort_not_confirmed", "ambiguous_run_abort_not_confirmed"]);
