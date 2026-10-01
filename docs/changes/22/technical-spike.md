@@ -306,6 +306,8 @@ The detailed experiment artifacts are preserved in their original directories. T
 **Result:** Inconclusive. The hosted run passed `I10_GATE` but exited 1 in 2.508 seconds, produced no dataset item/aggregate, and logged no stage or exception. The local diagnostic also exited before `Actor.init()`, but exact dependency/image parity was not established. No evidence of Readability success/failure, publisher readability or Google/publisher request activity is available.
 **Learning:** Offline/mocked preflight did not localize the early target-runtime failure; hosted logs did not establish the failing stage. Test the full entrypoint in a representative runtime with fixture-only input, network isolation and explicit safe startup/error stages before another hosted experiment; see `docs/learnings/issue-22-hosted-startup-diagnostics.md`.
 
+**Bounded known-issue search (2026-10-01):** Checked the [official Apify run documentation](https://docs.apify.com/actors/development/builds-and-runs/runs), the [Apify JavaScript SDK issue tracker](https://github.com/apify/apify-sdk-js/issues), and the [Apify Actor Docker issue tracker](https://github.com/apify/apify-actor-docker/issues). This search found no confirmed report matching a hosted Node Actor exiting 1 after about 2.5 seconds with a short, uninformative log. It is a bounded public-source check, not proof that no known issue exists and not a root-cause diagnosis; it does not justify retrying an unchanged candidate. The separate Extractus timeout check documented above concerns a different symptom and is not evidence about this startup failure.
+
 ### Iteration 11 — H12 local fixture startup diagnostic
 
 **Option:** O1 direct Mozilla Readability, fixture-only path
