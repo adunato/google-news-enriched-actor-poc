@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "issue22-iteration10-offline-preflight-v1",
+  "status": "passed",
+  "nodeVersion": "v20.19.0",
+  "readabilityVersion": "0.6.0",
+  "domAdapter": "linkedom@0.18.13",
+  "plannedCheckCount": 15,
+  "completedCheckCount": 15,
+  "totalElapsedMs": 1955,
+  "totalDeadlineMs": 90000,
+  "configured": {
+    "timeoutMs": 10000,
+    "maxRedirects": 5,
+    "prefixBytes": 524288,
+    "structuredBytes": 65536,
+    "maxDomElements": 10000,
+    "maxOutputChars": 100000,
+    "concurrency": 4,
+    "perHostDelayMs": 250,
+    "workerDeadlineMs": 5000,
+    "softStopMs": 780000,
+    "maxRows": 100,
+    "networkRetries": 0,
+    "runtimeImage": "apify/actor-node:20",
+    "hostedRunStarted": false
+  },
+  "packageLockSha256": "4598514fd8de26018a8a4253d65f9ac1927914ebca851a81c47fc17d3b8868c2",
+  "sourceManifestSha256": "07132f3650c7b2a70255c900be94d0d90d665c53bc7bce7b732db45ff28538f9",
+  "peakRssBytes": 101363712,
+  "networkProbeAttempts": 0,
+  "aggregateSinkChecks": {
+    "completeWrites": 1,
+    "partialWrites": 0,
+    "privacyViolationWrites": 0
+  },
+  "checks": [
+    {
+      "id": "fixed_configuration_and_no_retries",
+      "status": "passed"
+    },
+    {
+      "id": "public_dns_validation_and_pinning",
+      "status": "passed"
+    },
+    {
+      "id": "robots_allow_deny_and_disallow_unknown",
+      "status": "passed"
+    },
+    {
+      "id": "redirect_limit_and_no_backfill_dedupe",
+      "status": "passed"
+    },
+    {
+      "id": "per_host_pacing_reserves_250ms",
+      "status": "passed"
+    },
+    {
+      "id": "four_worker_concurrency_ceiling",
+      "status": "passed"
+    },
+    {
+      "id": "streamed_prefix_cap",
+      "status": "passed"
+    },
+    {
+      "id": "direct_mozilla_readability_and_structured_fixture",
+      "status": "passed"
+    },
+    {
+      "id": "cumulative_structured_script_cap",
+      "status": "passed"
+    },
+    {
+      "id": "dom_element_cap",
+      "status": "passed"
+    },
+    {
+      "id": "readability_output_cap",
+      "status": "passed"
+    },
+    {
+      "id": "worker_deadline_terminates",
+      "status": "passed"
+    },
+    {
+      "id": "aggregate_complete_and_threshold",
+      "status": "passed"
+    },
+    {
+      "id": "aggregate_privacy_and_reconciliation_before_sink",
+      "status": "passed"
+    },
+    {
+      "id": "hosted_run_gate_values_are_exact",
+      "status": "passed"
+    }
+  ]
+}

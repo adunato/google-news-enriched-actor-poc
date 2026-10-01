@@ -5,7 +5,7 @@
 **Artifact ID:** `spike-22`  
 **Status:** Open  
 **Owner:** Project owner  
-**Created / updated:** 2026-09-30  
+**Created / updated:** 2026-10-01
 **GitHub Spike Issue:** #22  
 **Blocked downstream Issue(s):** #4, #5  
 **Spike branch / draft PR:** `spike/22-automated-news-site-access` / PR #23  
@@ -51,7 +51,7 @@ The Spike must establish enough evidence to let downstream engineering know:
 - Local synthetic lifecycle work showed that extraction cost can rise sharply with input size/shape, but it did not explain the hosted 78/78 timeout pattern.
 - Iteration 9 phase-telemetry tooling passed its offline preflight, but no hosted Iteration 9 run occurred.
 - The Iteration 9 harness exercises Extractus, a structural extraction proxy and retries; it cannot be reused unchanged to evaluate the newly selected direct Readability option.
-- Iteration 10 is still a proposal. Its exact cohort, scoring rules and resource bounds are now specified below; no owner approval or hosted run has occurred.
+- The owner approved the bounded Iteration 10 on 2026-10-01. Its exact cohort, scoring rules and resource bounds are specified below. The offline preflight passed all 15 checks on 2026-10-01; no hosted run has occurred.
 
 ### Unresolved questions
 
@@ -149,7 +149,7 @@ This option set is intentionally small and bounded to the current blocker.
 
 **Evidence that would refute it:** the same broad timeout pattern occurs despite explicit guards, or readable output remains too low to plausibly support #5's >=50% representative target.
 
-**Status:** Proposed; owner approval required before execution.
+**Status:** Offline preflight passed on 2026-10-01; hosted evaluation remains gated on independent review and verification of the exact private-run settings.
 
 ### H11 — #4 consent/session handling
 
@@ -162,8 +162,8 @@ This option set is intentionally small and bounded to the current blocker.
 **Iteration:** 10 proposed  
 **Selected option:** O1 — direct Mozilla Readability with explicit guards  
 **Hypothesis / approach:** H10  
-**Executor:** Pending owner approval and offline compatibility preflight
-**Owner approval:** Pending; no execution authorization recorded
+**Executor:** Offline preflight completed and passed; hosted execution remains conditional on independent review and verification of every stated hosted gate
+**Owner approval:** Approved 2026-10-01 for the bounded Iteration 10 below only; 15/15 offline checks passed; no hosted run has occurred
 
 ### Why this iteration
 
@@ -171,7 +171,7 @@ The previous path was increasingly instrumenting Extractus rather than reassessi
 
 ### Experiment
 
-After the owner approves this bounded Iteration 10, complete an offline preflight that confirms the selected DOM adapter and Mozilla Readability versions are compatible with the Actor's Node/Apify runtime, and that structured extraction and direct Readability can be invoked on the same sanitized fixture HTML. It must also assert worker cancellation at the five-second deadline; response-prefix, cumulative structured-script, DOM-element and output-character guards at their stated limits; and that the configured sink emits aggregate-only records with no URL, title, article text, HTML, exception text or other raw row data. Exercise these assertions with offline fixtures, including inputs over each limit and a worker that exceeds its deadline. The preflight must make no network requests and emit no article text. If any assertion fails, stop the iteration and return to this owner checkpoint with the failed assertion and recovery options; approval does not waive a failed gate and does not authorize a hosted run after failure.
+The offline preflight passed all 15 planned assertions on 2026-10-01 under Node 20.19.0 with `@mozilla/readability` 0.6.0 and `linkedom` 0.18.13. It made zero network probe attempts; aggregate sink checks recorded one complete write, zero partial writes and zero privacy-violation writes. The sanitized report records the exact configuration and dependency/source hashes. This evidence covers the tested local parser adapter and guards only; it does not measure publisher pages or hosted behaviour. If review finds a failed assertion or a hosted gate cannot be verified, stop before hosted execution and return to this checkpoint with the failure and recovery options.
 
 Only if every preflight assertion passes and the exact stated hosted gates remain verified, execute at most one bounded O1 evaluation on a fresh representative cohort under the existing direct-HTTP, robots, DNS, privacy and hosted-resource controls. Define 100 cohort slots as 5 fixed queries × GB/US locales × the first 10 ranked results per query/locale. A slot is identified by its query, locale and rank. Deduplicate repeated stories across slots by parsing the original Google News URL, removing its fragment and serializing it with the URL parser (preserving query parameters); retain the first occurrence in query/locale/rank order and mark later occurrences as duplicate slots. Do not backfill a duplicate, missing result, inaccessible result or other shortfall with a later-ranked result or a new query. Report requested slots, returned candidates, duplicate slots, unique retained candidates and all subsequent eligibility/outcome counts separately. The primary denominator remains all 100 requested slots; the permitted successful 2xx HTML subset is a separate denominator for extraction yield. If fewer than 100 unique candidates remain, report a source/cohort shortfall and treat the result as non-decisive for extraction viability; do not classify missing/duplicate slots as extraction failures.
 
@@ -207,17 +207,17 @@ Stop before hosted execution if the offline compatibility preflight fails, if th
 
 ### Decision-ready checkpoint
 
-**Recommended next action:** request approval for the bounded Iteration 10 described below; if approved, perform its offline preflight and proceed to at most one hosted run only if every preflight assertion passes and the stated hosted gates are verified.
+**Recommended next action:** complete independent review of the frozen candidate, then verify the exact private Apify build and run settings; proceed to at most one hosted run only if all stated gates are verified.
 
 **Why this is next:** the option-viability checkpoint deprioritised further Extractus-specific telemetry. A small offline compatibility check first removes a deployment/API compatibility risk; the bounded hosted cohort then directly measures whether O1 can produce qualifying text in the target runtime while distinguishing access eligibility from extraction yield.
 
-**Prerequisite/blocker status:** owner approval for the bounded Iteration 10 is pending and blocks all execution; no Iteration 10 run has occurred. If approved, offline preflight is the first iteration step and must pass before any hosted run. It covers runtime/API compatibility, five-second worker cancellation, each stated input/output guard and aggregate-only sink behavior, including absence of raw row data. If an assertion fails, stop and return to this checkpoint with the failure and supported recovery; approval does not waive the gate. A cohort with fewer than 100 unique candidates is a source/cohort shortfall and makes extraction viability non-decisive. The unresolved #5 quality threshold is a material acceptance-definition gap: it prevents treating the 50/100 signal as proof of #5 completion, but does not prevent this limited viability experiment. Iteration 10 cannot resolve #4's consent/session boundary.
+**Prerequisite/blocker status:** owner approval was granted on 2026-10-01 and the offline preflight passed all 15 assertions; no hosted run has occurred. Independent review and verification of private visibility, `LIMITED_PERMISSIONS`, exact build, disabled restart, and the $1/256 MiB/900-second limits are prerequisites to hosted execution. A cohort with fewer than 100 unique candidates is a source/cohort shortfall and makes extraction viability non-decisive. The unresolved #5 quality threshold is a material acceptance-definition gap: it prevents treating the 50/100 signal as proof of #5 completion, but does not prevent this limited viability experiment. Iteration 10 cannot resolve #4's consent/session boundary.
 
-**Owner decision requested:** **Approve Iteration 10 as one bounded iteration: first perform the specified offline compatibility/safety preflight; then, only if every preflight assertion passes and all stated hosted gates are verified, run at most one private Apify cohort of 100 fixed query/locale/rank slots (5 queries × GB/US × first 10 ranked results), applying the specified dedupe and no-replacement policy, direct HTTP and extraction bounds, aggregate-only evidence and $1/256 MiB/900-second hosted cap; or redirect to another ranked option.** Approval does not waive any gate, authorize a hosted run after a failed preflight, authorize follow-on iterations, or close #22, #5 or #4.
+**Owner decision:** **Approved on 2026-10-01:** one bounded Iteration 10 consisting of the specified offline compatibility/safety preflight, followed only if every preflight assertion passes and all stated hosted gates are verified by at most one private Apify cohort of 100 fixed query/locale/rank slots (5 queries × GB/US × first 10 ranked results), applying the specified dedupe and no-replacement policy, direct HTTP and extraction bounds, aggregate-only evidence and $1/256 MiB/900-second hosted cap. Approval does not waive any gate, authorize a hosted run after a failed preflight, authorize follow-on iterations, or close #22, #5 or #4.
 
-**Consequence of approval:** execute the offline preflight first. If every assertion passes and all hosted gates are verified, execute at most one hosted run and record aggregate evidence and result; if any gate fails, stop, return to this checkpoint with recovery options, and do not run hosted. Afterward update current understanding and recommend the next highest-value action.
+**Consequence of approval:** the bounded iteration is authorized and its offline preflight has passed. After independent review, if all hosted gates are verified, execute at most one hosted run and record aggregate evidence and result; if any gate fails, stop, return to this checkpoint with recovery options, and do not run hosted. Afterward update current understanding and recommend the next highest-value action.
 
-**Consequence of non-approval or redirect:** do not run Iteration 10; #22 remains open, O1 target-runtime viability remains unmeasured, and #4/#5 remain blocked on their unresolved evidence/decision paths.
+**Consequence of redirect:** a later owner redirect before execution supersedes this approval; otherwise proceed within the approved bounds. #22 remains open, O1 target-runtime viability remains unmeasured, and #4/#5 remain blocked on their unresolved evidence/decision paths.
 
 **Learning checkpoint:** Learnings: None. This plan has not executed an experiment and has produced no reusable execution lesson.
 
@@ -370,4 +370,4 @@ Experiment artifacts are excluded from automatic Prettier rewriting so their ret
 
 **Spike state:** Open  
 **Rationale:** the bounded #4/#5 technical question remains unresolved.  
-**Required next action:** owner review of the option re-baseline and approval or redirect of H10. No new experiment has been executed by this re-baseline.
+**Required next action:** independently review the offline-passing Iteration 10 candidate and verify hosted run gates before any hosted execution.
