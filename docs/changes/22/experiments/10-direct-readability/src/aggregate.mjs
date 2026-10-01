@@ -25,6 +25,8 @@ export function buildAggregate(rows) {
     for (const [value, allowed, field] of [[row.candidate, CANDIDATE, "candidate"], [row.robots, ROBOTS, "robots"], [row.fetch, FETCH, "fetch"], [row.readability, READABILITY, "readability"], [row.structured, STRUCTURED, "structured"], [row.prefix, PREFIX, "prefix"], [row.elapsed, ELAPSED, "elapsed"], [row.dom, DOM, "dom"], [row.workerTime, WORKER_TIME, "worker_time"]])
       if (!allowed.includes(value)) throw new Error(`invalid_${field}_status`);
     if ((row.candidate === "not_returned" || row.candidate === "duplicate") && (row.robots !== "not_checked" || row.fetch !== "not_attempted" || row.readability !== "not_attempted" || row.structured !== "not_attempted" || row.prefix !== "unavailable" || row.dom !== "unavailable")) throw new Error("missing_or_duplicate_row_has_downstream_observation");
+    const eligible = row.fetch === "http_2xx_html" && ["allowed", "not_found"].includes(row.robots);
+    if (row.readability === "success" && !eligible) throw new Error("readability_success_without_eligible_publisher_evidence");
     cell.candidate[row.candidate]++;
     if (row.candidate !== "not_returned") cell.returnedRows++;
     if (row.candidate === "duplicate") cell.duplicateRows++;
@@ -32,7 +34,6 @@ export function buildAggregate(rows) {
     cell.robots[row.robots]++; cell.fetch[row.fetch]++; cell.readability[row.readability]++; cell.structured[row.structured]++;
     cell.prefix[row.prefix]++; cell.elapsed[row.elapsed]++; cell.dom[row.dom]++;
     cell.workerTime[row.workerTime]++;
-    const eligible = row.fetch === "http_2xx_html" && ["allowed", "not_found"].includes(row.robots);
     if (eligible) cell.eligibleRows++;
     const isReadable = eligible && row.readability === "success";
     const hasStructured = eligible && row.structured === "present";
@@ -65,6 +66,7 @@ export function validateAggregate(value) {
     }
     if (Object.values(cell.candidate).reduce((a, b) => a + b, 0) !== 10 || cell.returnedRows !== 10 - cell.candidate.not_returned || cell.duplicateRows !== cell.candidate.duplicate || cell.uniqueRows !== cell.candidate.resolved + cell.candidate.unresolved || cell.returnedRows !== cell.duplicateRows + cell.uniqueRows) throw new Error("cell_reconciliation_failed");
     if (cell.eligibleRows !== cell.overlap.both + cell.overlap.readability_only + cell.overlap.structured_only + cell.overlap.neither || cell.overlap.not_eligible !== 10 - cell.eligibleRows || cell.eligibleRows > cell.uniqueRows) throw new Error("eligible_overlap_reconciliation_failed");
+    if (cell.readability.success !== cell.overlap.both + cell.overlap.readability_only || cell.structured.present !== cell.overlap.both + cell.overlap.structured_only) throw new Error("eligible_extraction_reconciliation_failed");
     for (const key of Object.keys(totals)) { if (!Number.isSafeInteger(cell[key]) || cell[key] < 0) throw new Error("invalid_total"); totals[key] += cell[key]; }
   }
   for (const [key, total] of Object.entries(totals)) if (value[key] !== total) throw new Error("aggregate_reconciliation_failed");

@@ -4,9 +4,9 @@
   "nodeVersion": "v20.19.0",
   "readabilityVersion": "0.6.0",
   "domAdapter": "linkedom@0.18.13",
-  "plannedCheckCount": 15,
-  "completedCheckCount": 15,
-  "totalElapsedMs": 1955,
+  "plannedCheckCount": 20,
+  "completedCheckCount": 20,
+  "totalElapsedMs": 982,
   "totalDeadlineMs": 90000,
   "configured": {
     "timeoutMs": 10000,
@@ -25,8 +25,8 @@
     "hostedRunStarted": false
   },
   "packageLockSha256": "4598514fd8de26018a8a4253d65f9ac1927914ebca851a81c47fc17d3b8868c2",
-  "sourceManifestSha256": "07132f3650c7b2a70255c900be94d0d90d665c53bc7bce7b732db45ff28538f9",
-  "peakRssBytes": 101363712,
+  "sourceManifestSha256": "27301269997a11df948c956ae350bce81f37afc2c778562022d221f21afb5d38",
+  "peakRssBytes": 100982784,
   "networkProbeAttempts": 0,
   "aggregateSinkChecks": {
     "completeWrites": 1,
@@ -43,7 +43,15 @@
       "status": "passed"
     },
     {
-      "id": "robots_allow_deny_and_disallow_unknown",
+      "id": "robots_allow_deny_unknown_and_specific_agent_precedence",
+      "status": "passed"
+    },
+    {
+      "id": "request_wall_clock_bounds_stalled_dns_and_response_body",
+      "status": "passed"
+    },
+    {
+      "id": "startup_error_is_worker_error",
       "status": "passed"
     },
     {
@@ -92,6 +100,18 @@
     },
     {
       "id": "hosted_run_gate_values_are_exact",
+      "status": "passed"
+    },
+    {
+      "id": "hosted_runtime_environment_gate_fails_closed",
+      "status": "passed"
+    },
+    {
+      "id": "runtime_gate_precedes_actor_initialization_and_probe",
+      "status": "passed"
+    },
+    {
+      "id": "hosted_controller_mocked_api_order_exact_build_and_ambiguous_post",
       "status": "passed"
     }
   ]

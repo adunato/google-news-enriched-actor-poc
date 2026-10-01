@@ -53,22 +53,41 @@ export function redirectUrl(location, current) {
   try { return new URL(location, current).href; } catch { return null; }
 }
 
-export async function requestPinned(value, { resolver = lookup, timeoutMs = LIMITS.timeoutMs, headers = {}, method = "GET", body } = {}) {
-  const target = await resolvePublicTarget(value, resolver);
-  if (!target.ok) return target;
-  const url = new URL(target.url), transport = url.protocol === "https:" ? https : http;
+export async function requestPinned(value, { resolver = lookup, timeoutMs = LIMITS.timeoutMs, headers = {}, method = "GET", body, transports = { http, https } } = {}) {
   return new Promise((resolve, reject) => {
-    const request = transport.request({
-      hostname: target.hostname, port: url.port ? Number(url.port) : undefined,
-      path: `${url.pathname}${url.search}`, method, headers,
-      lookup: pinnedLookup(target), agent: false,
-      ...(url.protocol === "https:" && !isIP(target.hostname) ? { servername: target.hostname } : {}),
-    }, (response) => resolve({ ok: true, target, response, close: () => { response.destroy(); request.destroy(); } }));
-    const timer = setTimeout(() => { const error = new Error("request_timeout"); error.name = "TimeoutError"; request.destroy(error); }, timeoutMs);
-    timer.unref?.();
-    request.once("close", () => clearTimeout(timer));
-    request.once("error", (error) => { clearTimeout(timer); reject(error); });
-    request.end(body);
+    let request, response, settled = false, closed = false;
+    const timeoutError = () => { const error = new Error("request_timeout"); error.name = "TimeoutError"; return error; };
+    const timer = setTimeout(() => {
+      const error = timeoutError();
+      request?.destroy(error);
+      response?.destroy(error);
+      if (!settled) { settled = true; reject(error); }
+    }, timeoutMs);
+    const cleanup = () => { if (!closed) { closed = true; clearTimeout(timer); } };
+    (async () => {
+      try {
+        // The timer starts before DNS resolution, so a stalled resolver is bounded too.
+        const target = await resolvePublicTarget(value, resolver);
+        if (settled) return;
+        if (!target.ok) { settled = true; cleanup(); resolve(target); return; }
+        const url = new URL(target.url), transport = url.protocol === "https:" ? transports.https : transports.http;
+        request = transport.request({
+          hostname: target.hostname, port: url.port ? Number(url.port) : undefined,
+          path: `${url.pathname}${url.search}`, method, headers,
+          lookup: pinnedLookup(target), agent: false,
+          ...(url.protocol === "https:" && !isIP(target.hostname) ? { servername: target.hostname } : {}),
+        }, (incoming) => {
+          response = incoming;
+          if (settled) { response.destroy(timeoutError()); return; }
+          settled = true;
+          resolve({ ok: true, target, response, close: () => { cleanup(); response.destroy(); request.destroy(); } });
+        });
+        request.once("error", (error) => { if (!settled) { settled = true; cleanup(); reject(error); } });
+        request.end(body);
+      } catch (error) {
+        if (!settled) { settled = true; cleanup(); reject(error); }
+      }
+    })();
   });
 }
 
@@ -90,7 +109,7 @@ export async function boundedPrefix(response, cap = LIMITS.prefixBytes) {
   });
 }
 
-export function robotsAllows(text, pathname) {
+export function robotsAllows(text, pathname, userAgent = "*") {
   let groups = [], agents = [], rules = [];
   for (const raw of text.split(/\r?\n/)) {
     const line = raw.replace(/#.*/, "").trim(), i = line.indexOf(":");
@@ -100,7 +119,13 @@ export function robotsAllows(text, pathname) {
     else if ((key === "allow" || key === "disallow") && agents.length && value) rules.push({ allow: key === "allow", path: value });
   }
   if (agents.length) groups.push({ agents, rules });
-  const rulesForAgent = groups.filter((g) => g.agents.includes("*")).flatMap((g) => g.rules);
+  const agent = String(userAgent).split(/[\s/]/, 1)[0].toLowerCase();
+  const matches = groups.flatMap((group) => group.agents.filter((name) => name !== "*" && name && agent.includes(name)).map((name) => ({ name, group })));
+  const mostSpecific = matches.reduce((length, match) => Math.max(length, match.name.length), 0);
+  const selected = mostSpecific
+    ? matches.filter((match) => match.name.length === mostSpecific).map((match) => match.group)
+    : groups.filter((group) => group.agents.includes("*"));
+  const rulesForAgent = [...new Set(selected)].flatMap((group) => group.rules);
   const matching = rulesForAgent.filter((r) => pathname.startsWith(r.path)).sort((a, b) => b.path.length - a.path.length);
   return !matching.length || matching[0].allow;
 }

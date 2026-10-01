@@ -3,6 +3,7 @@ import { XMLParser } from "fast-xml-parser";
 import { LIMITS, boundedPrefix, dedupeFirst, paceHost, redirectUrl, requestPinned, robotsAllows } from "./network.mjs";
 import { extractBounded } from "./extract.mjs";
 import { persistAggregateOnly } from "./aggregate.mjs";
+import { assertHostedRunGate } from "./runtime-gate.mjs";
 import process from "node:process";
 
 const QUERIES = ["world news", "politics", "business", "technology", "climate change"];
@@ -104,10 +105,18 @@ async function resolveCandidate(googleNewsUrl) {
   return null;
 }
 
-export function robotsPolicy(textValue, pathname, status) {
+export function robotsPolicy(textValue, pathname, status, userAgent = USER_AGENT) {
   if (status === 404) return "not_found";
   if (status < 200 || status >= 300 || typeof textValue !== "string") return "unavailable";
-  return robotsAllows(textValue, pathname) ? "allowed" : "disallowed";
+  return robotsAllows(textValue, pathname, userAgent) ? "allowed" : "disallowed";
+}
+
+export function readabilityOutcome(result) {
+  if (result.status === "startup_error" || result.status === "worker_error") return "worker_error";
+  if (result.status === "network_attempt") return "network_attempt";
+  if (result.readabilityStatus === "success") return "success";
+  if (["timeout", "dom_limit", "output_limit", "protocol_error"].includes(result.status)) return result.status;
+  return "empty";
 }
 
 const robotsCache = new Map();
@@ -127,7 +136,7 @@ async function robotsFor(url) {
     } catch { return { status: null, signal: "unavailable" }; } finally { opened.close(); }
   })());
   const cached = await robotsCache.get(origin);
-  if (cached.text !== undefined) return { status: cached.status, signal: robotsAllows(cached.text, u.pathname) ? "allowed" : "disallowed" };
+  if (cached.text !== undefined) return { status: cached.status, signal: robotsAllows(cached.text, u.pathname, USER_AGENT) ? "allowed" : "disallowed" };
   return cached;
 }
 
@@ -156,7 +165,8 @@ async function inspectPublisher(candidateUrl) {
         let prefix;
         try { prefix = await boundedPrefix(res, LIMITS.prefixBytes); } catch { return { ...absent, robots: robots.signal, fetch: "transport_error", elapsed: elapsedBin(now() - started) }; }
         const result = await extractBounded(prefix.html, url.href);
-        return { robots: robots.signal, fetch: "http_2xx_html", readability: result.status === "network_attempt" ? "network_attempt" : result.readabilityStatus === "success" ? "success" : result.status === "timeout" ? "timeout" : result.status === "dom_limit" ? "dom_limit" : result.status === "output_limit" ? "output_limit" : result.status === "protocol_error" ? "protocol_error" : result.status === "worker_error" ? "worker_error" : "empty", structured: result.structuredStatus, prefix: prefix.capped ? "capped" : "not_capped", elapsed: elapsedBin(now() - started), dom: domBin(result.domElements), workerTime: workerTimeBin(result.elapsedMs) };
+        const readability = readabilityOutcome(result);
+        return { robots: robots.signal, fetch: "http_2xx_html", readability, structured: result.structuredStatus, prefix: prefix.capped ? "capped" : "not_capped", elapsed: elapsedBin(now() - started), dom: domBin(result.domElements), workerTime: workerTimeBin(result.elapsedMs) };
       } finally { opened.close(); }
     }
     return { ...absent, fetch: "http_other", elapsed: elapsedBin(now() - started) };
@@ -207,9 +217,9 @@ export async function executeIteration10({ actor = Actor, feed = fetchFeed, reso
   return persistAggregateOnly(observations, (aggregate) => actor.pushData(aggregate));
 }
 
-export async function runActorSafely({ init = () => Actor.init(), execute = () => executeIteration10(), exit = () => Actor.exit(), log = (aggregate) => Actor.log.info(`iteration10_complete ${JSON.stringify({ plannedRows: aggregate.plannedRows, returnedRows: aggregate.returnedRows, uniqueRows: aggregate.uniqueRows, eligibleRows: aggregate.eligibleRows })}`) } = {}) {
+export async function runActorSafely({ init = () => Actor.init(), execute = () => executeIteration10(), exit = () => Actor.exit(), getEnv = () => Actor.getEnv(), env = process.env, log = (aggregate) => Actor.log.info(`iteration10_complete ${JSON.stringify({ plannedRows: aggregate.plannedRows, returnedRows: aggregate.returnedRows, uniqueRows: aggregate.uniqueRows, eligibleRows: aggregate.eligibleRows })}`) } = {}) {
   let initialized = false, persisted = false;
-  try { await init(); initialized = true; const aggregate = await execute(); persisted = true; try { log(aggregate); } catch { /* aggregate already persisted */ } }
+  try { assertHostedRunGate({ actorEnv: getEnv(), processEnv: env }); await init(); initialized = true; const aggregate = await execute(); persisted = true; try { log(aggregate); } catch { /* aggregate already persisted */ } }
   catch { try { Actor.log.error("iteration10_failed"); } catch { /* no untrusted error text */ } }
   finally { if (initialized) try { await exit(); } catch { try { Actor.log.error("iteration10_exit_failed"); } catch { /* no retry */ } } }
   return persisted;

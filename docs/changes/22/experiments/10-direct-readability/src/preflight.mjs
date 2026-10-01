@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { EventEmitter } from "node:events";
 import { readFile, writeFile } from "node:fs/promises";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Readable } from "node:stream";
 import http from "node:http";
@@ -11,11 +11,13 @@ import net from "node:net";
 import dns from "node:dns";
 import dnsPromises from "node:dns/promises";
 import process from "node:process";
-import { LIMITS, NETWORK_RETRIES, addressIsPublic, boundedPrefix, dedupeFirst, mayFollowRedirect, paceHost, pinnedLookup, resolvePublicTarget, robotsAllows } from "./network.mjs";
+import { LIMITS, NETWORK_RETRIES, addressIsPublic, boundedPrefix, dedupeFirst, mayFollowRedirect, paceHost, pinnedLookup, requestPinned, resolvePublicTarget, robotsAllows } from "./network.mjs";
 import { extractBounded } from "./extract.mjs";
 import { buildAggregate, persistAggregateOnly, validateAggregate } from "./aggregate.mjs";
 import { verifyFutureRunGates } from "./verify-run-options.mjs";
-import { mapLimit } from "./probe.mjs";
+import { mapLimit, readabilityOutcome } from "./probe.mjs";
+import { assertHostedRunGate, inspectHostedRunGate } from "./runtime-gate.mjs";
+import { createHostedRunPlan, executeHostedRunPlan, hashSourceFiles } from "./hosted-run-controller.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const started = Date.now(), checks = [];
@@ -55,10 +57,42 @@ await check("public_dns_validation_and_pinning", async () => {
   assert.equal(privateTarget.ok, false); assert.equal(privateTarget.reason, "non_public_dns_address");
   const lookup = pinnedLookup(publicTarget); await new Promise((resolve, reject) => lookup("attacker.invalid", {}, (error) => error ? resolve() : reject(new Error("wrong host was pinned"))));
 });
-await check("robots_allow_deny_and_disallow_unknown", async () => {
+await check("robots_allow_deny_unknown_and_specific_agent_precedence", async () => {
   assert.equal(robotsAllows("User-agent: *\nDisallow: /private\nAllow: /private/public", "/private/a"), false);
   assert.equal(robotsAllows("User-agent: *\nDisallow: /private\nAllow: /private/public", "/private/public/a"), true);
   assert.equal(robotsAllows("User-agent: *\nDisallow:", "/article"), true);
+  const rules = "User-agent: *\nDisallow: /world\nUser-agent: GoogleNewsAccessSpike\nAllow: /world\nDisallow: /blocked\nUser-agent: OtherBot\nDisallow: /";
+  const actualAgent = "GoogleNewsAccessSpike/0.1 (+https://example.org)";
+  assert.equal(robotsAllows(rules, "/world/article", actualAgent), true);
+  assert.equal(robotsAllows(rules, "/blocked/article", actualAgent), false);
+  assert.equal(robotsAllows(rules, "/blocked/article", "UnmatchedBot/1.0"), true);
+});
+await check("request_wall_clock_bounds_stalled_dns_and_response_body", async () => {
+  const startedAt = Date.now();
+  await assert.rejects(() => requestPinned("https://publisher.example.org/a", { timeoutMs: 15, resolver: () => new Promise(() => {}) }), { name: "TimeoutError" });
+  assert.ok(Date.now() - startedAt < 500, "stalled DNS exceeded the request wall-clock deadline");
+
+  class StalledResponse extends EventEmitter {
+    headers = { "content-encoding": "identity" };
+    destroy(error) { if (error) queueMicrotask(() => this.emit("error", error)); return this; }
+  }
+  class FakeRequest extends EventEmitter {
+    constructor(callback) { super(); this.callback = callback; }
+    end() { queueMicrotask(() => this.callback(new StalledResponse())); }
+    destroy(error) { if (error) queueMicrotask(() => this.emit("error", error)); return this; }
+  }
+  const responseTransport = { request: (_options, callback) => new FakeRequest(callback) };
+  const opened = await requestPinned("https://publisher.example.org/a", {
+    timeoutMs: 15, resolver: async () => [{ address: "93.184.216.34", family: 4 }],
+    transports: { http: responseTransport, https: responseTransport },
+  });
+  await assert.rejects(() => boundedPrefix(opened.response, 1024), { name: "TimeoutError" });
+  opened.close();
+});
+await check("startup_error_is_worker_error", async () => {
+  assert.equal(readabilityOutcome({ status: "startup_error" }), "worker_error");
+  assert.equal(readabilityOutcome({ status: "worker_error" }), "worker_error");
+  assert.equal(readabilityOutcome({ status: "complete", readabilityStatus: "empty" }), "empty");
 });
 await check("redirect_limit_and_no_backfill_dedupe", async () => {
   assert.equal(mayFollowRedirect(5), false);
@@ -118,6 +152,8 @@ await check("aggregate_complete_and_threshold", async () => {
   assert.equal(buildAggregate(noRobotsFile).eligibleRows, 100);
   const belowSignal = cohort().map((item) => ({ ...item, readability: "empty" }));
   assert.equal(buildAggregate(belowSignal).decision, "signal_threshold_not_met");
+  const malformedSuccess = cohort(); malformedSuccess[0] = { ...malformedSuccess[0], robots: "unavailable" };
+  assert.throws(() => buildAggregate(malformedSuccess), /success_without_eligible/);
   const short = cohort(); short[1] = { ...short[1], candidate: "duplicate", robots: "not_checked", fetch: "not_attempted", readability: "not_attempted", structured: "not_attempted", prefix: "unavailable", elapsed: "unavailable", dom: "unavailable", workerTime: "unavailable" };
   assert.equal(buildAggregate(short).decision, "inconclusive_short_cohort");
 });
@@ -131,14 +167,59 @@ await check("aggregate_privacy_and_reconciliation_before_sink", async () => {
   assert.throws(() => validateAggregate(broken), /reconciliation/);
 });
 await check("hosted_run_gate_values_are_exact", async () => {
-  const good = { buildNumber: "i10.1", options: { build: "i10.1", maxTotalChargeUsd: 1, isMaxTotalChargeUsdSetByUser: true, memoryMbytes: 256, timeoutSecs: 900, restartOnError: false } };
-  const privateActor = { visibility: "PRIVATE", permissionLevel: "LIMITED_PERMISSIONS" };
-  assert.equal(verifyFutureRunGates({ actor: privateActor, run: good }, "i10.1").valid, true);
-  assert.equal(verifyFutureRunGates({ actor: { ...privateActor, visibility: "PUBLIC" }, run: good }, "i10.1").valid, false);
-  assert.equal(verifyFutureRunGates({ actor: privateActor, run: { ...good, options: { ...good.options, isMaxTotalChargeUsdSetByUser: false } } }, "i10.1").valid, false);
+  const good = { buildNumber: "10.0.7", options: { build: "10.0.7", maxTotalChargeUsd: 1, memoryMbytes: 256, timeoutSecs: 900, restartOnError: false } };
+  const privateActor = { isPublic: false, actorPermissionLevel: "LIMITED_PERMISSIONS" };
+  assert.equal(verifyFutureRunGates({ actor: privateActor, run: good }, "10.0.7").valid, true);
+  assert.equal(verifyFutureRunGates({ actor: { ...privateActor, isPublic: true }, run: good }, "10.0.7").valid, false);
+  assert.equal(verifyFutureRunGates({ actor: privateActor, run: { ...good, options: { ...good.options, maxTotalChargeUsd: 2 } } }, "10.0.7").valid, false);
+});
+await check("hosted_runtime_environment_gate_fails_closed", async () => {
+  const processEnv = { APIFY_IS_AT_HOME: "1", ACTOR_RUN_ID: "run_12345678", ACTOR_BUILD_ID: "build_12345678", ACTOR_BUILD_NUMBER: "1.2.34", ACTOR_PERMISSION_LEVEL: "LIMITED_PERMISSIONS", ACTOR_MEMORY_MBYTES: "256", ACTOR_STARTED_AT: "2026-10-01T00:00:00.000Z", ACTOR_TIMEOUT_AT: "2026-10-01T00:15:00.000Z", ACTOR_MAX_TOTAL_CHARGE_USD: "1", ACTOR_RESTART_ON_ERROR: "0" };
+  const actorEnv = { isAtHome: "1", actorRunId: processEnv.ACTOR_RUN_ID, actorBuildId: processEnv.ACTOR_BUILD_ID, actorBuildNumber: processEnv.ACTOR_BUILD_NUMBER, memoryMbytes: 256, startedAt: new Date(processEnv.ACTOR_STARTED_AT), timeoutAt: new Date(processEnv.ACTOR_TIMEOUT_AT) };
+  assert.equal(inspectHostedRunGate({ actorEnv, processEnv }).valid, true);
+  assert.doesNotThrow(() => assertHostedRunGate({ actorEnv, processEnv }));
+  for (const key of ["APIFY_IS_AT_HOME", "ACTOR_RUN_ID", "ACTOR_BUILD_ID", "ACTOR_BUILD_NUMBER", "ACTOR_PERMISSION_LEVEL", "ACTOR_MEMORY_MBYTES", "ACTOR_STARTED_AT", "ACTOR_TIMEOUT_AT", "ACTOR_MAX_TOTAL_CHARGE_USD", "ACTOR_RESTART_ON_ERROR"]) {
+    const absent = { ...processEnv }; delete absent[key];
+    assert.equal(inspectHostedRunGate({ actorEnv, processEnv: absent }).valid, false, `missing ${key} must fail closed`);
+  }
+  assert.equal(inspectHostedRunGate({ actorEnv: { ...actorEnv, actorRunId: "run_87654321" }, processEnv }).checks.runIdMatchesEnvironment, false);
+  assert.equal(inspectHostedRunGate({ actorEnv: { ...actorEnv, actorBuildId: "build_87654321" }, processEnv }).checks.buildIdMatchesEnvironment, false);
+  assert.throws(() => assertHostedRunGate({ actorEnv: {}, processEnv: {} }), (error) => error.code === "HOSTED_RUN_GATE_FAILED" && !error.message.includes(processEnv.ACTOR_RUN_ID));
+});
+await check("runtime_gate_precedes_actor_initialization_and_probe", async () => {
+  let initialized = 0, executed = 0;
+  const { runActorSafely } = await import("./probe.mjs");
+  const result = await runActorSafely({ getEnv: () => ({}), env: {}, init: async () => { initialized++; }, execute: async () => { executed++; return {}; }, exit: async () => {} });
+  assert.equal(result, false); assert.equal(initialized, 0); assert.equal(executed, 0);
+});
+await check("hosted_controller_mocked_api_order_exact_build_and_ambiguous_post", async () => {
+  const plan = await createHostedRunPlan({ sourceRoot: resolve(here, "..") });
+  assert.equal(plan.actor.isPublic, false); assert.equal(plan.actor.actorPermissionLevel, "LIMITED_PERMISSIONS");
+  assert.equal(plan.actor.defaultRunOptions.memoryMbytes, 256); assert.equal(plan.actor.defaultRunOptions.timeoutSecs, 900);
+  assert.equal(plan.run.maxTotalChargeUsd, 1); assert.equal(plan.actor.defaultRunOptions.restartOnError, false);
+  assert.equal(plan.run.build, null); assert.ok(plan.sourcePaths.includes("src/runtime-gate.mjs"));
+  assert.equal(hashSourceFiles(plan.version.sourceFiles), plan.sourceManifestSha256);
+  const calls = []; let startAttempts = 0;
+  const actor = { id: "actor_12345678", isPublic: false, actorPermissionLevel: "LIMITED_PERMISSIONS" };
+  const build = { id: "build_12345678", buildNumber: "10.0.7", status: "SUCCEEDED", actVersion: plan.version };
+  const run = { id: "run_12345678", buildId: build.id, buildNumber: build.buildNumber, options: { ...plan.run, build: build.buildNumber } };
+  const api = {
+    createPrivateActor: async (settings) => { calls.push("createActor"); assert.equal(settings.isPublic, false); return actor; },
+    setVersionSource: async (_id, version) => { calls.push("setVersion"); assert.equal(hashSourceFiles(version.sourceFiles), plan.sourceManifestSha256); },
+    getVersion: async () => { calls.push("getVersion"); return plan.version; },
+    buildVersion: async (_id, versionNumber) => { calls.push("buildVersion"); assert.equal(versionNumber, plan.version.versionNumber); return { id: build.id }; },
+    waitForBuild: async (_id, buildId) => { calls.push("waitForBuild"); assert.equal(buildId, build.id); return build; },
+    getActor: async () => { calls.push("getActor"); return actor; },
+    startRun: async (_id, options) => { calls.push("startRun"); startAttempts++; assert.deepEqual(options, { ...plan.run, build: build.buildNumber }); throw new Error("simulated ambiguous response"); },
+    findRunsSince: async (_id, since) => { calls.push("reconcileRuns"); assert.ok(Number.isFinite(since)); return [run]; },
+    getRun: async () => { calls.push("getRun"); return run; },
+  };
+  const outcome = await executeHostedRunPlan(plan, api);
+  assert.deepEqual(calls, ["createActor", "setVersion", "getVersion", "buildVersion", "waitForBuild", "getActor", "startRun", "reconcileRuns", "getRun"]);
+  assert.equal(startAttempts, 1); assert.equal(outcome.status, "run_started_after_readback"); assert.equal(outcome.buildNumber, build.buildNumber);
 });
 
-assert.equal(checks.length, 15);
+assert.equal(checks.length, 20);
 const elapsedMs = Date.now() - started;
 assert.ok(elapsedMs <= 90000, "preflight exceeded 90 seconds");
 clearInterval(rssSampler);
@@ -146,14 +227,14 @@ assert.ok(peakRssBytes <= 256 * 1024 * 1024, "preflight exceeded 256 MiB RSS");
 const pkg = JSON.parse(await readFile(join(here, "../package.json"), "utf8"));
 assert.equal(pkg.dependencies["@mozilla/readability"], "0.6.0");
 assert.equal(pkg.dependencies.linkedom, "0.18.13");
-const sourcePaths = ["../Dockerfile", "../package.json", "../package-lock.json", "./aggregate.mjs", "./extract-worker.mjs", "./extract.mjs", "./network.mjs", "./probe.mjs", "./preflight.mjs", "./verify-run-options.mjs"];
+const sourcePaths = ["../Dockerfile", "../package.json", "../package-lock.json", "./aggregate.mjs", "./extract-worker.mjs", "./extract.mjs", "./hosted-run-controller.mjs", "./network.mjs", "./probe.mjs", "./preflight.mjs", "./runtime-gate.mjs", "./verify-run-options.mjs"];
 const sourceParts = [];
 for (const path of sourcePaths) sourceParts.push(`${path}\0${createHash("sha256").update(await readFile(join(here, path))).digest("hex")}\n`);
 const sourceManifestSha256 = createHash("sha256").update(sourceParts.join("")).digest("hex");
 const lockSha256 = createHash("sha256").update(await readFile(join(here, "../package-lock.json"))).digest("hex");
 const report = {
   schemaVersion: "issue22-iteration10-offline-preflight-v1", status: "passed", nodeVersion: process.version,
-  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 15,
+  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 20,
   completedCheckCount: checks.length, totalElapsedMs: elapsedMs, totalDeadlineMs: 90000,
   configured: { ...LIMITS, networkRetries: NETWORK_RETRIES, runtimeImage: "apify/actor-node:20", hostedRunStarted: false },
   packageLockSha256: lockSha256, sourceManifestSha256,
