@@ -1,0 +1,13 @@
+{
+  "privacy": "private Actor, LIMITED_PERMISSIONS",
+  "build": "exact immutable source build required before run; not yet built",
+  "memoryMbytes": 256,
+  "timeoutSecs": 180,
+  "maxTotalChargeUsd": 0.1,
+  "restartOnError": false,
+  "sdkApiMaxRetries": 0,
+  "input": {
+    "mode": "fixture-only",
+    "fixtureId": "readability-positive-v1"
+  }
+}

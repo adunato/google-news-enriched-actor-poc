@@ -78,3 +78,37 @@ Apify runtime's SDK tuple set, successful publisher URL resolution or live
 article extraction, or a successful hosted Actor start. The loopback tuple set
 is evidence for this pinned local image only. The original I10 live 100-result
 hosted check remains unresolved; H12 does not unblock it or close Issue #22.
+
+## Owner authority update and next iteration
+
+On 2026-10-01, the owner expanded authority to “test Mozilla Readability on
+Apify”, make the POC work there, diagnose failures and continue changed
+iterations without per-iteration approval. This supersedes the earlier
+H12 checkpoint language that required separate approval before any hosted
+run. It authorizes the bounded work below; it does not imply that a hosted run
+has occurred or that the local result proves hosted behavior.
+
+The next step is H14: prepare and independently check a changed
+fixture-only candidate, then run it privately on Apify. Preserve the exact
+fixture input and Readability worker; add fixed startup/error stages and
+sanitized counters. Allow only documented and source-checked SDK destination
+and operation tuples, fail closed on unknown calls, activate the parent guard
+before application imports, and verify coverage markers/counters in every
+reachable Worker. No Google or publisher request is part of fixture mode.
+Each run is limited to 256 MiB, 180 seconds and $0.10, with restarts and
+retries disabled.
+
+If a hosted candidate fails, diagnose its logs, stage markers, SDK counters,
+dataset and resource evidence, make a relevant change, then repeat the bounded
+fixture run. Never rerun an unchanged failed candidate. If the failure
+evidence does not identify a viable corrective action, a required platform
+capability is unavailable, or continued work would cross the stated bounds or
+Issue #22/product constraints, report that blocker and the recovery decision
+needed.
+
+A successful fixture run establishes only that this Readability path starts,
+extracts the bundled sample and persists its aggregate on hosted Apify. Then
+prepare a fresh 100-slot live cohort under the existing query, locale,
+recency, deduplication, publisher-access, privacy and per-row failure rules to
+measure the >=50 qualifying unique article target. The fixture result alone
+does not measure live publisher success.

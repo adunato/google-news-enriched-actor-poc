@@ -1,0 +1,25 @@
+{
+  "title": "Issue #22 H14 fixture-only diagnostic",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "mode": {
+      "title": "Mode",
+      "description": "Run only the bundled synthetic readability fixture.",
+      "type": "string",
+      "editor": "select",
+      "enum": ["fixture-only"],
+      "default": "fixture-only"
+    },
+    "fixtureId": {
+      "title": "Bundled fixture",
+      "description": "The only article fixture accepted by this diagnostic.",
+      "type": "string",
+      "editor": "select",
+      "enum": ["readability-positive-v1"],
+      "default": "readability-positive-v1"
+    }
+  },
+  "required": ["mode", "fixtureId"],
+  "additionalProperties": false
+}

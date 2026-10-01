@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "issue22-h14-hosted-tuples-v1",
+  "state": "source-checked",
+  "origin": "https://api.apify.com",
+  "tuples": [
+    { "method": "GET", "path": "/v2/actor-runs/{ACTOR_RUN_ID}", "phase": "sdk_init" },
+    { "method": "GET", "path": "/v2/actor-runs/{ACTOR_RUN_ID}", "phase": "run_gate" },
+    { "method": "GET", "path": "/v2/key-value-stores/{APIFY_DEFAULT_KEY_VALUE_STORE_ID}", "phase": "input_read" },
+    { "method": "GET", "path": "/v2/key-value-stores/{APIFY_DEFAULT_KEY_VALUE_STORE_ID}/records/INPUT?attachment=*", "phase": "input_read" },
+    { "method": "GET", "path": "/v2/datasets/{APIFY_DEFAULT_DATASET_ID}", "phase": "aggregate_write" },
+    { "method": "POST", "path": "/v2/datasets/{APIFY_DEFAULT_DATASET_ID}/items", "phase": "aggregate_write" },
+    { "method": "GET", "path": "/v2/datasets/{APIFY_DEFAULT_DATASET_ID}/items?clean=*&fields=*&limit=*", "phase": "readback" }
+  ],
+  "sourceReferences": [
+    "apify@3.7.2 dist/actor.js Actor.init and Actor.getInput",
+    "@crawlee/core@3.18.2 storages/key_value_store.js KeyValueStore.getInput",
+    "@crawlee/core@3.18.2 storages/dataset.js Dataset.pushData",
+    "apify-client@2.25.0 dist/resource_clients/key_value_store.js",
+    "apify-client@2.25.0 dist/resource_clients/dataset.js"
+  ]
+}

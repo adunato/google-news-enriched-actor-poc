@@ -1,0 +1,15 @@
+{
+  "name": "issue-22-h14-fixture-hosted-diagnostic",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --import ./src/guard-preload.mjs ./src/main.mjs",
+    "preflight": "node ./src/preflight.mjs"
+  },
+  "dependencies": {
+    "@mozilla/readability": "0.6.0",
+    "apify": "3.7.2",
+    "linkedom": "0.18.13"
+  }
+}

@@ -1,0 +1,5 @@
+node_modules
+npm-debug.log*
+*.local.json
+apify-validation-output/
+apify-test-input.json

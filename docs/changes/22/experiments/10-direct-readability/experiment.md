@@ -1,6 +1,6 @@
 # Iteration 10 — direct Mozilla Readability (early hosted run failure)
 
-**Status:** Inconclusive. The corrected owner-approved offline preflight passed 37/37 checks on 2026-10-01 under Node 20.19.0, but the sole authorized private hosted run exited 1 after 2.508 seconds before any aggregate or publisher cohort result was produced; its failing stage is unknown. No unchanged rerun is authorized.
+**Status:** Inconclusive. The corrected owner-approved offline preflight passed 37/37 checks on 2026-10-01 under Node 20.19.0, but the sole hosted run authorized for this candidate exited 1 after 2.508 seconds before any aggregate or publisher cohort result was produced; its failing stage is unknown. The unchanged I10 candidate is not to be retried. The owner later expanded authority for changed Readability POC candidates and continued diagnosis on Apify; see the owner authorization update in the H12 experiment and living Spike.
 
 ## Question and hypothesis
 
@@ -62,6 +62,8 @@ The diagnostic API probe made the bounded POST to a verified unregistered route 
 
 **Learning checkpoint:** A mocked/offline preflight and a generic hosted failure before aggregate output did not provide enough evidence to locate the early target-runtime failure; the hosted failing stage is unknown. The reusable cross-project lesson is to validate entrypoint startup and error propagation in a representative runtime image using fixture-only inputs before spending a hosted run. A portable learning record is added under `docs/learnings/`.
 
+**Owner authority update (2026-10-01):** This historical experiment remains inconclusive and its exact candidate must not be rerun unchanged. The owner explicitly authorized continued Issue #22 Readability POC work on Apify, including diagnosing failures and running changed iterations without per-iteration approval. The next authorized step is H14's changed, fixture-only hosted startup diagnostic under the living Spike's private permissions and per-run resource bounds; after that succeeds, proceed to the fresh live 100-slot cohort. This update supersedes the earlier language requesting separate approval before hosted work.
+
 ## Iteration 11 (H12) local result and next checkpoint
 
 H12's approved local fixture experiment is complete. Existing H11 remains the separate #4 Google consent/session hypothesis; no iteration was skipped.
@@ -84,6 +86,6 @@ Any later hosted run requires separate explicit owner authorization after indepe
 
 **Prerequisite/blocker status:** local validation and independent review are GO for exercised paths only. The omitted paths include direct Undici, TLS, HTTP/2, WebSocket, child-process, native-addon and arbitrary Worker routes; the seven-file scan is lexical, not recursive. Hosted tuple/runtime parity is unresolved and blocks a hosted startup claim. Recovery is the no-run feasibility audit; if it cannot establish parity, report the limit and prepare a separate hosted-run decision request. No hosted run is authorized.
 
-**Next checkpoint:** H13, no-run hosted-boundary feasibility audit. Review the locked SDK tuple sources and official Apify documentation for whether runtime/image identity and request tuples are observable without an Actor run. Cost ceiling is $0; do not create/build/run Actors, use a token, contact Google/publishers, or retain payloads, secrets or article content. Record a sanitized five-tuple-to-source map and whether digest/runtime parity can be demonstrated. The image digest passed via environment is caller-supplied, not in-container attested.
+**Next checkpoint (superseded):** The original proposal was H13, a no-run hosted-boundary audit followed by a separate owner decision if parity remained unresolved. H13 remains optional supporting evidence; the owner's later expanded authority removes that approval gate.
 
-**Owner decision requested now:** none. H13 is limited to read-only evidence and does not require or imply hosted authorization. If it cannot establish hosted parity, return with a contextual choice: separately authorize at most one private fixture-only hosted run under the previously documented bounds, or keep hosted work on Hold. No run is authorized by the current checkpoint.
+**Current authorization:** The owner explicitly authorized continued Issue #22 Readability POC work on Apify, diagnosis of failures and changed iterations without per-iteration approval. Proceed with H14 as specified in the living Spike and H12 experiment: changed fixture-only candidate, independently checked guard/SDK behavior, private run under 256 MiB / 180 seconds / $0.10 per-run bounds, restarts/retries disabled. H13 may be done if it does not delay that work. After fixture startup is established, advance to a fresh live 100-slot O1 cohort. No unchanged failed candidate may be rerun; keep the existing product and evidence constraints.

@@ -1,0 +1,7 @@
+{
+  "actorSpecification": 1,
+  "name": "issue-22-h14-fixture-hosted-diagnostic",
+  "version": "1.0.0",
+  "buildTag": "latest",
+  "dockerfile": "Dockerfile"
+}
