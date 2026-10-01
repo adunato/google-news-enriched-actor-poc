@@ -55,7 +55,7 @@ export async function createHostedRunPlan({ sourceRoot, versionNumber = "10.0" }
       description: "Private disposable actor for the approved Issue 22 Iteration 10 technical spike.",
       isPublic: false,
       versions: [version],
-      defaultRunOptions: { build: versionNumber, memoryMbytes: 256, timeoutSecs: 900, restartOnError: false, forcePermissionLevel: "LIMITED_PERMISSIONS" },
+      defaultRunOptions: { memoryMbytes: 256, timeoutSecs: 900, restartOnError: false, forcePermissionLevel: "LIMITED_PERMISSIONS" },
     },
     version,
     build: { versionNumber },

@@ -252,6 +252,7 @@ await check("hosted_controller_exact_build_readback_gate_and_delayed_visibility"
   const plan = await createHostedRunPlan({ sourceRoot: resolve(here, "..") });
   assert.equal(plan.actor.isPublic, false); assert.equal(Object.hasOwn(plan.actor, "actorPermissionLevel"), false);
   assert.deepEqual(plan.actor.versions, [plan.version]);
+  assert.equal(Object.hasOwn(plan.actor.defaultRunOptions, "build"), false);
   assert.equal(plan.actor.defaultRunOptions.forcePermissionLevel, "LIMITED_PERMISSIONS");
   assert.equal(plan.actor.defaultRunOptions.memoryMbytes, 256); assert.equal(plan.actor.defaultRunOptions.timeoutSecs, 900);
   assert.equal(plan.run.maxTotalChargeUsd, 1); assert.equal(plan.actor.defaultRunOptions.restartOnError, false);
@@ -266,6 +267,7 @@ await check("hosted_controller_exact_build_readback_gate_and_delayed_visibility"
       calls.push("createActor"); assert.equal(settings.isPublic, false);
       assert.deepEqual(settings.versions, [plan.version]);
       assert.equal(Object.hasOwn(settings, "actorPermissionLevel"), false);
+      assert.equal(Object.hasOwn(settings.defaultRunOptions, "build"), false);
       assert.equal(settings.defaultRunOptions.forcePermissionLevel, "LIMITED_PERMISSIONS");
       return actor;
     },
@@ -351,18 +353,19 @@ await check("source_snapshot_byte_equality_and_gate_before_api", async () => {
   assert.deepEqual(calls, []);
 });
 
-await check("apify_cli_adapter_create_payload_includes_reviewed_version_and_supported_permission_fields", async () => {
+await check("apify_cli_adapter_create_payload_omits_rejected_default_build_and_includes_reviewed_version_and_supported_permission_fields", async () => {
   const calls = [];
   const adapter = await createApifyCliAdapter({ commandPath: "fixture-apify-cli", execute: async (command, args, input) => {
     calls.push({ command, args, input });
     return JSON.stringify({ data: { id: "actor_12345678", isPublic: false, actorPermissionLevel: "LIMITED_PERMISSIONS", token: "must-not-escape" } });
   } });
   const version = { versionNumber: "10.0", sourceType: "SOURCE_FILES", sourceFiles: [{ name: "src/main.js", format: "TEXT", content: "export {};" }] };
-  const actorSettings = { name: "test", isPublic: false, versions: [version], defaultRunOptions: { build: "10.0", memoryMbytes: 256, timeoutSecs: 900, restartOnError: false, forcePermissionLevel: "LIMITED_PERMISSIONS" } };
+  const actorSettings = { name: "test", isPublic: false, versions: [version], defaultRunOptions: { memoryMbytes: 256, timeoutSecs: 900, restartOnError: false, forcePermissionLevel: "LIMITED_PERMISSIONS" } };
   const actor = await adapter.createPrivateActor(actorSettings);
   assert.deepEqual(actor, { id: "actor_12345678", isPublic: false, actorPermissionLevel: "LIMITED_PERMISSIONS" });
   assert.deepEqual(calls[0].args, ["api", "POST", "acts", "-d", "-"]);
   assert.deepEqual(JSON.parse(calls[0].input), actorSettings);
+  assert.equal(Object.hasOwn(JSON.parse(calls[0].input).defaultRunOptions, "build"), false);
   assert.equal(Object.hasOwn(JSON.parse(calls[0].input), "actorPermissionLevel"), false);
   assert.equal(JSON.stringify(actor).includes("must-not-escape"), false);
 });
@@ -466,6 +469,22 @@ await check("apify_create_schema_validation_paths_are_sanitized_and_survive_laun
   });
 });
 
+await check("apify_schema_validation_diagnostic_traversal_is_bounded", async () => {
+  class FailedChild extends EventEmitter { constructor() { super(); this.stdin = new PassThrough(); this.stdout = new PassThrough(); this.stderr = new PassThrough(); } kill() {} }
+  const child = new FailedChild();
+  const failed = runApifyCli("fixture", [], undefined, { spawnProcess: () => child });
+  child.stdin.once("finish", () => {
+    let nested = { path: "defaultRunOptions.timeoutSecs", code: "invalid_type" };
+    for (let depth = 0; depth < 100; depth += 1) nested = { child: nested };
+    child.stderr.end(JSON.stringify({ error: { type: "schema-validation", details: [nested] } }));
+    setTimeout(() => child.emit("close", 1), 5);
+  });
+  await assert.rejects(failed, (error) => {
+    assert.equal(Object.hasOwn(error.diagnostic, "validationIssues"), false);
+    return true;
+  });
+});
+
 await check("apify_schema_validation_free_text_returns_only_known_field_path_and_category", async () => {
   class FailedChild extends EventEmitter { constructor() { super(); this.stdin = new PassThrough(); this.stdout = new PassThrough(); this.stderr = new PassThrough(); } kill() {} }
   const child = new FailedChild();
@@ -532,7 +551,7 @@ await check("apify_timeout_waits_for_child_close_before_settling", async () => {
   assert.ok(Date.now() - startedAt >= 15, "timeout settled before the child close event");
 });
 
-assert.equal(checks.length, 36);
+assert.equal(checks.length, 37);
 const elapsedMs = Date.now() - started;
 assert.ok(elapsedMs <= 90000, "preflight exceeded 90 seconds");
 clearInterval(rssSampler);
@@ -545,7 +564,7 @@ const sourceManifestSha256 = sourcePlan.sourceManifestSha256;
 const lockSha256 = createHash("sha256").update(await readFile(join(here, "../package-lock.json"))).digest("hex");
 const report = {
   schemaVersion: "issue22-iteration10-offline-preflight-v1", status: "passed", nodeVersion: process.version,
-  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 36,
+  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 37,
   completedCheckCount: checks.length, totalElapsedMs: elapsedMs, totalDeadlineMs: 90000,
   configured: { ...LIMITS, networkRetries: NETWORK_RETRIES, runtimeImage: "apify/actor-node:20", hostedRunStarted: false },
   packageLockSha256: lockSha256, sourceManifestSha256,

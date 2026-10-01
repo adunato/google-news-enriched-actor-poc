@@ -4,9 +4,9 @@
   "nodeVersion": "v20.19.0",
   "readabilityVersion": "0.6.0",
   "domAdapter": "linkedom@0.18.13",
-  "plannedCheckCount": 36,
-  "completedCheckCount": 36,
-  "totalElapsedMs": 1686,
+  "plannedCheckCount": 37,
+  "completedCheckCount": 37,
+  "totalElapsedMs": 1701,
   "totalDeadlineMs": 90000,
   "configured": {
     "timeoutMs": 10000,
@@ -26,8 +26,8 @@
     "hostedRunStarted": false
   },
   "packageLockSha256": "4598514fd8de26018a8a4253d65f9ac1927914ebca851a81c47fc17d3b8868c2",
-  "sourceManifestSha256": "4ddefdd911e60d0a8b02e3ebd7f340de82d2187da201e1a569d5862387be174d",
-  "peakRssBytes": 103718912,
+  "sourceManifestSha256": "ce7a892574c378793531d84960c109ded031677f68cbb6d7f50df8067bda8841",
+  "peakRssBytes": 105709568,
   "networkProbeAttempts": 0,
   "aggregateSinkChecks": {
     "completeWrites": 1,
@@ -144,7 +144,7 @@
       "status": "passed"
     },
     {
-      "id": "apify_cli_adapter_create_payload_includes_reviewed_version_and_supported_permission_fields",
+      "id": "apify_cli_adapter_create_payload_omits_rejected_default_build_and_includes_reviewed_version_and_supported_permission_fields",
       "status": "passed"
     },
     {
@@ -165,6 +165,10 @@
     },
     {
       "id": "apify_create_schema_validation_paths_are_sanitized_and_survive_launch_formatting",
+      "status": "passed"
+    },
+    {
+      "id": "apify_schema_validation_diagnostic_traversal_is_bounded",
       "status": "passed"
     },
     {

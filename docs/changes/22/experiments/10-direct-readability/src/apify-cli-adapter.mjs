@@ -41,10 +41,13 @@ function parseErrorJson(text) {
 
 const CREATE_FIELD_PATH = /^(?:name|title|description|isPublic|actorPermissionLevel|defaultRunOptions(?:\.(?:build|memoryMbytes|timeoutSecs|maxTotalChargeUsd|restartOnError|forcePermissionLevel))?|versions(?:\.\d+)?(?:\.(?:versionNumber|sourceType|sourceFiles(?:\.\d+)?(?:\.(?:name|format|content))?))?)$/;
 const FREE_TEXT_FIELD_TOKEN = /(?:^|[^A-Za-z0-9_])(defaultRunOptions|actorPermissionLevel|sourceFiles|sourceType|versionNumber|isPublic|name|title|description)(?:\.(?:\d+|build|memoryMbytes|timeoutSecs|maxTotalChargeUsd|restartOnError|forcePermissionLevel|versionNumber|sourceType|sourceFiles|name|format|content))*/g;
+const MAX_VALIDATION_PATH_CHARS = 128;
+const MAX_VALIDATION_NODES = 256;
+const MAX_VALIDATION_DEPTH = 8;
 
 function safeFieldPath(value) {
   const path = Array.isArray(value) ? value.map((part) => String(part)).join(".") : typeof value === "string" ? value : "";
-  return CREATE_FIELD_PATH.test(path) ? path : undefined;
+  return path.length <= MAX_VALIDATION_PATH_CHARS && CREATE_FIELD_PATH.test(path) ? path : undefined;
 }
 
 function reasonCategory(value) {
@@ -62,9 +65,17 @@ function safeValidationIssues(...outputs) {
   const envelope = outputs.map(parseErrorJson).find(Boolean);
   const error = envelope?.error && typeof envelope.error === "object" ? envelope.error : envelope;
   const candidates = [];
-  const collect = (value) => {
-    if (Array.isArray(value)) for (const item of value) collect(item);
-    else if (value && typeof value === "object") candidates.push(value);
+  const visited = new Set();
+  let visitedCount = 0;
+  const collect = (value, depth = 0) => {
+    if (depth > MAX_VALIDATION_DEPTH || visitedCount >= MAX_VALIDATION_NODES || !value || typeof value !== "object" || visited.has(value)) return;
+    visited.add(value);
+    visitedCount += 1;
+    if (Array.isArray(value)) for (const item of value) collect(item, depth + 1);
+    else {
+      candidates.push(value);
+      for (const item of Object.values(value)) collect(item, depth + 1);
+    }
   };
   collect(error?.details);
   collect(error?.issues);
