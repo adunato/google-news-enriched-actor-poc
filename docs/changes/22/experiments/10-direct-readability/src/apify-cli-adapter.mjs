@@ -1,5 +1,6 @@
 import { spawn } from "node:child_process";
 import { execFile as execFileCallback } from "node:child_process";
+import { dirname, join } from "node:path";
 import { promisify } from "node:util";
 
 const execFile = promisify(execFileCallback);
@@ -7,26 +8,46 @@ const MAX_STDOUT_BYTES = 2 * 1024 * 1024;
 const REQUEST_TIMEOUT_MS = 30000;
 const BUILD_TIMEOUT_MS = 12 * 60 * 1000;
 const POLL_MS = 3000;
+const PROCESS_CODES = new Set(["ENOENT", "EACCES", "EPERM", "ENOEXEC", "EINVAL", "EISDIR", "EFTYPE"]);
 
 async function defaultCommandPath() {
-  if (process.env.APIFY_CLI_PATH) return process.env.APIFY_CLI_PATH;
+  if (process.env.APIFY_CLI_PATH) return { command: process.env.APIFY_CLI_PATH, prefixArgs: [] };
   if (process.platform === "win32") {
     try {
-      const { stdout } = await execFile("where.exe", ["apify-cli.exe"], { windowsHide: true, maxBuffer: 4096 });
-      const path = stdout.split(/\r?\n/).map((line) => line.trim()).find(Boolean);
-      if (path) return path;
+      const shim = await execFile("where.exe", ["apify.ps1"], { windowsHide: true, maxBuffer: 4096 });
+      const shimPath = shim.stdout.split(/\r?\n/).map((line) => line.trim()).find(Boolean);
+      if (shimPath) return { command: join(dirname(shimPath), "apify-cli.exe"), prefixArgs: [] };
     } catch { /* stable unavailable error below */ }
+    throw new Error("apify_cli_unavailable");
   }
-  return "apify";
+  return { command: "apify", prefixArgs: [] };
+}
+
+function processError(code) {
+  const safeCode = PROCESS_CODES.has(code) ? code : "UNKNOWN";
+  const error = new Error(`apify_process_${safeCode}`);
+  error.diagnostic = { kind: "local_process_error", code: safeCode };
+  return error;
+}
+
+function cliExitError(exitCode, stderr) {
+  const safeExitCode = Number.isInteger(exitCode) ? exitCode : null;
+  const statusMatch = /(?:HTTP(?:\/\d(?:\.\d)?)?\s+|status(?:Code)?["']?\s*[:=]\s*["']?)([1-5]\d\d)\b/i.exec(stderr);
+  const diagnostic = statusMatch
+    ? { kind: "http_error", status: Number(statusMatch[1]) }
+    : { kind: "cli_exit", exitCode: safeExitCode };
+  const error = new Error(diagnostic.kind === "http_error" ? "apify_http_request_failed" : "apify_cli_exit_nonzero");
+  error.diagnostic = diagnostic;
+  return error;
 }
 
 export function runApifyCli(command, args, input, { spawnProcess = spawn, timeoutMs = REQUEST_TIMEOUT_MS } = {}) {
   return new Promise((resolve, reject) => {
     let child;
     try { child = spawnProcess(command, args, { shell: false, windowsHide: true, stdio: ["pipe", "pipe", "pipe"] }); }
-    catch { reject(new Error("apify_cli_unavailable")); return; }
+    catch (error) { reject(processError(error?.code)); return; }
     const chunks = [];
-    let stdoutBytes = 0, settled = false, timer;
+    let stdoutBytes = 0, stderrBytes = 0, stderr = "", settled = false, timer;
     const finish = (error, output) => {
       if (settled) return;
       settled = true; clearTimeout(timer);
@@ -38,12 +59,19 @@ export function runApifyCli(command, args, input, { spawnProcess = spawn, timeou
       if (stdoutBytes > MAX_STDOUT_BYTES) { child.kill(); finish(new Error("apify_cli_output_limit")); return; }
       chunks.push(chunk);
     });
-    child.stderr.on("data", () => { /* Never retain or expose CLI stderr: it may contain credentials. */ });
-    child.stdin.once("error", () => finish(new Error("apify_api_request_failed")));
-    child.once("error", () => finish(new Error("apify_cli_unavailable")));
+    child.stderr.on("data", (chunk) => {
+      // Bounded transient parsing only; stderr is never returned or logged.
+      if (stderrBytes < 65536) {
+        const bounded = chunk.subarray(0, 65536 - stderrBytes);
+        stderr += bounded.toString("utf8");
+        stderrBytes += bounded.length;
+      }
+    });
+    child.stdin.once("error", (error) => finish(processError(error?.code)));
+    child.once("error", (error) => finish(processError(error?.code)));
     child.once("close", (code) => {
       if (settled) return;
-      if (code !== 0) { finish(new Error("apify_api_request_failed")); return; }
+      if (code !== 0) { finish(cliExitError(code, stderr)); return; }
       finish(null, Buffer.concat(chunks, stdoutBytes).toString("utf8"));
     });
     if (input === undefined) child.stdin.end();
@@ -62,7 +90,7 @@ function pick(value, keys) {
   return Object.fromEntries(keys.filter((key) => Object.hasOwn(value, key)).map((key) => [key, value[key]]));
 }
 
-const actorView = (value) => pick(value, ["id", "isPublic", "actorPermissionLevel"]);
+const actorView = (value) => pick(value, ["id", "name", "isPublic", "actorPermissionLevel"]);
 const versionView = (value) => ({
   ...pick(value, ["versionNumber", "sourceType"]),
   ...(Array.isArray(value?.sourceFiles) ? { sourceFiles: value.sourceFiles.map((file) => pick(file, ["name", "format", "content"])) } : {}),
@@ -82,12 +110,12 @@ const runView = (value) => ({
  * stdout/stderr from the child process. API bodies travel through stdin.
  */
 export async function createApifyCliAdapter({ commandPath, spawnProcess = spawn, execute = runApifyCli, sleep = (ms) => new Promise((r) => setTimeout(r, ms)), clock = Date.now } = {}) {
-  const command = commandPath ?? await defaultCommandPath();
+  const invocation = commandPath ? { command: commandPath, prefixArgs: [] } : await defaultCommandPath();
   const request = async (method, endpoint, { body, params, timeoutMs } = {}) => {
-    const args = ["api", method, endpoint];
+    const args = [...invocation.prefixArgs, "api", method, endpoint];
     if (params && Object.keys(params).length) args.push("-p", JSON.stringify(params));
     if (body !== undefined) args.push("-d", "-");
-    const raw = await execute(command, args, body === undefined ? undefined : JSON.stringify(body), { spawnProcess, timeoutMs });
+    const raw = await execute(invocation.command, args, body === undefined ? undefined : JSON.stringify(body), { spawnProcess, timeoutMs });
     return parseResponse(raw);
   };
 
@@ -120,6 +148,11 @@ export async function createApifyCliAdapter({ commandPath, spawnProcess = spawn,
     },
     async getActor(actorId) {
       return actorView(await request("GET", `acts/${encodeURIComponent(actorId)}`));
+    },
+    async listOwnActors() {
+      const response = await request("GET", "acts", { params: { my: true, limit: 100 } });
+      const items = Array.isArray(response) ? response : Array.isArray(response?.items) ? response.items : [];
+      return items.map(actorView);
     },
     async startRun(actorId, options) {
       return runView(await request("POST", `acts/${encodeURIComponent(actorId)}/runs`, { params: options, timeoutMs: BUILD_TIMEOUT_MS }));

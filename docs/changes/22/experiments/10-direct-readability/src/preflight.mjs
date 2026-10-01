@@ -285,7 +285,32 @@ await check("apify_child_is_shell_free_and_stderr_is_discarded", async () => {
   assert.equal(output.includes("credential-sentinel"), false);
 });
 
-assert.equal(checks.length, 24);
+await check("apify_process_and_http_diagnostics_are_sanitized", async () => {
+  await assert.rejects(() => runApifyCli("fixture", [], undefined, {
+    spawnProcess: () => { const error = new Error("private command path"); error.code = "ENOENT"; throw error; },
+  }), (error) => {
+    assert.deepEqual(error.diagnostic, { kind: "local_process_error", code: "ENOENT" });
+    assert.equal(error.message, "apify_process_ENOENT");
+    assert.equal(error.message.includes("private command path"), false);
+    return true;
+  });
+
+  class FailedChild extends EventEmitter { constructor() { super(); this.stdin = new PassThrough(); this.stdout = new PassThrough(); this.stderr = new PassThrough(); } kill() {} }
+  const child = new FailedChild();
+  const failed = runApifyCli("fixture", [], undefined, { spawnProcess: () => child });
+  child.stdin.once("finish", () => {
+    child.stderr.end('HTTP 404 Not Found {"type":"NotFound","token":"credential-sentinel"}');
+    setTimeout(() => child.emit("close", 1), 5);
+  });
+  await assert.rejects(failed, (error) => {
+    assert.deepEqual(error.diagnostic, { kind: "http_error", status: 404 });
+    assert.equal(error.message, "apify_http_request_failed");
+    assert.equal(JSON.stringify(error).includes("credential-sentinel"), false);
+    return true;
+  });
+});
+
+assert.equal(checks.length, 25);
 const elapsedMs = Date.now() - started;
 assert.ok(elapsedMs <= 90000, "preflight exceeded 90 seconds");
 clearInterval(rssSampler);
@@ -298,7 +323,7 @@ const sourceManifestSha256 = sourcePlan.sourceManifestSha256;
 const lockSha256 = createHash("sha256").update(await readFile(join(here, "../package-lock.json"))).digest("hex");
 const report = {
   schemaVersion: "issue22-iteration10-offline-preflight-v1", status: "passed", nodeVersion: process.version,
-  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 24,
+  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 25,
   completedCheckCount: checks.length, totalElapsedMs: elapsedMs, totalDeadlineMs: 90000,
   configured: { ...LIMITS, networkRetries: NETWORK_RETRIES, runtimeImage: "apify/actor-node:20", hostedRunStarted: false },
   packageLockSha256: lockSha256, sourceManifestSha256,
