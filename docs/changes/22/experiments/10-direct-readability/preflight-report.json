@@ -4,9 +4,9 @@
   "nodeVersion": "v20.19.0",
   "readabilityVersion": "0.6.0",
   "domAdapter": "linkedom@0.18.13",
-  "plannedCheckCount": 25,
-  "completedCheckCount": 25,
-  "totalElapsedMs": 971,
+  "plannedCheckCount": 31,
+  "completedCheckCount": 31,
+  "totalElapsedMs": 1608,
   "totalDeadlineMs": 90000,
   "configured": {
     "timeoutMs": 10000,
@@ -26,8 +26,8 @@
     "hostedRunStarted": false
   },
   "packageLockSha256": "4598514fd8de26018a8a4253d65f9ac1927914ebca851a81c47fc17d3b8868c2",
-  "sourceManifestSha256": "ddd41d69296618b14ad0505a4e092b40156c54497c82e7ecb685bb2fd44af766",
-  "peakRssBytes": 100081664,
+  "sourceManifestSha256": "e7f3f073d467b086ed5e34de7b4eb340382fea3b97e186362ce6e060872d52ad",
+  "peakRssBytes": 100294656,
   "networkProbeAttempts": 0,
   "aggregateSinkChecks": {
     "completeWrites": 1,
@@ -116,7 +116,23 @@
       "status": "passed"
     },
     {
-      "id": "hosted_controller_mocked_api_order_exact_build_and_ambiguous_post",
+      "id": "runtime_launch_and_approval_finish_before_probe_execution",
+      "status": "passed"
+    },
+    {
+      "id": "launch_tuple_and_approval_gate_fail_closed_and_wait_for_delayed_record",
+      "status": "passed"
+    },
+    {
+      "id": "hosted_controller_exact_build_readback_gate_and_delayed_visibility",
+      "status": "passed"
+    },
+    {
+      "id": "hosted_controller_mismatch_no_gate_and_abort_confirmed",
+      "status": "passed"
+    },
+    {
+      "id": "hosted_controller_ambiguous_post_never_retries_and_aborts_candidate",
       "status": "passed"
     },
     {
@@ -128,11 +144,19 @@
       "status": "passed"
     },
     {
+      "id": "apify_cli_adapter_passes_run_input_and_gate_record_endpoints",
+      "status": "passed"
+    },
+    {
       "id": "apify_child_is_shell_free_and_stderr_is_discarded",
       "status": "passed"
     },
     {
       "id": "apify_process_and_http_diagnostics_are_sanitized",
+      "status": "passed"
+    },
+    {
+      "id": "apify_timeout_waits_for_child_close_before_settling",
       "status": "passed"
     }
   ]

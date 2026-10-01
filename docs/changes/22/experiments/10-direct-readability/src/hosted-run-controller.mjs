@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -21,7 +21,7 @@ const sourceFilesFromTree = async (root) => {
 export const SOURCE_ALLOWLIST = Object.freeze([
   "Dockerfile", "package.json", "package-lock.json", "src/aggregate.mjs", "src/extract-worker.mjs",
   "src/apify-cli-adapter.mjs", "src/extract.mjs", "src/hosted-run-controller.mjs", "src/launch-hosted-run.mjs",
-  "src/network.mjs", "src/probe.mjs", "src/preflight.mjs", "src/runtime-gate.mjs",
+  "src/network.mjs", "src/probe.mjs", "src/preflight.mjs", "src/runtime-gate.mjs", "src/run-approval.mjs",
   "src/source-continuity.mjs", "src/verify-run-options.mjs",
 ]);
 
@@ -107,6 +107,19 @@ function runMatches(run, buildNumber, buildId) {
     (!Object.hasOwn(options, "forcePermissionLevel") || options.forcePermissionLevel === "LIMITED_PERMISSIONS");
 }
 
+function exactLaunchInput({ marker, actorId, buildId, buildNumber }) {
+  return { i10LaunchMarker: marker, expectedActorId: actorId, expectedBuildId: buildId, expectedBuildNumber: buildNumber };
+}
+
+function launchInputMatches(input, expected) {
+  return input && input.i10LaunchMarker === expected.i10LaunchMarker &&
+    input.expectedActorId === expected.expectedActorId && input.expectedBuildId === expected.expectedBuildId &&
+    input.expectedBuildNumber === expected.expectedBuildNumber;
+}
+
+const gateRecord = ({ marker, actorId, buildId, buildNumber, runId }) => ({ schemaVersion: "i10-run-approval-v1", marker, actorId, buildId, buildNumber, runId });
+const terminalRunStatus = (status) => ["SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"].includes(status);
+
 /**
  * Execute a future hosted launch using an explicitly supplied API adapter.
  * No adapter is bundled in this experiment, so the checked-in CLI is dry-run
@@ -122,7 +135,8 @@ export async function executeHostedRunPlan(plan, api, { sourceCheck } = {}) {
   await assertContinuity();
   if (!api || typeof api.createPrivateActor !== "function" || typeof api.setVersionSource !== "function" ||
     typeof api.getVersion !== "function" || typeof api.buildVersion !== "function" || typeof api.waitForBuild !== "function" || typeof api.getActor !== "function" ||
-    typeof api.startRun !== "function" || typeof api.getRun !== "function" || typeof api.findRunsSince !== "function") {
+    typeof api.startRun !== "function" || typeof api.getRun !== "function" || typeof api.findRunsSince !== "function" ||
+    typeof api.getRunInput !== "function" || typeof api.putRunGate !== "function" || typeof api.getRunGate !== "function" || typeof api.abortRun !== "function") {
     throw new Error("hosted_api_adapter_incomplete");
   }
 
@@ -145,23 +159,60 @@ export async function executeHostedRunPlan(plan, api, { sourceCheck } = {}) {
   if (!actorIsSafe(actorReadback)) throw new Error("actor_readback_privacy_or_permission_gate_failed");
 
   const buildNumber = build.buildNumber;
+  const marker = randomUUID();
+  const expectedInput = exactLaunchInput({ marker, actorId: actor.id, buildId: build.id, buildNumber });
   await assertContinuity();
   const startedAt = Date.now();
   let run;
   try {
-    run = await api.startRun(actor.id, exactRunOptions(buildNumber));
+    run = await api.startRun(actor.id, { ...exactRunOptions(buildNumber), input: expectedInput });
   } catch {
     const candidates = await api.findRunsSince(actor.id, startedAt);
-    const exact = (candidates ?? []).filter((candidate) => runMatches(candidate, buildNumber, build.id));
-    if (exact.length !== 1) throw new Error("run_start_ambiguous_reconciliation_required");
-    run = exact[0];
+    const reconciled = [];
+    for (const candidate of candidates ?? []) if (candidate?.id) {
+      let markerMatched = false;
+      try { markerMatched = launchInputMatches(await api.getRunInput(candidate.id), expectedInput); } catch { /* unavailable input still leaves a recent run unauthorized */ }
+      reconciled.push({ candidate, markerMatched });
+    }
+    // This is a newly created private Actor. Abort every recent candidate: an
+    // unreadable or different marker cannot authorize a run after an ambiguous POST.
+    const matching = reconciled.filter(({ markerMatched }) => markerMatched).map(({ candidate }) => candidate);
+    const unmatched = reconciled.filter(({ markerMatched }) => !markerMatched).map(({ candidate }) => candidate);
+    const abortQueue = [...matching, ...unmatched];
+    for (const candidate of abortQueue) await api.abortRun(candidate.id);
+    for (const candidate of abortQueue) {
+      const confirmed = await api.getRun(candidate.id);
+      if (!terminalRunStatus(confirmed?.status)) throw new Error("ambiguous_run_abort_not_confirmed");
+    }
+    throw new Error("run_start_ambiguous_aborted_no_retry");
   }
   if (!run?.id) throw new Error("run_start_returned_no_id");
-  const runReadback = await api.getRun(run.id);
-  if (!runMatches(runReadback, buildNumber, build.id)) throw new Error("run_readback_gate_failed");
-  const finalActorReadback = await api.getActor(actor.id);
-  if (!actorIsSafe(finalActorReadback)) throw new Error("final_actor_privacy_or_permission_gate_failed");
-  return { actorId: actor.id, buildId: build.id, buildNumber, runId: run.id, status: "run_started_after_readback" };
+  let runReadback;
+  try {
+    runReadback = await api.getRun(run.id);
+    const actualInput = await api.getRunInput(run.id);
+    const finalActorReadback = await api.getActor(actor.id);
+    if (runReadback?.id !== run.id || !runMatches(runReadback, buildNumber, build.id) || !launchInputMatches(actualInput, expectedInput) || !actorIsSafe(finalActorReadback)) {
+      throw new Error("run_readback_gate_failed");
+    }
+    const expectedGate = gateRecord({ marker, actorId: actor.id, buildId: build.id, buildNumber, runId: run.id });
+    await assertContinuity();
+    await api.putRunGate(run.id, expectedGate);
+    const gateDeadline = Date.now() + 30000;
+    while (Date.now() < gateDeadline) {
+      const observed = await api.getRunGate(run.id);
+      if (observed && Object.keys(expectedGate).every((key) => observed[key] === expectedGate[key])) {
+        return { actorId: actor.id, buildId: build.id, buildNumber, runId: run.id, status: "run_approved_after_readback" };
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+    throw new Error("run_gate_record_not_observed");
+  } catch (error) {
+    await api.abortRun(run.id);
+    const confirmed = await api.getRun(run.id);
+    if (!terminalRunStatus(confirmed?.status)) throw new Error("run_abort_not_confirmed");
+    throw error;
+  }
 }
 
 const modulePath = fileURLToPath(import.meta.url);

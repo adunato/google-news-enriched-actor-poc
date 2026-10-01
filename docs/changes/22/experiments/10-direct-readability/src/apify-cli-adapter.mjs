@@ -47,16 +47,33 @@ export function runApifyCli(command, args, input, { spawnProcess = spawn, timeou
     try { child = spawnProcess(command, args, { shell: false, windowsHide: true, stdio: ["pipe", "pipe", "pipe"] }); }
     catch (error) { reject(processError(error?.code)); return; }
     const chunks = [];
-    let stdoutBytes = 0, stderrBytes = 0, stderr = "", settled = false, timer;
+    let stdoutBytes = 0, stderrBytes = 0, stderr = "", settled = false, closing = false, terminationReason, timer, forceTimer, confirmationTimer;
     const finish = (error, output) => {
       if (settled) return;
-      settled = true; clearTimeout(timer);
+      settled = true; clearTimeout(timer); clearTimeout(forceTimer); clearTimeout(confirmationTimer);
       if (error) reject(error); else resolve(output);
     };
-    timer = setTimeout(() => { child.kill(); finish(new Error("apify_cli_timeout")); }, timeoutMs);
+    const terminate = (reason) => {
+      if (closing || settled) return;
+      closing = true;
+      terminationReason = reason;
+      try { child.kill(); } catch { /* wait for process state below */ }
+      forceTimer = setTimeout(() => { try { child.kill("SIGKILL"); } catch { /* process may already have exited */ } }, 3000);
+      // Do not report an ordinary settled request if the OS never confirms exit.
+      forceTimer.unref?.();
+      confirmationTimer = setTimeout(() => {
+        if (!settled) {
+          const error = new Error("apify_cli_termination_unconfirmed");
+          error.diagnostic = { kind: "process_termination_unconfirmed" };
+          finish(error);
+        }
+      }, 10000);
+      confirmationTimer.unref?.();
+    };
+    timer = setTimeout(() => terminate("apify_cli_timeout"), timeoutMs);
     child.stdout.on("data", (chunk) => {
       stdoutBytes += chunk.length;
-      if (stdoutBytes > MAX_STDOUT_BYTES) { child.kill(); finish(new Error("apify_cli_output_limit")); return; }
+      if (stdoutBytes > MAX_STDOUT_BYTES) { terminate("apify_cli_output_limit"); return; }
       chunks.push(chunk);
     });
     child.stderr.on("data", (chunk) => {
@@ -67,9 +84,10 @@ export function runApifyCli(command, args, input, { spawnProcess = spawn, timeou
         stderrBytes += bounded.length;
       }
     });
-    child.stdin.once("error", (error) => finish(processError(error?.code)));
-    child.once("error", (error) => finish(processError(error?.code)));
+    child.stdin.once("error", () => terminate("apify_cli_stdin_error"));
+    child.once("error", (error) => { if (!closing) finish(processError(error?.code)); });
     child.once("close", (code) => {
+      if (closing) { clearTimeout(forceTimer); finish(new Error(terminationReason)); return; }
       if (settled) return;
       if (code !== 0) { finish(cliExitError(code, stderr)); return; }
       finish(null, Buffer.concat(chunks, stdoutBytes).toString("utf8"));
@@ -103,6 +121,7 @@ const runView = (value) => ({
   ...pick(value, ["id", "buildId", "buildNumber", "startedAt", "status"]),
   ...(value?.options ? { options: pick(value.options, ["build", "memoryMbytes", "timeoutSecs", "maxTotalChargeUsd", "restartOnError", "forcePermissionLevel"]) } : {}),
 });
+function isNotFound(error) { return error?.diagnostic?.kind === "http_error" && error?.diagnostic?.status === 404; }
 
 /**
  * Credential-safe adapter for the installed Apify CLI. The CLI owns
@@ -155,7 +174,8 @@ export async function createApifyCliAdapter({ commandPath, spawnProcess = spawn,
       return items.map(actorView);
     },
     async startRun(actorId, options) {
-      return runView(await request("POST", `acts/${encodeURIComponent(actorId)}/runs`, { params: options, timeoutMs: BUILD_TIMEOUT_MS }));
+      const { input, ...runOptions } = options;
+      return runView(await request("POST", `acts/${encodeURIComponent(actorId)}/runs`, { params: runOptions, body: input, timeoutMs: BUILD_TIMEOUT_MS }));
     },
     async findRunsSince(actorId, since) {
       const response = await request("GET", `acts/${encodeURIComponent(actorId)}/runs`, { params: { limit: 100, desc: true } });
@@ -164,6 +184,20 @@ export async function createApifyCliAdapter({ commandPath, spawnProcess = spawn,
     },
     async getRun(runId) {
       return runView(await request("GET", `actor-runs/${encodeURIComponent(runId)}`));
+    },
+    async getRunInput(runId) {
+      try { return await request("GET", `actor-runs/${encodeURIComponent(runId)}/key-value-store/records/INPUT`); }
+      catch (error) { if (isNotFound(error)) return null; throw error; }
+    },
+    async putRunGate(runId, record) {
+      await request("PUT", `actor-runs/${encodeURIComponent(runId)}/key-value-store/records/I10_GATE`, { body: record });
+    },
+    async getRunGate(runId) {
+      try { return await request("GET", `actor-runs/${encodeURIComponent(runId)}/key-value-store/records/I10_GATE`); }
+      catch (error) { if (isNotFound(error)) return null; throw error; }
+    },
+    async abortRun(runId) {
+      await request("POST", `actor-runs/${encodeURIComponent(runId)}/abort`);
     },
   };
 }

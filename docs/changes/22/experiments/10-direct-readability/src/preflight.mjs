@@ -17,6 +17,7 @@ import { buildAggregate, persistAggregateOnly, validateAggregate } from "./aggre
 import { verifyFutureRunGates } from "./verify-run-options.mjs";
 import { mapLimit, readabilityOutcome } from "./probe.mjs";
 import { assertHostedRunGate, inspectHostedRunGate } from "./runtime-gate.mjs";
+import { approvalRecordMatches, inspectLaunchTuple, waitForRunApproval } from "./run-approval.mjs";
 import { createHostedRunPlan, executeHostedRunPlan, hashSourceFiles, sourceSnapshotsEqual } from "./hosted-run-controller.mjs";
 import { createApifyCliAdapter, runApifyCli } from "./apify-cli-adapter.mjs";
 
@@ -217,14 +218,43 @@ await check("runtime_gate_precedes_actor_initialization_and_probe", async () => 
   const result = await runActorSafely({ getEnv: () => ({}), env: {}, init: async () => { initialized++; }, execute: async () => { executed++; return {}; }, exit: async () => {} });
   assert.equal(result, false); assert.equal(initialized, 0); assert.equal(executed, 0);
 });
-await check("hosted_controller_mocked_api_order_exact_build_and_ambiguous_post", async () => {
+await check("runtime_launch_and_approval_finish_before_probe_execution", async () => {
+  const processEnv = { APIFY_IS_AT_HOME: "1", ACTOR_ID: "actor_12345678", ACTOR_RUN_ID: "run_12345678", ACTOR_BUILD_ID: "build_12345678", ACTOR_BUILD_NUMBER: "1.2.34", ACTOR_PERMISSION_LEVEL: "LIMITED_PERMISSIONS", ACTOR_MEMORY_MBYTES: "256", ACTOR_STARTED_AT: "2026-10-01T00:00:00.000Z", ACTOR_TIMEOUT_AT: "2026-10-01T00:15:00.000Z", ACTOR_MAX_TOTAL_CHARGE_USD: "1", ACTOR_RESTART_ON_ERROR: "0" };
+  const actorEnv = { isAtHome: "1", actorId: processEnv.ACTOR_ID, actorRunId: processEnv.ACTOR_RUN_ID, actorBuildId: processEnv.ACTOR_BUILD_ID, actorBuildNumber: processEnv.ACTOR_BUILD_NUMBER, memoryMbytes: 256, startedAt: new Date(processEnv.ACTOR_STARTED_AT), timeoutAt: new Date(processEnv.ACTOR_TIMEOUT_AT) };
+  const input = { i10LaunchMarker: "123e4567-e89b-42d3-a456-426614174000", expectedActorId: processEnv.ACTOR_ID, expectedBuildId: processEnv.ACTOR_BUILD_ID, expectedBuildNumber: processEnv.ACTOR_BUILD_NUMBER };
+  const gate = { schemaVersion: "i10-run-approval-v1", marker: input.i10LaunchMarker, actorId: input.expectedActorId, buildId: input.expectedBuildId, buildNumber: input.expectedBuildNumber, runId: processEnv.ACTOR_RUN_ID };
+  const { runActorSafely } = await import("./probe.mjs");
+  const calls = []; let executed = 0;
+  const result = await runActorSafely({ getEnv: () => { calls.push("env"); return actorEnv; }, env: processEnv, init: async () => calls.push("init"), getInput: async () => { calls.push("input"); return input; }, getApprovalRecord: async () => { calls.push("approval"); return gate; }, execute: async () => { calls.push("execute"); executed++; return {}; }, exit: async () => calls.push("exit"), log: () => {} });
+  assert.equal(result, true); assert.equal(executed, 1); assert.deepEqual(calls, ["env", "init", "input", "env", "approval", "execute", "exit"]);
+  calls.length = 0; executed = 0;
+  const failed = await runActorSafely({ getEnv: () => { calls.push("env"); return actorEnv; }, env: processEnv, init: async () => calls.push("init"), getInput: async () => { calls.push("input"); return input; }, getApprovalRecord: async () => { calls.push("approval"); return null; }, approvalWait: async ({ getRecord, expected }) => waitForRunApproval({ getRecord, expected, timeoutMs: 2, pollMs: 1, clock: (() => { let now = 0; return () => now; })(), sleep: async () => { throw new Error("approval_wait_interrupted"); } }), execute: async () => { calls.push("execute"); executed++; return {}; }, exit: async () => calls.push("exit"), log: () => {} });
+  assert.equal(failed, false); assert.equal(executed, 0); assert.deepEqual(calls, ["env", "init", "input", "env", "approval", "exit"]);
+});
+await check("launch_tuple_and_approval_gate_fail_closed_and_wait_for_delayed_record", async () => {
+  const processEnv = { ACTOR_ID: "actor_12345678", ACTOR_RUN_ID: "run_12345678", ACTOR_BUILD_ID: "build_12345678", ACTOR_BUILD_NUMBER: "10.0.7" };
+  const actorEnv = { actorRunId: processEnv.ACTOR_RUN_ID, actorBuildId: processEnv.ACTOR_BUILD_ID, actorBuildNumber: processEnv.ACTOR_BUILD_NUMBER };
+  const input = { i10LaunchMarker: "123e4567-e89b-42d3-a456-426614174000", expectedActorId: processEnv.ACTOR_ID, expectedBuildId: processEnv.ACTOR_BUILD_ID, expectedBuildNumber: processEnv.ACTOR_BUILD_NUMBER };
+  assert.equal(inspectLaunchTuple({ input, actorEnv, processEnv }).valid, true);
+  assert.equal(inspectLaunchTuple({ input: { ...input, expectedBuildNumber: "10.0.6" }, actorEnv, processEnv }).valid, false);
+  const expected = { marker: input.i10LaunchMarker, actorId: processEnv.ACTOR_ID, buildId: processEnv.ACTOR_BUILD_ID, buildNumber: processEnv.ACTOR_BUILD_NUMBER, runId: processEnv.ACTOR_RUN_ID };
+  const approved = { schemaVersion: "i10-run-approval-v1", marker: expected.marker, actorId: expected.actorId, buildId: expected.buildId, buildNumber: expected.buildNumber, runId: expected.runId };
+  assert.equal(approvalRecordMatches(approved, expected), true);
+  assert.equal(approvalRecordMatches({ ...approved, runId: "run_87654321" }, expected), false);
+  let polls = 0;
+  assert.equal(await waitForRunApproval({ getRecord: async () => ++polls < 3 ? null : approved, expected, timeoutMs: 1000, pollMs: 1 }), true);
+  let fakeNow = 0;
+  await assert.rejects(() => waitForRunApproval({ getRecord: async () => null, expected, timeoutMs: 2, pollMs: 1, clock: () => fakeNow, sleep: async (ms) => { fakeNow += ms; } }), /run_approval_record_timeout/);
+  await assert.rejects(() => waitForRunApproval({ getRecord: async () => ({ ...approved, marker: "123e4567-e89b-42d3-a456-426614174001" }), expected, timeoutMs: 1000, pollMs: 1 }), /run_approval_record_mismatch/);
+});
+await check("hosted_controller_exact_build_readback_gate_and_delayed_visibility", async () => {
   const plan = await createHostedRunPlan({ sourceRoot: resolve(here, "..") });
   assert.equal(plan.actor.isPublic, false); assert.equal(plan.actor.actorPermissionLevel, "LIMITED_PERMISSIONS");
   assert.equal(plan.actor.defaultRunOptions.memoryMbytes, 256); assert.equal(plan.actor.defaultRunOptions.timeoutSecs, 900);
   assert.equal(plan.run.maxTotalChargeUsd, 1); assert.equal(plan.actor.defaultRunOptions.restartOnError, false);
   assert.equal(plan.run.build, null); assert.ok(plan.sourcePaths.includes("src/runtime-gate.mjs"));
   assert.equal(hashSourceFiles(plan.version.sourceFiles), plan.sourceManifestSha256);
-  const calls = []; let startAttempts = 0;
+  const calls = []; let startAttempts = 0, gateReads = 0, submittedInput;
   const actor = { id: "actor_12345678", isPublic: false, actorPermissionLevel: "LIMITED_PERMISSIONS" };
   const build = { id: "build_12345678", buildNumber: "10.0.7", status: "SUCCEEDED", actVersion: plan.version };
   const run = { id: "run_12345678", buildId: build.id, buildNumber: build.buildNumber, options: { ...plan.run, build: build.buildNumber } };
@@ -235,13 +265,48 @@ await check("hosted_controller_mocked_api_order_exact_build_and_ambiguous_post",
     buildVersion: async (_id, versionNumber) => { calls.push("buildVersion"); assert.equal(versionNumber, plan.version.versionNumber); return { id: build.id }; },
     waitForBuild: async (_id, buildId) => { calls.push("waitForBuild"); assert.equal(buildId, build.id); return build; },
     getActor: async () => { calls.push("getActor"); return actor; },
-    startRun: async (_id, options) => { calls.push("startRun"); startAttempts++; assert.deepEqual(options, { ...plan.run, build: build.buildNumber }); throw new Error("simulated ambiguous response"); },
-    findRunsSince: async (_id, since) => { calls.push("reconcileRuns"); assert.ok(Number.isFinite(since)); return [run]; },
+    startRun: async (_id, options) => { calls.push("startRun"); startAttempts++; const { input, ...runOptions } = options; submittedInput = input; assert.deepEqual(runOptions, { ...plan.run, build: build.buildNumber }); return run; },
+    findRunsSince: async () => [],
     getRun: async () => { calls.push("getRun"); return run; },
+    getRunInput: async () => { calls.push("getRunInput"); return submittedInput; },
+    putRunGate: async (_runId, record) => { calls.push("putGate"); assert.equal(record.runId, run.id); },
+    getRunGate: async () => { calls.push("getGate"); return ++gateReads < 2 ? null : { schemaVersion: "i10-run-approval-v1", marker: submittedInput.i10LaunchMarker, actorId: submittedInput.expectedActorId, buildId: submittedInput.expectedBuildId, buildNumber: submittedInput.expectedBuildNumber, runId: run.id }; },
+    abortRun: async () => { calls.push("abortRun"); },
   };
   const outcome = await executeHostedRunPlan(plan, api, { sourceCheck: async () => ({ valid: true, sourceManifestSha256: plan.sourceManifestSha256 }) });
-  assert.deepEqual(calls, ["createActor", "setVersion", "getVersion", "buildVersion", "waitForBuild", "getActor", "startRun", "reconcileRuns", "getRun", "getActor"]);
-  assert.equal(startAttempts, 1); assert.equal(outcome.status, "run_started_after_readback"); assert.equal(outcome.buildNumber, build.buildNumber);
+  assert.deepEqual(calls, ["createActor", "setVersion", "getVersion", "buildVersion", "waitForBuild", "getActor", "startRun", "getRun", "getRunInput", "getActor", "putGate", "getGate", "getGate"]);
+  assert.equal(startAttempts, 1); assert.equal(outcome.status, "run_approved_after_readback"); assert.equal(outcome.buildNumber, build.buildNumber);
+});
+await check("hosted_controller_mismatch_no_gate_and_abort_confirmed", async () => {
+  const plan = await createHostedRunPlan({ sourceRoot: resolve(here, "..") });
+  const actor = { id: "actor_12345678", isPublic: false, actorPermissionLevel: "LIMITED_PERMISSIONS" };
+  const build = { id: "build_12345678", buildNumber: "10.0.7", status: "SUCCEEDED", actVersion: plan.version };
+  const run = { id: "run_12345678", buildId: "build_87654321", buildNumber: build.buildNumber, status: "RUNNING", options: { ...plan.run, build: build.buildNumber } };
+  const calls = [];
+  const api = {
+    createPrivateActor: async () => actor, setVersionSource: async () => {}, getVersion: async () => plan.version,
+    buildVersion: async () => ({ id: build.id }), waitForBuild: async () => build, getActor: async () => actor,
+    startRun: async () => run, getRun: async () => ({ ...run, status: "ABORTED" }), getRunInput: async () => ({}),
+    findRunsSince: async () => [],
+    putRunGate: async () => { calls.push("put"); }, getRunGate: async () => null, abortRun: async () => { calls.push("abort"); },
+  };
+  await assert.rejects(() => executeHostedRunPlan(plan, api, { sourceCheck: async () => ({ valid: true, sourceManifestSha256: plan.sourceManifestSha256 }) }), /run_readback_gate_failed/);
+  assert.deepEqual(calls, ["abort"]);
+});
+await check("hosted_controller_ambiguous_post_never_retries_and_aborts_candidate", async () => {
+  const plan = await createHostedRunPlan({ sourceRoot: resolve(here, "..") });
+  const actor = { id: "actor_12345678", isPublic: false, actorPermissionLevel: "LIMITED_PERMISSIONS" };
+  const build = { id: "build_12345678", buildNumber: "10.0.7", status: "SUCCEEDED", actVersion: plan.version };
+  const run = { id: "run_12345678", status: "RUNNING" }, calls = []; let starts = 0, launchInput;
+  const api = {
+    createPrivateActor: async () => actor, setVersionSource: async () => {}, getVersion: async () => plan.version,
+    buildVersion: async () => ({ id: build.id }), waitForBuild: async () => build, getActor: async () => actor,
+    startRun: async (_actorId, options) => { starts++; launchInput = options.input; throw new Error("ambiguous"); }, findRunsSince: async () => [run],
+    abortRun: async () => { calls.push("abort"); }, getRun: async () => ({ ...run, status: "ABORTED" }),
+    getRunInput: async () => { calls.push("reconcileMarker"); return launchInput; }, putRunGate: async () => calls.push("put"), getRunGate: async () => null,
+  };
+  await assert.rejects(() => executeHostedRunPlan(plan, api, { sourceCheck: async () => ({ valid: true, sourceManifestSha256: plan.sourceManifestSha256 }) }), /run_start_ambiguous_aborted_no_retry/);
+  assert.equal(starts, 1); assert.deepEqual(calls, ["reconcileMarker", "abort"]);
 });
 
 await check("source_snapshot_byte_equality_and_gate_before_api", async () => {
@@ -265,6 +330,20 @@ await check("apify_cli_adapter_uses_stdin_and_allowlisted_results", async () => 
   assert.deepEqual(calls[0].args, ["api", "POST", "acts", "-d", "-"]);
   assert.deepEqual(JSON.parse(calls[0].input), { name: "test" });
   assert.equal(JSON.stringify(actor).includes("must-not-escape"), false);
+});
+await check("apify_cli_adapter_passes_run_input_and_gate_record_endpoints", async () => {
+  const calls = [];
+  const adapter = await createApifyCliAdapter({ commandPath: "fixture-apify-cli", execute: async (_command, args, input) => {
+    calls.push({ args, input });
+    if (args[2].endsWith("/runs")) return JSON.stringify({ data: { id: "run_12345678" } });
+    return JSON.stringify({ data: {} });
+  } });
+  const payload = { i10LaunchMarker: "123e4567-e89b-42d3-a456-426614174000", expectedActorId: "actor_12345678", expectedBuildId: "build_12345678", expectedBuildNumber: "10.0.7" };
+  await adapter.startRun("actor_12345678", { build: "10.0.7", memoryMbytes: 256, timeoutSecs: 900, maxTotalChargeUsd: 1, restartOnError: false, forcePermissionLevel: "LIMITED_PERMISSIONS", input: payload });
+  await adapter.putRunGate("run_12345678", { schemaVersion: "i10-run-approval-v1" });
+  assert.deepEqual(calls[0].args, ["api", "POST", "acts/actor_12345678/runs", "-p", JSON.stringify({ build: "10.0.7", memoryMbytes: 256, timeoutSecs: 900, maxTotalChargeUsd: 1, restartOnError: false, forcePermissionLevel: "LIMITED_PERMISSIONS" }), "-d", "-"]);
+  assert.deepEqual(JSON.parse(calls[0].input), payload);
+  assert.deepEqual(calls[1].args, ["api", "PUT", "actor-runs/run_12345678/key-value-store/records/I10_GATE", "-d", "-"]);
 });
 
 await check("apify_child_is_shell_free_and_stderr_is_discarded", async () => {
@@ -310,7 +389,14 @@ await check("apify_process_and_http_diagnostics_are_sanitized", async () => {
   });
 });
 
-assert.equal(checks.length, 25);
+await check("apify_timeout_waits_for_child_close_before_settling", async () => {
+  class SlowTerminationChild extends EventEmitter { constructor() { super(); this.stdin = new PassThrough(); this.stdout = new PassThrough(); this.stderr = new PassThrough(); } kill() { setTimeout(() => this.emit("close", null), 20); } }
+  const child = new SlowTerminationChild(), startedAt = Date.now();
+  await assert.rejects(() => runApifyCli("fixture", [], undefined, { spawnProcess: () => child, timeoutMs: 1 }), /apify_cli_timeout/);
+  assert.ok(Date.now() - startedAt >= 15, "timeout settled before the child close event");
+});
+
+assert.equal(checks.length, 31);
 const elapsedMs = Date.now() - started;
 assert.ok(elapsedMs <= 90000, "preflight exceeded 90 seconds");
 clearInterval(rssSampler);
@@ -323,7 +409,7 @@ const sourceManifestSha256 = sourcePlan.sourceManifestSha256;
 const lockSha256 = createHash("sha256").update(await readFile(join(here, "../package-lock.json"))).digest("hex");
 const report = {
   schemaVersion: "issue22-iteration10-offline-preflight-v1", status: "passed", nodeVersion: process.version,
-  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 25,
+  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 31,
   completedCheckCount: checks.length, totalElapsedMs: elapsedMs, totalDeadlineMs: 90000,
   configured: { ...LIMITS, networkRetries: NETWORK_RETRIES, runtimeImage: "apify/actor-node:20", hostedRunStarted: false },
   packageLockSha256: lockSha256, sourceManifestSha256,

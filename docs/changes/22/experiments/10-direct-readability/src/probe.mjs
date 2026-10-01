@@ -4,6 +4,7 @@ import { LIMITS, boundedPrefix, createRunBudget, dedupeFirst, paceHost, redirect
 import { extractBounded } from "./extract.mjs";
 import { persistAggregateOnly } from "./aggregate.mjs";
 import { assertHostedRunGate } from "./runtime-gate.mjs";
+import { inspectLaunchTuple, waitForRunApproval } from "./run-approval.mjs";
 import process from "node:process";
 
 const QUERIES = ["world news", "politics", "business", "technology", "climate change"];
@@ -231,9 +232,18 @@ export async function executeIteration10({ actor = Actor, feed = fetchFeed, reso
   } finally { budget.dispose(); }
 }
 
-export async function runActorSafely({ init = () => Actor.init(), execute = () => executeIteration10(), exit = () => Actor.exit(), getEnv = () => Actor.getEnv(), env = process.env, log = (aggregate) => Actor.log.info(`iteration10_complete ${JSON.stringify({ plannedRows: aggregate.plannedRows, returnedRows: aggregate.returnedRows, uniqueRows: aggregate.uniqueRows, eligibleRows: aggregate.eligibleRows })}`) } = {}) {
+export async function runActorSafely({ init = () => Actor.init(), execute = () => executeIteration10(), exit = () => Actor.exit(), getEnv = () => Actor.getEnv(), getInput = () => Actor.getInput(), getApprovalRecord = () => Actor.getValue("I10_GATE"), approvalWait = waitForRunApproval, env = process.env, log = (aggregate) => Actor.log.info(`iteration10_complete ${JSON.stringify({ plannedRows: aggregate.plannedRows, returnedRows: aggregate.returnedRows, uniqueRows: aggregate.uniqueRows, eligibleRows: aggregate.eligibleRows })}`) } = {}) {
   let initialized = false, persisted = false;
-  try { assertHostedRunGate({ actorEnv: getEnv(), processEnv: env }); await init(); initialized = true; const aggregate = await execute(); persisted = true; try { log(aggregate); } catch { /* aggregate already persisted */ } }
+  try {
+    const preInitEnv = getEnv();
+    assertHostedRunGate({ actorEnv: preInitEnv, processEnv: env });
+    await init(); initialized = true;
+    const input = await getInput(), postInitEnv = getEnv();
+    const tuple = inspectLaunchTuple({ input, actorEnv: postInitEnv, processEnv: env });
+    if (!tuple.valid) throw new Error("run_launch_tuple_gate_failed");
+    await approvalWait({ getRecord: getApprovalRecord, expected: { marker: input.i10LaunchMarker, actorId: input.expectedActorId, buildId: input.expectedBuildId, buildNumber: input.expectedBuildNumber, runId: postInitEnv.actorRunId } });
+    const aggregate = await execute(); persisted = true; try { log(aggregate); } catch { /* aggregate already persisted */ }
+  }
   catch { try { Actor.log.error("iteration10_failed"); } catch { /* no untrusted error text */ } }
   finally { if (initialized) try { await exit(); } catch { try { Actor.log.error("iteration10_exit_failed"); } catch { /* no retry */ } } }
   return persisted;
