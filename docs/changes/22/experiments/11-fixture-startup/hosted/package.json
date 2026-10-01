@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "start": "node --import ./src/guard-preload.mjs ./src/main.mjs",
-    "preflight": "node ./src/preflight.mjs"
+    "preflight": "node ./src/preflight.mjs",
+    "launch:dry-run": "node tools/hosted-launcher.mjs",
+    "launch:self-test": "node --test tools/hosted-launcher.test.mjs"
   },
   "dependencies": {
     "@mozilla/readability": "0.6.0",

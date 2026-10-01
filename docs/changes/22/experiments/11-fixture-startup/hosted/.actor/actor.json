@@ -3,5 +3,11 @@
   "name": "issue-22-h14-fixture-hosted-diagnostic",
   "version": "1.0.0",
   "buildTag": "latest",
-  "dockerfile": "Dockerfile"
+  "dockerfile": "Dockerfile",
+  "defaultRunOptions": {
+    "memoryMbytes": 256,
+    "timeoutSecs": 180,
+    "restartOnError": false,
+    "forcePermissionLevel": "LIMITED_PERMISSIONS"
+  }
 }

@@ -19,6 +19,8 @@ const lock = JSON.parse(await readFile(path.join(root, "package-lock.json"), "ut
 const actorConfig = JSON.parse(await readFile(path.join(root, ".actor/actor.json"), "utf8"));
 const inputSchema = JSON.parse(await readFile(path.join(root, "INPUT_SCHEMA.json"), "utf8"));
 const runOptions = JSON.parse(await readFile(path.join(root, "run-options.json"), "utf8"));
+const deployFileList = JSON.parse(await readFile(path.join(root, "tools/deploy-file-list.json"), "utf8"));
+const actorIgnore = await readFile(path.join(root, ".actorignore"), "utf8");
 const tupleManifest = JSON.parse(await readFile(path.join(here, "tuple-manifest.json"), "utf8"));
 const fixture = await readFile(path.join(root, "fixtures/readability-positive-v1.html"));
 const pinnedVersions = {
@@ -31,11 +33,16 @@ const pinnedVersions = {
 const staticChecks = {
   packageVersionsPinned: Object.values(pinnedVersions).every(Boolean),
   baseImagePinned: (await readFile(path.join(root, "Dockerfile"), "utf8")).includes(`FROM ${pinnedBaseDigest}`),
-  actorConfigValid: actorConfig.actorSpecification === 1 && actorConfig.name === "issue-22-h14-fixture-hosted-diagnostic",
+  actorConfigValid: actorConfig.actorSpecification === 1 && actorConfig.name === "issue-22-h14-fixture-hosted-diagnostic" &&
+    actorConfig.defaultRunOptions?.memoryMbytes === 256 && actorConfig.defaultRunOptions?.timeoutSecs === 180 &&
+    actorConfig.defaultRunOptions?.restartOnError === false && actorConfig.defaultRunOptions?.forcePermissionLevel === "LIMITED_PERMISSIONS",
   exactFixtureSchema: inputSchema.additionalProperties === false && inputSchema.required.join("|") === "mode|fixtureId" && inputSchema.properties.mode.enum[0] === "fixture-only" && inputSchema.properties.fixtureId.enum[0] === "readability-positive-v1",
   boundedRunOptions: runOptions.privacy.startsWith("private Actor") && runOptions.memoryMbytes === 256 && runOptions.timeoutSecs === 180 && runOptions.maxTotalChargeUsd === 0.1 && runOptions.restartOnError === false && runOptions.sdkApiMaxRetries === 0,
   fixturePinned: createHash("sha256").update(fixture).digest("hex") === fixtureHash,
   tupleManifestFrozen: tupleManifest.state === "source-checked" && tupleManifest.tuples.length === 7,
+  deployAllowlistNarrow: deployFileList.includes("src/main.mjs") && deployFileList.includes("src/guard-preload.mjs") &&
+    !deployFileList.some((name) => /(?:preflight|local-sdk-stub|guard-probe|hosted-launcher|deploy-file-list)/u.test(name)) &&
+    actorIgnore.split(/\r?\n/u).includes("tools"),
 };
 if (!Object.values(staticChecks).every(Boolean)) throw new Error("h14_static_preflight_failed");
 

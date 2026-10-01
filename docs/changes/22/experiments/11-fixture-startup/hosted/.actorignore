@@ -1,4 +1,5 @@
 node_modules
+tools
 npm-debug.log*
 *.local.json
 apify-validation-output/
