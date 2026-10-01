@@ -112,3 +112,33 @@ prepare a fresh 100-slot live cohort under the existing query, locale,
 recency, deduplication, publisher-access, privacy and per-row failure rules to
 measure the >=50 qualifying unique article target. The fixture result alone
 does not measure live publisher success.
+
+### First H14 remote preparation attempt (2026-10-01)
+
+Apify accepted creation of private Actor `6cJ0cY4Xe7d5xyjL3` with default
+`LIMITED_PERMISSIONS`; the configured run defaults were 256 MiB, 180 seconds
+and restart disabled. Build `6lNNucwesR5s5YL5y` (`1.0.1`) succeeded from the
+exact 18-file source snapshot (digest prefix `b90e0a9d`). Build cost was about
+$0.002707 and elapsed time was 12.182 seconds.
+
+The launcher stopped before posting a run because its build-tag readback
+comparison produced a false negative. The returned Apify build object had a
+`.buildId` matching the requested build, while the launcher expected a bare
+string. This identifies a local launcher validation defect; the Actor process
+did not start and no runtime failure occurred. There is no run ID, run cost,
+run log, dataset or hosted Readability result. The sanitized preparation
+evidence is
+[`evidence/attempt-2026-10-01-pre-run-stop.md`](evidence/attempt-2026-10-01-pre-run-stop.md).
+
+**Current run gate:** H14 remains authorized under the owner's expanded
+authority, but do not submit the run until the comparison is corrected,
+focused checks and independent review pass, and fresh readbacks confirm the
+same private Actor/build and bounded settings. Then resume against this same
+reviewed source build. If a later hosted run starts and fails, diagnose its
+evidence and change the candidate before another run; do not repeat an
+unchanged failed candidate. Each actual run remains capped at 256 MiB, 180
+seconds and $0.10, with restarts/retries disabled.
+
+**Learning checkpoint:** None. This is a specific launcher/API-shape defect,
+not a reusable cross-project learning beyond the existing startup-diagnostic
+learning record.

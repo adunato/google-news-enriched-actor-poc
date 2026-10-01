@@ -198,7 +198,11 @@ function verifyActor(actor, expectedId) {
 }
 
 function verifyBuildTagReadback(actor, tag, buildId) {
-  if (actor?.taggedBuilds?.[tag] !== buildId) throw new Error("build_tag_readback_mismatch");
+  const taggedBuild = actor?.taggedBuilds?.[tag];
+  if (!taggedBuild || typeof taggedBuild !== "object" || Array.isArray(taggedBuild) ||
+      typeof taggedBuild.buildId !== "string" || taggedBuild.buildId.length === 0 || taggedBuild.buildId !== buildId) {
+    throw new Error("build_tag_readback_mismatch");
+  }
 }
 
 function verifyRunReadback(run, actorId, build) {
@@ -230,6 +234,106 @@ function assertBuild(build, actorId, bundle) {
   assertSameSource(bundle.files, build.actVersion.sourceFiles);
 }
 
+function verifyVersion(version, bundle, expectedTag, errorCode) {
+  if (version?.versionNumber !== actorVersion || version?.sourceType !== "SOURCE_FILES" || version?.buildTag !== expectedTag ||
+      version?.applyEnvVarsToBuild !== false || !(version?.envVars == null || Array.isArray(version.envVars) && version.envVars.length === 0)) {
+    throw new Error(errorCode);
+  }
+  assertSameSource(bundle.files, version.sourceFiles);
+}
+
+function buildTagNameFor(bundle) {
+  return `${buildTag}-${bundle.sourceSha256.slice(0, 12)}`;
+}
+
+function validateResumeIds({ actorId, buildId, buildNumber }) {
+  if (typeof actorId !== "string" || !/^[A-Za-z0-9_-]+$/u.test(actorId) ||
+      typeof buildId !== "string" || !/^[A-Za-z0-9_-]+$/u.test(buildId) ||
+      typeof buildNumber !== "string" || !/^\d+\.\d+\.\d+$/u.test(buildNumber)) {
+    throw new Error("resume_identity_invalid");
+  }
+}
+
+function assertNoPriorBuildRuns(runs, build) {
+  if (!Array.isArray(runs)) throw new Error("actor_runs_readback_invalid");
+  if (runs.some((run) => run?.buildId === build.id || run?.buildNumber === build.buildNumber)) {
+    throw new Error("resume_run_already_exists");
+  }
+}
+
+export async function verifyResumeCandidateWithApi({ api, bundle, actorId, buildId, buildNumber }) {
+  validateResumeIds({ actorId, buildId, buildNumber });
+  const list = await api.listOwnedActors();
+  if (!Array.isArray(list)) throw new Error("actor_list_readback_invalid");
+  const matches = list.filter((item) => item?.name === actorName);
+  if (matches.length !== 1 || matches[0]?.id !== actorId || actorListHasCollision(list.filter((item) => item?.id !== actorId))) {
+    throw new Error("resume_actor_identity_or_collision_mismatch");
+  }
+
+  let actor = await api.getActor(actorId);
+  verifyActor(actor, actorId);
+  verifyBuildTagReadback(actor, buildTagNameFor(bundle), buildId);
+  let version = await api.getVersion(actorId, actorVersion);
+  verifyVersion(version, bundle, buildTag, "resume_version_readback_mismatch");
+  let build = await api.getBuild(buildId);
+  assertBuild(build, actorId, bundle);
+  if (build.buildNumber !== buildNumber) throw new Error("resume_build_number_mismatch");
+  verifyBuildTagReadback(actor, buildTagNameFor(bundle), build.id);
+
+  assertNoPriorBuildRuns(await api.listActorRuns(actorId), build);
+
+  // Repeat all mutable readbacks immediately before the only permitted POST.
+  actor = await api.getActor(actorId);
+  verifyActor(actor, actorId);
+  verifyBuildTagReadback(actor, buildTagNameFor(bundle), buildId);
+  version = await api.getVersion(actorId, actorVersion);
+  verifyVersion(version, bundle, buildTag, "pre_run_version_readback_mismatch");
+  build = await api.getBuild(buildId);
+  assertBuild(build, actorId, bundle);
+  if (build.buildNumber !== buildNumber) throw new Error("resume_build_number_mismatch");
+  verifyBuildTagReadback(actor, buildTagNameFor(bundle), build.id);
+  assertNoPriorBuildRuns(await api.listActorRuns(actorId), build);
+
+  return {
+    actorId,
+    buildId: build.id,
+    buildNumber: build.buildNumber,
+    sourceSha256: bundle.sourceSha256,
+    actorPrivate: true,
+    actorDefaultRunOptionsVerified: true,
+    sourceVersionReadbackVerified: true,
+    builtSourceReadbackVerified: true,
+    buildTagObjectVerified: true,
+    noPriorRunForBuildVerified: true,
+  };
+}
+
+export async function resumeWithApi({ api, bundle, actorId, buildId, buildNumber }) {
+  await verifyResumeCandidateWithApi({ api, bundle, actorId, buildId, buildNumber });
+
+  const build = { id: buildId, buildNumber };
+  const runQuery = createRunQuery(build.buildNumber);
+  const started = await api.startRun(actorId, runQuery, input);
+  if (typeof started?.id !== "string" || !/^[A-Za-z0-9_-]+$/u.test(started.id)) throw new Error("run_start_response_invalid");
+  const run = await api.getRun(started.id);
+  const readback = verifyRunReadback(run, actorId, build);
+  return {
+    outcome: "resumed_existing_build_run_started_and_verified",
+    actorIdSha256: sha256(actorId),
+    buildIdSha256: sha256(build.id),
+    runIdSha256: sha256(run.id),
+    sourceSha256: bundle.sourceSha256,
+    buildNumber: build.buildNumber,
+    actorPrivate: true,
+    actorDefaultRunOptionsVerified: true,
+    sourceVersionReadbackVerified: true,
+    builtSourceReadbackVerified: true,
+    preRunActorVersionBuildReadbackVerified: true,
+    noPriorRunForBuildVerified: true,
+    run: readback,
+  };
+}
+
 export async function launchWithApi({ api, bundle, sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)), buildWaitMs = 15 * 60_000 }) {
   const list = await api.listOwnedActors();
   if (!Array.isArray(list) || actorListHasCollision(list)) throw new Error("actor_name_collision_or_list_invalid");
@@ -247,7 +351,7 @@ export async function launchWithApi({ api, bundle, sleep = (ms) => new Promise((
   }
   assertSameSource(bundle.files, version.sourceFiles);
 
-  const buildTagName = `${buildTag}-${bundle.sourceSha256.slice(0, 12)}`;
+  const buildTagName = buildTagNameFor(bundle);
   let build = await api.createBuild(actorId, { version: actorVersion, useCache: false, betaPackages: false, tag: buildTagName, waitForFinish: 60 });
   if (typeof build?.id !== "string" || !/^[A-Za-z0-9_-]+$/u.test(build.id)) throw new Error("build_create_response_invalid");
   const stopAt = Date.now() + buildWaitMs;
@@ -361,6 +465,19 @@ export function makeCliApi() {
     async getVersion(actorId, version) { return request("GET", `actors/${actorId}/versions/${version}`); },
     async createBuild(actorId, params) { return request("POST", `actors/${actorId}/builds`, params, {}); },
     async getBuild(buildId) { return request("GET", `actor-builds/${buildId}`); },
+    async listActorRuns(actorId) {
+      const all = [];
+      let offset = 0;
+      let total = Infinity;
+      while (offset < total) {
+        const page = await request("GET", `actors/${actorId}/runs`, { limit: 1000, offset });
+        if (!Array.isArray(page?.items) || !Number.isSafeInteger(page.total) || page.items.length === 0 && offset < page.total) throw new Error("actor_runs_readback_invalid");
+        all.push(...page.items);
+        total = page.total;
+        offset += page.items.length;
+      }
+      return all;
+    },
     async startRun(actorId, params, runInput) { return request("POST", `actors/${actorId}/runs`, params, runInput); },
     async getRun(runId) { return request("GET", `actor-runs/${runId}`); },
   };
@@ -371,9 +488,14 @@ function printJson(value) {
 }
 
 function parseArgs(args) {
-  const parsed = { execute: false, reviewedCommit: undefined, reviewedSourceSha256: undefined };
+  const parsed = { execute: false, resumeExisting: false, verifyResumeReadonly: false, resumeActorId: undefined, resumeBuildId: undefined, resumeBuildNumber: undefined, reviewedCommit: undefined, reviewedSourceSha256: undefined };
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--execute") parsed.execute = true;
+    else if (args[i] === "--resume-existing") parsed.resumeExisting = true;
+    else if (args[i] === "--verify-resume-readonly") parsed.verifyResumeReadonly = true;
+    else if (args[i] === "--resume-actor-id") parsed.resumeActorId = args[++i];
+    else if (args[i] === "--resume-build-id") parsed.resumeBuildId = args[++i];
+    else if (args[i] === "--resume-build-number") parsed.resumeBuildNumber = args[++i];
     else if (args[i] === "--reviewed-commit") parsed.reviewedCommit = args[++i];
     else if (args[i] === "--reviewed-source-sha256") parsed.reviewedSourceSha256 = args[++i];
     else throw new Error("launcher_argument_invalid");
@@ -383,6 +505,9 @@ function parseArgs(args) {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
+  if (args.resumeExisting || args.verifyResumeReadonly) validateResumeIds({ actorId: args.resumeActorId, buildId: args.resumeBuildId, buildNumber: args.resumeBuildNumber });
+  else if (args.resumeActorId !== undefined || args.resumeBuildId !== undefined || args.resumeBuildNumber !== undefined) throw new Error("resume_arguments_require_resume_mode");
+  if (args.verifyResumeReadonly && (args.execute || args.resumeExisting)) throw new Error("readonly_resume_mode_cannot_execute");
   const bundle = await loadSourceBundle();
   const approval = validateReviewedApproval({
     ...args,
@@ -390,13 +515,33 @@ async function main() {
     sourceSha256: bundle.sourceSha256,
     treeClean: bundle.treeClean,
   });
+  if (args.verifyResumeReadonly) {
+    const verified = await verifyResumeCandidateWithApi({ api: makeCliApi(), bundle, actorId: args.resumeActorId, buildId: args.resumeBuildId, buildNumber: args.resumeBuildNumber });
+    printJson({
+      outcome: "resume_candidate_readback_verified_no_mutation",
+      remoteMutation: false,
+      actorIdSha256: sha256(verified.actorId),
+      buildIdSha256: sha256(verified.buildId),
+      buildNumber: verified.buildNumber,
+      sourceSha256: verified.sourceSha256,
+      actorPrivate: verified.actorPrivate,
+      actorDefaultRunOptionsVerified: verified.actorDefaultRunOptionsVerified,
+      sourceVersionReadbackVerified: verified.sourceVersionReadbackVerified,
+      builtSourceReadbackVerified: verified.builtSourceReadbackVerified,
+      buildTagObjectVerified: verified.buildTagObjectVerified,
+      noPriorRunForBuildVerified: verified.noPriorRunForBuildVerified,
+    });
+    return;
+  }
   if (!approval.approved) {
     printJson({
       outcome: "dry_run_only",
       remoteMutation: false,
+      mode: args.resumeExisting ? "resume-existing" : "create-build-run",
+      ...(args.resumeExisting ? { resumeTarget: { actorId: args.resumeActorId, buildId: args.resumeBuildId, buildNumber: args.resumeBuildNumber } } : {}),
       actorName,
-      actorCreateBodySha256: sha256(canonical(createActorPayload(bundle))),
-      actorCreateRequest: {
+      ...(args.resumeExisting ? {} : { actorCreateBodySha256: sha256(canonical(createActorPayload(bundle))) }),
+      ...(!args.resumeExisting ? { actorCreateRequest: {
         method: "POST",
         endpoint: "/v2/actors",
         isPublic: false,
@@ -409,7 +554,7 @@ async function main() {
           restartOnError: false,
           forcePermissionLevel: desired.forcePermissionLevel,
         },
-      },
+      } } : {}),
       sourceSha256: bundle.sourceSha256,
       sourceFiles: bundle.fileManifest,
       sourceFileCount: bundle.files.length,
@@ -417,12 +562,14 @@ async function main() {
       baseImageDigest: bundle.baseDigest,
       localHeadCommit: bundle.headCommit,
       localPackageClean: bundle.treeClean,
-      buildRequest: { method: "POST", endpoint: "/v2/actors/:actorId/builds", query: { version: actorVersion, useCache: false, betaPackages: false, tag: `${buildTag}-${bundle.sourceSha256.slice(0, 12)}`, waitForFinish: 60 } },
+      ...(!args.resumeExisting ? { buildRequest: { method: "POST", endpoint: "/v2/actors/:actorId/builds", query: { version: actorVersion, useCache: false, betaPackages: false, tag: buildTagNameFor(bundle), waitForFinish: 60 } } } : {}),
       runRequest: { method: "POST", endpoint: "/v2/actors/:actorId/runs", query: { ...createRunQuery("0.0.0"), build: "<exact-build-number>" }, input },
     });
     return;
   }
-  const result = await launchWithApi({ api: makeCliApi(), bundle });
+  const result = args.resumeExisting
+    ? await resumeWithApi({ api: makeCliApi(), bundle, actorId: args.resumeActorId, buildId: args.resumeBuildId, buildNumber: args.resumeBuildNumber })
+    : await launchWithApi({ api: makeCliApi(), bundle });
   printJson(result);
 }
 
