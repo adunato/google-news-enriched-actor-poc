@@ -1,7 +1,7 @@
 {
-  "schemaVersion": "issue22-h14-hosted-tuples-v1",
+  "schemaVersion": "issue22-h15b-sdk-tuples-v1",
   "state": "source-checked",
-  "origin": "https://api.apify.com",
+  "origin": "runtime-validated-private-ipv4",
   "tuples": [
     { "method": "GET", "path": "/v2/actor-runs/{ACTOR_RUN_ID}", "phase": "sdk_init" },
     { "method": "GET", "path": "/v2/actor-runs/{ACTOR_RUN_ID}", "phase": "run_gate" },

@@ -9,7 +9,7 @@ import { marker, state } from "./guard-preload.mjs";
 const attempted = [];
 function probe(name, operation) {
   try { operation(); attempted.push({ name, blocked: false }); }
-  catch (error) { attempted.push({ name, blocked: error?.code === "H14_NETWORK_DENIED" }); }
+  catch (error) { attempted.push({ name, blocked: error?.code === "H15B_NETWORK_DENIED" }); }
 }
 probe("fetch", () => fetch("https://news.google.com/"));
 probe("http.request", () => http.request("http://news.google.com/"));
@@ -25,4 +25,4 @@ for (const name of ["lookup", "lookupService", "resolve", "resolve4", "resolve6"
   if (typeof dns[name] === "function") probe(`dns.${name}`, () => dns[name]("news.google.com", () => {}));
   if (typeof dnsPromises[name] === "function") probe(`dns.promises.${name}`, () => dnsPromises[name]("news.google.com"));
 }
-parentPort.postMessage({ marker: globalThis.__ISSUE22_H14_GUARD__ === marker, attempted: attempted.length, allDenied: attempted.length === 42 && attempted.every((item) => item.blocked), failedNames: attempted.filter((item) => !item.blocked).map((item) => item.name), deniedByApi: state.applicationDeniedByApi });
+parentPort.postMessage({ marker: globalThis.__ISSUE22_H15B_GUARD__ === marker, attempted: attempted.length, allDenied: attempted.length === 42 && attempted.every((item) => item.blocked), failedNames: attempted.filter((item) => !item.blocked).map((item) => item.name), deniedByApi: state.applicationDeniedByApi });

@@ -6,11 +6,11 @@ import dnsPromises from "node:dns/promises";
 import { Worker } from "node:worker_threads";
 import { marker, state } from "./guard-preload.mjs";
 
-if (process.env.H14_LOCAL_PREFLIGHT !== "1") throw new Error("guard_probe_not_local");
+if (process.env.H15B_LOCAL_PREFLIGHT !== "1") throw new Error("guard_probe_not_local");
 const parent = [];
 function probe(name, operation) {
   try { operation(); parent.push({ name, blocked: false }); }
-  catch (error) { parent.push({ name, blocked: error?.code === "H14_NETWORK_DENIED" }); }
+  catch (error) { parent.push({ name, blocked: error?.code === "H15B_NETWORK_DENIED" }); }
 }
 probe("fetch", () => fetch("https://news.google.com/"));
 probe("http.request", () => http.request("http://news.google.com/"));
@@ -38,5 +38,5 @@ const worker = await new Promise((resolve, reject) => {
 });
 const parentDeniedCount = parent.filter((item) => item.blocked).length;
 const passed = parent.length === 15 && parentDeniedCount === 15 && worker.marker && worker.attempted === 42 && worker.allDenied;
-process.stdout.write(`${JSON.stringify({ schemaVersion: "issue22-h14-negative-result-v1", passed, parentAttemptCount: parent.length, parentDeniedCount, parentFailedNames: parent.filter((item) => !item.blocked).map((item) => item.name), parentDeniedByApi: state.applicationDeniedByApi, workerAttemptCount: worker.attempted, workerAllDenied: worker.allDenied, workerFailedNames: worker.failedNames, workerDeniedByApi: worker.deniedByApi })}\n`);
+process.stdout.write(`${JSON.stringify({ schemaVersion: "issue22-h15b-negative-result-v1", passed, parentAttemptCount: parent.length, parentDeniedCount, parentFailedNames: parent.filter((item) => !item.blocked).map((item) => item.name), parentDeniedByApi: state.applicationDeniedByApi, workerAttemptCount: worker.attempted, workerAllDenied: worker.allDenied, workerFailedNames: worker.failedNames, workerDeniedByApi: worker.deniedByApi })}\n`);
 process.exitCode = passed ? 0 : 1;

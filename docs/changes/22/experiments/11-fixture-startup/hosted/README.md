@@ -1,95 +1,96 @@
-# H14 hosted fixture diagnostic candidate
+# H15-B private-origin fixture diagnostic
 
-This is a separate, fixture-only Apify Actor candidate for Issue #22. It runs
-the existing bounded Mozilla Readability worker against one bundled synthetic
-HTML article. It does not import the Google News probe or publisher-fetch path,
-and its input schema accepts only `fixture-only` with
+H15-B is a separate, private Apify Actor candidate for Issue #22. It runs the
+existing bounded Mozilla Readability worker against one bundled synthetic
+HTML article. It does not import the Google News probe or publisher-fetch path;
+its input schema accepts only `fixture-only` with
 `readability-positive-v1`.
 
-## Local checks
+H14 failed before its application marker because its guard allowed only the
+documented public API hostname. A separate H15 no-dispatch diagnostic observed
+a private IPv4 URL shape alongside `APIFY_IS_AT_HOME=1`. That observation does
+not prove platform provenance. H15-B tests the bounded assumption that the
+runtime-injected value is the API service for this private run.
 
-The package pins Apify SDK 3.7.2, `apify-client` 2.25.0, Crawlee 3.18.2,
-Mozilla Readability 0.6.0, LinkeDOM 0.18.13, and the Apify Node base image by
-digest. From this directory:
+## Runtime origin boundary
+
+Before SDK import, the preload requires `APIFY_IS_AT_HOME=1` and accepts only
+an HTTP URL with a canonical RFC1918 IPv4 literal, explicit nondefault port,
+and root path. It rejects public, loopback, link-local, multicast,
+unspecified, shared, malformed, HTTPS, default-port, path, credential, query,
+and fragment variants. Both no-trailing-slash and trailing-slash root forms
+are accepted because the URL parser normalizes each to `/`.
+
+Known proxy override variables cause a fixed-code startup rejection; their
+values are not read into evidence, printed, or silently removed. The SDK
+allowlist binds each of the seven pinned method/path/phase tuples to the
+validated in-memory IP and port. The socket guard permits only that same
+address and port for those tuples. Hosted DNS is denied, redirects to any
+other origin or route miss the tuple allowlist, and application/Worker network
+calls remain denied. Observed tuple output uses fixed route templates and a
+fixed `runtime_validated_private_ipv4` label; it never includes the runtime
+address, port, resource IDs, or raw URL.
+
+This is a shape-based, bounded diagnostic assumption, not cryptographic origin
+verification. A platform or run-level environment override could imitate the
+same shape. The new Actor has no custom environment variables configured, and
+the launcher creates a distinct private Actor rather than modifying H14.
+Reject any run if Actor/version readbacks show custom environment variables or
+if the preload sees a proxy override.
+
+## Local validation
+
+From this directory:
 
 ```powershell
 npm ci
-npm run preflight
-docker build -t issue22-h14-hosted-local .
-docker run --rm --network none issue22-h14-hosted-local node src/preflight.mjs
 npm run launch:self-test
-npm run launch:dry-run
+npm run preflight
+docker build -t issue22-h15b-hosted-local .
+docker run --rm --network none issue22-h15b-hosted-local node src/preflight.mjs
+node tools/hosted-launcher.mjs
 ```
 
-The preflight exercises the complete local SDK/input/worker/aggregate/readback
-flow against a loopback SDK stub, repeats the fixed fixture twice, and runs
-negative API probes in separate parent and Worker processes. The container
-preflight passed with external networking disabled. These checks establish
-local behavior for this exact package. They do not establish hosted SDK tuple
-parity or prove that every possible operating-system egress path is blocked.
+Tests exercise the runtime gate across accepted private IPv4 ranges and
+rejected origin/proxy classes. Preflight runs the existing local SDK stub,
+checks all seven exact routes, denies 15 parent and 42 Worker API probes,
+rejects malformed input before starting the Readability worker, repeats the
+valid synthetic fixture twice, and confirms the fixed aggregate and readback
+(26 words, 186 characters). Local stub runs use a fixed loopback origin and do
+not validate the hosted private origin.
 
-## Hosted launcher and run gate
+The Docker command runs the local SDK stub with external networking disabled.
+These checks establish local behavior for this exact package; they do not
+prove every operating-system egress path is blocked or prove ownership of the
+hosted origin.
 
-`tools/hosted-launcher.mjs` uses the authenticated `apify api` CLI transport, so
-it does not read, export, or print an API token. It defaults to dry-run. Dry-run
-prints the deterministic source file hashes, source digest, lockfile hash,
-pinned base digest, exact actor-create body digest, build query, and run query.
-The remote source payload is generated only from
-`tools/deploy-file-list.json`; local preflight, mock, and launcher files are
-excluded.
+## Exact candidate launch path
 
-Any later remote invocation requires both `--execute` and explicit
-`--reviewed-commit <sha> --reviewed-source-sha256 <digest>`. The launcher checks
-that HEAD and the source digest match those reviewed values and that the H14
-package worktree is clean. Before actor creation it checks all owned Actor
-names and refuses an exact or similarly prefixed collision. It only creates a
-new private Actor, never targets an existing Actor for update. It reads back
-the Actor, uploaded version source, and built source before starting a run.
-The run request pins the exact successful build number and sends 256 MiB, 180
-seconds, $0.10, restart disabled, and limited permissions. It then reads the
-run by ID and verifies the returned build ID/number, memory, timeout, and charge
-cap. No POST is retried automatically.
+The package pins Apify SDK 3.7.2, `apify-client` 2.25.0, Crawlee 3.18.2,
+Mozilla Readability 0.6.0, LinkeDOM 0.18.13, and the Apify Node base image by
+digest. `tools/hosted-launcher.mjs` defaults to dry-run, reads no token, and
+uses the authenticated `apify api` CLI transport only after explicit reviewed
+commit and exact source SHA-256 gates.
 
-After a reviewer has approved and committed the exact candidate, the execution
-form is:
+The execution path creates only the distinct `issue-22-h15b-private-origin-fixture`
+Actor after a name-collision check. It requires private visibility,
+`LIMITED_PERMISSIONS`, 256 MiB, 180 seconds, restart disabled, no custom
+environment variables, empty SDK build environment, the exact uploaded
+source, and a successful exact-source build. It rereads Actor, source, tag and
+build state before the only run POST, checks run history twice for that build,
+and sends the fixture-only input with a `$0.10` max charge and SDK HTTP retries
+set to zero. It never targets the prior H14 Actor and does not retry create,
+build, or run POSTs.
+
+After a separate review of the clean committed candidate and source digest,
+the bounded launch form is:
 
 ```powershell
 node tools/hosted-launcher.mjs --execute --reviewed-commit <reviewed-commit-sha> --reviewed-source-sha256 <dry-run-source-digest>
 ```
 
-If a response is lost after Actor creation, or a readback gate fails after
-creation, the launcher stops and leaves the newly created Actor private for
-manual inspection. It never retries the create/build/run POST and never
-deletes an Actor automatically.
-
-Apify's Actor run response does not expose `restartOnError` or the effective
-permission override in the returned run options. The launcher verifies the
-Actor's private/default limited-permission settings before POST, sends the
-exact run query parameters, checks the post-run fields Apify exposes, and
-records this API limitation without claiming those two fields were echoed.
-The separate SDK API retry setting is source-checked as `maxRetries = 0` before
-`Actor.init`; it is not a platform run option.
-
-The Actor entrypoint independently rejects a hosted runtime whose run/build
-identity, permission level, limits, or retry setting do not match. Its first
-sanitized output is emitted at process exit, so a crash before the startup
-marker can still produce no stage output. Apify's platform logs may contain
-startup details for such a crash; the launcher does not fetch or retain those
-logs. Keep the input exactly as shown in `run-options.json`.
-
-The authenticated CLI route was confirmed with read-only checks. This launcher
-has not been executed remotely: no Actor was created, no remote build was
-started, and no hosted run was made. The manifest's seven Apify API tuples are
-derived from the locally observed SDK 3.7.2/client 2.25.0 flow and remain
-unverified against a hosted run. A future hosted diagnostic must stop on any
-tuple miss; do not broaden the manifest based on an unexplained request.
-
-The launcher follows Apify's documented [Create Actor](https://docs.apify.com/api/v2/actors-post),
-[Build Actor](https://docs.apify.com/api/v2/actors-builds-post), [Get Actor version](https://docs.apify.com/api/v2/actor-version-get),
-[Get build](https://docs.apify.com/api/v2/actor-build-get), and [Run Actor](https://docs.apify.com/api/v2/actors-runs-post)
-API schemas. If a source/configuration field is not returned exactly as
-required, it stops before the next mutating request.
-
-Output contains fixed stage names, bounded result counts, aggregate/readback
-booleans, and API counters. It intentionally omits article content, credentials,
-Actor identifiers, raw exceptions, and response bodies.
+The H15-B source package has not been built or run on Apify. The earlier H14
+Actor remains unchanged. H15-B's future hosted run must stop on any origin,
+proxy, Actor, source, build, settings, or run-history gate failure. A
+`private_origin_in_apify_runtime_unverified` classification alone is not
+permission to broaden this allowlist.

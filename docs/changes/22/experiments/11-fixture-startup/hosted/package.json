@@ -1,5 +1,5 @@
 {
-  "name": "issue-22-h14-fixture-hosted-diagnostic",
+  "name": "issue-22-h15b-private-origin-fixture",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -7,7 +7,7 @@
     "start": "node --import ./src/guard-preload.mjs ./src/main.mjs",
     "preflight": "node ./src/preflight.mjs",
     "launch:dry-run": "node tools/hosted-launcher.mjs",
-    "launch:self-test": "node --test tools/hosted-launcher.test.mjs"
+    "launch:self-test": "node --test tools/hosted-launcher.test.mjs tools/runtime-origin.test.mjs"
   },
   "dependencies": {
     "@mozilla/readability": "0.6.0",

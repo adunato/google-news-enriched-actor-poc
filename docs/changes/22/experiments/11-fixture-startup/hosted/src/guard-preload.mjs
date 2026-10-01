@@ -6,17 +6,26 @@ import dnsPromises from "node:dns/promises";
 import fs from "node:fs";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { normalizedPath } from "./tuples.mjs";
+import { assertNoProxyOverride, resolveRuntimeOrigin } from "./runtime-origin.mjs";
 
-const marker = "issue22-h14-hosted-guard-v1";
-globalThis.__ISSUE22_H14_GUARD__ = marker;
-process.env.H14_GUARD_MARKER = marker;
+assertNoProxyOverride(process.env);
+const localMode = process.env.H15B_LOCAL_PREFLIGHT === "1";
+const runtimeOrigin = resolveRuntimeOrigin({
+  apiBaseUrl: process.env.APIFY_API_BASE_URL,
+  isAtHome: process.env.APIFY_IS_AT_HOME,
+  localMode,
+});
+const { origin, hostname: approvedHost, port: approvedPort } = runtimeOrigin;
+
+const marker = "issue22-h15b-hosted-guard-v1";
+globalThis.__ISSUE22_H15B_GUARD__ = marker;
+process.env.H15B_GUARD_MARKER = marker;
 globalThis.__ISSUE22_H12_GUARD__ = "issue22-h12-deny-external-v1";
 process.env.H12_GUARD_MARKER = "issue22-h12-deny-external-v1";
 process.env.H12_REQUIRE_GUARD = "1";
 process.env.ACTORS_DISABLE_OUTDATED_WARNING = "1";
 process.env.ACTOR_EVENTS_WEBSOCKET_URL = "";
 process.env.APIFY_ACTOR_EVENTS_WS_URL = "";
-for (const key of ["HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy"]) delete process.env[key];
 
 const state = {
   sdkAllowedByPhase: { sdk_init: 0, input_read: 0, run_gate: 0, aggregate_write: 0, readback: 0, exit: 0 },
@@ -27,34 +36,33 @@ const state = {
   tuples: [],
   localRejectedSdkRoute: null,
 };
-globalThis.__ISSUE22_H14_COUNTERS__ = state;
+globalThis.__ISSUE22_H15B_COUNTERS__ = state;
 const sdkPhase = new AsyncLocalStorage();
 const requestTuple = new AsyncLocalStorage();
 const tupleKey = (value) => JSON.stringify(value);
-const localMode = process.env.H14_LOCAL_PREFLIGHT === "1";
-const hostedOrigin = "https://api.apify.com";
 const localOrigin = "http://127.0.0.1:43822";
-const origin = localMode ? localOrigin : hostedOrigin;
-const base = new URL(process.env.APIFY_API_BASE_URL || hostedOrigin);
-if (base.origin !== origin || base.pathname !== "/" || base.search || base.hash || base.username || base.password) throw new Error("h14_api_origin_rejected");
 
 const manifestPath = new URL("./tuple-manifest.json", import.meta.url);
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-if (manifest.schemaVersion !== "issue22-h14-hosted-tuples-v1" || manifest.state !== "source-checked" || manifest.origin !== hostedOrigin || !Array.isArray(manifest.tuples)) throw new Error("h14_tuple_manifest_invalid");
+if (manifest.schemaVersion !== "issue22-h15b-sdk-tuples-v1" || manifest.state !== "source-checked" || manifest.origin !== "runtime-validated-private-ipv4" || !Array.isArray(manifest.tuples) || manifest.tuples.length !== 7) throw new Error("h15b_tuple_manifest_invalid");
 function runtimeTuplePath(template) {
   return template.replace(/\{([A-Z0-9_]+)\}/gu, (_match, name) => {
     const value = process.env[name];
-    return value && /^[A-Za-z0-9_-]{1,100}$/u.test(value) ? value : `H14_MISSING_${name}`;
+    return value && /^[A-Za-z0-9_-]{1,100}$/u.test(value) ? value : `H15B_MISSING_${name}`;
   });
 }
-const tuples = manifest.tuples.map((entry) => ({ origin, method: entry.method, path: runtimeTuplePath(entry.path), phase: entry.phase }));
+const tupleEntries = manifest.tuples.map((entry) => ({
+  route: entry.path,
+  tuple: { origin, method: entry.method, path: runtimeTuplePath(entry.path), phase: entry.phase },
+}));
+const tuples = tupleEntries.map((entry) => entry.tuple);
 const allowedPhases = new Set(Object.keys(state.sdkAllowedByPhase));
 function deny(api, { tupleMiss = false } = {}) {
   if (tupleMiss) state.tupleMiss++;
   const key = api.startsWith("http.request") ? "httpRequest" : api.startsWith("http.get") ? "httpGet" : api.startsWith("https.request") ? "httpsRequest" : api.startsWith("https.get") ? "httpsGet" : api.startsWith("net") ? "net" : api === "fetch" ? "fetch" : "dns";
   state.applicationDeniedByApi[key]++;
-  const error = new Error("h14_network_denied");
-  error.code = "H14_NETWORK_DENIED";
+  const error = new Error("h15b_network_denied");
+  error.code = "H15B_NETWORK_DENIED";
   throw error;
 }
 function normalize(method, input, options) {
@@ -78,6 +86,9 @@ function normalize(method, input, options) {
 function expectedSdkTuple(tuple) {
   return tuple && tuple.origin === origin && allowedPhases.has(tuple.phase) && tuples.some((entry) => tupleKey(entry) === tupleKey(tuple));
 }
+function matchingSdkTuple(tuple) {
+  return expectedSdkTuple(tuple) ? tupleEntries.find((entry) => tupleKey(entry.tuple) === tupleKey(tuple)) : null;
+}
 function guardedRequest(original, api) {
   return function requestGuard(input, options, callback) {
     const tuple = normalize(options?.method ?? input?.method, input, options);
@@ -90,7 +101,10 @@ function guardedRequest(original, api) {
     }
     if (tuple.phase === "application") return deny(api);
     state.sdkAllowedByPhase[tuple.phase]++;
-    if (!state.tuples.some((entry) => tupleKey(entry) === tupleKey(tuple))) state.tuples.push(tuple);
+    const matchedEntry = matchingSdkTuple(tuple);
+    if (!state.tuples.some((entry) => entry.method === tuple.method && entry.path === matchedEntry.route && entry.phase === tuple.phase)) {
+      state.tuples.push({ method: tuple.method, path: matchedEntry.route, phase: tuple.phase, originClass: localMode ? "loopback_stub" : "runtime_validated_private_ipv4" });
+    }
     return requestTuple.run(tuple, () => original.call(this, input, options, callback));
   };
 }
@@ -99,13 +113,15 @@ function guardedSocket(original, receiver, options, args, api) {
   let host = typeof options === "object" && options ? (options.host ?? options.hostname) : args[0];
   let port = typeof options === "number" ? options : Number(options?.port ?? options?.localPort);
   if (context && expectedSdkTuple(context) && !host && !Number.isFinite(port)) {
-    host = localMode ? "127.0.0.1" : "api.apify.com";
-    port = localMode ? 43822 : 443;
+    host = approvedHost;
+    port = approvedPort;
     if (typeof options === "object" && options) options = { ...options, host, port };
     else if (typeof options === "number") args[0] = host;
     else options = { host, port };
   }
-  const hostOkay = localMode ? ["127.0.0.1", "localhost", "::1"].includes(String(host ?? "").toLowerCase()) && port === 43822 : String(host ?? "").toLowerCase() === "api.apify.com" && port === 443;
+  const hostOkay = localMode
+    ? ["127.0.0.1", "localhost", "::1"].includes(String(host ?? "").toLowerCase()) && port === approvedPort
+    : String(host ?? "") === approvedHost && port === approvedPort;
   if (!context || !expectedSdkTuple(context) || !hostOkay) {
     state.socketDenied++;
     return deny(api);
@@ -127,7 +143,7 @@ net.Socket.prototype.connect = function socketGuard(options, ...args) { return g
 const originalLookup = dns.lookup;
 dns.lookup = function lookupGuard(hostname, options, callback) {
   const context = requestTuple.getStore();
-  const allowedHost = localMode ? ["127.0.0.1", "localhost", "::1"].includes(String(hostname).toLowerCase()) : String(hostname).toLowerCase() === "api.apify.com";
+  const allowedHost = localMode && ["127.0.0.1", "localhost", "::1"].includes(String(hostname).toLowerCase());
   if (!context || !expectedSdkTuple(context) || !allowedHost) { state.dnsDenied++; return deny("dns.lookup"); }
   return originalLookup.call(this, hostname, options, callback);
 };
@@ -140,7 +156,7 @@ for (const method of ["lookupService", "resolve", "resolve4", "resolve6", "resol
 }
 
 export function withSdkPhase(phase, operation) {
-  if (!allowedPhases.has(phase)) throw new Error("h14_sdk_phase_rejected");
+  if (!allowedPhases.has(phase)) throw new Error("h15b_sdk_phase_rejected");
   return sdkPhase.run(phase, operation);
 }
 export { marker, state, tuples };

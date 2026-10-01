@@ -8,10 +8,10 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
 const apiOrigin = "https://api.apify.com/v2";
-const actorName = "issue-22-h14-fixture-hosted-diagnostic";
-const actorTitle = "Issue 22 H14 Fixture Startup Diagnostic";
+const actorName = "issue-22-h15b-private-origin-fixture";
+const actorTitle = "Issue 22 H15-B Private Origin Fixture Diagnostic";
 const actorVersion = "1.0";
-const buildTag = "h14-fixture-v1";
+const buildTag = "h15b-fixture-v1";
 const input = Object.freeze({ mode: "fixture-only", fixtureId: "readability-positive-v1" });
 const desired = Object.freeze({
   isPublic: false,
@@ -87,6 +87,7 @@ function validateLocalBundle(files) {
   const dockerfile = byName.get("Dockerfile") ?? "";
   const main = byName.get("src/main.mjs") ?? "";
   const sourceManifest = JSON.parse(byName.get("src/tuple-manifest.json") ?? "null");
+  const runtimeOriginSource = byName.get("src/runtime-origin.mjs") ?? "";
   const baseDigest = dockerfile.match(/^FROM\s+(apify\/actor-node@sha256:[0-9a-f]{64})\s*$/mu)?.[1];
   const retryIndex = main.indexOf("Actor.apifyClient.httpClient.maxRetries = 0");
   const initIndex = main.indexOf("Actor.init()");
@@ -105,7 +106,9 @@ function validateLocalBundle(files) {
     inputSchema?.properties?.mode?.enum?.[0] === input.mode && inputSchema?.properties?.fixtureId?.enum?.[0] === input.fixtureId;
   const failed = [
     ["base", Boolean(baseDigest)], ["actor_config", exactConfig], ["run_options", exactRunOptions],
-    ["runtime_pins", exactRuntimePins], ["input", exactInput], ["tuple_manifest", sourceManifest?.state === "source-checked"],
+    ["runtime_pins", exactRuntimePins], ["input", exactInput],
+    ["tuple_manifest", sourceManifest?.schemaVersion === "issue22-h15b-sdk-tuples-v1" && sourceManifest?.state === "source-checked" && sourceManifest?.origin === "runtime-validated-private-ipv4" && sourceManifest?.tuples?.length === 7],
+    ["runtime_origin_gate", runtimeOriginSource.includes("assertNoProxyOverride") && runtimeOriginSource.includes("resolveRuntimeOrigin")],
     ["retry_gate", retryIndex >= 0 && initIndex >= 0 && retryIndex < initIndex],
   ].filter(([, passed]) => !passed).map(([name]) => name);
   if (failed.length) throw new Error(`local_launch_contract_failed_${failed.join("_")}`);
@@ -225,7 +228,7 @@ function verifyRunReadback(run, actorId, build) {
 }
 
 function actorListHasCollision(items) {
-  return items.some((item) => typeof item.name === "string" && item.name.startsWith("issue-22-h14-fixture"));
+  return items.some((item) => typeof item.name === "string" && item.name.startsWith("issue-22-h15b-private-origin"));
 }
 
 function assertBuild(build, actorId, bundle) {
@@ -374,12 +377,14 @@ export async function launchWithApi({ api, bundle, sleep = (ms) => new Promise((
   build = await api.getBuild(build.id);
   assertBuild(build, actorId, bundle);
   verifyBuildTagReadback(actor, buildTagName, build.id);
+  assertNoPriorBuildRuns(await api.listActorRuns(actorId), build);
 
   const runQuery = createRunQuery(build.buildNumber);
   if (runQuery.memory !== desired.memoryMbytes || runQuery.timeout !== desired.timeoutSecs || runQuery.maxTotalChargeUsd !== desired.maxTotalChargeUsd ||
       runQuery.restartOnError !== false || runQuery.forcePermissionLevel !== desired.forcePermissionLevel || runQuery.build !== build.buildNumber) {
     throw new Error("run_request_contract_failed");
   }
+  assertNoPriorBuildRuns(await api.listActorRuns(actorId), build);
   const started = await api.startRun(actorId, runQuery, input);
   if (typeof started?.id !== "string" || !/^[A-Za-z0-9_-]+$/u.test(started.id)) throw new Error("run_start_response_invalid");
   const run = await api.getRun(started.id);

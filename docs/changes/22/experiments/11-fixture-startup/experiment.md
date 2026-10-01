@@ -160,27 +160,59 @@ failure establishes an API-origin guard rejection before Readability
 processing, not an extraction failure. The tested H14 candidate is on HOLD
 and must not be retried unchanged.
 
-**Next diagnostic — H15-A:** run a changed no-dispatch startup diagnostic
-that emits only fixed stage codes and an allowlisted API-origin category. It
-must not initialize the Apify SDK, make network calls, or execute the fixture
-or Readability. Use a read-only audit of SDK/platform origin configuration
-alongside its result; do not log the actual origin value.
+### H15-A no-dispatch origin classifier result (2026-10-01)
 
-**Conditional H15-B:** only if H15-A plus the read-only override audit
-establish a trusted exact runtime API origin, update the fixture candidate to
-allow that origin for only the required SDK operations while failing closed
-for all others. Independently review and validate the candidate before a
-bounded hosted run. If no exact trusted origin can be established, stop and
-report the platform/configuration blocker rather than widening the allowlist.
-The owner's expanded authority covers these changed diagnostic steps without
-per-run approval. Each actual run retains private `LIMITED_PERMISSIONS`, 256
-MiB, 180 seconds, $0.10 maximum, restarts/retries disabled, and no Google or
-publisher traffic in fixture mode. The live 100-slot publisher target remains
-untested.
+Actor `Xcnfyo8eLB2sIwKWO`, build `RcO4RDSM6EWlS8JWt` (`1.0.1`), ran once as
+private `LIMITED_PERMISSIONS`; run `op00GImjD5XmwPx8y` succeeded with exit 0.
+The classifier returned only
+`private_origin_in_apify_runtime_unverified`: HTTP scheme, private IPv4,
+explicit non-default port and root path, with `APIFY_IS_AT_HOME=true`. It did
+not initialize the Apify SDK, make application network calls, run Readability
+or the fixture, or write a dataset item. Platform RX/TX counters were
+nonzero. Build/run costs were approximately $0.00220733 / $0.00006401. The
+exact origin was not retained. Evidence:
+[`origin-classifier/evidence/h15-hosted-run-2026-10-01.md`](origin-classifier/evidence/h15-hosted-run-2026-10-01.md).
 
-**Learning checkpoint:** None. The evidence currently points to a specific
-candidate guard/configuration mismatch; the internal-origin explanation is
-not confirmed and does not yet support a portable learning.
+This result classifies the observed H15 runtime shape; it does not authenticate
+the origin's provenance or prove H14 received the same value. H14's custom
+environment list was empty, while H15 ran under a different Actor. Apify SDK
+3.7.2 configuration and maintainer issue #744 support the possibility of a
+platform-supplied `APIFY_API_BASE_URL`, but the H14 cause remains unconfirmed.
+H14 stays on HOLD and must not be retried unchanged.
+
+### H15-B conditional fixture plan
+
+First perform a read-only audit of configuration override and proxy sources
+and establish the platform-injection assumption. The changed fixture
+candidate must require `APIFY_IS_AT_HOME=true`; validate the API origin as
+HTTP, private IPv4, explicit non-default port and root path, with no userinfo,
+query or fragment. Retain the exact origin in memory only. Bind it only to the
+seven reviewed SDK tuples and permitted socket/redirect paths; deny every
+other destination and operation, including application and Worker requests.
+Never log or persist the origin. Add local positive and negative checks for
+the origin validation and binding rules, then obtain independent review.
+
+If those gates and provenance audit pass, make one private bounded fixture
+build/run. Keep the run at `LIMITED_PERMISSIONS`, 256 MiB, 180 seconds and
+$0.10 maximum, with restart/retries disabled and no Google/publisher traffic.
+If the origin cannot be tied to trusted platform configuration or cannot be
+validated safely, stop and report the concrete platform/configuration
+blocker rather than broadening the allowlist. The owner's expanded authority
+covers these changed diagnostic steps without per-run approval. The live
+100-slot publisher target remains untested.
+
+**Current candidate status: HOLD.** The changed H15-B package's local checks
+pass for the final 19-file source digest
+`3c5a2c7240399578257b38d9b814f920701153da3d1e99d1d85ce6c7684d671c`, but
+independent code review and independent revalidation after the final label and
+synthetic-identifier correction are pending. The read-only override/proxy
+provenance audit is also not yet complete. No H15-B Actor, build, or run has
+been created. See
+[`hosted/evidence/h15b-local-preflight-2026-10-01.md`](hosted/evidence/h15b-local-preflight-2026-10-01.md).
+
+**Learning checkpoint:** None. The observed origin category is not yet tied
+to trusted provenance, so this result does not support a reusable technical
+lesson.
 
 **Learning checkpoint:** None. This is a specific launcher/API-shape defect,
 not a reusable cross-project learning beyond the existing startup-diagnostic
