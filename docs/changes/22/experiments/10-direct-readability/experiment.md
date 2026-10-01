@@ -1,6 +1,6 @@
 # Iteration 10 — direct Mozilla Readability (offline preflight)
 
-**Status:** Owner-approved candidate offline preflight passed (31/31 checks) on 2026-10-01, including the external run-approval handshake and child-process termination checks. The hosted publisher cohort has not run. This update made no Apify API calls and created no Actor, build or hosted run.
+**Status:** Corrected owner-approved candidate offline preflight passed 33/33 checks on 2026-10-01 under Node 20.19.0. The exact-name read-only Actor listing found no match among two listed Actors. The hosted publisher cohort has not run; no Actor, build or hosted run was created.
 
 ## Question and hypothesis
 
@@ -32,7 +32,7 @@ Run `npm ci`, then `npx --yes --package=node@20.19.0 -- node src/preflight.mjs` 
 
 ## Result
 
-The revised preflight passed 31 checks under Node 20.19.0. Alongside the existing network, robots, parser, worker, aggregation and privacy checks, it validates the run-launch tuple, delayed and missing/mismatched approval records, runtime call ordering before probe execution, controller readback before approval, mismatch aborts without a gate write, one-attempt ambiguous POST handling with abort confirmation, run input/KVS endpoint wiring, and waiting for child process close after timeout. It recorded zero probe network attempts and zero privacy-violation writes. See [`preflight-report.json`](preflight-report.json) for the sanitized checks, configuration and dependency/source hashes. This supports the local parser and mocked handshake behavior; it does not measure publisher readability, Google access, hosted timing/cost or Issue #5 feasibility.
+The corrected preflight passed all 33 planned checks under Node 20.19.0. Alongside the existing network, robots, parser, worker, aggregation and privacy checks, it validates the run-launch tuple, delayed and missing/mismatched approval records, runtime call ordering before probe execution, controller readback before approval, mismatch aborts without a gate write, one-attempt ambiguous POST handling with abort confirmation, run input/KVS endpoint wiring, waiting for child process close after timeout, the documented initial version in the Actor-create body, omission of unsupported permission fields, no follow-up version mutation, and sanitized create-failure diagnostics. It recorded zero probe network attempts and zero privacy-violation writes. The read-only reconciliation queried `GET acts?my=true&limit=100`, returned two own Actors and zero exact-name matches. The dry-run launcher started no Actor/build/run. See [`preflight-report.json`](preflight-report.json) for sanitized checks, configuration and dependency/source hashes. This supports local parser and mocked handshake behavior; it does not measure publisher readability, Google access, hosted timing/cost or Issue #5 feasibility.
 
 ## Hosted launch preparation and boundary
 
@@ -40,8 +40,14 @@ The revised preflight passed 31 checks under Node 20.19.0. Alongside the existin
 
 Before `Actor.init()` the probe checks hosted permission, memory, timeout, charge cap, restart setting, run ID and build ID/number consistency. After initialization it reads `Actor.getInput()` and `Actor.getEnv()` again, validating the unique marker and expected actor/build tuple against runtime values. It polls the run default KVS record `I10_GATE` for up to 30 seconds and makes no Google or publisher request until every field matches. The handshake uses the documented [Run Actor input body](https://docs.apify.com/api/v2/actors-runs-post), [Actor SDK input/KVS helpers](https://docs.apify.com/sdk/js/reference/3.6/class/Actor) and [run default KVS record API](https://docs.apify.com/api/v2/default-key-value-store).
 
+Official API references: [Create Actor](https://docs.apify.com/api/v2/actors-post) requires at least one source version; [Update Actor](https://docs.apify.com/api/v2/actor-put) documents `actorPermissionLevel` on updates and `defaultRunOptions.forcePermissionLevel` for the run permission setting.
+
+### Create-request correction
+
+After two create attempts failed, the request was checked against the official [Create Actor API](https://docs.apify.com/api/v2/actors-post), which requires at least one source version in the initial POST. The corrected plan puts the byte-manifested source snapshot in `versions`, reads it back byte-for-byte before building, and removes the separate post-create version PUT. It omits response-only `actorPermissionLevel` from the request and sets the documented `defaultRunOptions.forcePermissionLevel` to `LIMITED_PERMISSIONS`. Safe error reporting retains only request stage/context, HTTP or CLI status, and validated Apify error type/request ID/timestamp; it drops raw stderr, response text, and secrets. Corrected offline validation passed. A read-only own-Actor listing found no exact-name match.
+
 ## Decision boundary
 
 No Actor was created or built and no hosted run started. No publisher or Google News request and no Apify API call occurred during this offline-only update. The credential-safe adapter and gated launcher require independent review and verification against the exact reviewed build and private `LIMITED_PERMISSIONS`/cost/memory/time/restart gates. A future hosted invocation also requires the explicit trusted HEAD and experiment-root environment anchors and a clean worktree. Results from the publisher cohort, once run, are a signal only: at least 50 strict Readability successes among 100 unique requested rows is promising evidence for further Issue #5 validation, not production adoption or a completed Spike.
 
-**Learning checkpoint:** None identified in offline preparation.
+**Learning checkpoint:** The Actor create endpoint requires source code to be present in the initial request. A separate version update after create adds an avoidable mutation and version-consistency risk; the corrected flow creates with the reviewed snapshot and verifies its readback before building.

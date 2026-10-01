@@ -30,12 +30,26 @@ function processError(code) {
   return error;
 }
 
+function safeErrorFields(stderr) {
+  const objectStart = stderr.indexOf("{");
+  if (objectStart < 0) return {};
+  let value;
+  try { value = JSON.parse(stderr.slice(objectStart)); } catch { return {}; }
+  const rawType = value?.type ?? value?.error?.type;
+  const safeType = typeof rawType === "string" && /^[a-z0-9-]{1,80}$/i.test(rawType) ? rawType : undefined;
+  const rawRequestId = value?.requestId ?? value?.request_id;
+  const requestId = typeof rawRequestId === "string" && /^[A-Za-z0-9._:-]{1,128}$/.test(rawRequestId) ? rawRequestId : undefined;
+  const rawTimestamp = value?.timestamp;
+  const timestamp = typeof rawTimestamp === "string" && Number.isFinite(Date.parse(rawTimestamp)) ? new Date(rawTimestamp).toISOString() : undefined;
+  return { ...(safeType ? { apifyErrorType: safeType } : {}), ...(requestId ? { requestId } : {}), ...(timestamp ? { apifyTimestamp: timestamp } : {}) };
+}
+
 function cliExitError(exitCode, stderr) {
   const safeExitCode = Number.isInteger(exitCode) ? exitCode : null;
   const statusMatch = /(?:HTTP(?:\/\d(?:\.\d)?)?\s+|status(?:Code)?["']?\s*[:=]\s*["']?)([1-5]\d\d)\b/i.exec(stderr);
   const diagnostic = statusMatch
-    ? { kind: "http_error", status: Number(statusMatch[1]) }
-    : { kind: "cli_exit", exitCode: safeExitCode };
+    ? { kind: "http_error", status: Number(statusMatch[1]), ...safeErrorFields(stderr) }
+    : { kind: "cli_exit", exitCode: safeExitCode, ...safeErrorFields(stderr) };
   const error = new Error(diagnostic.kind === "http_error" ? "apify_http_request_failed" : "apify_cli_exit_nonzero");
   error.diagnostic = diagnostic;
   return error;
@@ -134,7 +148,15 @@ export async function createApifyCliAdapter({ commandPath, spawnProcess = spawn,
     const args = [...invocation.prefixArgs, "api", method, endpoint];
     if (params && Object.keys(params).length) args.push("-p", JSON.stringify(params));
     if (body !== undefined) args.push("-d", "-");
-    const raw = await execute(invocation.command, args, body === undefined ? undefined : JSON.stringify(body), { spawnProcess, timeoutMs });
+    let raw;
+    try {
+      raw = await execute(invocation.command, args, body === undefined ? undefined : JSON.stringify(body), { spawnProcess, timeoutMs });
+    } catch (cause) {
+      const existing = cause?.diagnostic && typeof cause.diagnostic === "object" ? cause.diagnostic : {};
+      const error = new Error(cause?.message === "apify_http_request_failed" ? "apify_http_request_failed" : cause?.message === "apify_cli_exit_nonzero" ? "apify_cli_exit_nonzero" : "apify_request_failed");
+      error.diagnostic = { ...existing, method, endpoint, requestTimestamp: new Date().toISOString() };
+      throw error;
+    }
     return parseResponse(raw);
   };
 
@@ -145,9 +167,6 @@ export async function createApifyCliAdapter({ commandPath, spawnProcess = spawn,
     },
     async createPrivateActor(settings) {
       return actorView(await request("POST", "acts", { body: settings }));
-    },
-    async setVersionSource(actorId, version) {
-      await request("PUT", `acts/${encodeURIComponent(actorId)}/versions/${encodeURIComponent(version.versionNumber)}`, { body: version });
     },
     async getVersion(actorId, versionNumber) {
       return versionView(await request("GET", `acts/${encodeURIComponent(actorId)}/versions/${encodeURIComponent(versionNumber)}`));

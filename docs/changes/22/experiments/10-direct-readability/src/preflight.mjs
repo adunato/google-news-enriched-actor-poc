@@ -249,7 +249,9 @@ await check("launch_tuple_and_approval_gate_fail_closed_and_wait_for_delayed_rec
 });
 await check("hosted_controller_exact_build_readback_gate_and_delayed_visibility", async () => {
   const plan = await createHostedRunPlan({ sourceRoot: resolve(here, "..") });
-  assert.equal(plan.actor.isPublic, false); assert.equal(plan.actor.actorPermissionLevel, "LIMITED_PERMISSIONS");
+  assert.equal(plan.actor.isPublic, false); assert.equal(Object.hasOwn(plan.actor, "actorPermissionLevel"), false);
+  assert.deepEqual(plan.actor.versions, [plan.version]);
+  assert.equal(plan.actor.defaultRunOptions.forcePermissionLevel, "LIMITED_PERMISSIONS");
   assert.equal(plan.actor.defaultRunOptions.memoryMbytes, 256); assert.equal(plan.actor.defaultRunOptions.timeoutSecs, 900);
   assert.equal(plan.run.maxTotalChargeUsd, 1); assert.equal(plan.actor.defaultRunOptions.restartOnError, false);
   assert.equal(plan.run.build, null); assert.ok(plan.sourcePaths.includes("src/runtime-gate.mjs"));
@@ -259,8 +261,13 @@ await check("hosted_controller_exact_build_readback_gate_and_delayed_visibility"
   const build = { id: "build_12345678", buildNumber: "10.0.7", status: "SUCCEEDED", actVersion: plan.version };
   const run = { id: "run_12345678", buildId: build.id, buildNumber: build.buildNumber, options: { ...plan.run, build: build.buildNumber } };
   const api = {
-    createPrivateActor: async (settings) => { calls.push("createActor"); assert.equal(settings.isPublic, false); return actor; },
-    setVersionSource: async (_id, version) => { calls.push("setVersion"); assert.equal(hashSourceFiles(version.sourceFiles), plan.sourceManifestSha256); },
+    createPrivateActor: async (settings) => {
+      calls.push("createActor"); assert.equal(settings.isPublic, false);
+      assert.deepEqual(settings.versions, [plan.version]);
+      assert.equal(Object.hasOwn(settings, "actorPermissionLevel"), false);
+      assert.equal(settings.defaultRunOptions.forcePermissionLevel, "LIMITED_PERMISSIONS");
+      return actor;
+    },
     getVersion: async () => { calls.push("getVersion"); return plan.version; },
     buildVersion: async (_id, versionNumber) => { calls.push("buildVersion"); assert.equal(versionNumber, plan.version.versionNumber); return { id: build.id }; },
     waitForBuild: async (_id, buildId) => { calls.push("waitForBuild"); assert.equal(buildId, build.id); return build; },
@@ -274,7 +281,7 @@ await check("hosted_controller_exact_build_readback_gate_and_delayed_visibility"
     abortRun: async () => { calls.push("abortRun"); },
   };
   const outcome = await executeHostedRunPlan(plan, api, { sourceCheck: async () => ({ valid: true, sourceManifestSha256: plan.sourceManifestSha256 }) });
-  assert.deepEqual(calls, ["createActor", "setVersion", "getVersion", "buildVersion", "waitForBuild", "getActor", "startRun", "getRun", "getRunInput", "getActor", "putGate", "getGate", "getGate"]);
+  assert.deepEqual(calls, ["createActor", "getVersion", "buildVersion", "waitForBuild", "getActor", "startRun", "getRun", "getRunInput", "getActor", "putGate", "getGate", "getGate"]);
   assert.equal(startAttempts, 1); assert.equal(outcome.status, "run_approved_after_readback"); assert.equal(outcome.buildNumber, build.buildNumber);
 });
 await check("hosted_controller_mismatch_no_gate_and_abort_confirmed", async () => {
@@ -284,7 +291,7 @@ await check("hosted_controller_mismatch_no_gate_and_abort_confirmed", async () =
   const run = { id: "run_12345678", buildId: "build_87654321", buildNumber: build.buildNumber, status: "RUNNING", options: { ...plan.run, build: build.buildNumber } };
   const calls = [];
   const api = {
-    createPrivateActor: async () => actor, setVersionSource: async () => {}, getVersion: async () => plan.version,
+    createPrivateActor: async () => actor, getVersion: async () => plan.version,
     buildVersion: async () => ({ id: build.id }), waitForBuild: async () => build, getActor: async () => actor,
     startRun: async () => run, getRun: async () => ({ ...run, status: "ABORTED" }), getRunInput: async () => ({}),
     findRunsSince: async () => [],
@@ -299,7 +306,7 @@ await check("hosted_controller_ambiguous_post_never_retries_and_aborts_candidate
   const build = { id: "build_12345678", buildNumber: "10.0.7", status: "SUCCEEDED", actVersion: plan.version };
   const run = { id: "run_12345678", status: "RUNNING" }, calls = []; let starts = 0, launchInput;
   const api = {
-    createPrivateActor: async () => actor, setVersionSource: async () => {}, getVersion: async () => plan.version,
+    createPrivateActor: async () => actor, getVersion: async () => plan.version,
     buildVersion: async () => ({ id: build.id }), waitForBuild: async () => build, getActor: async () => actor,
     startRun: async (_actorId, options) => { starts++; launchInput = options.input; throw new Error("ambiguous"); }, findRunsSince: async () => [run],
     abortRun: async () => { calls.push("abort"); }, getRun: async () => ({ ...run, status: "ABORTED" }),
@@ -307,6 +314,26 @@ await check("hosted_controller_ambiguous_post_never_retries_and_aborts_candidate
   };
   await assert.rejects(() => executeHostedRunPlan(plan, api, { sourceCheck: async () => ({ valid: true, sourceManifestSha256: plan.sourceManifestSha256 }) }), /run_start_ambiguous_aborted_no_retry/);
   assert.equal(starts, 1); assert.deepEqual(calls, ["reconcileMarker", "abort"]);
+});
+
+await check("hosted_controller_reports_sanitized_actor_create_failure_context", async () => {
+  const plan = await createHostedRunPlan({ sourceRoot: resolve(here, "..") });
+  const failure = new Error("apify_http_request_failed");
+  failure.diagnostic = { kind: "http_error", status: 400, apifyErrorType: "invalid-request", requestId: "request_123", requestTimestamp: "2026-10-01T00:00:00.000Z", endpoint: "acts" };
+  const calls = [];
+  await assert.rejects(() => executeHostedRunPlan(plan, {
+    createPrivateActor: async () => { calls.push("create"); throw failure; },
+    getVersion: async () => { calls.push("version"); },
+    buildVersion: async () => {}, waitForBuild: async () => {}, getActor: async () => {}, startRun: async () => {},
+    getRun: async () => {}, findRunsSince: async () => [], getRunInput: async () => {}, putRunGate: async () => {},
+    getRunGate: async () => {}, abortRun: async () => {},
+  }, { sourceCheck: async () => ({ valid: true, sourceManifestSha256: plan.sourceManifestSha256 }) }), (error) => {
+    assert.equal(error.message, "actor_create_failed");
+    assert.deepEqual(error.diagnostic, { stage: "actor_create", ...failure.diagnostic });
+    assert.equal(JSON.stringify(error).includes("apify_http_request_failed"), false);
+    return true;
+  });
+  assert.deepEqual(calls, ["create"]);
 });
 
 await check("source_snapshot_byte_equality_and_gate_before_api", async () => {
@@ -319,16 +346,19 @@ await check("source_snapshot_byte_equality_and_gate_before_api", async () => {
   assert.deepEqual(calls, []);
 });
 
-await check("apify_cli_adapter_uses_stdin_and_allowlisted_results", async () => {
+await check("apify_cli_adapter_create_payload_includes_reviewed_version_and_supported_permission_fields", async () => {
   const calls = [];
   const adapter = await createApifyCliAdapter({ commandPath: "fixture-apify-cli", execute: async (command, args, input) => {
     calls.push({ command, args, input });
     return JSON.stringify({ data: { id: "actor_12345678", isPublic: false, actorPermissionLevel: "LIMITED_PERMISSIONS", token: "must-not-escape" } });
   } });
-  const actor = await adapter.createPrivateActor({ name: "test" });
+  const version = { versionNumber: "10.0", sourceType: "SOURCE_FILES", sourceFiles: [{ name: "src/main.js", format: "TEXT", content: "export {};" }] };
+  const actorSettings = { name: "test", isPublic: false, versions: [version], defaultRunOptions: { build: "10.0", memoryMbytes: 256, timeoutSecs: 900, restartOnError: false, forcePermissionLevel: "LIMITED_PERMISSIONS" } };
+  const actor = await adapter.createPrivateActor(actorSettings);
   assert.deepEqual(actor, { id: "actor_12345678", isPublic: false, actorPermissionLevel: "LIMITED_PERMISSIONS" });
   assert.deepEqual(calls[0].args, ["api", "POST", "acts", "-d", "-"]);
-  assert.deepEqual(JSON.parse(calls[0].input), { name: "test" });
+  assert.deepEqual(JSON.parse(calls[0].input), actorSettings);
+  assert.equal(Object.hasOwn(JSON.parse(calls[0].input), "actorPermissionLevel"), false);
   assert.equal(JSON.stringify(actor).includes("must-not-escape"), false);
 });
 await check("apify_cli_adapter_passes_run_input_and_gate_record_endpoints", async () => {
@@ -378,13 +408,29 @@ await check("apify_process_and_http_diagnostics_are_sanitized", async () => {
   const child = new FailedChild();
   const failed = runApifyCli("fixture", [], undefined, { spawnProcess: () => child });
   child.stdin.once("finish", () => {
-    child.stderr.end('HTTP 404 Not Found {"type":"NotFound","token":"credential-sentinel"}');
+    child.stderr.end('HTTP 404 Not Found {"error":{"type":"NotFound","message":"private response"},"token":"credential-sentinel"}');
     setTimeout(() => child.emit("close", 1), 5);
   });
   await assert.rejects(failed, (error) => {
-    assert.deepEqual(error.diagnostic, { kind: "http_error", status: 404 });
+    assert.deepEqual(error.diagnostic, { kind: "http_error", status: 404, apifyErrorType: "NotFound" });
     assert.equal(error.message, "apify_http_request_failed");
     assert.equal(JSON.stringify(error).includes("credential-sentinel"), false);
+    return true;
+  });
+});
+
+await check("apify_error_metadata_is_allowlisted_and_sanitized", async () => {
+  class FailedChild extends EventEmitter { constructor() { super(); this.stdin = new PassThrough(); this.stdout = new PassThrough(); this.stderr = new PassThrough(); } kill() {} }
+  const child = new FailedChild();
+  const failed = runApifyCli("fixture", [], undefined, { spawnProcess: () => child });
+  child.stdin.once("finish", () => {
+    child.stderr.end('HTTP 400 Bad Request {"error":{"type":"invalid-request","message":"APIFY_TOKEN=credential-sentinel"},"requestId":"request_123","timestamp":"2026-10-01T00:00:00.000Z"}');
+    setTimeout(() => child.emit("close", 1), 5);
+  });
+  await assert.rejects(failed, (error) => {
+    assert.deepEqual(error.diagnostic, { kind: "http_error", status: 400, apifyErrorType: "invalid-request", requestId: "request_123", apifyTimestamp: "2026-10-01T00:00:00.000Z" });
+    assert.equal(JSON.stringify(error).includes("credential-sentinel"), false);
+    assert.equal(JSON.stringify(error).includes("message"), false);
     return true;
   });
 });
@@ -396,7 +442,7 @@ await check("apify_timeout_waits_for_child_close_before_settling", async () => {
   assert.ok(Date.now() - startedAt >= 15, "timeout settled before the child close event");
 });
 
-assert.equal(checks.length, 31);
+assert.equal(checks.length, 33);
 const elapsedMs = Date.now() - started;
 assert.ok(elapsedMs <= 90000, "preflight exceeded 90 seconds");
 clearInterval(rssSampler);
@@ -409,7 +455,7 @@ const sourceManifestSha256 = sourcePlan.sourceManifestSha256;
 const lockSha256 = createHash("sha256").update(await readFile(join(here, "../package-lock.json"))).digest("hex");
 const report = {
   schemaVersion: "issue22-iteration10-offline-preflight-v1", status: "passed", nodeVersion: process.version,
-  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 31,
+  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 33,
   completedCheckCount: checks.length, totalElapsedMs: elapsedMs, totalDeadlineMs: 90000,
   configured: { ...LIMITS, networkRetries: NETWORK_RETRIES, runtimeImage: "apify/actor-node:20", hostedRunStarted: false },
   packageLockSha256: lockSha256, sourceManifestSha256,

@@ -4,9 +4,9 @@
   "nodeVersion": "v20.19.0",
   "readabilityVersion": "0.6.0",
   "domAdapter": "linkedom@0.18.13",
-  "plannedCheckCount": 31,
-  "completedCheckCount": 31,
-  "totalElapsedMs": 1608,
+  "plannedCheckCount": 33,
+  "completedCheckCount": 33,
+  "totalElapsedMs": 1638,
   "totalDeadlineMs": 90000,
   "configured": {
     "timeoutMs": 10000,
@@ -26,8 +26,8 @@
     "hostedRunStarted": false
   },
   "packageLockSha256": "4598514fd8de26018a8a4253d65f9ac1927914ebca851a81c47fc17d3b8868c2",
-  "sourceManifestSha256": "e7f3f073d467b086ed5e34de7b4eb340382fea3b97e186362ce6e060872d52ad",
-  "peakRssBytes": 100294656,
+  "sourceManifestSha256": "4079bd158d7101a1c48554b08116936e221eb8175d7368e2a470a55d54d5fdd1",
+  "peakRssBytes": 100229120,
   "networkProbeAttempts": 0,
   "aggregateSinkChecks": {
     "completeWrites": 1,
@@ -136,11 +136,15 @@
       "status": "passed"
     },
     {
+      "id": "hosted_controller_reports_sanitized_actor_create_failure_context",
+      "status": "passed"
+    },
+    {
       "id": "source_snapshot_byte_equality_and_gate_before_api",
       "status": "passed"
     },
     {
-      "id": "apify_cli_adapter_uses_stdin_and_allowlisted_results",
+      "id": "apify_cli_adapter_create_payload_includes_reviewed_version_and_supported_permission_fields",
       "status": "passed"
     },
     {
@@ -153,6 +157,10 @@
     },
     {
       "id": "apify_process_and_http_diagnostics_are_sanitized",
+      "status": "passed"
+    },
+    {
+      "id": "apify_error_metadata_is_allowlisted_and_sanitized",
       "status": "passed"
     },
     {

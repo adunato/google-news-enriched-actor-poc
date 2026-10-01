@@ -149,7 +149,7 @@ This option set is intentionally small and bounded to the current blocker.
 
 **Evidence that would refute it:** the same broad timeout pattern occurs despite explicit guards, or readable output remains too low to plausibly support #5's >=50% representative target.
 
-**Status:** Offline preflight passed on 2026-10-01; hosted evaluation remains gated on independent review and verification of the exact private-run settings.
+**Status:** Corrected offline preflight passed 33/33 checks on 2026-10-01 under Node 20.19.0. Read-only reconciliation found no exact-name Actor match among two listed own Actors. Hosted evaluation remains unstarted.
 
 ### H11 — #4 consent/session handling
 
@@ -159,11 +159,11 @@ This option set is intentionally small and bounded to the current blocker.
 
 ## 6. Current Iteration
 
-**Iteration:** 10 approved; offline preflight passed, hosted cohort not run
+**Iteration:** 10 approved; corrected offline preflight passed and exact-name read-only reconciliation found no Actor; hosted cohort not run
 **Selected option:** O1 — direct Mozilla Readability with explicit guards  
 **Hypothesis / approach:** H10  
-**Executor:** Offline preflight completed and passed 31/31 checks; hosted execution remains conditional on independent review and verification of every stated hosted gate
-**Owner approval:** Approved 2026-10-01 for the bounded Iteration 10 only. The revised candidate passed 31/31 offline checks; no hosted run has occurred.
+**Executor:** Corrected create payload and sanitized error metadata passed the 33-check Node 20 offline preflight; read-only exact-name reconciliation found no Actor; hosted execution remains conditional on independent review and verification of every stated hosted gate
+**Owner approval:** Approved 2026-10-01 for the bounded Iteration 10 only. No hosted run has occurred. Two create attempts failed before an Actor was observed. Official Create Actor documentation requires a source version in the initial POST, so the corrected plan includes the exact manifest source there, performs version readback before build, and eliminates the follow-up version PUT. The correction passed offline checks; read-only `GET acts?my=true&limit=100` listed two own Actors and found zero exact-name matches. This addresses an API contract mismatch; it is not evidence about Readability or publisher access.
 
 ### Why this iteration
 
@@ -171,7 +171,7 @@ The previous path was increasingly instrumenting Extractus rather than reassessi
 
 ### Experiment
 
-The revised offline preflight passed all 31 planned assertions on 2026-10-01 under Node 20.19.0 with `@mozilla/readability` 0.6.0 and `linkedom` 0.18.13. It made zero probe network attempts; aggregate sink checks recorded one complete write, zero partial writes and zero privacy-violation writes. The sanitized report records the configuration and dependency/source hashes. Alongside the existing parser, network, worker, aggregation and privacy checks, it validates runtime call ordering so probe execution follows Actor initialization, launch tuple validation and matching approval; delayed/missing/mismatched approval records; and controller run/build/options/input/privacy readbacks before writing `I10_GATE`, mismatch handling with no approval write and confirmed abort, ambiguous POST handling with no retry and confirmed abort, API endpoint/body wiring, and waiting for child process closure after termination. The launcher dry run confirmed that no Actor/build/run was started. No Apify API calls occurred during this offline-only update. This does not measure publisher extraction or hosted behavior.
+The corrected offline preflight passed 33/33 checks on 2026-10-01 under Node 20.19.0 with `@mozilla/readability` 0.6.0 and `linkedom` 0.18.13. In addition to the existing checks, it asserts the documented initial source version in the create body, supported permission configuration, no post-create version PUT, and allowlisted create-failure metadata. It made zero probe network attempts. The launcher dry run started no Actor/build/run. The read-only Actor lookup found zero exact-name matches among the two own Actors returned. Hosted publisher behavior remains unmeasured.
 
 Only if every preflight assertion passes and the exact stated hosted gates remain verified, execute at most one bounded O1 evaluation on a fresh representative cohort under the existing direct-HTTP, robots, DNS, privacy and hosted-resource controls. Define 100 cohort slots as 5 fixed queries × GB/US locales × the first 10 ranked results per query/locale. A slot is identified by its query, locale and rank. Deduplicate repeated stories across slots by parsing the original Google News URL, removing its fragment and serializing it with the URL parser (preserving query parameters); retain the first occurrence in query/locale/rank order and mark later occurrences as duplicate slots. Do not backfill a duplicate, missing result, inaccessible result or other shortfall with a later-ranked result or a new query. Report requested slots, returned candidates, duplicate slots, unique retained candidates and all subsequent eligibility/outcome counts separately. The primary denominator remains all 100 requested slots; the permitted successful 2xx HTML subset is a separate denominator for extraction yield. If fewer than 100 unique candidates remain, report a source/cohort shortfall and treat the result as non-decisive for extraction viability; do not classify missing/duplicate slots as extraction failures.
 

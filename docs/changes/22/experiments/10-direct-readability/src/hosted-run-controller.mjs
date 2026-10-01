@@ -47,16 +47,17 @@ export async function createHostedRunPlan({ sourceRoot, versionNumber = "10.0" }
   }
   const sourceManifestSha256 = hashSourceFiles(sourceFiles);
   const runOptions = { ...HOSTED_RUN_OPTIONS };
+  const version = { versionNumber, sourceType: "SOURCE_FILES", sourceFiles };
   return {
     actor: {
       name: "issue22-i10-readability-probe",
       title: "Issue 22 Iteration 10 Readability Probe",
       description: "Private disposable actor for the approved Issue 22 Iteration 10 technical spike.",
       isPublic: false,
-      actorPermissionLevel: "LIMITED_PERMISSIONS",
+      versions: [version],
       defaultRunOptions: { build: versionNumber, memoryMbytes: 256, timeoutSecs: 900, restartOnError: false, forcePermissionLevel: "LIMITED_PERMISSIONS" },
     },
-    version: { versionNumber, sourceType: "SOURCE_FILES", sourceFiles },
+    version,
     build: { versionNumber },
     run: { ...runOptions, build: null },
     sourceManifestSha256,
@@ -133,7 +134,7 @@ export async function executeHostedRunPlan(plan, api, { sourceCheck } = {}) {
     if (!continuity?.valid || continuity.sourceManifestSha256 !== plan.sourceManifestSha256) throw new Error("source_continuity_gate_failed");
   };
   await assertContinuity();
-  if (!api || typeof api.createPrivateActor !== "function" || typeof api.setVersionSource !== "function" ||
+  if (!api || typeof api.createPrivateActor !== "function" ||
     typeof api.getVersion !== "function" || typeof api.buildVersion !== "function" || typeof api.waitForBuild !== "function" || typeof api.getActor !== "function" ||
     typeof api.startRun !== "function" || typeof api.getRun !== "function" || typeof api.findRunsSince !== "function" ||
     typeof api.getRunInput !== "function" || typeof api.putRunGate !== "function" || typeof api.getRunGate !== "function" || typeof api.abortRun !== "function") {
@@ -141,11 +142,16 @@ export async function executeHostedRunPlan(plan, api, { sourceCheck } = {}) {
   }
 
   await assertContinuity();
-  const actor = await api.createPrivateActor(plan.actor);
+  let actor;
+  try { actor = await api.createPrivateActor(plan.actor); }
+  catch (cause) {
+    const error = new Error("actor_create_failed");
+    error.diagnostic = { stage: "actor_create", ...(cause?.diagnostic && typeof cause.diagnostic === "object" ? cause.diagnostic : {}) };
+    throw error;
+  }
   if (!actor?.id || !actorIsSafe(actor)) throw new Error("actor_privacy_or_permission_gate_failed");
 
   await assertContinuity();
-  await api.setVersionSource(actor.id, plan.version);
   const version = await api.getVersion(actor.id, plan.version.versionNumber);
   if (!versionMatches(version, plan)) throw new Error("version_source_snapshot_mismatch");
 
