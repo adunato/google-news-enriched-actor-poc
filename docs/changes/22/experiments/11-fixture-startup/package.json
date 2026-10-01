@@ -1,0 +1,16 @@
+{
+  "name": "issue22-h12-fixture-startup",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Issue #22 H12 local-only diagnostic. Runtime dependencies resolve from the repository lock and the I10 Readability extraction worker.",
+  "dependencies": {
+    "@mozilla/readability": "0.6.0",
+    "apify": "3.7.2",
+    "apify-client": "2.25.0",
+    "linkedom": "0.18.13"
+  },
+  "scripts": {
+    "preflight": "node src/run-local.mjs"
+  }
+}

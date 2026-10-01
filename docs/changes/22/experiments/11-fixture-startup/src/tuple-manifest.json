@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "issue22-h12-local-tuples-v1",
+  "state": "frozen",
+  "tuples": [
+    { "origin": "http://127.0.0.1:43821", "method": "GET", "path": "/v2/actor-runs/H12fixtureRun00000000000001", "phase": "sdk_init" },
+    { "origin": "http://127.0.0.1:43821", "method": "GET", "path": "/v2/key-value-stores/issue22-h12-local-store", "phase": "input_read" },
+    { "origin": "http://127.0.0.1:43821", "method": "GET", "path": "/v2/key-value-stores/issue22-h12-local-store/records/INPUT?attachment=*", "phase": "input_read" },
+    { "origin": "http://127.0.0.1:43821", "method": "GET", "path": "/v2/datasets/issue22-h12-local-store", "phase": "aggregate_write" },
+    { "origin": "http://127.0.0.1:43821", "method": "POST", "path": "/v2/datasets/issue22-h12-local-store/items", "phase": "aggregate_write" }
+  ]
+}

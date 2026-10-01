@@ -31,7 +31,10 @@ function articleBody(value, out = [], depth = 0) {
   return out;
 }
 
-post({ kind: "phase", phase: "worker_ready" });
+const h12GuardMarker = process.env.H12_REQUIRE_GUARD === "1"
+  ? globalThis.__ISSUE22_H12_GUARD__ === "issue22-h12-deny-external-v1"
+  : undefined;
+post({ kind: "phase", phase: "worker_ready", ...(process.env.H12_REQUIRE_GUARD === "1" ? { guardMarker: h12GuardMarker } : {}) });
 const started = performance.now();
 post({ kind: "phase", phase: "parse_started" });
 try {

@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "issue22-h12-local-result-v1",
+  "outcome": "fixture_complete",
+  "failureCode": "none",
+  "stages": [
+    "application_entry",
+    "loopback_stub_ready",
+    "guard_ready",
+    "parent_worker_guards_verified",
+    "sdk_initialized",
+    "fixture_input_accepted",
+    "fixture_extracted",
+    "aggregate_persisted"
+  ],
+  "aggregatePersisted": true,
+  "deterministicStoreId": "issue22-h12-local-store",
+  "guardMarker": true,
+  "guardGlobalMarker": true,
+  "tupleManifestState": "frozen",
+  "tupleManifestCount": 5,
+  "observedTupleCount": 5,
+  "observedTuples": [
+    {
+      "origin": "http://127.0.0.1:43821",
+      "method": "GET",
+      "path": "/v2/actor-runs/H12fixtureRun00000000000001",
+      "phase": "sdk_init"
+    },
+    {
+      "origin": "http://127.0.0.1:43821",
+      "method": "GET",
+      "path": "/v2/key-value-stores/issue22-h12-local-store",
+      "phase": "input_read"
+    },
+    {
+      "origin": "http://127.0.0.1:43821",
+      "method": "GET",
+      "path": "/v2/key-value-stores/issue22-h12-local-store/records/INPUT?attachment=*",
+      "phase": "input_read"
+    },
+    {
+      "origin": "http://127.0.0.1:43821",
+      "method": "GET",
+      "path": "/v2/datasets/issue22-h12-local-store",
+      "phase": "aggregate_write"
+    },
+    {
+      "origin": "http://127.0.0.1:43821",
+      "method": "POST",
+      "path": "/v2/datasets/issue22-h12-local-store/items",
+      "phase": "aggregate_write"
+    }
+  ],
+  "allowedSdkByPhase": {
+    "sdk_init": 1,
+    "input_read": 2,
+    "aggregate_write": 2,
+    "other": 0
+  },
+  "deniedApplication": 0,
+  "tupleMiss": 0,
+  "socketDenied": 0,
+  "socketHostClass": {
+    "missing": 0,
+    "loopback": 1,
+    "other": 0
+  },
+  "socketCallShape": {
+    "objectStubPort": 0,
+    "objectOtherPort": 0,
+    "objectNoPort": 1,
+    "numberStubPort": 0,
+    "numberOtherPort": 0,
+    "string": 0,
+    "function": 0,
+    "undefined": 0,
+    "other": 0
+  },
+  "socketOptionKeySet": {
+    "none": 1
+  },
+  "blockedApi": {
+    "fetch": 0,
+    "httpRequest": 0,
+    "httpGet": 0,
+    "httpsRequest": 0,
+    "httpsGet": 0,
+    "netConnect": 0,
+    "dns": 0,
+    "other": 0
+  },
+  "externalNetwork": "disabled-by-runner-and-guard",
+  "fixtureOnly": true,
+  "inputAllowlistVerified": true,
+  "eventWebSocketDisabled": true,
+  "runtimeImageDigest": "apify/actor-node@sha256:c475bc63b3e70488dfb574147d8e63e7f410480bb0a3ef5b7ccad54635299a63",
+  "parentNegativeApiCount": 15,
+  "workerNegativeApiCount": 42,
+  "parentDeniedByApi": {
+    "fetch": 1,
+    "httpRequest": 2,
+    "httpGet": 1,
+    "httpsRequest": 1,
+    "httpsGet": 1,
+    "netConnect": 4,
+    "dns": 5,
+    "other": 0
+  },
+  "workerDeniedByApi": {
+    "fetch": 1,
+    "httpRequest": 2,
+    "httpGet": 1,
+    "httpsRequest": 1,
+    "httpsGet": 1,
+    "netConnect": 4,
+    "dns": 32,
+    "other": 0
+  },
+  "parentAndWorkerDeniedAll": true,
+  "stubCallsDuringNegativeChecks": 0,
+  "aggregateWriteVerified": true,
+  "fixtureResult": {
+    "workerStatus": "complete",
+    "readabilityStatus": "success",
+    "wordCount": 26,
+    "outputCharCount": 186,
+    "workerGuardMarker": true
+  },
+  "importGraph": {
+    "reviewedModuleCount": 7,
+    "forbiddenApplicationImports": false,
+    "dynamicImports": false,
+    "nativeLoads": false,
+    "directUndiciAvailable": false,
+    "fixtureOnlyEntry": true,
+    "workerGuardMarkerCheck": true,
+    "runtimeVersions": {
+      "node": "v20.20.2",
+      "apify": "3.7.2",
+      "apifyClient": "2.25.0",
+      "readability": "0.6.0",
+      "linkedom": "0.18.13"
+    },
+    "runtimePinned": true,
+    "passed": true
+  }
+}

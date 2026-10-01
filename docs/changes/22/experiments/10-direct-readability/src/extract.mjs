@@ -1,6 +1,6 @@
 import { Worker } from "node:worker_threads";
 import { performance } from "node:perf_hooks";
-import { LIMITS } from "./network.mjs";
+import { LIMITS } from "./limits.mjs";
 
 const phases = ["worker_ready", "parse_started", "parse_complete"];
 const statuses = new Set(["complete", "dom_limit", "output_limit", "worker_error", "network_attempt"]);
@@ -9,13 +9,14 @@ function keysAre(value, keys) { return value && typeof value === "object" && !Ar
 export function extractBounded(html, url, { WorkerClass = Worker, deadlineMs = LIMITS.workerDeadlineMs, now = () => performance.now(), signal } = {}) {
   return new Promise((resolve) => {
     const start = now(), deadline = start + deadlineMs;
-    let worker, terminal = false, timer, nextPhase = 0, result = null;
+    let worker, terminal = false, timer, nextPhase = 0, result = null, guardMarker = false;
     const finish = async (status, value = null) => {
       if (terminal) return;
       terminal = true; clearTimeout(timer);
       signal?.removeEventListener("abort", onAbort);
       try { await worker?.terminate(); } catch { /* fixed outcome is already selected */ }
-      resolve(value ?? { status, elapsedMs: Math.max(0, Number((now() - start).toFixed(3))), domElements: 0, structuredStatus: "unavailable", structuredWords: 0, readabilityStatus: "unavailable", readabilityWords: 0, outputChars: 0 });
+      const outcome = value ?? { status, elapsedMs: Math.max(0, Number((now() - start).toFixed(3))), domElements: 0, structuredStatus: "unavailable", structuredWords: 0, readabilityStatus: "unavailable", readabilityWords: 0, outputChars: 0 };
+      resolve(process.env.H12_REQUIRE_GUARD === "1" ? { ...outcome, guardMarker } : outcome);
     };
     const onAbort = () => void finish("timeout");
     if (signal?.aborted) { void finish("timeout"); return; }
@@ -29,7 +30,13 @@ export function extractBounded(html, url, { WorkerClass = Worker, deadlineMs = L
       if (late()) return void finish("timeout");
       if (!m || typeof m !== "object" || Array.isArray(m)) return void finish("protocol_error");
       if (m.kind === "phase") {
-        if (!keysAre(m, m.phase === "parse_complete" ? ["kind", "phase", "durationMs"] : ["kind", "phase"]) || m.phase !== phases[nextPhase++]) return void finish("protocol_error");
+        const guardedStartup = process.env.H12_REQUIRE_GUARD === "1" && m.phase === "worker_ready";
+        const expectedKeys = m.phase === "parse_complete" ? ["kind", "phase", "durationMs"] : guardedStartup ? ["kind", "phase", "guardMarker"] : ["kind", "phase"];
+        if (!keysAre(m, expectedKeys) || m.phase !== phases[nextPhase++]) return void finish("protocol_error");
+        if (guardedStartup) {
+          if (m.guardMarker !== true) return void finish("worker_error");
+          guardMarker = true;
+        }
         if (m.phase === "parse_complete" && (!Number.isFinite(m.durationMs) || m.durationMs < 0 || m.durationMs >= deadlineMs)) return void finish("protocol_error");
         return;
       }
