@@ -51,11 +51,12 @@ The Spike must establish enough evidence to let downstream engineering know:
 - Local synthetic lifecycle work showed that extraction cost can rise sharply with input size/shape, but it did not explain the hosted 78/78 timeout pattern.
 - Iteration 9 phase-telemetry tooling passed its offline preflight, but no hosted Iteration 9 run occurred.
 - The Iteration 9 harness exercises Extractus, a structural extraction proxy and retries; it cannot be reused unchanged to evaluate the newly selected direct Readability option.
-- The owner approved the bounded Iteration 10 on 2026-10-01. Sanitized live validation diagnostics pinpointed `defaultRunOptions.build` as the rejected create field; the candidate omits it from creation while retaining concrete build pinning in later run options. The corrected offline preflight passed all 37 checks under Node 20.19.0, including controller-to-runtime approval, nonzero CLI stdout error sanitization, wrapper propagation and bounded diagnostic traversal. A safe authenticated POST to a root path absent from the complete official Apify OpenAPI schema returned `page-not-found`; read-only `GET acts?my=true&limit=100` reconciliation returned two own Actors and zero exact-name matches before and after. No hosted publisher cohort has run; no Actor, build or run was created.
+- The owner approved one bounded Iteration 10 on 2026-10-01. The corrected offline preflight passed 37/37 checks; sanitized API diagnostics corrected the create payload, and a read-only exact-name Actor reconciliation found zero matches before and after the probe. The sole authorized hosted run passed `I10_GATE` but exited 1 after 2.508 seconds, with no dataset items or aggregate. Its logs do not identify a stage or exception and do not establish whether Google/publisher traffic occurred. A local Node 20 diagnostic in a network-disabled `apify/actor-node:20` image also exited silently before `Actor.init()`, but exact Dockerfile dependency installation could not be completed offline. The root cause and image/dependency parity remain unknown; Iteration 10 provides no Readability or publisher evidence.
 
 ### Unresolved questions
 
-- Whether a simpler, directly controlled generic extraction path can meet #5's representative target in the Apify runtime.
+- Whether direct Readability can meet #5's representative target in the Apify runtime; Iteration 10 never reached a scored cohort.
+- Why the reviewed Actor failed early in the sole approved hosted run before aggregate output (stage unknown), and whether the failure can be localized safely with fixture-only inputs.
 - Whether #4's Google consent/interstitial behaviour can be handled within ordinary public access/session mechanics and the current POC boundary.
 - Which failure classes should cause row-level fail-soft behaviour versus an explicit Product/Architecture decision.
 
@@ -80,7 +81,7 @@ The Spike must establish enough evidence to let downstream engineering know:
 
 **Known limitation:** requires a DOM implementation in Node; structured article body is not guaranteed across publishers.
 
-**Status:** Priority 1 — selected for next evaluation.
+**Status:** Selected, not yet evaluated against publisher HTML. Iteration 10 ended inconclusively before the cohort; do not infer candidate failure or success.
 
 Sources:
 
@@ -133,7 +134,7 @@ Source:
 
 ### Prioritisation
 
-O1 is next because it removes the higher-level wrapper that has accumulated unexplained hosted failures while keeping the experiment inside the same HTTP-first POC boundary. O3 is retained as a credible alternative if O1 is insufficient. O4 does not currently justify experiment cost.
+O1 remains the selected extraction candidate because it removes the higher-level wrapper while staying within the HTTP-first POC boundary. Iteration 10's early failure with no stage evidence changes the immediate work: first localize startup with a fixture-only test of the complete entrypoint in a representative image. O3 is retained as a later alternative if O1 proves insufficient. O4 does not currently justify experiment cost.
 
 This option set is intentionally small and bounded to the current blocker.
 
@@ -149,7 +150,7 @@ This option set is intentionally small and bounded to the current blocker.
 
 **Evidence that would refute it:** the same broad timeout pattern occurs despite explicit guards, or readable output remains too low to plausibly support #5's >=50% representative target.
 
-**Status:** Corrected offline preflight passed 37/37 checks on 2026-10-01 under Node 20.19.0. Sanitized live validation diagnostics pinpointed `defaultRunOptions.build` as the rejected create field; the candidate omits it from create while later run options still pin the concrete build. The sanitized nonzero CLI API error path was also confirmed against an unregistered root route. Read-only `GET acts?my=true&limit=100` reconciliation returned two own Actors and zero exact-name matches before and after. Hosted evaluation remains unstarted.
+**Status:** Inconclusive. The sole authorized hosted Actor run passed `I10_GATE` but exited 1 in 2.508 seconds with zero dataset items; no aggregate or cohort result was produced. Logs provide no stage, exception or proof of whether Google/publisher traffic occurred. A network-disabled local Node 20 container diagnostic also exited silently before `Actor.init()`, but Dockerfile dependency-install parity was not established. Cause is unknown. The prior 37/37 offline preflight remains valid only for the checks it exercised; it did not predict or locate this early run failure. No unchanged rerun is authorized.
 
 ### H11 — #4 consent/session handling
 
@@ -157,69 +158,49 @@ This option set is intentionally small and bounded to the current blocker.
 
 **Status:** Proposed after the current publisher-content branch reaches its next checkpoint, unless #4 is explicitly prioritised first by the owner.
 
+### H12 — fixture-only full-entrypoint startup diagnosis for O1
+
+This is the hypothesis ID for the proposed **Iteration 11**. Existing H11 is the separate #4 Google consent/session question and is not a numbered experiment; no iteration is skipped.
+
+**Hypothesis:** A fixture-only execution of the complete Actor entrypoint in a representative Node 20/Apify image, with explicit fixed stage/error codes and no external inputs, can distinguish dependency/image/startup failure from live Google/publisher behaviour without retaining sensitive data.
+
+**Why this is next:** The approved I10 run failed early before producing any cohort aggregate, and its failing stage is unknown. Repeating the live cohort or running a live cohort first would spend authorization without resolving whether the Actor can initialize. The fixture-only path targets the earliest unobserved boundary and can establish whether a safe hosted run is technically meaningful.
+
+**Experiment:** Add bounded startup-stage instrumentation and a synthetic HTML fixture mode to the current O1 probe. Reject any input that is not an exact fixture-only mode before creating a network client or making a request. Emit only fixed stage identifiers, coarse allowlisted error codes and aggregate pass/fail; never emit fixture/article text, URL, exception text, secrets or row identifiers. Run the complete entrypoint locally in the exact locked dependencies and representative runtime image with networking disabled; verify initialization, fixture parse, aggregate sink and sanitized failure propagation. If every gate passes, request at most one private hosted fixture-only run under the same reviewed source manifest and runtime image. This requires a fresh owner approval after independent review; Iteration 10's one-run approval is exhausted.
+
+**Bounds and stops:** Fixture HTML only; reject mixed/live inputs before any network path. One private `LIMITED_PERMISSIONS` run maximum, 256 MiB, 180 seconds, $0.10 maximum charge, restart/retry disabled, aggregate/status-code-only output. Stop on failed local preflight, network-isolation failure, gate mismatch, raw-content/privacy risk, resource-bound failure or any need to change Product/Architecture constraints. Do not issue Google or publisher requests. The result can establish fixture/startup viability only and cannot unblock #4 or #5.
+
+**Status:** Proposed; not implemented, reviewed, approved or executed.
+
+**Ranked immediate options:** (1) H12 fixture-only full-entrypoint startup diagnosis (recommended); (2) return to the 100-slot live O1 cohort only after H12 succeeds and after separate owner approval; (3) unchanged hosted rerun (rejected because it repeats the same unlocalized candidate under exhausted one-run authorization); (4) local-only fixture preflight (insufficient to resolve target-image/hosted startup uncertainty).
+
 ## 6. Current Iteration
 
-**Iteration:** 10 approved; corrected offline preflight and bounded API diagnostic probe passed; exact-name read-only reconciliation found no Actor; hosted cohort not run
-**Selected option:** O1 — direct Mozilla Readability with explicit guards  
-**Hypothesis / approach:** H10  
-**Executor:** Corrected create payload and sanitized CLI API diagnostics passed the 37-check Node 20 offline preflight; the create request omits the field identified by live schema validation (`defaultRunOptions.build`) and later run options pin the concrete build. A bounded POST to an official-schema-absent route preserved `page-not-found`; read-only reconciliation returned two own Actors and no exact-name match before or after; hosted execution remains conditional on independent review and verification of every stated hosted gate.
-**Owner approval:** Approved 2026-10-01 for the bounded Iteration 10 only. No hosted run has occurred. Two create attempts failed before an Actor was observed. Sanitized validation diagnostics pinpointed `defaultRunOptions.build`; the corrected create request omits only this field, while later run options continue to pin and verify the concrete build. Official Create Actor documentation requires a source version in the initial POST, so the corrected plan includes the exact manifest source there, performs version readback before build, and eliminates the follow-up version PUT. The correction passed offline checks; read-only `GET acts?my=true&limit=100` returned two own Actors and zero exact-name matches. This addresses an API contract mismatch; it is not evidence about Readability or publisher access.
+**Iteration:** 10 completed inconclusively; sole authorized hosted run failed early before aggregate output; the failing stage is unknown.
+**Selected extraction option:** O1 (direct Mozilla Readability with explicit guards)
+**Hypothesis:** H10 was not tested against a publisher cohort; no conclusion about extraction viability is supported.
 
-### Why this iteration
+### Iteration 10 outcome
 
-The previous path was increasingly instrumenting Extractus rather than reassessing whether Extractus remained the right option. The viability checkpoint now shows that deeper Extractus-specific telemetry is lower information value than testing the simpler directly controlled option.
+The corrected offline preflight passed 37/37 checks under Node 20.19.0. One private hosted Actor run passed the `I10_GATE` but exited 1 after 2.508 seconds. It used Actor `Gng0hd54CzA43fLym`, build `AItbGMOLryzBEx22B` / `10.0.1`, source manifest `ce7a892574c378793531d84960c109ded031677f68cbb6d7f50df8067bda8841`, from reviewed commit `9c62b0c`. Peak memory was 12,562,432 bytes and cost was $0.0000849056. The dataset is empty; no aggregate was flushed. Logs contain no stage, exception or stack trace and do not prove whether Google or publisher traffic occurred. A network-disabled local Node 20 container diagnostic also exited silently before `Actor.init()`; the Dockerfile `npm ci` could not complete offline, so dependency/image parity is unknown. The cause is indeterminate. See `experiments/10-direct-readability/hosted-run-evidence.json` and `experiments/10-direct-readability/experiment.md`.
 
-### Experiment
+### Recommended next action: proposed Iteration 11 (H12)
 
-The corrected offline preflight passed 37/37 checks on 2026-10-01 under Node 20.19.0 with `@mozilla/readability` 0.6.0 and `linkedom` 0.18.13. In addition to the existing checks, it asserts the documented initial source version in the create body, omission of rejected create-time `defaultRunOptions.build`, concrete build pinning in run options, supported permission configuration, no post-create version PUT, and allowlisted create-failure metadata from CLI stdout/stderr JSON. Diagnostic parsing caps nested traversal, visited objects and accepted path length. It made zero publisher/probe network attempts. A separate authenticated API diagnostic sent benign JSON through CLI stdin to a deliberately unregistered root route; the complete official [Apify OpenAPI schema](https://docs.apify.com/api/openapi.json) lists no such route. The CLI exited nonzero and exposed only `page-not-found` (no HTTP status); the adapter classified this as `api_error` and retained only allowlisted metadata. Read-only `GET acts?my=true&limit=100` reconciliation returned two own Actors and zero exact-name matches before and after. The launcher dry run started no Actor/build/run. Hosted publisher behavior remains unmeasured.
+Build fixture-only instrumentation for the full entrypoint and diagnose startup under a representative Node 20/Apify image with all networking disabled. Use fixed startup stage IDs and allowlisted coarse error codes; never emit content, URLs, exception text, secrets or row identifiers. Reject any non-fixture or mixed/live input before opening a network path. Verify initialization, fixture parsing, aggregate sink and sanitized error propagation. If local checks pass and isolation is proven, prepare at most one private hosted fixture-only run.
 
-Only if every preflight assertion passes and the exact stated hosted gates remain verified, execute at most one bounded O1 evaluation on a fresh representative cohort under the existing direct-HTTP, robots, DNS, privacy and hosted-resource controls. Define 100 cohort slots as 5 fixed queries × GB/US locales × the first 10 ranked results per query/locale. A slot is identified by its query, locale and rank. Deduplicate repeated stories across slots by parsing the original Google News URL, removing its fragment and serializing it with the URL parser (preserving query parameters); retain the first occurrence in query/locale/rank order and mark later occurrences as duplicate slots. Do not backfill a duplicate, missing result, inaccessible result or other shortfall with a later-ranked result or a new query. Report requested slots, returned candidates, duplicate slots, unique retained candidates and all subsequent eligibility/outcome counts separately. The primary denominator remains all 100 requested slots; the permitted successful 2xx HTML subset is a separate denominator for extraction yield. If fewer than 100 unique candidates remain, report a source/cohort shortfall and treat the result as non-decisive for extraction viability; do not classify missing/duplicate slots as extraction failures.
+**Why this is next:** The live run failed before reaching a scored cohort, so first establish that the whole entrypoint starts safely in the target runtime. A live cohort now would not isolate the early failure or establish where execution stopped. An unchanged hosted rerun is rejected; Iteration 10's one-run approval is exhausted. A local-only fixture run cannot establish hosted startup viability.
 
-For each eligible row:
+**Operational bounds:** At most one private `LIMITED_PERMISSIONS` hosted fixture run, 256 MiB, 180 seconds, $0.10 maximum charge, restart and retry disabled, aggregate/status-code-only output. No Google or publisher requests. Stop on failed local preflight, network-isolation failure, gate mismatch, privacy/resource-bound failure, or need for a Product/Architecture change. The result can establish fixture/startup viability only; it does not unblock #4 or #5. Any hosted I11 run requires fresh owner approval after independent review.
 
-- inspect structured `ArticleBody`/JSON-LD and run direct Mozilla Readability against the same eligible HTML; record structured and Readability outcomes independently, including overlap;
-- define a qualifying Readability result as non-empty cleaned text with `fullTextStatus=success` and a reported `wordCount` equal to the whitespace-delimited word count of that cleaned text. Structured-only output is reported separately and does not count as Readability success;
-- apply a 512 KiB response-prefix cap, a cumulative 64 KiB structured-script cap, a 10,000 DOM-element cap and a 100,000-character output cap. Record truncation/guard outcomes; never represent truncated extraction as complete without recording that status;
-- retain only aggregate success/failure, timing, input-size/guard, access-eligibility, truncation, overlap and readable-text proxy evidence;
-- do not retain URL, title, HTML body, article text, cookies or exception text.
+**Prerequisite/blocker status:** I10 is complete and its one-run authorization is consumed. The startup root cause is unknown. The network-disabled diagnostic failed too, but full Dockerfile dependency installation was unavailable, so it does not establish image parity. Recovery: implement fixture-only startup-stage/error instrumentation and test the full entrypoint locally in the representative image with networking disabled. This is an ordinary Spike implementation prerequisite; no Product/Architecture decision is currently needed.
 
-Use zero retries (`attempt_count=1`) and preserve the five-second per-row worker deadline, five-redirect maximum, concurrency of four and 250 ms pacing. Apply a 780-second soft stop within the hosted 900-second run limit. The existing O2 evidence is contextual comparison evidence, not a controlled head-to-head baseline. Do not execute the deferred hosted Iteration 9 telemetry first.
+**Exact owner decision requested:** **Approve Iteration 11: fixture-only full-entrypoint startup diagnosis for O1, using the stated local preflight and at most one private hosted fixture run within 256 MiB, 180 seconds and $0.10, with no Google/publisher requests.** Approval authorizes only the bounded fixture experiment and its preflight; any hosted invocation still requires the preflight, independent review and exact run gates to pass. Redirect to the separate #4 access question if preferred.
 
-### Expected evidence
+**Consequence of approval:** implement H12 instrumentation/fixture mode in the experiment area, prove network isolation and local runtime preflight, request independent review, then execute at most one hosted fixture run only if all gates pass. Record sanitized stage/error evidence and reassess O1 viability.
 
-The run should report all of the following, with counts and denominators:
+**Consequence of non-approval or redirect:** H12 remains unrun; O1's target-runtime viability and the startup cause remain unknown, and #4/#5 stay blocked. If redirected, rank options for the newly selected #4 question before selecting an experiment.
 
-- requested slots (100), returned candidates, duplicate slots, unique retained candidates, source/cohort shortfall and rows with permitted 2xx HTML;
-- access failure versus extraction failure, including robots unavailable/disallowed, HTTP denial, non-HTML and other ineligible outcomes;
-- structured-data success versus Readability success and their overlap;
-- guarded rejection, truncation, timeout/error and non-empty qualifying output;
-- aggregate timings, peak memory, elapsed time and hosted cost needed to decide whether O1 remains viable.
-
-At least 50 qualifying unique rows out of all 100 requested slots is a positive initial signal only when the cohort has all 100 unique candidates; fewer than 100 unique candidates makes the result non-decisive for extraction viability regardless of extraction yield. With a complete cohort, fewer than 50 qualifying rows is a negative signal for this cohort, not by itself proof that #5 is infeasible. Neither outcome closes #22: #5's readable-quality threshold is not yet defined by this experiment, and #4 remains a separate unresolved boundary.
-
-### Operational bounds
-
-Use at most one private Apify run with `LIMITED_PERMISSIONS`, restart disabled, maximum charge $1, 256 MiB memory and a 900-second platform limit; stop new work at 780 seconds. Keep the five-second per-row worker deadline, five redirects, concurrency four, 250 ms pacing, zero retries and aggregate-only retention as stated above. Owner approval authorizes the bounded iteration, including the offline preflight, but a hosted run is permitted only after every preflight assertion passes and the stated hosted gates are verified. Approval does not waive these gates.
-
-### Stop conditions
-
-Stop before hosted execution if the offline compatibility preflight fails, if the probe would emit raw row-level output or article text, if retries cannot be disabled, or if the soft stop cannot be enforced. Stop the run at the $1, 256 MiB, 780-second soft-stop or 900-second platform bound, and stop before execution if the implementation would require browser rendering, residential proxies, paid external extraction APIs, publisher-specific rules, paywall bypass or another Product/Architecture boundary change. Any such failure invalidates this proposed experiment until corrected and re-approved; it must not be reported as an Iteration 10 result.
-
-### Decision-ready checkpoint
-
-**Recommended next action:** complete independent review of the frozen candidate, then verify the exact private Apify build and run settings; proceed to at most one hosted run only if all stated gates are verified.
-
-**Why this is next:** the option-viability checkpoint deprioritised further Extractus-specific telemetry. A small offline compatibility check first removes a deployment/API compatibility risk; the bounded hosted cohort then directly measures whether O1 can produce qualifying text in the target runtime while distinguishing access eligibility from extraction yield.
-
-**Prerequisite/blocker status:** owner approval was granted on 2026-10-01; the revised offline preflight passed all 37 assertions and the unregistered-route diagnostic probe returned sanitized `page-not-found`; read-only reconciliation found two own Actors and no exact-name match before and after. No hosted run has occurred and no Actor/build/run was created. The candidate still requires independent review, a committed reviewed HEAD supplied as the trust anchor, a clean worktree and verification of private visibility, `LIMITED_PERMISSIONS`, exact build, disabled restart, and the $1/256 MiB/900-second limits before hosted execution. A cohort with fewer than 100 unique candidates is a source/cohort shortfall and makes extraction viability non-decisive. The unresolved #5 quality threshold remains a material acceptance-definition gap; it does not prevent this limited viability experiment. Iteration 10 cannot resolve #4's consent/session boundary.
-
-**Owner decision:** **Approved on 2026-10-01:** one bounded Iteration 10 consisting of the specified offline compatibility/safety preflight, followed only if every preflight assertion passes and all stated hosted gates are verified by at most one private Apify cohort of 100 fixed query/locale/rank slots (5 queries × GB/US × first 10 ranked results), applying the specified dedupe and no-replacement policy, direct HTTP and extraction bounds, aggregate-only evidence and $1/256 MiB/900-second hosted cap. Approval does not waive any gate, authorize a hosted run after a failed preflight, authorize follow-on iterations, or close #22, #5 or #4.
-
-**Consequence of approval:** the bounded iteration is authorized and its offline preflight has passed. After independent review, if all hosted gates are verified, execute at most one hosted run and record aggregate evidence and result; if any gate fails, stop, return to this checkpoint with recovery options, and do not run hosted. Afterward update current understanding and recommend the next highest-value action.
-
-**Consequence of redirect:** a later owner redirect before execution supersedes this approval; otherwise proceed within the approved bounds. #22 remains open, O1 target-runtime viability remains unmeasured, and #4/#5 remain blocked on their unresolved evidence/decision paths.
-
-**Learning checkpoint:** The bounded API diagnostic exposed a reusable adapter lesson: Apify CLI can return a JSON API error on stdout without an HTTP status, so allowlisted `error.type` must survive separately from local process-exit classification. The experiment note retains the evidence; a portable cross-project learning record should be considered during the parent lifecycle review. No Actor, build, hosted run or publisher cohort has been executed.
+**Learning checkpoint:** An early hosted run failure with no stage evidence plus mocked/offline preflight was insufficient to localize the runtime failure. A portable cross-project learning is recorded in `docs/learnings/issue-22-hosted-startup-diagnostics.md`.
 
 ## 7. Experiment Log
 
@@ -296,6 +277,14 @@ The detailed experiment artifacts are preserved in their original directories. T
 
 **Current recommendation:** do not run hosted Iteration 9 telemetry before H10.
 
+### Iteration 10 — direct Mozilla Readability startup attempt
+
+**Option:** O1 direct Mozilla Readability with explicit guards
+**Environment/data:** corrected 37-check offline preflight; one approved private Apify Actor run; separate Node 20 network-disabled container diagnostic
+**Evidence:** `experiments/10-direct-readability/experiment.md` and `experiments/10-direct-readability/hosted-run-evidence.json`
+**Result:** Inconclusive. The hosted run passed `I10_GATE` but exited 1 in 2.508 seconds, produced no dataset item/aggregate, and logged no stage or exception. The local diagnostic also exited before `Actor.init()`, but exact dependency/image parity was not established. No evidence of Readability success/failure, publisher readability or Google/publisher request activity is available.
+**Learning:** Offline/mocked preflight did not localize the early target-runtime failure; hosted logs did not establish the failing stage. Test the full entrypoint in a representative runtime with fixture-only input, network isolation and explicit safe startup/error stages before another hosted experiment; see `docs/learnings/issue-22-hosted-startup-diagnostics.md`.
+
 ## 8. Supported Technical Specification
 
 ### Supported behaviour
@@ -363,6 +352,7 @@ Historical evidence is retained under:
 - `docs/changes/22/experiments/07-hosted-eligibility/`
 - `docs/changes/22/experiments/08-local-worker-lifecycle/`
 - `docs/changes/22/experiments/09-hosted-phase-telemetry/`
+- `docs/changes/22/experiments/10-direct-readability/`
 
 Experiment artifacts are excluded from automatic Prettier rewriting so their retained byte-level evidence and recorded hashes are not changed merely to satisfy repository formatting.
 
@@ -370,4 +360,4 @@ Experiment artifacts are excluded from automatic Prettier rewriting so their ret
 
 **Spike state:** Open  
 **Rationale:** the bounded #4/#5 technical question remains unresolved.  
-**Required next action:** independently review the offline-passing Iteration 10 candidate and verify hosted run gates before any hosted execution.
+**Required next action:** owner checkpoint for proposed Iteration 11 (H12 fixture-only full-entrypoint startup diagnosis); do not repeat the live cohort without fresh approval.

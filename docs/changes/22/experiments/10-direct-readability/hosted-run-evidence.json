@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "issue22-iteration10-hosted-run-evidence-v1",
+  "iteration": 10,
+  "result": "inconclusive",
+  "authorization": "one approved hosted run; authorization exhausted",
+  "actorId": "Gng0hd54CzA43fLym",
+  "runId": "Ci8jcmvbfDcoa3ToG",
+  "buildId": "AItbGMOLryzBEx22B",
+  "buildNumber": "10.0.1",
+  "sourceReviewedCommit": "9c62b0c",
+  "sourceManifestSha256": "ce7a892574c378793531d84960c109ded031677f68cbb6d7f50df8067bda8841",
+  "preRunGate": "I10_GATE passed",
+  "exitCode": 1,
+  "elapsedSeconds": 2.508,
+  "peakMemoryBytes": 12562432,
+  "reportedCostUsd": 0.0000849056,
+  "datasetItemCount": 0,
+  "aggregateFlushed": false,
+  "hostedLogEvidence": {
+    "stageMarkerPresent": false,
+    "exceptionOrStackPresent": false,
+    "provesGoogleOrPublisherTraffic": false,
+    "trafficMayHaveOccurred": "unknown"
+  },
+  "localDiagnostic": {
+    "runtime": "Node 20 in apify/actor-node:20",
+    "imageDigestPrefix": "sha256:c475bc63",
+    "network": "disabled",
+    "hostedEnvironmentVariables": "absent",
+    "exitCode": 1,
+    "failurePoint": "before Actor.init()",
+    "visibleError": false,
+    "exactDockerfileNpmCiCompleted": false,
+    "dependencyAndImageParityEstablished": false,
+    "externalRequests": 0
+  },
+  "interpretation": "No Readability, publisher-access, Google-access, or cohort result. Root cause indeterminate. The local diagnostic is non-parity evidence and does not establish the hosted failure cause.",
+  "privacy": "No URLs, titles, row identifiers, response bodies, article text, credentials, or exception text retained."
+}
