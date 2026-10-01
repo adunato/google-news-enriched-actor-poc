@@ -55,7 +55,18 @@ function classifyPath(url) {
   return "other_path";
 }
 
-function result({ present, classification, schemeClass, hostClass, portClass, pathClass, hasUserInfo, hasQuery, hasFragment, runtime }) {
+function result({
+  present,
+  classification,
+  schemeClass = null,
+  hostClass = null,
+  portClass = null,
+  pathClass = null,
+  hasUserInfo = false,
+  hasQuery = false,
+  hasFragment = false,
+  runtime,
+}) {
   return Object.freeze({
     schemaVersion: "issue22-h15-origin-classifier-v1",
     startupMarker: "h15_origin_classifier_complete",

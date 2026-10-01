@@ -15,6 +15,22 @@ host class, effective port class, and path class without retaining or printing
 the host, address, port number, URL path, query, fragment, or user information.
 It also reports the `APIFY_IS_AT_HOME` signal separately.
 
+Every input path emits the same 16 keys in the same order. Fields unavailable
+for missing, malformed, or oversized values are explicit `null` values;
+boolean indicators remain `false`. This keeps downstream evidence parsing
+stable without filling absent details with guessed values.
+
+| `classification` | Supported inference | Not established |
+| --- | --- | --- |
+| `missing`, `empty`, `malformed`, `too_long`, `invalid_type` | The variable is unavailable or cannot be classified in its supplied form. | Any origin or source. |
+| `documented_public_apify_api_shape` | The URL shape matches HTTPS `api.apify.com` at the root or `/v2` path. | Who supplied the value or whether a request would succeed. |
+| `private_origin_in_apify_runtime_unverified` | A private, loopback, link-local, or similar host shape coincides with `APIFY_IS_AT_HOME=1`. | That the origin is an official platform service rather than an override. |
+| `private_origin_outside_or_unknown_runtime_unverified` | A private-like host shape without a positive Apify runtime signal. | Origin ownership or trust. |
+| `other_apify_domain_unverified`, `public_or_other_origin_unverified`, `unsupported_scheme`, `authority_or_suffix_present` | Only the named shape category and separate scheme/host/path/boolean flags. | Origin provenance, safety, or authorization for network access. |
+
+All host/path/port details are reduced to fixed categories. Query, fragment,
+and userinfo contents are never emitted.
+
 These fields classify value shape. A private address observed in an Apify
 runtime is labelled `private_origin_in_apify_runtime_unverified`; that does not
 prove the address is an official platform service or establish where the value
@@ -37,7 +53,8 @@ node tools/hosted-launcher.mjs --prepare
 
 The tests use synthetic values and a loopback listener sentinel. The sentinel
 must receive zero connections. No hosted build or run is part of local
-preflight.
+preflight. H15 hosted run count across builds: **0** (no hosted build or run
+has been started for this diagnostic).
 
 ## Future hosted run gate
 

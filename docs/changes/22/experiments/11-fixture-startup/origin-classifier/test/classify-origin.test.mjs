@@ -9,6 +9,10 @@ import { classifyApiBaseUrl } from "../src/classify-origin.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "..");
+const outputKeys = [
+  "schemaVersion", "startupMarker", "outcome", "baseUrlPresent", "classification", "schemeClass", "hostClass", "portClass", "pathClass",
+  "hasUserInfo", "hasQuery", "hasFragment", "runtimeContext", "provenance", "networkDispatch", "sdkImported",
+];
 
 function summary(raw, isAtHome) {
   return classifyApiBaseUrl(raw, isAtHome);
@@ -20,6 +24,34 @@ test("missing and malformed values produce fixed categories without raw values",
   assert.equal(summary(" https://api.apify.com").classification, "malformed");
   assert.equal(summary("not a URL").classification, "malformed");
   assert.equal(summary("x".repeat(2049)).classification, "too_long");
+});
+
+test("all input classes emit the identical ordered key set and stable value types", () => {
+  const samples = [
+    summary(undefined),
+    summary("not a URL"),
+    summary("x".repeat(2049)),
+    summary("https://api.apify.com/v2"),
+    summary("http://10.12.4.8:3000/v2", "1"),
+  ];
+  const expectedTypes = ["string", "string", "string", "boolean", "string", "nullable-string", "nullable-string", "nullable-string", "nullable-string",
+    "boolean", "boolean", "boolean", "string", "string", "string", "boolean"];
+  for (let sampleIndex = 0; sampleIndex < samples.length; sampleIndex++) {
+    const sample = samples[sampleIndex];
+    assert.deepEqual(Object.keys(sample), outputKeys);
+    assert.equal(Object.values(sample).some((value) => value === undefined), false);
+    const actualTypes = Object.values(sample).map((value) => value === null ? "nullable-string" : typeof value);
+    for (let i = 0; i < actualTypes.length; i++) {
+      if (expectedTypes[i] === "nullable-string") assert.ok(actualTypes[i] === "nullable-string" || actualTypes[i] === "string");
+      else assert.equal(actualTypes[i], expectedTypes[i]);
+    }
+    if (sampleIndex < 3) {
+      for (const key of ["schemeClass", "hostClass", "portClass", "pathClass"]) assert.equal(sample[key], null);
+      for (const key of ["hasUserInfo", "hasQuery", "hasFragment"]) assert.equal(sample[key], false);
+    } else {
+      for (const key of ["schemeClass", "hostClass", "portClass", "pathClass"]) assert.equal(typeof sample[key], "string");
+    }
+  }
 });
 
 test("documented public API and ordinary URL shapes are categorized without retaining host or path", () => {
