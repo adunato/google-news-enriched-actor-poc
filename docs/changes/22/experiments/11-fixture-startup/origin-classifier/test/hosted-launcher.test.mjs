@@ -4,7 +4,9 @@ import {
   launchWithApi,
   loadBundle,
   makeRunQuery,
+  parseArgs,
   prepareWithApi,
+  runLauncher,
   validateApproval,
 } from "../tools/hosted-launcher.mjs";
 
@@ -97,4 +99,69 @@ test("one-run gate rejects bad tags, source, and prior build run before its only
     await assert.rejects(() => launchWithApi({ api: candidate.api, bundle, actorId, buildId, buildNumber }), pattern);
     assert.equal(candidate.calls.includes("start-run"), false);
   }
+});
+
+test("CLI parser rejects missing, duplicate, and malformed option values", () => {
+  assert.deepEqual(parseArgs(["--prepare", "--execute"]), { execute: true, prepare: true });
+  assert.throws(() => parseArgs(["--reviewed-commit", "--execute"]), /argument_value_invalid/u);
+  assert.throws(() => parseArgs(["--execute", "--execute"]), /argument_invalid/u);
+  assert.throws(() => parseArgs(["--actor-id", "actor", "--actor-id", "other"]), /argument_invalid/u);
+  assert.throws(() => parseArgs(["--unknown"]), /argument_invalid/u);
+});
+
+test("CLI dispatch keeps default and prepare dry-runs offline", async () => {
+  const bundle = await loadBundle({ git: false });
+  let apiFactoryCalls = 0;
+  const outputs = [];
+  const makeApi = () => { apiFactoryCalls++; throw new Error("unexpected_api_transport"); };
+  await runLauncher(parseArgs([]), { bundle, makeApi, write: (value) => outputs.push(value) });
+  await runLauncher(parseArgs(["--prepare"]), { bundle, makeApi, write: (value) => outputs.push(value) });
+  assert.equal(apiFactoryCalls, 0);
+  assert.equal(outputs.length, 2);
+  assert.equal(outputs[0].remoteMutation, false);
+  assert.equal(outputs[1].remoteMutation, false);
+});
+
+test("CLI prepare-execute reaches only the private Actor/build path after exact review gates", async () => {
+  const initialBundle = await loadBundle({ git: false });
+  const commit = "a".repeat(40);
+  const bundle = { ...initialBundle, headCommit: commit, treeClean: true };
+  const { api, calls } = await mockApi(bundle);
+  let apiFactoryCalls = 0;
+  const outputs = [];
+  await runLauncher(parseArgs(["--prepare", "--execute", "--reviewed-commit", commit, "--reviewed-source-sha256", bundle.sourceSha256]), {
+    bundle,
+    makeApi: () => { apiFactoryCalls++; return api; },
+    write: (value) => outputs.push(value),
+  });
+  assert.equal(apiFactoryCalls, 1);
+  assert.equal(outputs[0].outcome, "private_actor_and_exact_build_prepared_no_run");
+  assert.deepEqual(calls.filter((call) => ["create-actor", "create-build", "start-run"].includes(call)), ["create-actor", "create-build"]);
+});
+
+test("CLI invalid modes and review gates fail before API transport", async () => {
+  const initialBundle = await loadBundle({ git: false });
+  const commit = "a".repeat(40);
+  const bundle = { ...initialBundle, headCommit: commit, treeClean: true };
+  let apiFactoryCalls = 0;
+  const makeApi = () => { apiFactoryCalls++; throw new Error("unexpected_api_transport"); };
+  const invalidModes = [
+    ["--prepare", "--execute", "--actor-id", actorId],
+    ["--execute"],
+    ["--actor-id", actorId],
+  ];
+  for (const argv of invalidModes) {
+    await assert.rejects(() => runLauncher(parseArgs(argv), { bundle, makeApi, write() {} }));
+  }
+  const approved = ["--prepare", "--execute", "--reviewed-commit", commit, "--reviewed-source-sha256", bundle.sourceSha256];
+  assert.throws(() => parseArgs(approved.slice(0, -1)), /argument_value_invalid/u);
+  await assert.rejects(() => runLauncher(parseArgs(approved), {
+    bundle: { ...bundle, treeClean: false }, makeApi, write() {},
+  }), /worktree_dirty/u);
+  const runTarget = ["--actor-id", actorId, "--build-id", buildId, "--build-number", buildNumber, "--execute"];
+  await assert.rejects(() => runLauncher(parseArgs(runTarget), { bundle, makeApi, write() {} }), /reviewed_commit_mismatch/u);
+  await assert.rejects(() => runLauncher(parseArgs([...runTarget, "--reviewed-commit", commit, "--reviewed-source-sha256", "0".repeat(64)]), {
+    bundle, makeApi, write() {},
+  }), /reviewed_source_digest_mismatch/u);
+  assert.equal(apiFactoryCalls, 0);
 });

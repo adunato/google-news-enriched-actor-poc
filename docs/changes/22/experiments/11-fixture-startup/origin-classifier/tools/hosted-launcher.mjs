@@ -288,48 +288,65 @@ export function makeCliApi() {
   };
 }
 
-function parseArgs(args) {
+export function parseArgs(args) {
   const parsed = { execute: false, prepare: false };
+  const seen = new Set();
   for (let i = 0; i < args.length; i++) {
-    if (args[i] === "--execute") parsed.execute = true;
-    else if (args[i] === "--prepare") parsed.prepare = true;
-    else if (args[i] === "--reviewed-commit") parsed.reviewedCommit = args[++i];
-    else if (args[i] === "--reviewed-source-sha256") parsed.reviewedSourceSha256 = args[++i];
-    else if (args[i] === "--actor-id") parsed.actorId = args[++i];
-    else if (args[i] === "--build-id") parsed.buildId = args[++i];
-    else if (args[i] === "--build-number") parsed.buildNumber = args[++i];
-    else throw new Error("launcher_argument_invalid");
+    const flag = args[i];
+    if (!["--execute", "--prepare", "--reviewed-commit", "--reviewed-source-sha256", "--actor-id", "--build-id", "--build-number"].includes(flag) || seen.has(flag)) {
+      throw new Error("launcher_argument_invalid");
+    }
+    seen.add(flag);
+    if (flag === "--execute") parsed.execute = true;
+    else if (flag === "--prepare") parsed.prepare = true;
+    else {
+      const value = args[++i];
+      if (typeof value !== "string" || value.length === 0 || value.startsWith("--")) throw new Error("launcher_argument_value_invalid");
+      const property = {
+        "--reviewed-commit": "reviewedCommit",
+        "--reviewed-source-sha256": "reviewedSourceSha256",
+        "--actor-id": "actorId",
+        "--build-id": "buildId",
+        "--build-number": "buildNumber",
+      }[flag];
+      parsed[property] = value;
+    }
   }
   return parsed;
 }
 
-async function main() {
-  const args = parseArgs(process.argv.slice(2));
-  const bundle = await loadBundle();
-  if (args.prepare && args.execute) throw new Error("prepare_and_run_modes_are_separate");
+export async function runLauncher(args, { bundle, makeApi = makeCliApi, write = (value) => process.stdout.write(`${JSON.stringify(value, null, 2)}\n`) } = {}) {
+  if (!bundle) bundle = await loadBundle();
   if (args.prepare) {
     if (args.actorId !== undefined || args.buildId !== undefined || args.buildNumber !== undefined) throw new Error("prepare_and_run_modes_are_separate");
     if (!args.execute) {
-      process.stdout.write(`${JSON.stringify(preparePlan(bundle), null, 2)}\n`);
+      write(preparePlan(bundle));
       return;
     }
     const approval = validateApproval({ ...args, headCommit: bundle.headCommit, sourceSha256: bundle.sourceSha256, treeClean: bundle.treeClean });
     if (!approval.approved) throw new Error("prepare_not_approved");
-    process.stdout.write(`${JSON.stringify(await prepareWithApi({ api: makeCliApi(), bundle }), null, 2)}\n`);
+    write(await prepareWithApi({ api: makeApi(), bundle }));
     return;
   }
   if (args.execute) {
     validateTarget(args);
     const approval = validateApproval({ ...args, headCommit: bundle.headCommit, sourceSha256: bundle.sourceSha256, treeClean: bundle.treeClean });
     if (!approval.approved) throw new Error("execution_not_approved");
-    process.stdout.write(`${JSON.stringify(await launchWithApi({ api: makeCliApi(), bundle, ...args }), null, 2)}\n`);
+    write(await launchWithApi({ api: makeApi(), bundle, ...args }));
     return;
   }
-  process.stdout.write(`${JSON.stringify({ outcome: "dry_run_only", remoteMutation: false, sourceSha256: bundle.sourceSha256,
+  if (args.actorId !== undefined || args.buildId !== undefined || args.buildNumber !== undefined || args.reviewedCommit !== undefined || args.reviewedSourceSha256 !== undefined) {
+    throw new Error("launcher_mode_invalid");
+  }
+  write({ outcome: "dry_run_only", remoteMutation: false, sourceSha256: bundle.sourceSha256,
     sourceFileCount: bundle.files.length, sourceFiles: bundle.files.map(({ name, content }) => ({ name, sha256: hash(content) })),
     reviewedHeadCommit: bundle.headCommit, packageClean: bundle.treeClean, packageLockSha256: hash(bundle.files.find((f) => f.name === "package-lock.json").content),
     baseImageDigest: bundle.baseDigest, buildTag: bundle.tag, actorName, actorVersion, input,
-    runQuery: { ...makeRunQuery("1.0.1"), build: "<exact-build-number>" } }, null, 2)}\n`);
+    runQuery: { ...makeRunQuery("1.0.1"), build: "<exact-build-number>" } });
+}
+
+async function main() {
+  await runLauncher(parseArgs(process.argv.slice(2)));
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
