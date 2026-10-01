@@ -20,6 +20,7 @@ import { assertHostedRunGate, inspectHostedRunGate } from "./runtime-gate.mjs";
 import { approvalRecordMatches, inspectLaunchTuple, waitForRunApproval } from "./run-approval.mjs";
 import { createHostedRunPlan, executeHostedRunPlan, hashSourceFiles, sourceSnapshotsEqual } from "./hosted-run-controller.mjs";
 import { createApifyCliAdapter, runApifyCli } from "./apify-cli-adapter.mjs";
+import { safeFailure } from "./launch-hosted-run.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const started = Date.now(), checks = [];
@@ -331,6 +332,10 @@ await check("hosted_controller_reports_sanitized_actor_create_failure_context", 
     assert.equal(error.message, "actor_create_failed");
     assert.deepEqual(error.diagnostic, { stage: "actor_create", ...failure.diagnostic });
     assert.equal(JSON.stringify(error).includes("apify_http_request_failed"), false);
+    assert.deepEqual(safeFailure(error), {
+      status: "failed", error: "actor_create_failed",
+      diagnostic: { stage: "actor_create", kind: "http_error", status: 400, apifyErrorType: "invalid-request", requestId: "request_123", requestTimestamp: "2026-10-01T00:00:00.000Z", endpoint: "acts" },
+    });
     return true;
   });
   assert.deepEqual(calls, ["create"]);
@@ -412,7 +417,7 @@ await check("apify_process_and_http_diagnostics_are_sanitized", async () => {
     setTimeout(() => child.emit("close", 1), 5);
   });
   await assert.rejects(failed, (error) => {
-    assert.deepEqual(error.diagnostic, { kind: "http_error", status: 404, apifyErrorType: "NotFound" });
+    assert.deepEqual(error.diagnostic, { kind: "http_error", status: 404, exitCode: 1, apifyErrorType: "NotFound" });
     assert.equal(error.message, "apify_http_request_failed");
     assert.equal(JSON.stringify(error).includes("credential-sentinel"), false);
     return true;
@@ -428,9 +433,53 @@ await check("apify_error_metadata_is_allowlisted_and_sanitized", async () => {
     setTimeout(() => child.emit("close", 1), 5);
   });
   await assert.rejects(failed, (error) => {
-    assert.deepEqual(error.diagnostic, { kind: "http_error", status: 400, apifyErrorType: "invalid-request", requestId: "request_123", apifyTimestamp: "2026-10-01T00:00:00.000Z" });
+    assert.deepEqual(error.diagnostic, { kind: "http_error", status: 400, exitCode: 1, apifyErrorType: "invalid-request", requestId: "request_123", apifyTimestamp: "2026-10-01T00:00:00.000Z" });
     assert.equal(JSON.stringify(error).includes("credential-sentinel"), false);
     assert.equal(JSON.stringify(error).includes("message"), false);
+    return true;
+  });
+});
+
+await check("apify_cli_nonzero_stdout_json_error_is_sanitized_and_survives_launch_formatting", async () => {
+  class FailedChild extends EventEmitter { constructor() { super(); this.stdin = new PassThrough(); this.stdout = new PassThrough(); this.stderr = new PassThrough(); } kill() {} }
+  const child = new FailedChild();
+  const failed = runApifyCli("fixture", [], "{\"safe\":true}", { spawnProcess: () => child });
+  child.stdin.once("finish", () => {
+    child.stdout.end(JSON.stringify({ statusCode: 400, error: { type: "invalid-request", code: "INVALID_INPUT", message: "private response APIFY_TOKEN=credential-sentinel" }, requestId: "request_456", timestamp: "2026-10-01T00:00:00.000Z" }));
+    child.stderr.end("private stderr APIFY_TOKEN=stderr-sentinel");
+    setTimeout(() => child.emit("close", 2, null), 5);
+  });
+  await assert.rejects(failed, (error) => {
+    assert.deepEqual(error.diagnostic, { kind: "http_error", status: 400, exitCode: 2, apifyErrorType: "invalid-request", apifyErrorCode: "INVALID_INPUT", requestId: "request_456", apifyTimestamp: "2026-10-01T00:00:00.000Z" });
+    assert.equal(error.message, "apify_http_request_failed");
+    assert.equal(JSON.stringify(error).includes("credential-sentinel"), false);
+    assert.equal(JSON.stringify(error).includes("private response"), false);
+    return true;
+  });
+
+  const api = await createApifyCliAdapter({ commandPath: "fixture", execute: async () => { const error = new Error("apify_http_request_failed"); error.diagnostic = { kind: "http_error", status: 400, exitCode: 2, apifyErrorType: "invalid-request", apifyErrorCode: "INVALID_INPUT", requestId: "request_456" }; throw error; } });
+  await assert.rejects(() => api.createPrivateActor({ name: "fixture" }), (error) => {
+    assert.equal(error.message, "apify_http_request_failed");
+    assert.equal(error.diagnostic.kind, "http_error");
+    assert.equal(error.diagnostic.status, 400);
+    assert.equal(error.diagnostic.apifyErrorCode, "INVALID_INPUT");
+    assert.equal(error.diagnostic.endpoint, "acts");
+    const formatted = safeFailure(Object.assign(new Error("actor_create_failed"), { diagnostic: { stage: "actor_create", ...error.diagnostic } }));
+    assert.equal(formatted.diagnostic.apifyErrorCode, "INVALID_INPUT");
+    assert.equal(formatted.diagnostic.endpoint, "acts");
+    return true;
+  });
+
+  const apiFailureChild = new FailedChild();
+  const apiFailure = runApifyCli("fixture", [], undefined, { spawnProcess: () => apiFailureChild });
+  apiFailureChild.stdin.once("finish", () => {
+    apiFailureChild.stdout.end(JSON.stringify({ error: { type: "page-not-found", code: "ROUTE_ABSENT", message: "discard this" }, token: "credential-sentinel" }));
+    setTimeout(() => apiFailureChild.emit("close", 1, null), 5);
+  });
+  await assert.rejects(apiFailure, (error) => {
+    assert.equal(error.message, "apify_api_error");
+    assert.deepEqual(error.diagnostic, { kind: "api_error", exitCode: 1, apifyErrorType: "page-not-found", apifyErrorCode: "ROUTE_ABSENT" });
+    assert.equal(JSON.stringify(error).includes("credential-sentinel"), false);
     return true;
   });
 });
@@ -442,7 +491,7 @@ await check("apify_timeout_waits_for_child_close_before_settling", async () => {
   assert.ok(Date.now() - startedAt >= 15, "timeout settled before the child close event");
 });
 
-assert.equal(checks.length, 33);
+assert.equal(checks.length, 34);
 const elapsedMs = Date.now() - started;
 assert.ok(elapsedMs <= 90000, "preflight exceeded 90 seconds");
 clearInterval(rssSampler);
@@ -455,7 +504,7 @@ const sourceManifestSha256 = sourcePlan.sourceManifestSha256;
 const lockSha256 = createHash("sha256").update(await readFile(join(here, "../package-lock.json"))).digest("hex");
 const report = {
   schemaVersion: "issue22-iteration10-offline-preflight-v1", status: "passed", nodeVersion: process.version,
-  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 33,
+  readabilityVersion: "0.6.0", domAdapter: "linkedom@0.18.13", plannedCheckCount: 34,
   completedCheckCount: checks.length, totalElapsedMs: elapsedMs, totalDeadlineMs: 90000,
   configured: { ...LIMITS, networkRetries: NETWORK_RETRIES, runtimeImage: "apify/actor-node:20", hostedRunStarted: false },
   packageLockSha256: lockSha256, sourceManifestSha256,

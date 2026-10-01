@@ -4,9 +4,9 @@
   "nodeVersion": "v20.19.0",
   "readabilityVersion": "0.6.0",
   "domAdapter": "linkedom@0.18.13",
-  "plannedCheckCount": 33,
-  "completedCheckCount": 33,
-  "totalElapsedMs": 1638,
+  "plannedCheckCount": 34,
+  "completedCheckCount": 34,
+  "totalElapsedMs": 1628,
   "totalDeadlineMs": 90000,
   "configured": {
     "timeoutMs": 10000,
@@ -26,8 +26,8 @@
     "hostedRunStarted": false
   },
   "packageLockSha256": "4598514fd8de26018a8a4253d65f9ac1927914ebca851a81c47fc17d3b8868c2",
-  "sourceManifestSha256": "4079bd158d7101a1c48554b08116936e221eb8175d7368e2a470a55d54d5fdd1",
-  "peakRssBytes": 100229120,
+  "sourceManifestSha256": "8b974fe21ec214d031fa10812437128dde6bb6a78680c44f84e5c00844875c18",
+  "peakRssBytes": 100208640,
   "networkProbeAttempts": 0,
   "aggregateSinkChecks": {
     "completeWrites": 1,
@@ -161,6 +161,10 @@
     },
     {
       "id": "apify_error_metadata_is_allowlisted_and_sanitized",
+      "status": "passed"
+    },
+    {
+      "id": "apify_cli_nonzero_stdout_json_error_is_sanitized_and_survives_launch_formatting",
       "status": "passed"
     },
     {

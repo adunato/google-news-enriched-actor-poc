@@ -10,7 +10,7 @@ const BUILD_TIMEOUT_MS = 12 * 60 * 1000;
 const POLL_MS = 3000;
 const PROCESS_CODES = new Set(["ENOENT", "EACCES", "EPERM", "ENOEXEC", "EINVAL", "EISDIR", "EFTYPE"]);
 
-async function defaultCommandPath() {
+export async function defaultCommandPath() {
   if (process.env.APIFY_CLI_PATH) return { command: process.env.APIFY_CLI_PATH, prefixArgs: [] };
   if (process.platform === "win32") {
     try {
@@ -30,27 +30,48 @@ function processError(code) {
   return error;
 }
 
-function safeErrorFields(stderr) {
-  const objectStart = stderr.indexOf("{");
-  if (objectStart < 0) return {};
-  let value;
-  try { value = JSON.parse(stderr.slice(objectStart)); } catch { return {}; }
-  const rawType = value?.type ?? value?.error?.type;
-  const safeType = typeof rawType === "string" && /^[a-z0-9-]{1,80}$/i.test(rawType) ? rawType : undefined;
-  const rawRequestId = value?.requestId ?? value?.request_id;
-  const requestId = typeof rawRequestId === "string" && /^[A-Za-z0-9._:-]{1,128}$/.test(rawRequestId) ? rawRequestId : undefined;
-  const rawTimestamp = value?.timestamp;
-  const timestamp = typeof rawTimestamp === "string" && Number.isFinite(Date.parse(rawTimestamp)) ? new Date(rawTimestamp).toISOString() : undefined;
-  return { ...(safeType ? { apifyErrorType: safeType } : {}), ...(requestId ? { requestId } : {}), ...(timestamp ? { apifyTimestamp: timestamp } : {}) };
+function parseErrorJson(text) {
+  const objectStart = text.indexOf("{");
+  if (objectStart < 0) return null;
+  try {
+    const value = JSON.parse(text.slice(objectStart));
+    return value && typeof value === "object" ? value : null;
+  } catch { return null; }
 }
 
-function cliExitError(exitCode, stderr) {
+function safeErrorFields(...outputs) {
+  const value = outputs.map(parseErrorJson).find(Boolean);
+  if (!value) return {};
+  const rawType = value?.type ?? value?.error?.type;
+  const safeType = typeof rawType === "string" && /^[a-z0-9-]{1,80}$/i.test(rawType) ? rawType : undefined;
+  const rawCode = value?.code ?? value?.error?.code;
+  const code = typeof rawCode === "string" && /^[a-z0-9._-]{1,80}$/i.test(rawCode) ? rawCode : undefined;
+  const rawRequestId = value?.requestId ?? value?.request_id;
+  const requestId = typeof rawRequestId === "string" && /^[A-Za-z0-9._:-]{1,128}$/.test(rawRequestId) ? rawRequestId : undefined;
+  const rawTimestamp = value?.timestamp ?? value?.error?.timestamp;
+  const timestamp = typeof rawTimestamp === "string" && Number.isFinite(Date.parse(rawTimestamp)) ? new Date(rawTimestamp).toISOString() : undefined;
+  return { ...(safeType ? { apifyErrorType: safeType } : {}), ...(code ? { apifyErrorCode: code } : {}), ...(requestId ? { requestId } : {}), ...(timestamp ? { apifyTimestamp: timestamp } : {}) };
+}
+
+function cliExitError(exitCode, signal, stdout, stderr) {
   const safeExitCode = Number.isInteger(exitCode) ? exitCode : null;
-  const statusMatch = /(?:HTTP(?:\/\d(?:\.\d)?)?\s+|status(?:Code)?["']?\s*[:=]\s*["']?)([1-5]\d\d)\b/i.exec(stderr);
-  const diagnostic = statusMatch
-    ? { kind: "http_error", status: Number(statusMatch[1]), ...safeErrorFields(stderr) }
-    : { kind: "cli_exit", exitCode: safeExitCode, ...safeErrorFields(stderr) };
-  const error = new Error(diagnostic.kind === "http_error" ? "apify_http_request_failed" : "apify_cli_exit_nonzero");
+  const jsonError = parseErrorJson(stdout) ?? parseErrorJson(stderr);
+  const rawStatus = jsonError?.statusCode ?? jsonError?.status_code ?? jsonError?.status ?? jsonError?.error?.statusCode ?? jsonError?.error?.status;
+  const textStatus = /(?:HTTP(?:\/\d(?:\.\d)?)?\s+|status(?:Code)?["']?\s*[:=]\s*["']?)([1-5]\d\d)\b/i.exec(stderr);
+  const status = Number.isInteger(rawStatus) && rawStatus >= 100 && rawStatus <= 599
+    ? rawStatus
+    : textStatus ? Number(textStatus[1]) : undefined;
+  const safeSignal = typeof signal === "string" && /^[A-Z0-9]{1,16}$/.test(signal) ? signal : undefined;
+  const fields = safeErrorFields(stdout, stderr);
+  const kind = status !== undefined ? "http_error" : fields.apifyErrorType || fields.apifyErrorCode ? "api_error" : "cli_exit";
+  const diagnostic = {
+    kind,
+    ...(status !== undefined ? { status } : {}),
+    ...(safeExitCode !== null ? { exitCode: safeExitCode } : {}),
+    ...(safeSignal ? { signal: safeSignal } : {}),
+    ...fields,
+  };
+  const error = new Error(kind === "http_error" ? "apify_http_request_failed" : kind === "api_error" ? "apify_api_error" : "apify_cli_exit_nonzero");
   error.diagnostic = diagnostic;
   return error;
 }
@@ -100,11 +121,12 @@ export function runApifyCli(command, args, input, { spawnProcess = spawn, timeou
     });
     child.stdin.once("error", () => terminate("apify_cli_stdin_error"));
     child.once("error", (error) => { if (!closing) finish(processError(error?.code)); });
-    child.once("close", (code) => {
+    child.once("close", (code, signal) => {
       if (closing) { clearTimeout(forceTimer); finish(new Error(terminationReason)); return; }
       if (settled) return;
-      if (code !== 0) { finish(cliExitError(code, stderr)); return; }
-      finish(null, Buffer.concat(chunks, stdoutBytes).toString("utf8"));
+      const stdout = Buffer.concat(chunks, stdoutBytes).toString("utf8");
+      if (code !== 0) { finish(cliExitError(code, signal, stdout, stderr)); return; }
+      finish(null, stdout);
     });
     if (input === undefined) child.stdin.end();
     else child.stdin.end(input, "utf8");
@@ -135,7 +157,10 @@ const runView = (value) => ({
   ...pick(value, ["id", "buildId", "buildNumber", "startedAt", "status"]),
   ...(value?.options ? { options: pick(value.options, ["build", "memoryMbytes", "timeoutSecs", "maxTotalChargeUsd", "restartOnError", "forcePermissionLevel"]) } : {}),
 });
-function isNotFound(error) { return error?.diagnostic?.kind === "http_error" && error?.diagnostic?.status === 404; }
+function isNotFound(error) {
+  return (error?.diagnostic?.kind === "http_error" && error?.diagnostic?.status === 404) ||
+    (error?.diagnostic?.kind === "api_error" && ["page-not-found", "record-not-found"].includes(error?.diagnostic?.apifyErrorType));
+}
 
 /**
  * Credential-safe adapter for the installed Apify CLI. The CLI owns
@@ -153,7 +178,7 @@ export async function createApifyCliAdapter({ commandPath, spawnProcess = spawn,
       raw = await execute(invocation.command, args, body === undefined ? undefined : JSON.stringify(body), { spawnProcess, timeoutMs });
     } catch (cause) {
       const existing = cause?.diagnostic && typeof cause.diagnostic === "object" ? cause.diagnostic : {};
-      const error = new Error(cause?.message === "apify_http_request_failed" ? "apify_http_request_failed" : cause?.message === "apify_cli_exit_nonzero" ? "apify_cli_exit_nonzero" : "apify_request_failed");
+      const error = new Error(cause?.message === "apify_http_request_failed" ? "apify_http_request_failed" : cause?.message === "apify_api_error" ? "apify_api_error" : cause?.message === "apify_cli_exit_nonzero" ? "apify_cli_exit_nonzero" : "apify_request_failed");
       error.diagnostic = { ...existing, method, endpoint, requestTimestamp: new Date().toISOString() };
       throw error;
     }
