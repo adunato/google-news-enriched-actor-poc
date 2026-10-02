@@ -61,7 +61,7 @@ Read the integrated Spike artifacts:
 - `docs/changes/<spike-issue>/spike-implementation-plan.md`;
 - `docs/changes/<spike-issue>/technical-spike.md`.
 
-If the Spike conclusion is `Feasible`, record Technical Spike `Required / Complete`, reference the Spike, and decide downstream HLD/Implementation Plan depth from the supported technical specification.
+- If the Spike conclusion is `Feasible`, record Technical Spike `Required / Complete`, reference the Spike, and decide downstream HLD/Implementation Plan depth from the supported technical specification.
 - If the Spike conclusion is `Not feasible`, keep production implementation blocked and route the result to the required Product Definition, Architecture Definition or POC decision. Do not silently relax requirements or constraints.
 - If the Spike is still open, do not continue downstream assessment.
 
