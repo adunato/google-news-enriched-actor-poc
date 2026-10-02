@@ -45,6 +45,7 @@ Before every experiment, present the following self-contained checkpoint. Assume
 **1. Issue context**
 
 Explain the underlying Issue first:
+
 - what capability/problem the Issue is trying to resolve;
 - why that matters to the product or downstream work;
 - what currently prevents the Issue from being completed.
@@ -54,6 +55,7 @@ Do not start with the experiment, library, error, hypothesis or implementation d
 **2. Spike context**
 
 Explain why a Technical Spike is being used and what uncertainty it must resolve. Then identify:
+
 - current TID workstream;
 - current candidate/option;
 - why that option is being investigated now;
@@ -64,6 +66,7 @@ Expand acronyms/mechanisms enough for a reader who has not followed previous ite
 **3. Previous experiment**
 
 Explain:
+
 - what was tested;
 - why that test was necessary in the wider investigation;
 - what it was expected to establish;
@@ -76,6 +79,7 @@ Do not use internal labels such as hypothesis IDs, fixture names or library name
 **4. Current understanding**
 
 State:
+
 - what the evidence established;
 - what it ruled out;
 - what remains unknown;
@@ -86,6 +90,7 @@ Separate evidence from interpretation.
 **5. Proposed next experiment**
 
 Describe exactly one bounded experiment:
+
 - what will be tested;
 - why this is the next question;
 - what changes compared with the previous experiment;
