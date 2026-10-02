@@ -1,99 +1,101 @@
-# Technical Investigation Design: <Spike question / boundary>
+# Technical Investigation Design: <question / boundary>
 
-> Canonical Spike-specific investigation-design artifact. Use this template for a Technical Spike after the controlling Issue/workspace exists and before experiment execution begins. It defines the technical search space and evidence boundaries; it is not a production HLD and not an experiment log.
+> Canonical top-down design artifact for a Technical Spike. It defines the technical search space and investigation strategy before individual experiments are approved. It is not a production HLD and does not record experiment chronology.
 
 **Artifact ID:** `<stable-id>`  
 **Status:** `<Draft | Approved | Superseded>`  
 **Owner:** `<person or role>`  
 **Created / updated:** `<YYYY-MM-DD>`  
 **GitHub Spike Issue:** `<#issue or URL>`  
+**Spike branch:** `<branch>`  
+**Blocked downstream Issue(s):** `<#issue(s) or URL(s)>`  
 **Product Definition:** `<path / requirement references or None>`  
-**Architecture Definition:** `<path / section references or None>`  
-**Traceability:** `<blocked downstream Issues / prior evidence / decisions or None>`
+**Architecture Definition:** `<path / section references or None>`
 
-## 1. Investigation Context
+## 1. Investigation Objective
 
-<Explain the underlying Issue, why the technical uncertainty matters to the product/downstream work, and what must become known before downstream design/implementation can proceed.>
+<State the Technical Question, why it matters to downstream engineering, and what decision this investigation must enable.>
 
-## 2. Current Technical Context
+## 2. Current Understanding
 
 ### Established facts
 
-- <authoritative specification or directly observed behaviour>
-- <relevant prior evidence>
+- <authoritative specification or directly observed fact>
+- <validated prior evidence>
 
 ### Material unknowns
 
-- <unknown that the Spike must resolve>
+- <unknown that must be resolved>
 
-Do not treat third-party/community code as authoritative specification unless the external provider explicitly documents it as such.
+### Relevant prior evidence
 
-## 3. Scope, Constraints and Non-Goals
+<Summarize only evidence that materially shapes the investigation. Reference historical artifacts rather than reproducing their chronology.>
 
-### In scope
+## 3. Investigation Structure
 
-- <bounded technical boundary>
+Break the question into stable workstreams only when that improves clarity. A simple Spike may have one workstream.
 
-### Constraints
+| ID | Workstream / boundary | Question to resolve | Dependency |
+| --- | --- | --- | --- |
+| W1 | <boundary> | <question> | <None / dependency> |
 
-- <approved product/architecture/dependency/cost/runtime/risk constraint>
+## 4. Candidate Approaches
 
-### Explicit non-goals
+Identify the materially credible technical approaches for each workstream. These are high-level approaches, not individual hypotheses or experiments.
 
-- <direction that must not emerge implicitly during experimentation>
+| ID | Workstream | Approach | Technical shape / mechanism | Why credible | Material constraints / weakness | Initial disposition |
+| --- | --- | --- | --- | --- | --- | --- |
+| A1 | W1 | <approach> | <how it works at high level> | <evidence/rationale> | <constraint> | <Primary / Fallback / Reference only / Deprioritised / Rejected> |
 
-## 4. Investigation Structure
+Third-party/community implementations are evidence about possible approaches; they are not authoritative specifications unless the provider explicitly documents them as such.
 
-Break the technical question into one or more stable workstreams only when that decomposition materially clarifies the investigation.
+## 5. Investigation Strategy
 
-| Workstream | Purpose                  | Dependency / relationship | Evidence needed to resolve it |
-| ---------- | ------------------------ | ------------------------- | ----------------------------- |
-| W1         | <technical sub-question> | <None / dependency>       | <decision evidence>           |
+For each workstream, define how the candidate set should be traversed without prescribing individual experiments.
 
-## 5. Candidate Approaches
+State:
 
-Define materially credible approaches at the level needed to understand how they work and how they fit the system. Do not prescribe experiment-by-experiment troubleshooting here.
+- which approach is investigated first and why;
+- whether other approaches are mandatory comparisons or fallbacks;
+- the condition under which an approach has been tested sufficiently;
+- the condition for moving to another approach;
+- when the workstream can stop because its required outcome is demonstrated;
+- when the investigation must return for TID review rather than adding a new direction implicitly.
 
-| Workstream | Option | High-level technical approach | Why credible         | Dependencies / constraints | Known limitations | Initial disposition                            |
-| ---------- | ------ | ----------------------------- | -------------------- | -------------------------- | ----------------- | ---------------------------------------------- |
-| W1         | O1     | <approach>                    | <evidence/rationale> | <constraints>              | <limitations>     | <Primary / Reserve / Reference only / Rejected> |
+## 6. Evidence and Decision Criteria
 
-The option set should be proportionate to the Issue. A Spike is not a general market or technology survey.
+Define the evidence needed to answer the Technical Question, including representative environment/data and quantitative thresholds where applicable.
 
-## 6. Technical Interaction Model
+| Workstream | Required evidence | Success / exit criterion | Not-feasible / escalation condition |
+| --- | --- | --- | --- |
+| W1 | <evidence> | <criterion> | <condition> |
 
-<Describe the high-level system/integration flow relevant to the investigation and the responsibility boundaries that experiments must preserve. Use diagrams where useful.>
+## 7. Boundaries and Non-Goals
 
-## 7. Evidence and Decision Criteria
+- <approved constraint or excluded direction>
+- <technique that must not be introduced implicitly>
 
-For each workstream, define what evidence is sufficient to decide whether the required outcome is supported within the approved constraints.
+## 8. Design-Change Rule
 
-| Workstream | Representative environment/data | Success / decision criterion          | Evidence boundary            |
-| ---------- | ------------------------------- | ------------------------------------- | ---------------------------- |
-| W1         | <environment/sample>            | <threshold or supported behaviour>    | <what is and is not proved>  |
+The Spike may generate hypotheses and diagnostic experiments inside the approved TID. If evidence materially changes the workstream decomposition, candidate set, architectural mechanism, constraints, or investigation strategy, stop and update/review the TID before continuing.
 
-Candidate approaches do not all need to be tested merely because they are listed. The Spike Implementation Plan determines the traversal order and fallback conditions.
+## 9. Open Questions
 
-## 8. Investigation Boundaries
+<List design-level questions that must be resolved before approval. Do not put iteration-level hypotheses here. If none: “No outstanding investigation-design questions.”>
 
-The executing agent may formulate and propose bounded hypotheses inside the approved search space. A material change to the workstreams, candidate set, architectural assumptions, excluded capabilities or evidence criteria requires TID review before the investigation proceeds in that new direction.
+## 10. Summary and Approval
 
-## 9. Open Investigation-Design Questions
+### Key decisions
 
-<Questions that prevent the investigation design from being approved. If none: “No outstanding investigation-design questions.”>
-
-## 10. Investigation Design Summary
-
-- <key workstream / option decision>
-- <key boundary>
-- <key evidence criterion>
+- <workstream / candidate decision>
+- <boundary / evidence decision>
 
 ### Approval
 
-**Decision:** `<Approve investigation design | Hold | Reject>`  
+**Decision:** `<Approve | Hold | Reject>`  
 **Rationale:** `<decision and remaining conditions>`  
-**Required follow-up before Spike Implementation Planning:** `<actions or None>`
+**Required follow-up before Spike execution:** `<actions or None>`
 
 ### Completion contract
 
-The TID is complete when the technical question has a coherent problem decomposition, credible candidate approaches are represented proportionately, system/integration boundaries are clear, evidence criteria are explicit, and no unresolved investigation-design decision prevents planning. Approval authorizes the investigation design only; it does not establish technical feasibility.
+The TID is ready for approval when the technical question is decomposed sufficiently, the credible candidate approaches are understood and prioritised, investigation/transition rules and evidence criteria are explicit, and no material investigation-design decision remains unresolved. Individual hypotheses and experiment procedures belong in `technical-spike.md`, not this artifact.
