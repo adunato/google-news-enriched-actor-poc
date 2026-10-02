@@ -46,17 +46,17 @@ Do not treat third-party/community code as authoritative specification unless th
 
 Break the technical question into one or more stable workstreams only when that decomposition materially clarifies the investigation.
 
-| Workstream | Purpose | Dependency / relationship | Evidence needed to resolve it |
-| --- | --- | --- | --- |
-| W1 | <technical sub-question> | <None / dependency> | <decision evidence> |
+| Workstream | Purpose                  | Dependency / relationship | Evidence needed to resolve it |
+| ---------- | ------------------------ | ------------------------- | ----------------------------- |
+| W1         | <technical sub-question> | <None / dependency>       | <decision evidence>           |
 
 ## 5. Candidate Approaches
 
 Define materially credible approaches at the level needed to understand how they work and how they fit the system. Do not prescribe experiment-by-experiment troubleshooting here.
 
-| Workstream | Option | High-level technical approach | Why credible | Dependencies / constraints | Known limitations | Initial disposition |
-| --- | --- | --- | --- | --- | --- | --- |
-| W1 | O1 | <approach> | <evidence/rationale> | <constraints> | <limitations> | <Primary / Reserve / Reference only / Rejected> |
+| Workstream | Option | High-level technical approach | Why credible         | Dependencies / constraints | Known limitations | Initial disposition                            |
+| ---------- | ------ | ----------------------------- | -------------------- | -------------------------- | ----------------- | ---------------------------------------------- |
+| W1         | O1     | <approach>                    | <evidence/rationale> | <constraints>              | <limitations>     | <Primary / Reserve / Reference only / Rejected> |
 
 The option set should be proportionate to the Issue. A Spike is not a general market or technology survey.
 
@@ -68,9 +68,9 @@ The option set should be proportionate to the Issue. A Spike is not a general ma
 
 For each workstream, define what evidence is sufficient to decide whether the required outcome is supported within the approved constraints.
 
-| Workstream | Representative environment/data | Success / decision criterion | Evidence boundary |
-| --- | --- | --- | --- |
-| W1 | <environment/sample> | <threshold or supported behaviour> | <what is and is not proved> |
+| Workstream | Representative environment/data | Success / decision criterion          | Evidence boundary            |
+| ---------- | ------------------------------- | ------------------------------------- | ---------------------------- |
+| W1         | <environment/sample>            | <threshold or supported behaviour>    | <what is and is not proved>  |
 
 Candidate approaches do not all need to be tested merely because they are listed. The Spike Implementation Plan determines the traversal order and fallback conditions.
 
