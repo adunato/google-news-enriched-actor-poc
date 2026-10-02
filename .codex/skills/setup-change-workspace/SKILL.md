@@ -20,21 +20,26 @@ For a Technical Spike:
 - create or adopt one long-lived branch/workspace for the controlling Spike Issue;
 - use a branch name such as `spike/<issue-number>-<slug>` where repository branch rules permit it;
 - keep all iterations for the same technical question in that workspace;
-- store the living artifact at `docs/changes/<issue-number>/technical-spike.md`;
+- reserve the canonical paths:
+  - `docs/changes/<issue-number>/technical-investigation-design.md`;
+  - `docs/changes/<issue-number>/spike-implementation-plan.md`;
+  - `docs/changes/<issue-number>/technical-spike.md`;
 - keep experiment-specific probes/evidence under the same change directory when useful;
-- open/reuse one draft PR for the Spike rather than creating a new branch/PR per failed hypothesis.
+- **do not open a pull request during ordinary in-progress Spike investigation**.
 
-Workspace setup itself does not require HLD, Implementation Plan or LLD.
+The Issue is the central management/tracking object and the Spike branch is the working container. The final integration PR is created only after the Spike reaches a supported conclusion and final validation passes.
+
+Workspace setup itself does not require normal HLD, Implementation Plan or LLD.
 
 ## Completion contract
 
-Report the Issue reference/type, branch, worktree, base branch, created/adopted state, existing draft PR when applicable, conventions applied, unrelated-change safety, and any readiness blocker.
+Report the Issue reference/type, branch, worktree, base branch, created/adopted state, conventions applied, unrelated-change safety, expected Spike artifact paths when applicable, and any readiness blocker.
 
 ## Safe cleanup
 
 For Feature/Bug work, do not remove the Issue worktree/branch before a human confirms its PR was integrated and the usual clean/SHA checks pass.
 
-For a Technical Spike, keep the workspace/branch while the Spike remains open. Do not clean it up merely because an individual experiment or interim PR update is complete. Cleanup occurs only after the final Spike PR is human-merged or the owner explicitly stops/supersedes the Spike and preserved evidence has been handled.
+For a Technical Spike, keep the workspace/branch while the Spike remains open. Cleanup occurs only after the final Spike PR is human-merged or the owner explicitly stops/supersedes the Spike and preserved evidence has been handled.
 
 Never force-remove a worktree.
 
