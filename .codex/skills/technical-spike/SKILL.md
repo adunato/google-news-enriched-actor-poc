@@ -142,21 +142,27 @@ Trigger this checkpoint before deeper troubleshooting when:
 Report:
 
 ### Original purpose
+
 What the approved experiment was intended to establish and why that matters to the Issue.
 
 ### What went wrong
+
 What failed and which straightforward correction(s) were already attempted.
 
 ### Why this is no longer routine troubleshooting
+
 What additional complexity or new decision is now required.
 
 ### Perspective check
+
 Whether continuing this experiment still has better information value than stepping back to another TID option or revisiting the plan/TID.
 
 ### Recommendation
+
 One of: **continue troubleshooting / modify the experiment / abandon this experiment and return to the planned option set / review the TID**.
 
 ### Decision requested
+
 Ask the owner to approve or redirect that recommendation.
 
 The governing principle is: **troubleshooting depth must remain proportional to the value of the experiment**.
