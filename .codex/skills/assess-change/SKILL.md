@@ -45,7 +45,9 @@ Require a Technical Spike when downstream design cannot responsibly be chosen be
 
 Do **not** require a Spike for every uncertainty. Keep a bounded feasibility gate inside HLD/Implementation Planning when the external/runtime behaviour is already sufficiently understood and a small probe only confirms a residual implementation assumption.
 
-When a Spike is required, create or link **one controlling Technical Spike Issue** using the canonical template. Set HLD, Implementation Plan and LLD to deferred and stop assessment. Do not design around the unknown.
+When a Spike is required, create or link **one controlling Technical Spike Issue** using the canonical template. Set the downstream Feature/Bug HLD, Implementation Plan and LLD to deferred and stop downstream assessment.
+
+The dedicated Spike lifecycle then proceeds through: workspace/branch setup → Technical Investigation Design → Spike Implementation Plan → bounded Technical Spike experiments. These are Spike-specific artifacts and do not replace the downstream Feature/Bug HLD/Implementation Plan/LLD.
 
 If a controlling Spike already exists and is still open, keep using it. A failed/inconclusive experiment inside that Spike is not grounds for a serial replacement Spike.
 
@@ -53,9 +55,13 @@ If a controlling Spike already exists and is still open, keep using it. A failed
 
 Rerun `assess-change` only after the controlling Spike reaches a supported final conclusion and its final evidence has been integrated.
 
-Read `docs/changes/<spike-issue>/technical-spike.md`.
+Read the integrated Spike artifacts:
 
-- If the Spike conclusion is `Feasible`, record Technical Spike `Required / Complete`, reference the Spike, and decide HLD/Implementation Plan depth from the supported technical specification.
+- `docs/changes/<spike-issue>/technical-investigation-design.md`;
+- `docs/changes/<spike-issue>/spike-implementation-plan.md`;
+- `docs/changes/<spike-issue>/technical-spike.md`.
+
+If the Spike conclusion is `Feasible`, record Technical Spike `Required / Complete`, reference the Spike, and decide downstream HLD/Implementation Plan depth from the supported technical specification.
 - If the Spike conclusion is `Not feasible`, keep production implementation blocked and route the result to the required Product Definition, Architecture Definition or POC decision. Do not silently relax requirements or constraints.
 - If the Spike is still open, do not continue downstream assessment.
 
