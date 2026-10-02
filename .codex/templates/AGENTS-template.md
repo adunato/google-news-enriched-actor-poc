@@ -34,13 +34,13 @@ Use the relevant skill and installed tool instead of recreating lifecycle behavi
 
 Before implementation, ensure the Feature/Bug Issue is development-ready. Use `refine-issue` when requirements or acceptance criteria need shaping, and `assess-change` to decide first whether prerequisite Technical Spike is required and then the minimum proportional design/planning path.
 
-When `assess-change` requires a Technical Spike, create/link one controlling Technical Spike Issue and one dedicated Spike branch. Produce and approve the Technical Investigation Design, then the Spike Implementation Plan, then execute one owner-approved experiment at a time with `technical-spike`. The TID owns the technical search space; the Spike plan owns option/workstream traversal; `technical-spike.md` owns the current experiment and evidence history. Do not open a PR while the Spike is still being investigated. Create the final PR only after a supported `Feasible`/`Not feasible` conclusion and final Spike validation. After integration, rerun `assess-change` on the blocked Feature/Bug Issue.
+When `assess-change` requires a Technical Spike, create/link one controlling Technical Spike Issue and use it as the investigation tracker. Set up one dedicated Spike branch, create/approve `technical-investigation-design.md`, create/approve `spike-implementation-plan.md`, then execute one explicitly approved bounded experiment at a time through `technical-spike.md`. Do not open a PR while the Spike is active. Straightforward mechanical corrections may complete the approved experiment; non-trivial troubleshooting requires the experiment-viability owner checkpoint before deeper diagnostics. After a supported final conclusion and final validation, create the final PR, integrate the evidence, then rerun `assess-change` on blocked Feature/Bug Issues. Normal Feature/Bug HLD/Implementation Plan/LLD remain downstream of the Spike.
 
 Create change-specific artifacts only when required:
 
-- `technical-investigation-design.md` for the top-down Technical Spike search space and evidence boundaries;
-- `spike-implementation-plan.md` for Technical Spike workstream/option sequencing and fallback rules;
-- `technical-spike.md` for the living Technical Spike experiment/evidence record;
+- `technical-investigation-design.md` as the top-down Spike investigation design;
+- `spike-implementation-plan.md` as the Spike execution-routing plan;
+- `technical-spike.md` as the living Spike experiment/evidence artifact;
 - `hld.md` for a material Feature/Bug change-design decision;
 - `implementation-plan.md` for meaningful repository-level implementation planning;
 - `low-level-design.md` only when an approved implementation plan requires file-level design.
@@ -66,8 +66,7 @@ Product-specific lessons may be resolved through normal local artifacts and chan
 - Normal change branches are based on `dev`.
 - Follow the repository branch naming defined by the SideGig GitHub Delivery Model.
 - Do not push normal changes directly to `dev`, `staging` or `main`.
-- For normal Feature/Bug work, after validation use `merge-change` to commit/push the branch and create/update the pull request.
-- For an open Technical Spike, keep the dedicated branch without a PR. After final Spike validation, use `merge-change` to create the final integration PR.
+- After validation, use `merge-change` to prepare the final integration PR. For an active Technical Spike, the dedicated branch is intentionally allowed to exist without a PR; create the PR only after the Spike has a supported final conclusion and passes final validation.
 - Pull requests must include Issue, design, validation, durable-document and learning-record traceability.
 - A failed required acceptance test puts the tested candidate on Hold. Do not rerun an unchanged candidate merely to obtain a pass; diagnose the failure and make a relevant corrective change before retesting.
 - Use `ci-diagnostics` for failed automated gates rather than weakening checks.
