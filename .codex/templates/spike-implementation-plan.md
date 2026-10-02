@@ -18,9 +18,9 @@
 
 Reference the TID workstream and option IDs directly. Do not rename them as new stages or create a second option taxonomy.
 
-| Order | Workstream | TID approach | Entry condition | Exit / success condition | Fallback / next route |
-| ---: | --- | --- | --- | --- | --- |
-| 1 | W1 | A1 | <condition> | <condition> | <A2 / conclude workstream / TID review> |
+| Order | Workstream | TID approach | Entry condition | Exit / success condition | Fallback / next route                   |
+| ----: | ---------- | ------------ | --------------- | ------------------------ | --------------------------------------- |
+| 1     | W1         | A1           | <condition>     | <condition>              | <A2 / conclude workstream / TID review> |
 
 The plan need not test every TID option. Define when sufficient evidence allows the investigation to stop and when a fallback becomes eligible.
 
