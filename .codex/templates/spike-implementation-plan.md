@@ -1,6 +1,6 @@
-# Spike Implementation Plan: <Spike question / boundary>
+# Spike Implementation Plan: <question / boundary>
 
-> Canonical Spike-specific execution-plan artifact. It translates the approved Technical Investigation Design into an ordered investigation route. It does not define individual hypotheses or experiment procedures.
+> Canonical execution-routing artifact for a Technical Spike. It translates the approved Technical Investigation Design into an ordered investigation route while leaving individual hypotheses and experiment design to the Technical Spike iteration loop.
 
 **Artifact ID:** `<stable-id>`  
 **Status:** `<Draft | Approved | Superseded>`  
@@ -8,60 +8,59 @@
 **Created / updated:** `<YYYY-MM-DD>`  
 **GitHub Spike Issue:** `<#issue or URL>`  
 **Technical Investigation Design:** `<path and artifact ID>`  
-**Spike branch:** `<branch>`  
-**Blocked downstream Issue(s):** `<#issue(s) or URL(s)>`
+**Spike branch:** `<branch>`
 
-## 1. Execution Purpose
+## 1. Purpose
 
-<Explain how this plan traverses the TID's workstreams/options to answer the controlling Technical Question without predefining the detailed experiments.>
+<State what this plan controls and the downstream decision it supports. Do not restate the complete TID.>
 
-## 2. Execution Authority
+## 2. Execution Map
 
-- The **Issue** defines the stable question, constraints and completion criteria.
-- The **TID** defines the approved workstreams, candidate approaches and evidence boundaries.
-- This **Spike Implementation Plan** defines the order, dependencies, entry/exit conditions and fallback transitions.
-- `technical-spike.md` owns the current hypothesis, approved experiment, evidence and experiment history.
+Reference the TID workstream and option IDs directly. Do not rename them as new stages or create a second option taxonomy.
 
-If evidence requires a material change to the TID search space, revise/review the TID before changing this plan.
+| Order | Workstream | TID approach | Entry condition | Exit / success condition | Fallback / next route |
+| ---: | --- | --- | --- | --- | --- |
+| 1 | W1 | A1 | <condition> | <condition> | <A2 / conclude workstream / TID review> |
 
-## 3. Workstream and Option Execution Map
+The plan need not test every TID option. Define when sufficient evidence allows the investigation to stop and when a fallback becomes eligible.
 
-Make explicit whether an option is always tested, conditionally tested, reference-only or excluded, and when investigation stops instead of testing every candidate.
+## 3. Cross-Workstream Dependencies
 
-| Workstream | TID option | Execution role / order | Entry condition  | Exit condition                  | Fallback / next state       |
-| ---------- | ---------- | ---------------------- | ---------------- | ------------------------------- | --------------------------- |
-| W1         | O1         | <Primary / first>      | <when eligible>  | <evidence that ends this path>  | <O2 / conclude / TID review> |
+<Describe only dependencies that affect execution order or evidence validity. If none: “None.”>
 
-## 4. Dependencies and Sequencing
+## 4. Execution Envelope
 
-<Describe only material dependencies between workstreams/options and any evidence that must exist before another path can be tested responsibly.>
+For each active route, state what may vary inside individual experiments without changing this plan and what would constitute a route change.
 
-## 5. Experiment Boundary
+### <Workstream / TID approach>
 
-Each experiment is individually proposed and owner-approved through the Technical Spike skill.
+**Experiment may vary:** <inputs, instrumentation, bounded diagnostics, implementation details that do not change the approach>  
+**Requires plan/TID review:** <new mechanism, new dependency/runtime, different candidate, changed evidence meaning, changed workstream order>
 
-This plan does **not** prescribe the experiment backlog. Within the currently authorised workstream/option, the agent proposes the next bounded hypothesis/experiment based on evidence.
+## 5. Stop and Return Rules
 
-The agent may make only straightforward corrections needed to complete the approved experiment. Non-trivial troubleshooting triggers an Experiment Viability Checkpoint before a new diagnostic direction is pursued.
+Stop the current route and return to the appropriate higher-level artifact when:
 
-## 6. Transition and Fallback Rules
+- the TID option-viability condition is reached;
+- continuing requires an approach not authorized by the TID;
+- troubleshooting becomes a separate technical investigation rather than a straightforward correction to the approved experiment;
+- a dependency, runtime, architecture, cost, security, legal, safety, or scope boundary materially changes;
+- the representative evidence basis or success criterion must change.
 
-<State the decision rules for moving between TID options/workstreams, including when success ends a workstream, when option viability requires fallback, and when evidence requires TID review instead of deeper troubleshooting.>
+## 6. Spike Completion Route
 
-## 7. Spike Completion Path
+<State how completed workstreams combine to answer the Spike Issue, and which downstream Issues must be reassessed after final integration.>
 
-<Map the TID evidence criteria to the conditions needed for a supported `Feasible` or `Not feasible` Spike conclusion.>
+## 7. Open Planning Questions
 
-## 8. Open Planning Questions
+<List unresolved execution-routing questions. Do not put experiment-level hypotheses here. If none: “No outstanding Spike planning questions.”>
 
-<Questions that prevent this execution route from being approved. If none: “No outstanding Spike planning questions.”>
+## 8. Approval
 
-### Approval
-
-**Decision:** `<Approve Spike execution plan | Hold | Reject>`  
+**Decision:** `<Approve | Hold | Reject>`  
 **Rationale:** `<decision and remaining conditions>`  
-**Required follow-up before first experiment:** `<actions or None>`
+**Required follow-up:** `<actions or None>`
 
 ### Completion contract
 
-The plan is complete when every active TID workstream has an explicit execution/fallback route, dependencies and transition conditions are clear, the per-experiment approval boundary is preserved, and no unresolved planning decision prevents the first bounded experiment.
+The plan is ready for approval when it references the approved TID directly, defines the meaningful execution order, entry/exit/fallback rules, dependencies and stop/return boundaries, and leaves individual hypotheses/experiment procedures to the Technical Spike iteration loop.
