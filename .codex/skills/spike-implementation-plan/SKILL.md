@@ -1,56 +1,41 @@
 ---
 name: spike-implementation-plan
-description: Translate an approved Technical Investigation Design into the ordered execution and fallback route for a Technical Spike.
+description: Translate an approved Technical Investigation Design into the ordered execution route for a Technical Spike without predefining individual experiments.
 ---
 
 # Spike Implementation Plan
 
-Use the canonical `.codex/templates/spike-implementation-plan.md` template for every Technical Spike after the TID is approved and before the first experiment is executed.
+Use the canonical `.codex/templates/spike-implementation-plan.md` template for every Technical Spike after its TID is approved.
 
-This is a Spike-specific plan. It does not replace the normal Feature/Bug Implementation Plan.
+Start from the controlling Spike Issue and approved TID. Use the TID's workstream and candidate IDs directly.
 
-## Inputs
+## Responsibilities
 
-Read:
+Define:
 
-- the controlling Technical Spike Issue;
-- the approved TID;
-- blocked downstream Issue(s);
-- relevant repository/runtime constraints.
+- which TID workstream/candidate is investigated first;
+- dependencies that constrain order;
+- entry and exit conditions;
+- when sufficient evidence stops a workstream;
+- when a fallback candidate becomes eligible;
+- when the route returns to TID review;
+- the execution envelope inside which individual experiments may vary;
+- the final route to a supported Spike conclusion.
 
-## Planning responsibility
+Do not duplicate the TID's architecture/option analysis and do not create a second naming scheme such as unrelated stages. Do not define the current hypothesis, exact experiment, diagnostic procedure or chronological findings; those belong to `technical-spike.md`.
 
-Define the investigation route across the TID without predefining individual experiments.
-
-For each TID workstream/option, make explicit:
-
-- whether it is primary, conditional/fallback, reference-only or excluded;
-- when it becomes eligible for testing;
-- the evidence/condition that ends that path;
-- whether success stops the workstream or further comparison is required;
-- which fallback/next state follows failure or option rejection;
-- dependencies on other workstreams/options.
-
-The plan must make clear that candidate options are not automatically all tested. Stop when the TID's required evidence is established.
-
-## Boundary with Technical Spike execution
-
-The plan does not contain the hypothesis backlog or detailed experiment procedures.
-
-The `technical-spike` skill owns the next bounded hypothesis/experiment within the currently authorised TID option and requires owner approval for each experiment.
-
-A material change to the TID search space requires TID review first. A material change to workstream/option order, entry/exit criteria or fallback route requires this plan to be updated/reviewed before execution continues.
-
-## Troubleshooting control
-
-Preserve the experiment-level approval boundary. The plan must not grant blanket authority for open-ended troubleshooting.
-
-Straightforward corrections may be handled inside the approved experiment. When troubleshooting becomes a new investigation direction, requires material new machinery/dependencies, or becomes disproportionate to the experiment's information value, the Technical Spike skill must stop at an Experiment Viability Checkpoint.
+The plan need not test every TID candidate. It must make explicit when testing stops because the required outcome has already been demonstrated.
 
 ## Approval
 
-Prepare the plan for explicit owner approval before the first experiment.
+The plan requires explicit owner approval before the first experiment begins.
+
+Update/review the plan when evidence changes major ordering, dependencies, entry/exit/fallback rules or execution boundaries. A new technical approach not present in the TID requires TID review first.
 
 ## Completion contract
 
-Report the artifact path/ID, Issue/TID references, workstream/option execution map, dependencies, transitions/fallbacks, completion path, open questions and approval state.
+Report the plan path/ID, TID reference, execution map, dependencies, execution envelope, stop/return rules, completion route, unresolved planning questions and approval state.
+
+## Learning checkpoint
+
+Consider whether planning exposed a reusable lesson. Use `capture-learning` when warranted; otherwise report `Learnings: None`.
