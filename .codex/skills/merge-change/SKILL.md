@@ -1,11 +1,11 @@
 ---
 name: merge-change
-description: Prepare a validated Feature/Bug change or completed Technical Spike for integration through the repository GitHub Delivery Model, while preserving long-lived draft-PR behaviour for open Spikes.
+description: Prepare a validated Feature/Bug change or completed Technical Spike for final integration through the repository GitHub Delivery Model.
 ---
 
 # Merge Change
 
-Use this skill for final integration preparation. A branch may be pushed and a pull request may remain draft while work is incomplete, but it must not be reported ready for merge until the originating Issue's completion conditions are satisfied.
+Use this skill only for final integration preparation. Do not use it as an in-progress Technical Spike workspace mechanism.
 
 Confirm the originating Issue/type, branch/worktree, target branch, intended commits, required Spike/design/change artifacts, durable Product/Architecture updates, validation evidence, learning records and unrelated local changes.
 
@@ -17,54 +17,53 @@ Before reporting a Feature/Bug PR ready, confirm every material acceptance crite
 
 A candidate with an unresolved failed required acceptance test is not ready for merge. A later rerun may support readiness only after the failure cause and a relevant corrective change are recorded; repeating the unchanged candidate cannot erase the failed result.
 
-## Technical Spike pull-request lifecycle
+## Technical Spike integration
 
-A Technical Spike normally opens **one draft PR early** and keeps it for the lifetime of the Spike.
+Do not create a PR for an open/in-progress Spike.
 
-While the Spike remains open:
+Before creating the final Spike PR confirm:
 
-- commits may accumulate experiment plans, probes, sanitized evidence and updates to `technical-spike.md`;
-- keep the PR draft;
-- reference the controlling Spike with `Refs #<issue>` rather than a closing keyword;
-- do not report the PR ready for merge merely because one iteration is valid;
-- do not create a replacement PR for each failed/inconclusive hypothesis.
+- final Spike validation passed;
+- the original Technical Question is resolved;
+- the result is `Feasible` or `Not feasible`;
+- the approved Technical Investigation Design is current;
+- the approved Spike Implementation Plan reflects the route actually used or any deviation is explicitly approved;
+- `technical-spike.md` contains the supported technical specification/infeasibility evidence and downstream implications;
+- retained experiment evidence required for audit/reproducibility is present.
 
-If repository or operational constraints genuinely require interim evidence to be merged, that merge must not close the controlling Spike or imply downstream authorization. Preserve clear references to the still-open Spike and continue from a suitable branch/workspace.
+Only then create the integration PR. It should reference:
 
-Before reporting the **final** Spike PR ready:
+- the controlling Spike Issue;
+- the TID;
+- the Spike Implementation Plan;
+- `technical-spike.md`;
+- final validation evidence;
+- learning records where applicable.
 
-- final Spike validation must pass;
-- the original Technical Question must be resolved;
-- the final result must be `Feasible` or `Not feasible`;
-- `technical-spike.md` must contain the supported technical specification or infeasibility evidence;
-- downstream implications must be explicit.
-
-Only then may the PR use `Closes #<spike>`.
+The final PR may use `Closes #<spike>`.
 
 ## Final PR preparation
 
 After the validated final change is ready:
 
-1. commit all intended in-scope changes, including durable documentation and learning records;
+1. commit all intended in-scope changes;
 2. push the source branch;
-3. create a PR when none exists, or update the existing PR;
+3. create the PR;
 4. ensure the PR references the originating Issue and summarizes the implemented outcome or final Spike conclusion, relevant artifacts, validation evidence, durable-document updates and learning records;
 5. identify learning records marked `SideGig review: Yes`;
 6. confirm required CI/validation state and report the PR as ready for explicit human merge.
-
-When validation is blocked, the PR remains draft and its body states the incomplete evidence/next action.
 
 Do not bypass CI, branch protection or explicit human merge/promotion decisions. An agent prepares/updates PRs but does not merge its own work.
 
 ## Cleanup
 
-After a human-approved final merge is confirmed, verify target branch, PR head SHA and clean worktree before removing the workspace/branch. Never clean up an open Technical Spike simply because an iteration ended. Never force-remove a worktree.
+After a human-approved final merge is confirmed, verify target branch, PR head SHA and clean worktree before removing the workspace/branch. Never clean up an open Technical Spike simply because an experiment ended. Never force-remove a worktree.
 
 ## Completion report contract
 
-Report the Issue/type, source/target branch, PR URL/ID and draft/ready state, CI/validation state, integration state, Spike/design/durable-document updates, learning records, residual conditions, downstream reassessment required, and required human action.
+Report the Issue/type, source/target branch, PR URL/ID and ready state, CI/validation state, integration state, Spike/design/durable-document updates, learning records, residual conditions, downstream reassessment required, and required human action.
 
-Before final merge the expected terminal state is `PR prepared; human merge required`. For an open Spike iteration the expected state is `Draft PR updated; Spike remains open`.
+Expected terminal state: `PR prepared; human merge required`.
 
 ## Learning checkpoint
 
