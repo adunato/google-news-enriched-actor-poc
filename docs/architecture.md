@@ -5,7 +5,7 @@
 **Artifact ID:** `architecture-enriched-google-news-actor-poc`  
 **Status:** `Approved`  
 **Owner:** Project owner  
-**Created / updated:** `2026-09-27`  
+**Created / updated:** `2026-09-30`<br>
 **Product Definition:** `docs/product.md` / `product-enriched-google-news-actor-poc`  
 **Traceability:** SideGig enriched POC bootstrap handoff; Gateway 3 Pass; Step 9 repository establishment
 
@@ -28,7 +28,7 @@ External dependencies are Google News public search/RSS behaviour, public publis
 | Actor entrypoint and input validation | Read Actor input, enforce the approved bounded contract and start orchestration.                                                                                          |
 | Google News request adapter           | Perform bounded HTTP requests with timeout/retry/body-size controls.                                                                                                      |
 | Google News parser/normalizer         | Convert feed records into the approved core metadata contract.                                                                                                            |
-| Publisher URL resolver                | Resolve Google News article links to publisher URLs and emit explicit status/reason information.                                                                          |
+| Publisher URL resolver                | Resolve Google News article links to publisher URLs using the internal RSS edition context; emit explicit status/reason information without exposing that context.        |
 | Article fetch/readability stage       | When requested, fetch resolved publisher pages over HTTP and attempt readable text extraction.                                                                            |
 | Row enrichment boundary               | Isolate URL/full-text failures and preserve fallback/provenance fields.                                                                                                   |
 | Multi-query orchestrator              | Execute bounded queries, enforce per-query result limits, deduplicate by Google News URL at the retrieval boundary where requested, and coordinate downstream enrichment. |
@@ -41,13 +41,13 @@ External dependencies are Google News public search/RSS behaviour, public publis
 1. Apify starts the Actor with validated query/locale/recency/result-limit inputs.
 2. The request adapter retrieves Google News results for each bounded query.
 3. The parser normalizes feed records, and each query is capped at `maxItemsPerQuery`.
-4. At the currently implemented retrieval boundary, optional in-run deduplication removes later records with the same exact `googleNewsUrl`, retaining the first record and its query context. Disabling deduplication preserves every capped occurrence.
-5. When implemented, the resolver attempts a publisher URL for each remaining row and records the result status.
-6. When full text is requested and a publisher URL is available, the article stage performs a bounded HTTP fetch and readability extraction.
+4. Optional in-run deduplication removes later candidates with the same exact `googleNewsUrl`, retaining the first complete candidate, including the `hl`, `gl`, and `ceid` values from its RSS request. Disabling deduplication preserves every capped occurrence.
+5. The publisher resolver attempts each remaining candidate with at most four concurrent rows, a 10-second row deadline, five redirects, and a 2 MiB cap per response. It requests the explicit Google News article-ID parameter page with the candidate edition, requires a matching article marker, and submits the `Fbv4je` / `garturlreq` request with the fixed H5-tested `US:en` context to Google's `batchexecute` endpoint. Internal diagnostics record `US:en` and flag candidates outside the tested GB/US English editions. A matching, parseable HTTP(S) non-Google RPC result produces `success`; redirects outside Google News, consent/interstitials, and other failures produce row-level `failure`. Disabled resolution produces `not_requested` without a resolver request. The original Google News URL is preserved, edition context is omitted from output rows, and ordered enriched rows pass to the in-memory processing boundary. The fixed 100-row live acceptance gate remains unproven.
+6. The resolver does not fetch publisher page bodies. Full-text extraction remains a later bounded HTTP stage when requested and when a publisher URL is available.
 7. Row-level failures are captured as status/fallback data rather than propagated as run-fatal errors.
 8. Final rows are written to the default Apify dataset.
 
-Steps 5-8 describe the intended downstream enriched flow; publisher resolution, full-text extraction and dataset delivery are not yet implemented in the current repository state.
+Publisher URL resolution and its in-memory row handoff are implemented. Full-text extraction is a later stage. Dataset writes and the public output schema belong to Issue #6 and are not yet implemented in the current repository state.
 
 ### Fail-soft enrichment
 
@@ -59,13 +59,14 @@ Steps 5-8 describe the intended downstream enriched flow; publisher resolution, 
 
 ## 5. Interfaces and Integrations
 
-| Interface / integration        | Purpose                                  | Direction / contract                                         |
-| ------------------------------ | ---------------------------------------- | ------------------------------------------------------------ |
-| Apify Actor input              | User/API invocation                      | Inbound JSON matching the Product Definition input contract. |
-| Google News public feed/search | Article discovery                        | Outbound bounded HTTP; no paid API dependency.               |
-| Publisher HTTP pages           | URL resolution and optional article text | Outbound bounded HTTP; partial failure is expected.          |
-| Apify default dataset/API      | Result delivery                          | Outbound normalized rows matching the product contract.      |
-| Apify logs/analytics/charging  | Operational and POC evidence             | Platform-native observability and pay-per-event evidence.    |
+| Interface / integration        | Purpose                      | Direction / contract                                                                       |
+| ------------------------------ | ---------------------------- | ------------------------------------------------------------------------------------------ |
+| Apify Actor input              | User/API invocation          | Inbound JSON matching the Product Definition input contract.                               |
+| Google News public feed/search | Article discovery            | Outbound bounded HTTP; no paid API dependency.                                             |
+| Google News article page/RPC   | Publisher URL resolution     | Outbound bounded HTTP using the RSS candidate's edition; partial failure is expected.      |
+| Publisher HTTP pages           | Optional article text        | Outbound bounded HTTP when full-text extraction is requested; partial failure is expected. |
+| Apify default dataset/API      | Result delivery              | Outbound normalized rows matching the product contract.                                    |
+| Apify logs/analytics/charging  | Operational and POC evidence | Platform-native observability and pay-per-event evidence.                                  |
 
 ## 6. Data and State
 
@@ -84,7 +85,7 @@ Actor/Store schemas and Docker packaging are implementation artifacts and will b
 ## 8. Cross-Cutting Architecture
 
 - **Security:** No product credentials should be required for Google News/public publisher access. Repository/deployment secrets remain in platform secret stores, never source control.
-- **Reliability:** Bounded requests, retries/timeouts/body limits where appropriate, and strict row-level isolation for publisher-specific failures.
+- **Reliability:** Publisher resolution uses a shared 10-second per-row deadline, a five-redirect limit, a 2 MiB per-response bound, concurrency capped at four, and strict row-level failure isolation. Google's decoder endpoint is undocumented and may change. The mixed-edition H5 evidence used `US:en`; one bounded hosted row also succeeded with `GB:en`, but broader locale mapping remains unverified. The resolver uses fixed `US:en`, reports candidates outside GB/US English in internal diagnostics, and still requires the >=95/100 representative live acceptance gate. Google-owned and interstitial redirect destinations are failures rather than publisher URLs.
 - **Observability:** Apify-native logs/run status/dataset evidence plus charging/analytics needed for Step 8 evaluation.
 - **Performance / scale:** Query count and per-query result limits bound work. Enrichment must remain bounded and suitable for a lightweight POC.
 - **Cost:** Avoid mandatory browser/proxy/paid extraction infrastructure; preserve the low-cost experimental model.
