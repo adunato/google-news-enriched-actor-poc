@@ -1,6 +1,6 @@
 # Technical Spike: <question / boundary>
 
-> Canonical living execution/evidence artifact for a Technical Spike. The Technical Investigation Design defines the search space; the Spike Implementation Plan defines the route. This document records the current approved experiment, evidence and supported technical conclusions.
+> Canonical living execution/evidence artifact for a Technical Spike. The Issue defines the question, the TID defines the technical search space, and the Spike Implementation Plan defines the execution route. This document records the bounded experiments and accumulated evidence.
 
 **Artifact ID:** `<stable-id>`  
 **Status:** `<Open | Feasible | Not feasible | Superseded>`  
@@ -12,82 +12,93 @@
 **Spike branch:** `<branch>`  
 **Blocked downstream Issue(s):** `<#issue(s) or URL(s)>`
 
-## 1. Current Understanding
+## 1. Technical Question and Required Outcome
+
+<Reference the stable Issue question/outcome concisely. Do not redefine it here.>
+
+## 2. Current Understanding
 
 ### Established facts
 
-- <authoritative specification or directly observed fact>
-- <validated prior behaviour>
+- <evidence-backed fact>
 
-### Material unresolved questions
+### Remaining uncertainty
 
-- <uncertainty that still matters to the Technical Question>
+- <uncertainty still relevant to the Issue>
 
 ### Rejected / unsupported assumptions
 
-- <assumption or approach disproved by evidence>
+- <assumption disproved, with evidence reference>
 
-## 2. Current Approved Experiment
+## 3. Current Investigation Position
+
+**TID workstream:** `<W# / description>`  
+**TID approach:** `<A# / description>`  
+**Plan route:** `<execution-map reference>`  
+**Approach status:** `<Active | Supported | Deprioritised | Rejected | Blocked>`
+
+<Explain briefly why this is the current position under the approved TID and Spike Implementation Plan.>
+
+## 4. Current Approved Experiment
 
 **Iteration:** `<number>`  
-**TID workstream:** `<W# / description>`  
-**TID option:** `<O# / description>`  
-**Hypothesis:** `<bounded claim>`  
+**Hypothesis:** `<bounded hypothesis>`  
 **Owner approval:** `<Approved YYYY-MM-DD | Pending>`
 
 ### Why this experiment
 
-<Why this exact experiment is the next useful test under the approved Spike Implementation Plan.>
+<Explain what uncertainty this experiment resolves and why it follows from the current TID/plan position.>
 
 ### Experiment
 
-<Exact bounded experiment, representative environment/data and comparison/control where relevant.>
+<Exact bounded experiment, representative environment/data, and controls/comparison where relevant.>
 
 ### Expected evidence
 
-<What observable result would support, reject or leave the hypothesis unresolved.>
+<Observable evidence that would support, reject or leave the hypothesis inconclusive.>
 
 ### Operational bounds
 
-<Runtime, spend, requests, data retention, credentials, safety/security controls and other explicit limits.>
+<Requests, concurrency, runtime, spend, data retention, credentials, safety/security controls and other limits.>
 
-### Straightforward corrections allowed
+### Permitted straightforward corrections
 
-<List only unambiguous mechanical/configuration corrections that do not change the hypothesis, mechanism, architecture, dependency model or evidence meaning. If none: “None.”>
+<List corrections that may be made without changing the experiment's hypothesis, mechanism, architecture/dependencies or evidence meaning. If none: “None.”>
 
-### Stop / viability conditions
+### Stop conditions
 
-<Conditions that require stopping the experiment and returning to the owner rather than adding a new troubleshooting direction.>
+<Conditions requiring an owner checkpoint before further troubleshooting or a new experiment.>
 
-## 3. Experiment Log
+## 5. Experiment Log
 
-Append one subsection per completed experiment. Do not delete failed/inconclusive experiments.
+Append one subsection per completed experiment. Preserve failures and inconclusive results.
 
 ### Iteration <N> — <short name>
 
-**Workstream / option:** <W# / O#>  
+**TID workstream / approach:** <W# / A#>  
 **Hypothesis:** <what was tested>  
 **Environment/data:** <representative runtime/input/sample>  
 **Method:** <bounded experiment>  
 **Evidence:** <stable repository references and key observations>  
 **Result:** `<Supported | Rejected | Inconclusive>`  
-**Straightforward corrections attempted:** <None / concise list>  
-**Experiment viability checkpoint:** <Not triggered | Triggered — reason and owner decision>  
 **Learning:** <what changed in current understanding>  
-**Owner decision / next approved experiment:** <decision/reference>
+**Straightforward corrections attempted:** <None or concise list>  
+**Experiment viability:** `<Normal completion | Viability checkpoint triggered>`  
+**Approach viability:** `<Continue | Deprioritise | Reject | TID review required>`  
+**Owner checkpoint outcome:** `<Pending | Approved next experiment | Redirected | Stop>`
 
-## 4. Supported Technical Specification
+## 6. Supported Technical Specification
 
-> Accumulating evidence-backed output that downstream engineering may eventually rely on. Include only supported behaviour.
+> Accumulating evidence that downstream engineering may eventually rely on. Include only supported behaviour.
 
 ### Supported behaviour
 
-- <technical behaviour / interaction rule / environmental requirement>
+- <technical behaviour / environmental requirement>
 
 ### Required sequence / mechanism
 
-1. <supported interaction step>
-2. <supported interaction step>
+1. <supported step>
+2. <supported step>
 
 ### Failure modes and handling constraints
 
@@ -95,50 +106,49 @@ Append one subsection per completed experiment. Do not delete failed/inconclusiv
 
 ### Environment / variability
 
-- <runtime, region, account, provider, data-shape or timing limitation>
+- <material limitation>
 
 ### Confidence and evidence boundary
 
-<What is demonstrated, how representative it is, and what is explicitly not claimed.>
+<What is demonstrated and what is explicitly not claimed.>
 
-## 5. Remaining Uncertainty
+## 7. Remaining Uncertainty
 
 <List only uncertainties that still matter to the original Technical Question.>
 
-## 6. Final Conclusion
+## 8. Final Conclusion
 
 **Result:** `<Feasible | Not feasible | Pending>`
 
 ### Feasible
 
-<State the evidence-backed technical specification/approach sufficiently established for downstream design.>
+<State the evidence-backed technical approach/specification downstream engineering may rely on.>
 
 ### Not feasible
 
-<State the evidence showing that the required outcome cannot be achieved within the approved constraints and the resulting Product/Architecture/POC decision.>
+<State the evidence showing the Required Outcome cannot be achieved within the approved constraints and the resulting decision required.>
 
-The Spike is not complete while the result is Pending.
+An individual failed or inconclusive experiment is not a terminal Spike result.
 
-## 7. Downstream Implications
+## 9. Downstream Implications
 
-- <blocked Feature/Bug Issue and required reassessment>
+- <blocked Issue and required reassessment>
 - <Product/Architecture/POC decision required, if any>
-- <durable technical facts that downstream HLD/Implementation Planning may rely on>
 
-## 8. Reproducibility
+## 10. Reproducibility
 
 Record:
 
 - exact repository commit / probe version;
-- commands/scripts used;
-- runtime/environment details;
-- representative input/sample;
-- execution windows;
+- commands/scripts;
+- runtime/environment;
+- representative sample;
+- execution window;
 - retained evidence paths;
 - credential/environment prerequisites without secret values.
 
 ## Completion
 
-**Spike state:** `<Open | Ready for final validation>`  
-**Rationale:** <why the original Technical Question is or is not resolved>  
-**Required next action:** <next approved experiment, viability decision, or final validation>
+**Spike state:** `<Open | Ready to close>`  
+**Rationale:** <why the Technical Question is or is not resolved>  
+**Required next action:** <next approved experiment, TID/plan review, final validation, or final PR>
