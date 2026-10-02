@@ -45,7 +45,7 @@ Require a Technical Spike when downstream design cannot responsibly be chosen be
 
 Do **not** require a Spike for every uncertainty. Keep a bounded feasibility gate inside HLD/Implementation Planning when the external/runtime behaviour is already sufficiently understood and a small probe only confirms a residual implementation assumption.
 
-When a Spike is required, create or link **one controlling Technical Spike Issue** using the canonical template. Set HLD, Implementation Plan and LLD to deferred and stop assessment. Do not design around the unknown.
+When a Spike is required, create or link **one controlling Technical Spike Issue** using the canonical template. Set the downstream Feature/Bug HLD, Implementation Plan and LLD to deferred and stop downstream assessment. The Spike then follows its dedicated path: setup the Spike branch, create/approve the Technical Investigation Design, create/approve the Spike Implementation Plan, then execute bounded experiments through `technical-spike`. Do not use the normal Feature/Bug HLD/Implementation Plan as substitutes for those Spike-specific artifacts.
 
 If a controlling Spike already exists and is still open, keep using it. A failed/inconclusive experiment inside that Spike is not grounds for a serial replacement Spike.
 
@@ -53,7 +53,7 @@ If a controlling Spike already exists and is still open, keep using it. A failed
 
 Rerun `assess-change` only after the controlling Spike reaches a supported final conclusion and its final evidence has been integrated.
 
-Read `docs/changes/<spike-issue>/technical-spike.md`.
+Read the final Spike artifact set: `technical-investigation-design.md`, `spike-implementation-plan.md`, and `technical-spike.md`.
 
 - If the Spike conclusion is `Feasible`, record Technical Spike `Required / Complete`, reference the Spike, and decide HLD/Implementation Plan depth from the supported technical specification.
 - If the Spike conclusion is `Not feasible`, keep production implementation blocked and route the result to the required Product Definition, Architecture Definition or POC decision. Do not silently relax requirements or constraints.
@@ -71,7 +71,7 @@ If the Feature/Bug Issue itself is not ready, return to Issue refinement rather 
 
 ## Completion contract
 
-Report the Issue, readiness state, Technical Spike decision/rationale/prerequisite/status, HLD decision and rationale (or deferral), Implementation Plan decision and rationale (or deferral), LLD status, likely durable Product/Architecture impact, material risks/dependencies, validation complexity, and exact next lifecycle step. Confirm the Issue's `Development Lifecycle Assessment` section has been updated when write access is available.
+Report the Issue, readiness state, Technical Spike decision/rationale/prerequisite/status, the Spike next step when required (workspace → TID → Spike Implementation Plan → bounded experiment execution), HLD decision and rationale (or deferral), normal Implementation Plan decision and rationale (or deferral), LLD status, likely durable Product/Architecture impact, material risks/dependencies, validation complexity, and exact next lifecycle step. Confirm the Issue's `Development Lifecycle Assessment` section has been updated when write access is available.
 
 ## Learning checkpoint
 

@@ -1,233 +1,242 @@
 ---
 name: technical-spike
-description: Run an iterative technical Spike for a material undocumented or unknown external/runtime boundary, preserving one controlling Issue until the original technical question is resolved or shown infeasible.
+description: Execute a Technical Spike through individually approved bounded experiments using its Issue, TID and Spike Implementation Plan as the controlling context.
 ---
 
 # Technical Spike
 
-Use this skill only for a GitHub Technical Spike Issue created because a material technical unknown prevents responsible downstream design or implementation.
+Use this skill only for a GitHub Technical Spike Issue.
 
-A Technical Spike answers one stable technical question through iterative, bounded experiments. It does **not** implement the blocked production feature.
+A Technical Spike answers one stable technical question through bounded experiments. The **Issue is the central work item**. The dedicated Spike branch is the working container. Do not open a pull request while the investigation is still active.
 
-## Core lifecycle rule
+## Required inputs
 
-The Spike Issue is the controlling work item and remains open until its original Technical Question is resolved with a supported **Feasible** or **Not feasible** conclusion.
+Before the first experiment, read and confirm:
 
-A failed or inconclusive experiment is not Spike completion. Record it, update the current understanding, propose the next hypothesis/experiment, and continue within the same Spike after the required owner checkpoint.
+- the controlling Technical Spike Issue;
+- approved `docs/changes/<issue>/technical-investigation-design.md`;
+- approved `docs/changes/<issue>/spike-implementation-plan.md`;
+- `docs/changes/<issue>/technical-spike.md`;
+- blocked downstream Issue(s);
+- Product Definition and Architecture Definition;
+- relevant source/tests/configuration and retained evidence.
 
-Do not create serial follow-up Spike Issues merely because an experiment failed. Create another Spike only when a genuinely independent technical question emerges with a distinct completion condition.
+If the TID or Spike Implementation Plan is missing/unapproved, create/complete it through the dedicated skills before experiment execution.
 
-## Inputs
+## Authority model
 
-Read:
+The Issue defines **what must be answered**.
 
-- the Technical Spike Issue and its completion criteria;
-- each blocked downstream Feature/Bug Issue;
-- `docs/product.md`;
-- `docs/architecture.md`;
-- `AGENTS.md`;
-- relevant source/tests/configuration;
-- official external documentation and retained repository evidence;
-- relevant third-party/community implementations or reports as leads, not authoritative specifications unless the provider explicitly documents them.
+The TID defines **the technical search space, workstreams, candidate approaches, boundaries and evidence criteria**.
 
-Create or update:
+The Spike Implementation Plan defines **how that space is traversed: order, dependencies, entry/exit/fallback rules and stop/return conditions**.
 
-`docs/changes/<spike-issue-number>/technical-spike.md`
+`technical-spike.md` records **the current bounded experiment, evidence and accumulated technical conclusions**.
 
-from the canonical template.
+Do not allow chronological experiment history to redefine the TID or plan implicitly.
 
-Use one long-lived Spike branch/workspace for the controlling Issue. Open a draft pull request early, reference the Spike with `Refs #<issue>`, and keep it open while the Spike remains unresolved. Do not use a closing keyword until final Spike completion.
+## Experiment boundary
 
-## Option discovery and prioritisation
+Default execution is **one approved experiment at a time**.
 
-Before selecting the first experimental hypothesis, perform a **proportionate option scan** for the bounded Technical Question.
+The agent may autonomously make a **straightforward correction** only when it is required to complete the already-approved experiment and does not materially change:
 
-The goal is to identify the materially credible ways to resolve the blocking uncertainty before committing to one implementation path. Use the smallest useful combination of:
+- the hypothesis;
+- the mechanism/approach being tested;
+- architecture, dependency or runtime shape;
+- scope, cost or risk;
+- representative environment/data;
+- what the resulting evidence would mean.
 
-- official/provider documentation;
-- current repository and retained evidence;
-- established libraries, mechanisms or implementation approaches;
-- relevant upstream issues/releases and community experience where they illuminate maturity, reliability or known limitations.
+Examples include correcting a typo, malformed fixture, obvious invocation defect or equivalent mechanical error.
 
-Record the credible option set, evidence/rationale, material known limitations, and investigation priority in the living Spike artifact. Do not select a candidate merely because it is easy to install, familiar, or the first plausible search result.
+If the first reasonable correction does not resolve the problem and there is no obvious next fix, or further troubleshooting requires choosing a new technical direction, stop for an **Experiment Viability Checkpoint**.
 
-This is a lightweight technical-research step, **not a replacement for the SideGig Research Methodology**. Keep it proportionate to the downstream development question. If a responsible scan would require broad/open-ended domain research, many provider classes, commercial-market analysis or a materially wider objective, state that boundary and return to the owner instead of expanding the Spike silently. Respect any explicit owner instruction to keep the investigation at Spike depth.
+Do not treat owner approval for one experiment as authority for a sequence of new diagnostic experiments.
 
-## Iteration planning
+## Experiment approval checkpoint
 
-Before executing an iteration, update the living Spike artifact with:
+Before every new experiment, present a self-contained checkpoint. Assume the owner has not looked at this work for several days and has no Issue, TID, plan, previous checkpoint or code open.
 
-1. the current understanding;
-2. the current ranked option set and status;
-3. the ordered hypothesis backlog for the selected option;
-4. the selected option and hypothesis;
-5. why it is the next useful test;
-6. the exact bounded experiment;
-7. representative environment/data;
-8. expected evidence and interpretation;
-9. operational bounds and stop conditions.
+Use this structure:
 
-The Issue body holds the stable problem/outcome. The living Spike artifact holds the evolving option selection, investigation design and evidence.
+### 1. Issue context
 
-## Owner checkpoint
+Explain the underlying Issue first:
 
-Default mode is **one approved iteration at a time**.
+- what capability/problem the Issue is trying to resolve;
+- why it matters to the product or downstream work;
+- what currently prevents the Issue from being completed.
 
-An owner checkpoint is an **authorization and decision boundary, not a transfer of investigative ownership**. The executing agent remains responsible for understanding what the evidence means, selecting the best next step, diagnosing ordinary execution problems, and presenting a decision-ready recommendation.
+Do not start with the current experiment, library, error, hypothesis or implementation detail.
 
-After each completed iteration:
+### 2. Spike context
 
-1. record the evidence and result in the Experiment Log;
-2. update Current Understanding, Supported Technical Specification and Remaining Uncertainty;
-3. decide whether the evidence still justifies the current option or triggers an option-viability checkpoint; if the option remains viable, select and **recommend** the next hypothesis/experiment with the highest current information value; if not, return to the ranked option set and recommend the next option;
-4. explain why that recommendation is next and what uncertainty it resolves;
-5. identify any prerequisite, blocker or execution problem and classify it explicitly:
-   - whether it affected the completed iteration;
-   - whether it blocks the recommended next iteration;
-   - whether it is an ordinary operational prerequisite or a material owner/product/architecture/risk decision;
-   - the concrete supported recovery/action required;
-6. for ordinary operational prerequisites, use or identify the repository/platform's standard recovery path before escalating manual work to the owner;
-7. state the exact owner decision requested, normally in a form such as **Approve Iteration N: <bounded experiment>**, **Redirect to <alternative>**, or **Decide <material choice>**;
-8. report back to the project owner and stop only after the hand-off is decision-ready.
+Explain why a Technical Spike is being used and what uncertainty it must resolve.
 
-Proceed to the next iteration only after owner approval.
+Then state:
 
-The project owner may explicitly authorize autonomous continuation across multiple iterations. Even with that authorization, stop before proceeding when the next iteration would materially change:
+- current TID workstream;
+- current TID candidate/approach;
+- why that candidate is being investigated now under the Spike Implementation Plan;
+- what evidence would finish this part of the investigation or justify moving elsewhere.
 
-- the original Technical Question or required outcome;
-- product scope or acceptance criteria;
-- Product/Architecture constraints;
-- dependency model or use a previously excluded dependency;
-- expected cost/spend or operational burden;
-- security, privacy, legal or safety posture;
-- representative environment/data in a way that changes what the evidence means.
+Expand acronyms and technical mechanisms sufficiently for a reader without recent context.
 
-## Option-viability checkpoint
+### 3. Previous experiment
 
-Do not respond to repeated or unexplained failure by automatically adding progressively deeper diagnostics to the same candidate.
+Explain:
 
-Trigger an option-viability checkpoint when evidence materially raises doubt about whether the selected option is itself suitable, including repeated timeouts/failures, behaviour inconsistent with its expected maturity or documented use, or a growing need for candidate-specific workarounds.
+- what was tested;
+- why that test was necessary in the wider investigation, not merely its immediate technical purpose;
+- what it was expected to establish;
+- what actually happened.
 
-At that checkpoint:
+Do not use experiment IDs, library names or diagnostic terms as substitutes for explanation.
 
-1. summarize what is failing and what has already been ruled out;
-2. inspect proportionate upstream evidence such as official documentation, release notes, issue trackers and community reports;
-3. distinguish evidence for an environment/integration-specific problem from evidence of a candidate-level reliability, compatibility or maintenance problem;
-4. compare the cost/information value of deeper diagnosis with returning to the next ranked credible option;
-5. record an explicit option decision: `Continue`, `Deprioritise`, or `Reject`, with evidence.
+### 4. Current understanding
 
-A rejected/deprioritised option remains part of the Spike evidence. Return to the existing ranked option set; do not create a new Spike merely because one option failed.
+State:
+
+- what the evidence established;
+- what it ruled out;
+- what remains unknown;
+- whether the current TID candidate still appears sensible.
+
+Separate observation from interpretation.
+
+### 5. Proposed next experiment
+
+Describe exactly one bounded experiment:
+
+- what will be tested;
+- why it is now the next question;
+- what changes from the previous experiment;
+- what evidence would support, reject or leave the hypothesis inconclusive.
+
+### 6. Direction check
+
+Explain why the experiment is proportionate to the original Issue and consistent with the TID and Spike Implementation Plan.
+
+Explicitly state whether it introduces any new architecture, infrastructure, dependency, runtime/security mechanism or broader scope. If any are introduced, do not treat the change as routine troubleshooting; route it through the appropriate plan/TID/owner decision first.
+
+### 7. Decision requested
+
+Request exactly one of:
+
+**Approve this experiment / Redirect the investigation / Stop and reconsider the approach.**
+
+Do not execute the new experiment until it is approved.
+
+## Experiment Viability Checkpoint
+
+Trigger this checkpoint before deeper troubleshooting when:
+
+- the first reasonable correction did not resolve the problem and there is no obvious next fix;
+- additional debugging requires new machinery, infrastructure, dependencies, guards, wrappers or architectural assumptions;
+- the troubleshooting problem is becoming materially different from the question the experiment was intended to answer;
+- several plausible causes now require a new investigation to distinguish;
+- the expected troubleshooting effort/risk is becoming disproportionate to the information value of the experiment;
+- the agent is progressively creating specialised diagnostics instead of making progress on the approved hypothesis.
+
+Report:
+
+### Original purpose
+
+What the approved experiment was intended to establish and why that matters to the Issue.
+
+### What went wrong
+
+What failed and which straightforward correction(s) were already attempted.
+
+### Why this is no longer routine troubleshooting
+
+What additional complexity or new decision is now required.
+
+### Perspective check
+
+Whether continuing this experiment still has better information value than stepping back to another TID option or revisiting the plan/TID.
+
+### Recommendation
+
+One of: **continue troubleshooting / modify the experiment / abandon this experiment and return to the planned option set / review the TID**.
+
+### Decision requested
+
+Ask the owner to approve or redirect that recommendation.
+
+The governing principle is: **troubleshooting depth must remain proportional to the value of the experiment**.
+
+## Option viability and rabbit-hole control
+
+Repeated, stubborn or surprising failures also require an option-level perspective check before deeper candidate-specific diagnostics.
+
+Use the TID and Spike Implementation Plan to determine whether the current option remains justified. Explicitly decide:
+
+- `Continue`;
+- `Deprioritise`;
+- `Reject`;
+- `TID review required`.
+
+Do not respond to a failing candidate by inventing progressively more specialised infrastructure merely because it could make the latest experiment pass.
 
 ## Investigation discipline
 
-For each iteration:
+For each approved experiment:
 
-1. Separate established facts from hypotheses and third-party claims.
-2. Prefer direct observation of the real boundary when legally, safely and practically possible.
-3. Use representative environments/data/permissions/providers/protocol variants proportionate to the question.
-4. Make the experiment reproducible before drawing conclusions.
-5. Keep hypotheses tied to the currently selected option and return to the ranked option set when the option-viability checkpoint says deeper diagnosis is no longer justified.
-6. Compare materially credible alternatives proportionately; the initial option scan establishes the comparison set and later evidence may add/remove options.
-7. Preserve enough evidence to audit the result without retaining secrets or unnecessary sensitive/raw content.
-8. Record variability and limitations; do not generalise beyond the evidence.
-9. Classify the experiment result as `Supported`, `Rejected`, or `Inconclusive`.
-10. Update the option status and investigation backlog from what was learned.
+1. keep the hypothesis tied to the current TID option and plan route;
+2. prefer direct observation of the real boundary when practical;
+3. use representative environment/data proportionate to the claim;
+4. make the experiment reproducible;
+5. separate facts, inference and third-party claims;
+6. preserve only necessary sanitized evidence;
+7. classify the result as `Supported`, `Rejected` or `Inconclusive`;
+8. update `technical-spike.md` before proposing the next experiment.
 
-A third-party library, script, blog post, issue, or reverse-engineered implementation is evidence about a possible approach. It is not the external system's specification. Validate material behaviour independently before downstream design relies on it.
+A failed/inconclusive experiment does not complete the Spike and does not create a new Spike Issue.
 
-## Code and repository boundaries
+## Repository and PR behaviour
 
-Disposable probes and reproducibility tooling are allowed. Keep them under the Spike change area or another clearly non-production location unless the Issue explicitly authorizes reusable investigation tooling.
+Use one long-lived branch/workspace for the controlling Issue, normally `spike/<issue>-<slug>`.
 
-A normal Spike tree may contain:
+Store:
 
 ```text
 docs/changes/<issue>/
+  technical-investigation-design.md
+  spike-implementation-plan.md
   technical-spike.md
-  experiments/
-    01-<slug>/
-      experiment.md
-      <probe scripts>
-      <sanitized retained evidence>
-    02-<slug>/
-      ...
+  experiments/        # only where useful
 ```
 
-Use subdirectories only when they make a material experiment reproducible/auditable; do not create ceremony for trivial probes.
+Commits preserve the working history. The Issue remains the tracking centre.
 
-Do not:
+**Do not open or maintain a draft PR during the investigation.**
 
-- implement the blocked production feature;
-- silently turn a probe into production architecture;
-- expand product scope;
-- relax approved constraints merely to obtain a positive result;
-- treat an inconclusive iteration as authority to close the Spike.
+Create the pull request only after:
 
-If evidence shows that a product/architecture constraint itself must change, record the implication, recommend the resulting decision path, state exactly what must be decided, and stop for the owner/product decision.
-
-Do not use passive checkpoint language as a substitute for ownership. Statements such as "the next experiment awaits owner review", "a token was unavailable", or "the Spike remains open" are incomplete unless accompanied by the recommended next action, blocker impact, recovery path and exact owner decision required.
-
-## Draft PR behaviour
-
-The Spike branch and draft PR are long-lived working containers for the investigation.
-
-Each iteration may add commits containing:
-
-- the updated `technical-spike.md`;
-- experiment notes;
-- bounded probe/reproducibility code;
-- sanitized evidence;
-- learning records where warranted.
-
-Keep the PR draft while the Spike is unresolved. Interim experiment commits/PR updates do not need to be merged merely to preserve evidence. If repository or operational constraints require an interim evidence merge, the controlling Spike remains open and the merge must not use a closing keyword or imply that downstream work is unblocked.
+- the original Technical Question has a supported `Feasible` or `Not feasible` conclusion;
+- final Spike validation passes;
+- the branch is ready to propose for integration.
 
 ## Completion gate
 
-The Spike is ready to close only when the original Technical Question is resolved.
+A Spike is ready to close only when the original Technical Question is resolved.
 
-A **Feasible** conclusion requires enough representative evidence to state a supported technical specification/approach that downstream design may rely on.
+A `Feasible` conclusion requires representative evidence supporting a technical specification/approach downstream work may rely on.
 
-A **Not feasible** conclusion requires enough evidence to show that the Required Outcome cannot be achieved within the approved constraints and to identify the resulting Product/Architecture/POC decision.
+A `Not feasible` conclusion requires evidence showing the Required Outcome cannot be achieved within the approved constraints and identifies the resulting Product/Architecture/POC decision.
 
-There is no terminal `Inconclusive` Spike state. An inconclusive experiment keeps the Spike Open and drives the next iteration unless the owner explicitly changes/stops the original objective.
-
-Before completion confirm:
-
-- the original Technical Question is answered;
-- material hypotheses/alternatives were covered proportionately;
-- experiment evidence is reproducible and observations are distinguished from inference;
-- limitations/variability are explicit;
-- the Supported Technical Specification contains only evidence-backed behaviour;
-- downstream implications are explicit;
-- the final result is Feasible or Not feasible.
-
-After the final Spike PR is integrated, rerun `assess-change` on every blocked downstream Issue.
-
-## Validation and integration
-
-Use the repository validation contract for committed tooling and the `validation` skill to validate both individual experiment evidence and final Spike completion.
-
-Validation may return **Iteration valid / Spike remains open** when an experiment is correctly executed but the original Technical Question is unresolved.
-
-Only final Spike validation may authorize the PR to become ready for merge with a closing keyword.
+After final integration, rerun `assess-change` on every blocked downstream Issue.
 
 ## Completion contract
 
-For an iteration, report the Spike Issue, current iteration, hypothesis, experiment, environment/data, retained evidence, result, learning and updated current understanding.
+For each iteration, report the Issue, TID workstream/approach, approved hypothesis, experiment, representative environment/data, evidence, result, learning, current understanding and whether an experiment/option viability checkpoint was triggered.
 
-Then provide a **decision-ready checkpoint** containing:
+Before a new experiment, use the full self-contained approval checkpoint above.
 
-- **Recommended next iteration/action:** one clear recommendation owned by the agent;
-- **Why this is next:** the uncertainty resolved and why it has the highest current information value;
-- **Prerequisite/blocker status:** `None` or, for each item, whether it affected the completed iteration, whether it blocks the next iteration, and the concrete recovery/action;
-- **Owner decision requested:** the exact approval, redirect or material decision required;
-- **Consequence of approval:** what the agent will execute next;
-- **Consequence of non-approval/redirect:** what remains unresolved.
-
-Do not end an iteration report with only "awaiting review", "owner review required", an open-ended problem statement, or a missing prerequisite with no impact/recovery explanation.
-
-For final completion, additionally report the supported technical specification or infeasibility conclusion, limitations, downstream implications, validation result, final PR state and downstream reassessment required.
+For final completion, report the supported technical specification or infeasibility conclusion, limitations, downstream implications, validation result and final PR state.
 
 ## Learning checkpoint
 
-Before completing each iteration, consider whether execution exposed a reusable lesson about the product, Development Operating Model, a skill/template, tooling/CI, or implementation methodology. A normal failed hypothesis is not automatically a learning. When a reusable lesson exists, use `capture-learning`; otherwise report `Learnings: None`.
+Consider whether execution exposed a reusable lesson. Use `capture-learning` when warranted; otherwise report `Learnings: None`.
