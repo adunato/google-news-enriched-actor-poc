@@ -129,13 +129,13 @@ Do not jump from a consent response directly to browser automation, proxies, man
 
 ### 5.3 Alternatives and boundary decisions
 
-| Option | Fit with current POC | Decision |
-| --- | --- | --- |
-| Existing marker/RPC mechanism over ordinary HTTP/session | Strong | **Primary** |
-| Alternative library implementing the same mechanism | Useful as reference/validation, but not a different architecture | Reference only unless it materially improves reliability |
-| Browser/Playwright resolution | Technically credible; current GNews project uses this for automatic URL resolution | Out of scope unless owner changes the POC |
-| Paid search/news API returning publisher URLs | Could avoid Google decoding entirely | Out of scope under current product constraints |
-| Offline decoding of opaque current tokens | Current evidence does not support it as a general solution | Do not pursue |
+| Option                                                   | Fit with current POC                                                               | Decision                                                 |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Existing marker/RPC mechanism over ordinary HTTP/session | Strong                                                                             | **Primary**                                              |
+| Alternative library implementing the same mechanism      | Useful as reference/validation, but not a different architecture                   | Reference only unless it materially improves reliability |
+| Browser/Playwright resolution                            | Technically credible; current GNews project uses this for automatic URL resolution | Out of scope unless owner changes the POC                |
+| Paid search/news API returning publisher URLs            | Could avoid Google decoding entirely                                               | Out of scope under current product constraints           |
+| Offline decoding of opaque current tokens                | Current evidence does not support it as a general solution                         | Do not pursue                                            |
 
 ### 5.4 Success condition
 
