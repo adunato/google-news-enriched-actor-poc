@@ -28,9 +28,9 @@ If evidence requires a material change to the TID search space, revise/review th
 
 Make explicit whether an option is always tested, conditionally tested, reference-only or excluded, and when investigation stops instead of testing every candidate.
 
-| Workstream | TID option | Execution role / order | Entry condition | Exit condition | Fallback / next state |
-| --- | --- | --- | --- | --- | --- |
-| W1 | O1 | <Primary / first> | <when eligible> | <evidence that ends this path> | <O2 / conclude / TID review> |
+| Workstream | TID option | Execution role / order | Entry condition  | Exit condition                  | Fallback / next state       |
+| ---------- | ---------- | ---------------------- | ---------------- | ------------------------------- | --------------------------- |
+| W1         | O1         | <Primary / first>      | <when eligible>  | <evidence that ends this path>  | <O2 / conclude / TID review> |
 
 ## 4. Dependencies and Sequencing
 
