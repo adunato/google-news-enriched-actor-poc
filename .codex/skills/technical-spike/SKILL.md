@@ -56,75 +56,123 @@ Do not treat owner approval for one experiment as authority for a sequence of ne
 
 ## Experiment approval checkpoint
 
-Before every new experiment, present a self-contained checkpoint. Assume the owner has not looked at this work for several days and has no Issue, TID, plan, previous checkpoint or code open.
+Before every new experiment, give the project owner a self-contained approval summary.
 
-Use this structure:
+Write it for a person who understands the product at a general level but may not have looked at this Issue or Spike for days or weeks. They must not need to open the Issue, TID, Spike Implementation Plan, `technical-spike.md`, previous checkpoints, code or PR history to understand the decision.
 
-### 1. Issue context
+### Communication rules
 
-Explain the underlying Issue first:
+Apply these rules throughout the whole checkpoint:
 
-- what capability/problem the Issue is trying to resolve;
-- why it matters to the product or downstream work;
-- what currently prevents the Issue from being completed.
+- Start from the product/problem context and progressively narrow down to the proposed experiment.
+- Use clear, non-specialist language wherever possible.
+- Do not use an Issue number as an explanation. If mentioning `#4`, first explain what Issue #4 is and what it is trying to achieve, then use the number as shorthand.
+- Do not use TID workstream IDs, approach IDs, hypothesis IDs, PR numbers, artifact names, library names, internal mechanism names or historical experiment names without first explaining what they mean and why they matter.
+- Do not assume the owner remembers previous experiments, previous decisions, architecture discussions or implementation history.
+- Introduce technical terminology only when it is necessary to understand the decision, and explain it when first introduced.
+- Describe technical mechanisms in terms of what they do before naming them.
+- Separate the information needed to make the decision from execution detail. Do not fill the owner summary with fixture hashes, commands, request counts, file paths, configuration values or other implementation parameters unless one of those values is itself material to the decision.
+- Prefer explaining cause, consequence and decision over reproducing the technical record.
+- The checkpoint must be understandable from top to bottom without knowledge introduced elsewhere.
 
-Do not start with the current experiment, library, error, hypothesis or implementation detail.
+### 1. Product and Issue context
 
-### 2. Spike context
-
-Explain why a Technical Spike is being used and what uncertainty it must resolve.
-
-Then state:
-
-- current TID workstream;
-- current TID candidate/approach;
-- why that candidate is being investigated now under the Spike Implementation Plan;
-- what evidence would finish this part of the investigation or justify moving elsewhere.
-
-Expand acronyms and technical mechanisms sufficiently for a reader without recent context.
-
-### 3. Previous experiment
+Re-establish the wider context before discussing the Spike.
 
 Explain:
 
-- what was tested;
-- why that test was necessary in the wider investigation, not merely its immediate technical purpose;
-- what it was expected to establish;
-- what actually happened.
+- what part of the product or capability this work relates to;
+- what the relevant downstream Issue or Issues are trying to achieve, in normal language;
+- why those Issues matter;
+- what currently prevents them from progressing.
 
-Do not use experiment IDs, library names or diagnostic terms as substitutes for explanation.
+If Issue numbers are useful for traceability, mention them only after explaining what each Issue means.
 
-### 4. Current understanding
+The reader should finish this section understanding the underlying product problem even if they remember nothing about the Spike.
+
+### 2. Why this Spike exists
+
+Explain:
+
+- what important technical uncertainty prevents the Issue from being solved normally;
+- why experimentation is needed;
+- what the Spike is ultimately trying to establish.
+
+Then explain where the investigation currently is in that wider journey.
+
+If referring to a TID workstream or candidate approach, first explain what that part of the investigation is trying to determine in ordinary language, then provide the ID in parentheses if useful.
+
+Do not begin with IDs such as `W1/A1`.
+
+### 3. What we have learned so far
+
+Summarise only the previous evidence necessary to understand the next decision.
+
+Explain:
+
+- what we previously believed or needed to establish;
+- what was tested or observed;
+- what the result tells us;
+- what it does **not** tell us;
+- what question therefore remains.
+
+Do not present a chronological experiment log.
+
+Do not say only that “H3 failed”, “Readability timed out”, or “the RPC path worked”. Explain what was being attempted, why it mattered to the wider problem, and what that result means.
+
+If this is the first experiment, state that clearly and summarise the historical evidence that led to this starting point.
+
+### 4. What we propose to do next
+
+Describe exactly one experiment.
+
+Start with the question the experiment is intended to answer.
+
+Then explain, at the level needed for an owner decision:
+
+- what we will try;
+- why this experiment is the next sensible way to reduce the remaining uncertainty;
+- how it differs from what has already been established;
+- what a successful result would tell us;
+- what a failed result would tell us.
+
+Keep detailed execution instructions in the technical Spike record unless they materially affect the owner's decision.
+
+### 5. Direction and complexity check
+
+Explicitly step back from the immediate experiment.
 
 State:
 
-- what the evidence established;
-- what it ruled out;
-- what remains unknown;
-- whether the current TID candidate still appears sensible.
+- why continuing in this direction still makes sense given the original Issue;
+- whether the proposed experiment stays within the existing TID and Spike Implementation Plan;
+- whether it introduces any new architecture, infrastructure, dependency, runtime mechanism, security mechanism, significant operational burden, cost or scope.
 
-Separate observation from interpretation.
+If none are introduced, say so plainly.
 
-### 5. Proposed next experiment
+If the proposed experiment requires new machinery or materially deeper troubleshooting, explain why the investigation has become more complicated than expected and do not proceed without the owner's decision.
 
-Describe exactly one bounded experiment:
+### 6. Recommendation
 
-- what will be tested;
-- why it is now the next question;
-- what changes from the previous experiment;
-- what evidence would support, reject or leave the hypothesis inconclusive.
+Give one clear recommendation in normal language.
 
-### 6. Direction check
+Explain briefly why this is preferable to:
 
-Explain why the experiment is proportionate to the original Issue and consistent with the TID and Spike Implementation Plan.
+- continuing to troubleshoot the previous experiment;
+- switching to another known approach;
+- stopping or reconsidering the current direction.
 
-Explicitly state whether it introduces any new architecture, infrastructure, dependency, runtime/security mechanism or broader scope. If any are introduced, do not treat the change as routine troubleshooting; route it through the appropriate plan/TID/owner decision first.
+The agent owns this recommendation. Do not make the owner reconstruct it from the evidence.
 
 ### 7. Decision requested
 
-Request exactly one of:
+End with a short, explicit choice:
 
 **Approve this experiment / Redirect the investigation / Stop and reconsider the approach.**
+
+State in one sentence exactly what approval authorises.
+
+Approval applies only to this bounded experiment and straightforward mechanical corrections within it. It does not authorise a new troubleshooting strategy, new technical mechanism or subsequent experiment.
 
 Do not execute the new experiment until it is approved.
 
