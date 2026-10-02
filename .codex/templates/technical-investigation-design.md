@@ -35,17 +35,17 @@
 
 Break the question into stable workstreams only when that improves clarity. A simple Spike may have one workstream.
 
-| ID | Workstream / boundary | Question to resolve | Dependency |
-| --- | --- | --- | --- |
-| W1 | <boundary> | <question> | <None / dependency> |
+| ID  | Workstream / boundary | Question to resolve | Dependency          |
+| --- | --------------------- | ------------------- | ------------------- |
+| W1  | <boundary>            | <question>          | <None / dependency> |
 
 ## 4. Candidate Approaches
 
 Identify the materially credible technical approaches for each workstream. These are high-level approaches, not individual hypotheses or experiments.
 
-| ID | Workstream | Approach | Technical shape / mechanism | Why credible | Material constraints / weakness | Initial disposition |
-| --- | --- | --- | --- | --- | --- | --- |
-| A1 | W1 | <approach> | <how it works at high level> | <evidence/rationale> | <constraint> | <Primary / Fallback / Reference only / Deprioritised / Rejected> |
+| ID  | Workstream | Approach   | Technical shape / mechanism  | Why credible         | Material constraints / weakness | Initial disposition                                              |
+| --- | ---------- | ---------- | ---------------------------- | -------------------- | ------------------------------- | ---------------------------------------------------------------- |
+| A1  | W1         | <approach> | <how it works at high level> | <evidence/rationale> | <constraint>                    | <Primary / Fallback / Reference only / Deprioritised / Rejected> |
 
 Third-party/community implementations are evidence about possible approaches; they are not authoritative specifications unless the provider explicitly documents them as such.
 
@@ -67,8 +67,8 @@ State:
 Define the evidence needed to answer the Technical Question, including representative environment/data and quantitative thresholds where applicable.
 
 | Workstream | Required evidence | Success / exit criterion | Not-feasible / escalation condition |
-| --- | --- | --- | --- |
-| W1 | <evidence> | <criterion> | <condition> |
+| ---------- | ----------------- | ------------------------ | ----------------------------------- |
+| W1         | <evidence>        | <criterion>              | <condition>                         |
 
 ## 7. Boundaries and Non-Goals
 
