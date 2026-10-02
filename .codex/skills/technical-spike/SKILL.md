@@ -1,193 +1,236 @@
 ---
 name: technical-spike
-description: Execute one owner-approved Technical Spike experiment at a time within an approved Technical Investigation Design and Spike Implementation Plan.
+description: Execute a Technical Spike through individually approved bounded experiments using its Issue, TID and Spike Implementation Plan as the controlling context.
 ---
 
 # Technical Spike
 
-Use this skill only for a controlling GitHub Technical Spike Issue.
+Use this skill only for a GitHub Technical Spike Issue.
 
-The Issue is the central work item. The dedicated Spike branch is the working container. Do not open or maintain a draft pull request during ordinary investigation; the final PR is created only after the Spike reaches a supported conclusion and final validation passes.
+A Technical Spike answers one stable technical question through bounded experiments. The **Issue is the central work item**. The dedicated Spike branch is the working container. Do not open a pull request while the investigation is still active.
 
 ## Required inputs
 
-Before proposing the first experiment, read:
+Before the first experiment, read and confirm:
 
-- the Technical Spike Issue and completion criteria;
-- each blocked downstream Issue;
-- the approved `docs/changes/<issue>/technical-investigation-design.md`;
-- the approved `docs/changes/<issue>/spike-implementation-plan.md`;
-- `docs/product.md`, `docs/architecture.md` and `AGENTS.md`;
+- the controlling Technical Spike Issue;
+- approved `docs/changes/<issue>/technical-investigation-design.md`;
+- approved `docs/changes/<issue>/spike-implementation-plan.md`;
+- `docs/changes/<issue>/technical-spike.md`;
+- blocked downstream Issue(s);
+- Product Definition and Architecture Definition;
 - relevant source/tests/configuration and retained evidence.
 
-Create/update:
+If the TID or Spike Implementation Plan is missing/unapproved, create/complete it through the dedicated skills before experiment execution.
 
-`docs/changes/<issue>/technical-spike.md`
+## Authority model
 
-from the canonical template.
+The Issue defines **what must be answered**.
 
-If the TID or Spike Implementation Plan is missing/unapproved, do not begin experimentation.
+The TID defines **the technical search space, workstreams, candidate approaches, boundaries and evidence criteria**.
 
-## Experiment selection
+The Spike Implementation Plan defines **how that space is traversed: order, dependencies, entry/exit/fallback rules and stop/return conditions**.
 
-Use the Spike Implementation Plan to identify the currently eligible workstream/option. Within that boundary, select the single bounded hypothesis/experiment with the highest current information value.
+`technical-spike.md` records **the current bounded experiment, evidence and accumulated technical conclusions**.
 
-Do not silently move to another TID option, add an unplanned subsystem/dependency, or redefine the investigation route. Those changes require the appropriate TID/plan review first.
+Do not allow chronological experiment history to redefine the TID or plan implicitly.
 
-## Owner approval boundary
+## Experiment boundary
 
-**One experiment is approved at a time.** Do not treat approval of an option/workstream as blanket authority for open-ended troubleshooting or multiple experiments.
+Default execution is **one approved experiment at a time**.
 
-Before every experiment, present the following self-contained checkpoint. Assume the owner has not looked at this work for several days and has no Issue, TID, plan, previous checkpoint or code open.
+The agent may autonomously make a **straightforward correction** only when it is required to complete the already-approved experiment and does not materially change:
 
-### Spike experiment approval checkpoint
+- the hypothesis;
+- the mechanism/approach being tested;
+- architecture, dependency or runtime shape;
+- scope, cost or risk;
+- representative environment/data;
+- what the resulting evidence would mean.
 
-**1. Issue context**
+Examples include correcting a typo, malformed fixture, obvious invocation defect or equivalent mechanical error.
+
+If the first reasonable correction does not resolve the problem and there is no obvious next fix, or further troubleshooting requires choosing a new technical direction, stop for an **Experiment Viability Checkpoint**.
+
+Do not treat owner approval for one experiment as authority for a sequence of new diagnostic experiments.
+
+## Experiment approval checkpoint
+
+Before every new experiment, present a self-contained checkpoint. Assume the owner has not looked at this work for several days and has no Issue, TID, plan, previous checkpoint or code open.
+
+Use this structure:
+
+### 1. Issue context
 
 Explain the underlying Issue first:
 
 - what capability/problem the Issue is trying to resolve;
-- why that matters to the product or downstream work;
+- why it matters to the product or downstream work;
 - what currently prevents the Issue from being completed.
 
-Do not start with the experiment, library, error, hypothesis or implementation detail.
+Do not start with the current experiment, library, error, hypothesis or implementation detail.
 
-**2. Spike context**
+### 2. Spike context
 
-Explain why a Technical Spike is being used and what uncertainty it must resolve. Then identify:
+Explain why a Technical Spike is being used and what uncertainty it must resolve.
+
+Then state:
 
 - current TID workstream;
-- current candidate/option;
-- why that option is being investigated now;
-- what evidence would complete this part of the investigation or cause a planned transition.
+- current TID candidate/approach;
+- why that candidate is being investigated now under the Spike Implementation Plan;
+- what evidence would finish this part of the investigation or justify moving elsewhere.
 
-Expand acronyms/mechanisms enough for a reader who has not followed previous iterations.
+Expand acronyms and technical mechanisms sufficiently for a reader without recent context.
 
-**3. Previous experiment**
+### 3. Previous experiment
 
 Explain:
 
 - what was tested;
-- why that test was necessary in the wider investigation;
+- why that test was necessary in the wider investigation, not merely its immediate technical purpose;
 - what it was expected to establish;
 - what actually happened.
 
-For the first experiment, state that there is no previous experiment.
+Do not use experiment IDs, library names or diagnostic terms as substitutes for explanation.
 
-Do not use internal labels such as hypothesis IDs, fixture names or library names as if they are self-explanatory.
-
-**4. Current understanding**
+### 4. Current understanding
 
 State:
 
 - what the evidence established;
 - what it ruled out;
 - what remains unknown;
-- whether the current option still appears sensible.
+- whether the current TID candidate still appears sensible.
 
-Separate evidence from interpretation.
+Separate observation from interpretation.
 
-**5. Proposed next experiment**
+### 5. Proposed next experiment
 
 Describe exactly one bounded experiment:
 
 - what will be tested;
-- why this is the next question;
-- what changes compared with the previous experiment;
-- what evidence supports/rejects the hypothesis.
+- why it is now the next question;
+- what changes from the previous experiment;
+- what evidence would support, reject or leave the hypothesis inconclusive.
 
-**6. Direction check**
+### 6. Direction check
 
 Explain why the experiment is proportionate to the original Issue and consistent with the TID and Spike Implementation Plan.
 
-Explicitly state whether it introduces any new architecture, infrastructure, dependency, runtime/security mechanism or broader scope. If it does, this is a material decision and the relevant design/plan must be reviewed before execution.
+Explicitly state whether it introduces any new architecture, infrastructure, dependency, runtime/security mechanism or broader scope. If any are introduced, do not treat the change as routine troubleshooting; route it through the appropriate plan/TID/owner decision first.
 
-**7. Decision requested**
+### 7. Decision requested
 
 Request exactly one of:
 
 **Approve this experiment / Redirect the investigation / Stop and reconsider the approach.**
 
-Do not execute until the experiment is approved.
-
-## Execution authority
-
-After approval, execute only the approved experiment.
-
-The agent may make **straightforward corrections** needed to complete that exact experiment when the correction is unambiguous and does not change:
-
-- the hypothesis/question being tested;
-- the technical mechanism/candidate under test;
-- architecture or dependency model;
-- representative environment/data in a way that changes evidence meaning;
-- cost/risk/security boundaries;
-- the experiment's intended evidence.
-
-Examples include an obvious typo, path error, deterministic configuration mistake or similarly mechanical defect with one clear correction.
+Do not execute the new experiment until it is approved.
 
 ## Experiment Viability Checkpoint
 
-Stop and return to the owner when troubleshooting ceases to be straightforward. Trigger this checkpoint when any of the following occurs:
+Trigger this checkpoint before deeper troubleshooting when:
 
-- the first reasonable correction does not resolve the problem and there is no obvious next fix;
-- the proposed fix requires new machinery, infrastructure, dependencies, guards, wrappers or architecture not present in the approved experiment;
-- troubleshooting becomes materially different from the question the experiment was meant to answer;
-- several plausible causes exist and choosing among them requires a new investigation;
-- diagnosis effort/risk becomes disproportionate to the information value of the experiment;
-- increasingly specialised diagnostics are being added without clear progress on the original hypothesis.
+- the first reasonable correction did not resolve the problem and there is no obvious next fix;
+- additional debugging requires new machinery, infrastructure, dependencies, guards, wrappers or architectural assumptions;
+- the troubleshooting problem is becoming materially different from the question the experiment was intended to answer;
+- several plausible causes now require a new investigation to distinguish;
+- the expected troubleshooting effort/risk is becoming disproportionate to the information value of the experiment;
+- the agent is progressively creating specialised diagnostics instead of making progress on the approved hypothesis.
 
-Do **not** choose another deeper diagnostic direction before owner review.
+Report:
 
-Present a self-contained checkpoint that again starts with the Issue/Spike context, then states:
+### Original purpose
+What the approved experiment was intended to establish and why that matters to the Issue.
 
-**Original experiment purpose:** what this experiment was meant to establish and why it matters.  
-**What went wrong:** failure and straightforward correction(s) already attempted.  
-**Why this is no longer routine troubleshooting:** the new complexity/decision now required.  
-**Perspective check:** whether continuing this experiment/candidate still has better information value than modifying/abandoning it or returning to the TID option set.  
-**Recommendation:** Continue troubleshooting / Modify the experiment / Abandon this experiment and return to the plan/TID.  
-**Decision requested:** Approve the recommendation / Redirect / Stop.
+### What went wrong
+What failed and which straightforward correction(s) were already attempted.
 
-## After an experiment
+### Why this is no longer routine troubleshooting
+What additional complexity or new decision is now required.
 
-1. retain reproducible/sanitized evidence;
-2. record the result as `Supported`, `Rejected` or `Inconclusive`;
-3. update Current Understanding and Supported Technical Specification;
-4. assess the result against the current plan transition/exit conditions;
-5. if the Spike remains open, propose the next experiment through the full approval checkpoint above.
+### Perspective check
+Whether continuing this experiment still has better information value than stepping back to another TID option or revisiting the plan/TID.
 
-A failed/inconclusive experiment does not create a replacement Spike Issue.
+### Recommendation
+One of: **continue troubleshooting / modify the experiment / abandon this experiment and return to the planned option set / review the TID**.
 
-If evidence changes the credible search space or architectural assumptions, update/review the TID first. If it changes only workstream/option order, entry/exit conditions or fallback route, update/review the Spike Implementation Plan first.
+### Decision requested
+Ask the owner to approve or redirect that recommendation.
 
-## Code and repository boundaries
+The governing principle is: **troubleshooting depth must remain proportional to the value of the experiment**.
 
-Disposable probes and reproducibility tooling are allowed. Keep experiment-specific files under `docs/changes/<issue>/experiments/<NN>-<slug>/` or another clearly non-production location when they materially improve reproducibility/auditability.
+## Option viability and rabbit-hole control
 
-Do not:
+Repeated, stubborn or surprising failures also require an option-level perspective check before deeper candidate-specific diagnostics.
 
-- implement the blocked production feature;
-- turn a probe into production architecture implicitly;
-- expand product scope;
-- relax approved constraints to obtain a positive result;
-- open a PR merely to provide an in-progress Spike workspace.
+Use the TID and Spike Implementation Plan to determine whether the current option remains justified. Explicitly decide:
+
+- `Continue`;
+- `Deprioritise`;
+- `Reject`;
+- `TID review required`.
+
+Do not respond to a failing candidate by inventing progressively more specialised infrastructure merely because it could make the latest experiment pass.
+
+## Investigation discipline
+
+For each approved experiment:
+
+1. keep the hypothesis tied to the current TID option and plan route;
+2. prefer direct observation of the real boundary when practical;
+3. use representative environment/data proportionate to the claim;
+4. make the experiment reproducible;
+5. separate facts, inference and third-party claims;
+6. preserve only necessary sanitized evidence;
+7. classify the result as `Supported`, `Rejected` or `Inconclusive`;
+8. update `technical-spike.md` before proposing the next experiment.
+
+A failed/inconclusive experiment does not complete the Spike and does not create a new Spike Issue.
+
+## Repository and PR behaviour
+
+Use one long-lived branch/workspace for the controlling Issue, normally `spike/<issue>-<slug>`.
+
+Store:
+
+```text
+docs/changes/<issue>/
+  technical-investigation-design.md
+  spike-implementation-plan.md
+  technical-spike.md
+  experiments/        # only where useful
+```
+
+Commits preserve the working history. The Issue remains the tracking centre.
+
+**Do not open or maintain a draft PR during the investigation.**
+
+Create the pull request only after:
+
+- the original Technical Question has a supported `Feasible` or `Not feasible` conclusion;
+- final Spike validation passes;
+- the branch is ready to propose for integration.
 
 ## Completion gate
 
-The Spike can conclude only when the original Technical Question is resolved:
+A Spike is ready to close only when the original Technical Question is resolved.
 
-- **Feasible** — representative evidence supports a technical specification/approach sufficiently for downstream design;
-- **Not feasible** — representative evidence shows the Required Outcome cannot be achieved within approved constraints and identifies the resulting decision.
+A `Feasible` conclusion requires representative evidence supporting a technical specification/approach downstream work may rely on.
 
-Before final integration, run final Spike validation. Only after final validation passes should `merge-change` create the integration PR with the Issue/TID/plan/technical-spike evidence.
+A `Not feasible` conclusion requires evidence showing the Required Outcome cannot be achieved within the approved constraints and identifies the resulting Product/Architecture/POC decision.
 
-After human merge, rerun `assess-change` on every blocked downstream Issue.
+After final integration, rerun `assess-change` on every blocked downstream Issue.
 
 ## Completion contract
 
-For each experiment report the Issue, workstream/option, approved hypothesis/experiment, evidence, result, corrections attempted, viability-checkpoint status and updated technical understanding.
+For each iteration, report the Issue, TID workstream/approach, approved hypothesis, experiment, representative environment/data, evidence, result, learning, current understanding and whether an experiment/option viability checkpoint was triggered.
 
-For final completion additionally report the Feasible/Not feasible conclusion, evidence boundary, downstream implications, final validation result and readiness for final PR.
+Before a new experiment, use the full self-contained approval checkpoint above.
+
+For final completion, report the supported technical specification or infeasibility conclusion, limitations, downstream implications, validation result and final PR state.
 
 ## Learning checkpoint
 
-Before completing each experiment, consider whether execution exposed a reusable lesson about the product, Development Operating Model, a skill/template, tooling/CI or implementation methodology. A normal failed hypothesis is not automatically a learning. Use `capture-learning` when warranted; otherwise report `Learnings: None`.
+Consider whether execution exposed a reusable lesson. Use `capture-learning` when warranted; otherwise report `Learnings: None`.
