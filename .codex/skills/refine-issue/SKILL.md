@@ -46,12 +46,12 @@ For a Technical Spike, capture the stable parts of the investigation:
 - starting evidence already established;
 - approved constraints and prohibited techniques;
 - the intended investigation boundary, including any owner instruction to keep the Spike to a lightweight/proportionate search;
-- known leads, sources or candidate approaches worth including in the initial option scan, without preselecting a solution or committing hypotheses;
+- known leads, sources or candidate approaches worth considering later, without preselecting a solution or committing hypotheses;
 - completion criteria;
 - blocked downstream Feature/Bug Issue(s);
-- the canonical living artifact path `docs/changes/<issue>/technical-spike.md`.
+- the canonical Spike artifact paths under `docs/changes/<issue>/`.
 
-Do **not** perform or pre-empt the option selection in the Issue body. The Issue is the stable problem statement and investigation boundary. The proportionate option scan, ranked option set, hypotheses, current iteration, experiment backlog/log and accumulating technical specification belong in `technical-spike.md`.
+Do **not** perform or pre-empt option selection in the Issue body. The Issue is the stable problem statement and central tracking object. The Technical Investigation Design owns the problem decomposition, candidate approaches and evidence boundaries; the Spike Implementation Plan owns traversal/order/fallback rules; `technical-spike.md` owns the current approved experiment and evidence history.
 
 A Spike is not a substitute for the SideGig Research Methodology. If refinement shows that answering the request would require broad/open-ended domain, provider, commercial or market research rather than a bounded technical investigation tied to the downstream issue, surface that boundary for an owner decision instead of silently expanding the Spike.
 
@@ -69,7 +69,7 @@ When a Feature/Bug depends on a substantial undocumented, reverse-engineered, ma
 
 For Feature/Bug Issues, preserve the template's `Development Lifecycle Assessment` section with initial `Pending` values, including Technical Spike. Issue refinement does not perform the change assessment; `assess-change` populates it afterwards.
 
-Technical Spike Issues follow their dedicated Spike lifecycle and do not require a second HLD/Implementation Plan/LLD assessment before investigation begins.
+Technical Spike Issues follow their dedicated TID → Spike Implementation Plan → bounded experiment lifecycle and do not require the normal Feature/Bug HLD/Implementation Plan/LLD assessment before investigation begins.
 
 If refinement exposes an unresolved product decision, architecture ambiguity, missing dependency, acceptance criterion that cannot yet be made observable, or no credible evidence path for a material positive outcome, report the Issue as not ready rather than inventing the answer.
 
