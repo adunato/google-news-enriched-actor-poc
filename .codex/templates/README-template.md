@@ -51,7 +51,7 @@ Repository-specific agent instructions are in [AGENTS.md](AGENTS.md).
 - [Product Definition](docs/product.md) — current approved product intent, scope, capabilities and externally meaningful behaviour.
 - [Architecture Definition](docs/architecture.md) — current approved technical architecture.
 
-Change-specific artifacts are stored under `docs/changes/<issue-number>/` when required. A Technical Spike uses a Technical Investigation Design, Spike Implementation Plan and `technical-spike.md` execution/evidence record on its dedicated branch; normal Feature/Bug work may use HLD, Implementation Plan and LLD proportionately. Technical Spike evidence is produced by a separate prerequisite Issue when a material unknown technical boundary must be established before downstream design/implementation.
+Change-specific artifacts are stored under `docs/changes/<issue-number>/` only when the SideGig Development Lifecycle requires them. A Technical Spike uses `technical-investigation-design.md`, `spike-implementation-plan.md`, and `technical-spike.md` on its dedicated Issue branch; normal Feature/Bug work may use HLD, Implementation Plan and LLD. A Spike opens its pull request only after the investigation reaches a supported final conclusion and is ready for integration.
 
 ## Deployment
 
