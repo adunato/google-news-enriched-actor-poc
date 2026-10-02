@@ -7,6 +7,8 @@
 **Owner:** Project owner  
 **Created:** 2026-10-02  
 **Technical Spike:** #22  
+**Active execution PR:** #31  
+**Historical execution PR:** #23  
 **Blocked downstream issues:** #4, #5  
 **Product Definition:** `docs/product.md`  
 **Architecture Definition:** `docs/architecture.md`
@@ -350,14 +352,17 @@ The agent should stop and surface a design decision when it would need to:
 
 When an experiment reveals that this HLD is wrong, update the HLD first rather than allowing the PR history to become the new design implicitly.
 
-## 11. Relationship to Issue #22 and PR #23
+## 11. Relationship between the artifacts
 
-- **This HLD:** current design baseline — what we intend to build/test and why.
-- **Issue #22:** investigation objective, constraints, completion criteria and current owner decisions.
-- **`technical-spike.md` / PR #23:** chronological experiment evidence and historical findings.
-- **Future implementation plan / LLD:** detailed execution design after the high-level direction is sufficiently proven.
+- **Issue #22:** controlling investigation objective, constraints and completion criteria.
+- **This HLD:** current design authority — architecture, selected technical direction and experiment sequence.
+- **PR #31 / `technical-spike.md`:** active execution workspace for all post-HLD experiments, findings and evidence.
+- **PR #23:** closed historical execution record only. Consult it when prior evidence is needed; do not use its old "current iteration" or "next step" text as execution instructions.
+- **Future implementation plan / LLD:** detailed implementation design after the high-level direction is sufficiently proven.
 
-Historical PR #23 experiments remain valid evidence within the limits recorded at the time. The HLD does not require deleting or rewriting that history. It does mean that future work should not continue a diagnostic branch merely because it is the latest branch of the PR.
+The operating order is therefore **Issue #22 -> HLD -> PR #31 execution**. If PR #31 produces evidence that materially changes the design, update/review this HLD before continuing down the new architectural path.
+
+Historical PR #23 experiments remain valid evidence within the limits recorded at the time. They are inputs to the HLD, not a continuation point for the agent.
 
 ## 12. Current recommendation
 
