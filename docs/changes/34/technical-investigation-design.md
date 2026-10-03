@@ -63,6 +63,17 @@ This area succeeds only when the production-like hosted flow:
 
 If reaching the resolver requires browser automation, residential proxies, paid unblocking, or another excluded architecture change, this area stops and returns that as a Product/Architecture decision rather than silently adopting it.
 
+### Experiment sequence
+
+| Order | ID | Experiment | Purpose | Run when | Next if successful | Next if unsuccessful |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | A1 | Reproduce and characterise Google News access | Establish the current baseline and whether the historical consent redirect still occurs | **Always first** | A4 | A2 |
+| 2 | A2 | Test minimal ordinary session/consent handling | Test whether normal redirects, cookies and session state are sufficient to reach the existing resolver | **Only if A1 does not provide a stable path to marker/RPC** | A4 | A3 only if evidence points to our request construction; otherwise stop |
+| 3 | A3 | Compare request construction with an independent implementation | Check whether our request/session construction is the remaining fault | **Only if A2 fails and evidence indicates a likely local implementation problem** | A4 | Stop / return boundary decision |
+| 4 | A4 | Run the publisher-URL acceptance sample | Prove the actual 95/100 product capability | **Only after A1, A2 or A3 establishes a stable path to marker/RPC** | Area A feasible | Failed acceptance; diagnose before any new run |
+
+The table is the controlling procedural view for this area. Detailed sections below explain each experiment; they do not change the sequence or trigger rules above.
+
 ### Experiment A1 — Reproduce and characterise the Google News access behaviour
 
 **Objective**  
@@ -165,12 +176,6 @@ At least **95/100** valid non-Google publisher URLs.
 **Failure**  
 A result below 95/100 is a failed acceptance result. Do not repeat it unchanged. Diagnose the observed failure before any further acceptance run.
 
-### Area A execution flow
-
-`A1 baseline -> [if needed] A2 ordinary session handling -> [only for evidence of local request-shape fault] A3 comparison -> A4 100-row acceptance`
-
-A2 and A3 are **conditional**, not mandatory. A4 is mandatory before this investigation area can be concluded feasible.
-
 ---
 
 ## 3. Investigation Area B — Retrieve readable publisher article text
@@ -198,6 +203,16 @@ Changing extraction libraries cannot solve a publisher-access failure.
 At least **50/100 retained rows** in the defined representative sample must produce non-empty readable article text with a consistent success status and word count.
 
 Failures must remain row-local and must distinguish access failures from extraction failures.
+
+### Experiment sequence
+
+| Order | ID | Experiment | Purpose | Run when | Next if successful | Next if unsuccessful |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | B1 | Measure current publisher-page access | Establish whether enough usable publisher HTML is available to make the 50/100 target possible | **Always first** | B2 if at least 50 rows provide usable HTML | Stop / return publisher-access boundary |
+| 2 | B2 | Extract with structured data plus Mozilla Readability | Test the primary lightweight extraction path on accessible HTML | **Only if B1 shows at least 50 usable HTML rows** | Area B feasible | B3 only if extraction quality, rather than access, is the remaining blocker |
+| 3 | B3 | Test one alternative generic Node-native extractor | Check whether the remaining shortfall is specific to the primary parser | **Only if B2 misses because of extraction quality on accessible HTML** | Area B feasible | Stop / return extraction or architecture limitation |
+
+The table is the controlling procedural view for this area. Detailed sections below explain each experiment; they do not change the sequence or trigger rules above.
 
 ### Experiment B1 — Measure current publisher-page access
 
@@ -282,12 +297,6 @@ Run **only if B2 misses the target because of extraction quality on accessible H
 - If the combined supported path reaches at least 50/100, this area is feasible.
 - If it remains below 50/100, stop and return the specific limitation. Any move to browser rendering, a second runtime, paid extraction, publisher-specific infrastructure or similar heavier machinery requires a new Product/Architecture decision.
 
-### Area B execution flow
-
-`B1 publisher access -> [only if >=50 usable HTML rows] B2 structured data + Readability -> [only if parser quality is the remaining blocker] B3 one alternative extractor`
-
-B1 is mandatory. B2 is conditional on there being enough accessible HTML to make the product target possible. B3 is conditional on extraction quality, not access, being the demonstrated blocker.
-
 ---
 
 ## 4. Constraints that apply to every experiment
@@ -342,6 +351,6 @@ If either target cannot be met without crossing an approved Product/Architecture
 
 This revision deliberately replaces the previous split between “workstreams”, “candidate approaches”, “investigation strategy” and “evidence criteria”. Those sections repeated the same material from different angles and made individual tests hard to understand.
 
-The reusable unit in this design is an **Investigation Area** only when the problem genuinely contains more than one separable technical question. Each area is self-contained and each experiment carries its own objective, rationale, test, measures, execution rule and next-step rule.
+The reusable unit in this design is an **Investigation Area** only when the problem genuinely contains more than one separable technical question. Each area is self-contained. Its **Experiment sequence** table provides the at-a-glance procedural view: order, optionality, prerequisites and branching. Each detailed experiment then carries its own objective, rationale, test, measures and decision rules.
 
 **Owner approval:** Pending.
