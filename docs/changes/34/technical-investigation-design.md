@@ -67,7 +67,7 @@ If reaching the resolver requires browser automation, residential proxies, paid 
 
 | Order | ID | Experiment | Purpose | Run when | Next if successful | Next if unsuccessful |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | A1 | Reproduce and characterise Google News access | Establish the current baseline and whether the historical consent redirect still occurs | **Always first** | A4 | A2 |
+| 1 | A1 | Reproduce and characterise Google News access | Establish the current baseline and test whether access degrades across repeated requests from the same hosted execution/network identity | **Always first** | A4 | A2 |
 | 2 | A2 | Test minimal ordinary session/consent handling | Test whether normal redirects, cookies and session state are sufficient to reach the existing resolver | **Only if A1 does not provide a stable path to marker/RPC** | A4 | A3 only if evidence points to our request construction; otherwise stop |
 | 3 | A3 | Compare request construction with an independent implementation | Check whether our request/session construction is the remaining fault | **Only if A2 fails and evidence indicates a likely local implementation problem** | A4 | Stop / return boundary decision |
 | 4 | A4 | Run the publisher-URL acceptance sample | Prove the actual 95/100 product capability | **Only after A1, A2 or A3 establishes a stable path to marker/RPC** | Area A feasible | Failed acceptance; diagnose before any new run |
@@ -77,21 +77,29 @@ The table is the controlling procedural view for this area. Detailed sections be
 ### Experiment A1 — Reproduce and characterise the Google News access behaviour
 
 **Objective**  
-Establish exactly what happens today when the hosted Actor accesses known Google News article URLs, including whether behaviour differs between a fresh request and repeated requests in the same ordinary session.
+Establish exactly what happens today when the hosted Actor accesses known Google News article URLs, and specifically test whether behaviour degrades as multiple requests are made from the same hosted execution/network identity.
 
 **Why this experiment exists**  
-Earlier hosted resolver experiments succeeded, while the later 79-row diagnostic redirected every request to Google consent before the resolver could run. We need a controlled baseline before changing anything. This experiment is therefore a **reproduction/baseline experiment**, not an attempt to prove the publisher resolver again.
+Earlier hosted resolver experiments succeeded, while the later 79-row diagnostic redirected every request to Google consent before the resolver could run. One plausible explanation is that repeated Google News requests from the same hosted network identity trigger different behaviour, but the historical evidence does not prove that. A1 exists to discriminate that hypothesis before we change the resolver or add consent-handling logic. It is therefore a **reproduction/baseline experiment**, not an attempt to prove the publisher resolver again.
 
 **Test**  
-Use a very small fixed set of previously known-good Google News article controls in the normal Apify Node 20 Actor path. Record the request sequence, HTTP status, redirect destination, ordinary cookie/session state, and whether the response reaches the page state required for marker extraction. Include both a fresh access and a bounded repeat within the same ordinary session so that a first-request/repeat-request difference can be observed rather than assumed.
+Use a small fixed set of previously known-good Google News article controls in one normal Apify Node 20 Actor run. Execute a bounded ordered sequence rather than a single request:
+
+1. request one known-good article immediately after startup;
+2. request several additional known-good articles sequentially from the same hosted execution/session;
+3. repeat one of the earlier article requests near the end of the sequence.
+
+For every attempt, record the request number, HTTP status, redirect destination, ordinary cookie/session state, and whether the response reaches the page state required for marker extraction. Where the runtime exposes it safely and reliably, also record whether the outbound network identity remains the same across the sequence. The purpose is to observe whether consent/interstitial behaviour is immediate, appears only after repeated requests, changes with session state, or is unrelated to request count.
 
 **Measures**  
-- request order and session state;
-- HTTP status and redirect destination;
-- whether `consent.google.com` is reached;
+- request number and ordered sequence position;
+- session state and, where observable, outbound network identity continuity;
+- HTTP status and redirect destination for each attempt;
+- first request number, if any, at which `consent.google.com` appears;
+- whether behaviour changes between initial requests and later/repeated requests;
 - whether the Google News marker page is reached;
 - whether marker/RPC execution becomes possible;
-- request count and elapsed time.
+- total request count and elapsed time.
 
 **Execution rule**  
 **Always run first.**
