@@ -20,13 +20,12 @@ For a Technical Spike:
 - create or adopt one long-lived branch/workspace for the controlling Spike Issue;
 - use a branch name such as `spike/<issue-number>-<slug>` where repository rules permit it;
 - keep all iterations for the same Technical Question in that workspace;
-- reserve `docs/changes/<issue-number>/technical-investigation-design.md` for the TID;
-- reserve `docs/changes/<issue-number>/spike-implementation-plan.md` for the Spike Implementation Plan;
+- reserve `docs/changes/<issue-number>/technical-investigation-design.md` for the complete Spike investigation design/routing artifact;
 - reserve `docs/changes/<issue-number>/technical-spike.md` for the living execution/evidence record;
 - keep experiment-specific probes/evidence under the same change directory only when useful;
 - **do not open a pull request during the active investigation**.
 
-The Issue is the tracking centre and the branch is the working container. TID/plan/spike artifacts are created by their dedicated lifecycle skills after workspace setup.
+The Issue is the tracking centre and the branch is the working container. The TID and `technical-spike.md` are created by their dedicated lifecycle skills after workspace setup.
 
 Workspace setup itself does not require normal Feature/Bug HLD, Implementation Plan or LLD.
 
