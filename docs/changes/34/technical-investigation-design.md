@@ -65,6 +65,7 @@ If reaching the resolver requires browser automation, residential proxies, paid 
 
 ### Experiment sequence
 
+<!-- prettier-ignore -->
 | Order | ID | Experiment | Purpose | Run when | Next if successful | Next if unsuccessful |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | A1 | Reproduce and characterise Google News access | Establish the current baseline and test whether access degrades across repeated requests from the same hosted execution/network identity | **Always first** | A4 | A2 |
@@ -214,6 +215,7 @@ Failures must remain row-local and must distinguish access failures from extract
 
 ### Experiment sequence
 
+<!-- prettier-ignore -->
 | Order | ID | Experiment | Purpose | Run when | Next if successful | Next if unsuccessful |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | B1 | Measure current publisher-page access | Establish whether enough usable publisher HTML is available to make the 50/100 target possible | **Always first** | B2 if at least 50 rows provide usable HTML | Stop / return publisher-access boundary |
