@@ -1,3 +1,5 @@
+<!-- prettier-ignore-start -->
+
 # Technical Investigation Design: <question / boundary>
 
 > Canonical pre-execution design artifact for a Technical Spike. It explains the technical problem, defines the bounded experiments needed to answer it, and makes their order, conditionality and decision routing explicit. It is not a production HLD and it is not an experiment log.
@@ -42,7 +44,6 @@
 
 ### Experiment sequence
 
-<!-- prettier-ignore -->
 | Order | ID | Experiment | Purpose | Run when | Next if successful | Next if unsuccessful |
 | ---: | --- | --- | --- | --- | --- | --- |
 | 1 | A1 | <short experiment name> | <concise reason it exists> | **Always first** | <next experiment / area complete> | <next experiment / stop / TID review> |
@@ -128,3 +129,5 @@ Approval authorises execution of the bounded experiment sequence and conditional
 ### Completion contract
 
 The TID is ready for approval when the technical problem is understandable without repository archaeology; any useful Investigation Areas are self-contained; every planned experiment has an objective, rationale, test, measures, execution rule and next-step rule; sequence/optionality/branching are obvious at a glance; success criteria and constraints are explicit; and no material investigation-design decision remains unresolved.
+
+<!-- prettier-ignore-end -->
