@@ -1,109 +1,135 @@
-# Spike Implementation Plan: Google News access and publisher full-text boundary
+# Spike Implementation Plan: Google News access and publisher full-text
 
-> Canonical execution-routing artifact for Technical Spike #34. It translates the approved Technical Investigation Design into an ordered investigation route while leaving individual hypotheses and experiment design to the Technical Spike iteration loop.
+> Execution-routing artifact for Technical Spike [**Rebaseline Google News access and publisher full-text for the publisher-URL and full-text features (#34)**](https://github.com/adunato/google-news-enriched-actor-poc/issues/34). It uses the experiments defined in the Technical Investigation Design as the authoritative investigation units and controls their execution order, prerequisites, hand-offs and stop/return rules.
 
 **Artifact ID:** `sip-34-news-access-full-text`  
-**Status:** `Approved`  
+**Status:** `Draft — owner review`  
 **Owner:** `Project owner`  
-**Created / updated:** `2026-10-02`  
-**GitHub Spike Issue:** `#34`  
+**Created:** `2026-10-02`  
+**Updated:** `2026-10-04`  
 **Technical Investigation Design:** `docs/changes/34/technical-investigation-design.md` / `tid-34-news-access-full-text`  
 **Spike branch:** `spike/34-news-access-full-text`
 
 ## 1. Purpose
 
-Control the order in which #34 evaluates the approved TID candidates so the investigation answers #4 and #5 without allowing a failing experiment to expand into candidate-specific infrastructure.
+This plan controls how the experiments already defined in the Technical Investigation Design are executed. It does **not** redefine their objective, rationale, test method or measures.
 
-The plan starts with the #4 access/session blocker, because #5 depends on resolved publisher URLs in the product flow, then evaluates the #5 publisher fetch/extraction path. It preserves explicit fallbacks and stop/return rules so troubleshooting cannot redefine the design implicitly.
+The investigation supports two blocked product capabilities:
+
+- [**Resolve Google News links to publisher URLs with fail-soft status (#4)**](https://github.com/adunato/google-news-enriched-actor-poc/issues/4), which requires at least 95/100 valid non-Google publisher URLs on the defined representative live sample.
+- [**Add optional best-effort article full-text extraction (#5)**](https://github.com/adunato/google-news-enriched-actor-poc/issues/5), which requires readable article text for at least 50/100 retained rows on the defined representative mixed-publisher sample.
+
+Execution follows the TID's two Investigation Areas. Area A establishes whether the existing Google News resolver can be reached reliably in hosted execution and then proves the publisher-URL acceptance target. Area B then establishes whether accessible publisher pages can produce enough readable article text.
 
 ## 2. Execution Map
 
-| Order | Workstream | TID approach | Entry condition | Exit / success condition | Fallback / next route |
-| ----: | --- | --- | --- | --- | --- |
-| 1 | W1 | A1 | #34 branch/artifacts approved; normal Apify Actor/SDK path available; #14 resolver core and #4 failed-access evidence identified | Production-like access/session path demonstrated and #4's defined 100-row sample reaches >=95/100 valid publisher URLs, or A1 is shown unable to do so within approved boundary | If evidence points to local same-mechanism implementation defect -> A2. If success -> W2/A4. If heavier access mechanism required -> conclude W1 boundary / TID-Product-Architecture decision |
-| 2 | W1 | A2 | A1 evidence specifically indicates a local request/session/parsing implementation difference may explain failure | Bounded comparison either identifies a relevant corrective change that returns to A1 acceptance testing or rules out local implementation difference | Return to A1 with relevant change; otherwise conclude W1 boundary. Do not proceed to A3 inside current TID |
-| 3 | W2 | A4 | W1 has a supported route for final flow, or a bounded candidate-only test uses provenance-clear retained publisher URLs; normal publisher HTTP fetch and result scoring can be separated from extraction | Defined #5 representative sample reaches >=50 readable-text successes with explicit per-row statuses, or evidence classifies why target is missed | If access is limiting -> conclude W2 boundary. If accessible HTML is sufficient but extraction quality is limiting -> A5. If success -> Spike completion synthesis |
-| 4 | W2 | A5 | A4 misses primarily because accessible eligible HTML cannot be extracted well enough; owner approves a proportionate generic Node-native fallback selected within TID | Fallback reaches >=50/100 on the defined representative sample or demonstrates that credible Node-native generic extraction cannot satisfy target | If success -> Spike completion synthesis. If failure would require A6/A7 or a new mechanism -> TID review / boundary decision |
+The experiment IDs below come directly from the TID. The TID remains authoritative for what each experiment does and why it exists.
 
-**A6 Extractus:** not on the normal route. Historical evidence already gives it lower information value. It may be reconsidered only if new evidence materially changes its disposition and the TID is reviewed if needed.
+| Order | Investigation Area | Experiment | Entry condition | Successful route | Unsuccessful route |
+| ---: | --- | --- | --- | --- | --- |
+| 1 | A — Reach the existing Google News resolver | **A1 — Reproduce and characterise Google News access** | TID and plan approved; normal Apify Node 20 execution available | If the resolver remains stably reachable across the bounded repeated-request sequence, go to **A4** | If consent/interstitial behaviour appears or access is unstable, go to **A2** |
+| 2 | A | **A2 — Test minimal ordinary session/consent handling** | A1 did not provide a stable path to the existing resolver | If ordinary HTTP/session handling restores a stable path, go to **A4** | Go to **A3 only if** evidence specifically points to our request/session construction; otherwise stop Area A and return the boundary decision |
+| 3 | A | **A3 — Compare request construction with an independent implementation** | A2 failed and evidence indicates a likely local request/session-construction problem | If one bounded corrective difference restores access, go to **A4** | Stop Area A; do not expand into library shopping or heavier access machinery |
+| 4 | A | **A4 — Run the publisher-URL acceptance sample** | A1, A2 or A3 has established a stable production-like path to the existing resolver | At least 95/100 valid non-Google publisher URLs -> Area A complete | Record failed acceptance. Do not rerun unchanged; return to the observed failure and determine whether TID/plan review is required |
+| 5 | B — Retrieve readable publisher article text | **B1 — Measure current publisher-page access** | Area A has completed sufficiently to support the product flow and the defined representative publisher-URL sample is available | If at least 50/100 rows provide usable article HTML, go to **B2** | Stop Area B and return the publisher-access boundary; changing extractor cannot solve the target |
+| 6 | B | **B2 — Extract with structured data plus Mozilla Readability** | B1 demonstrates at least 50 usable HTML rows | If at least 50/100 retained rows produce readable article text, Area B complete | Go to **B3 only if** enough HTML was accessible and extraction quality is the demonstrated remaining blocker; otherwise stop |
+| 7 | B | **B3 — Test one alternative generic Node-native extractor** | B2 misses the target specifically because of extraction quality on accessible HTML | If the supported path reaches at least 50/100 readable-text successes, Area B complete | Stop and return the demonstrated extraction/architecture limitation |
 
-**A3/A7 heavier mechanisms:** not executable routes under this plan.
+Experiments are **not all mandatory**. A1, A4 and B1 are required on the normal route. A2, A3 and B3 are conditional. B2 runs only when B1 shows that the product target is still technically achievable from the accessible HTML.
 
-## 3. Cross-Workstream Dependencies
+## 3. Cross-Investigation Dependencies
 
-- W1 precedes the final W2 capability conclusion because #5's production flow depends on #4 producing usable publisher URLs.
-- A bounded W2 candidate-mechanics experiment may use retained/fixed publisher URLs before W1 is complete only when provenance is explicit and the result is not presented as final #5 end-to-end acceptance evidence.
-- Final #5 evidence must preserve the representative sample definition and clearly report the effect of unresolved/resolved URL availability.
-- A W1 systemic failure may make end-to-end #5 infeasible regardless of extractor quality; do not hide that dependency by substituting hand-curated publisher URLs in the final conclusion.
+- Complete Investigation Area A before beginning the final Area B route. The full-text capability depends on usable publisher URLs in the product flow.
+- A failed Area A conclusion must not be hidden by substituting a hand-curated publisher URL set and presenting Area B as an end-to-end success.
+- Area B must keep publisher retrieval and text extraction as separate evidence stages. An inaccessible page is an access failure, not an extractor failure.
+- Historical evidence may be reused where the TID says it remains valid, but any experiment requiring current hosted behaviour must use current production-like evidence.
+- A failed acceptance run remains evidence for that code/configuration and cannot be repeated unchanged merely to seek a different result.
 
 ## 4. Execution Envelope
 
-### W1 / A1 — existing resolver over ordinary HTTP/session handling
+### A1 — Google News access baseline and repeated-request behaviour
 
-**Experiment may vary:** bounded query/sample size before the final 100-row acceptance run; request headers that represent ordinary public HTTP use; redirect/session/cookie handling necessary to reproduce and pass the consent/interstitial boundary; instrumentation that records response class, resolver-stage progress, timing and row outcomes without changing the mechanism.  
-**Requires plan/TID review:** browser automation, proxies/unblocking services, paid alternative APIs, replacement of marker/RPC with a different resolution architecture, custom SDK/egress/security harnesses, new runtime/service, changed acceptance meaning.
+**May vary within the experiment:** the small number of known-good controls; bounded number/order of requests; instrumentation needed to record request sequence, redirect behaviour, session/cookie state and, where observable, outbound network-identity continuity.
 
-If the experiment fails before reaching the intended Google boundary because the ordinary Actor runtime cannot start or execute, permit one bounded smoke-level correction/diagnostic. If there is no obvious mechanical fix after that, trigger an Experiment Viability Checkpoint rather than creating a runtime-diagnostics programme.
+**Requires plan/TID review:** changing the purpose from characterising repeated-request behaviour; adding browser automation, proxies/unblocking, custom network-security infrastructure, another runtime/service, or a different resolver mechanism.
 
-### W1 / A2 — same-mechanism reference comparison
+### A2 — ordinary session/consent handling
 
-**Experiment may vary:** compare request/session/parsing behaviour against one credible maintained implementation or minimal reference; isolate specific differences; test one evidence-backed corrective change.  
-**Requires plan/TID review:** broad library comparison, different resolution mechanism, heavy access infrastructure, changing #4 success semantics.
+**May vary within the experiment:** the minimum redirect, cookie or ordinary session handling justified directly by A1 evidence.
 
-### W2 / A4 — bounded fetch + structured data + Readability
+**Requires plan/TID review:** heavy access machinery, a different resolution mechanism, or troubleshooting that becomes a separate investigation rather than testing ordinary HTTP/session handling.
 
-**Experiment may vary:** small representative cohort before full sample; fetch timeout/body-size/concurrency bounds; Readability guard settings; structured-data fast-path parsing; measurement/instrumentation; mechanical DOM integration details.  
-**Requires plan/TID review:** extractor performing its own uncontrolled network fetch; publisher-specific parser rules; browser rendering; second service/runtime; access-bypass machinery; redefining readable-text success.
+### A3 — same-mechanism implementation comparison
 
-A4 troubleshooting must keep fetch and extraction evidence separate. If the page was not successfully fetched as eligible HTML, do not treat the row as an extraction-library failure.
+**May vary within the experiment:** one maintained reference implementation; inspection of the minimum request/session differences relevant to the observed failure; one evidence-backed corrective change.
 
-### W2 / A5 — generic Node-native fallback
+**Requires plan/TID review:** broad library comparison, a different resolver family, multiple speculative implementation changes or heavier access infrastructure.
 
-**Experiment may vary:** one proportionately selected generic Node-native algorithm; equivalent supplied-HTML input; bounded configuration/instrumentation needed to compare with A4.  
-**Requires plan/TID review:** more than one new fallback without evidence, publisher-specific rules, Python/sidecar/external service, changed fetch architecture, changed success criterion.
+### A4 — publisher-URL acceptance
+
+**May vary within the experiment:** instrumentation and mechanical fixes required to execute the already-defined representative 100-row acceptance sample without changing what is being measured.
+
+**Requires plan/TID review:** changing the sample, success definition, threshold or resolver architecture.
+
+### B1 — publisher-page access
+
+**May vary within the experiment:** bounded HTTP timeout, response-size and concurrency settings needed to execute the defined representative access measurement.
+
+**Requires plan/TID review:** browser rendering, proxy/unblocking infrastructure, publisher-specific access logic, paid services or a changed definition of usable HTML.
+
+### B2 — structured data plus Readability
+
+**May vary within the experiment:** bounded parser/runtime guards and mechanical integration details that preserve the TID's structured-data-first / Readability fallback design.
+
+**Requires plan/TID review:** an extractor that performs uncontrolled network access, publisher-specific parser rules, another runtime/service or changed readable-text success criteria.
+
+### B3 — one alternative generic Node-native extractor
+
+**May vary within the experiment:** selection and bounded configuration of one credible generic Node-native extractor with a materially different parsing approach, applied to the same already-fetched HTML basis.
+
+**Requires plan/TID review:** multiple fallback extractors, publisher-specific rules, Python/sidecar/external services, changed fetch architecture or changed success criteria.
 
 ## 5. Stop and Return Rules
 
-Stop the current route and return to the appropriate higher-level artifact when:
+Stop the current experiment and return to the owner or higher-level artifact when:
 
-- the TID option-viability condition is reached;
-- continuing requires an approach not authorised by the TID;
-- the first reasonable correction to an approved experiment does not resolve a failure and there is no obvious next mechanical fix;
-- troubleshooting starts adding guards, wrappers, infrastructure, dependencies or diagnostics whose purpose is materially different from the approved experiment;
-- several plausible causes would require a separate investigation to distinguish;
-- a failed candidate is being rerun unchanged;
-- a publisher access failure is being used to justify switching article extractor;
-- a dependency, runtime, architecture, cost, security, legal/policy, safety or scope boundary materially changes;
-- representative evidence or an acceptance threshold would need to change;
-- the expected troubleshooting effort becomes disproportionate to the information value of the current option.
+- its TID decision condition says to stop rather than continue;
+- continuing requires an experiment not authorised by the TID sequence;
+- the first reasonable mechanical correction does not resolve an execution defect and further troubleshooting becomes a new investigation;
+- new infrastructure, dependencies or diagnostics would materially change what is being tested;
+- an experiment is being repeated unchanged after failure;
+- a publisher-access failure is being used to justify changing extractor;
+- representative data, evidence meaning or an acceptance threshold would need to change;
+- a Product/Architecture constraint would need to be relaxed;
+- the effort required to diagnose the current route becomes disproportionate to its information value.
 
-At each such point, use the Experiment Viability Checkpoint and explicitly decide: **Continue / Deprioritise / Reject / TID review required.**
+At such a point, do not invent another experiment. Decide whether the correct action is to **stop the area, revise the TID, revise this plan, or return a Product/Architecture decision**.
 
 ## 6. Spike Completion Route
 
-The Spike reaches a supported conclusion only after both workstreams are resolved sufficiently for downstream engineering:
+The Spike reaches a supported conclusion when both Investigation Areas have reached a supported outcome:
 
-1. W1 establishes the supported #4 production-like access/session + marker/RPC route against the defined acceptance evidence, **or** identifies the exact POC/Product/Architecture boundary preventing it.
-2. W2 establishes the supported #5 bounded publisher fetch + extraction route against the defined representative evidence, **or** identifies the exact boundary preventing the >=50% target.
-3. `technical-spike.md` synthesises the supported failure/status taxonomy, runtime/cost observations, environment limitations and what downstream engineering may rely on.
+1. **Publisher URL resolution:** the hosted flow reaches the existing Google News resolver and satisfies the defined 95/100 acceptance target, or the exact approved-boundary blocker is demonstrated.
+2. **Readable full text:** the representative publisher flow satisfies the defined 50/100 readable-text target, or the exact access/extraction boundary preventing it is demonstrated.
+3. `technical-spike.md` records the experiment evidence, failure classes, material runtime/cost observations and the final supported technical specification.
 4. Run final Spike validation.
-5. Create the single final integration PR from `spike/34-news-access-full-text`.
-6. After merge, rerun `assess-change` on **#4 and #5**. Do not resume either Feature Issue from pre-Spike assumptions.
+5. Create the final integration PR from `spike/34-news-access-full-text`.
+6. After integration, reassess **Resolve Google News links to publisher URLs with fail-soft status (#4)** and **Add optional best-effort article full-text extraction (#5)** from the final Spike evidence.
 
-A single successful workstream does not by itself complete #34 unless the other workstream's downstream requirement is explicitly shown not to be part of the stable Technical Question. Under the current Issue, both must be addressed.
+A successful result in only one Investigation Area does not complete the Spike.
 
 ## 7. Open Planning Questions
 
-No outstanding Spike planning questions.
+No outstanding execution-routing questions.
 
-The first execution action is **not** to code or run a test. The agent must read #34, this approved TID, this approved plan and the initial `technical-spike.md`, then present the self-contained owner approval checkpoint for exactly one **W1/A1** experiment.
+The first execution action is to use the Technical Spike process to present the owner approval checkpoint for **A1 — Reproduce and characterise Google News access**. The checkpoint must use the TID's current A1 definition, including its bounded repeated-request sequence. Do not execute A1 before approval.
 
 ## 8. Approval
 
-**Decision:** `Approve`  
-**Rationale:** The route directly follows the approved TID, starts with the blocking #4 access/session boundary, separates access from extraction, defines evidence-driven fallbacks, and contains explicit anti-rabbit-hole stop rules.  
-**Required follow-up:** `Use the technical-spike skill to propose the first W1/A1 experiment for owner approval. Do not execute it before approval.`
+**Decision:** `Pending owner review`  
+**Rationale:** This revision aligns the existing implementation-plan structure to the approved TID experiment model while avoiding a second workstream/approach taxonomy.  
+**Required follow-up:** `Owner review of this updated plan; after approval, propose A1 through the Technical Spike owner checkpoint.`
 
 ### Completion contract
 
-The plan is approved for use. Individual hypotheses, exact experiments and operational bounds belong in `technical-spike.md` and require one owner approval at a time.
+The plan is ready for approval when the TID experiments remain authoritative, their execution order and conditional transitions are unambiguous, cross-area dependencies are explicit, and execution-envelope/stop rules prevent an experiment from silently expanding into a different investigation.
