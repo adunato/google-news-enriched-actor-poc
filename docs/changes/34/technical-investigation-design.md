@@ -4,10 +4,10 @@
 > This document explains **what is being investigated, why each experiment exists, what it measures, and exactly when it should run**. It is not an experiment log.
 
 **Artifact ID:** `tid-34-news-access-full-text`  
-**Status:** `Draft — owner review`  
+**Status:** `Approved`  
 **Owner:** `Project owner`  
 **Created:** `2026-10-02`  
-**Updated:** `2026-10-03`  
+**Updated:** `2026-10-04`  
 **Spike branch:** `spike/34-news-access-full-text`
 
 ## 1. What this investigation is trying to achieve
@@ -361,4 +361,4 @@ This revision deliberately replaces the previous split between “workstreams”
 
 The reusable unit in this design is an **Investigation Area** only when the problem genuinely contains more than one separable technical question. Each area is self-contained. Its **Experiment sequence** table provides the at-a-glance procedural view: order, optionality, prerequisites and branching. Each detailed experiment then carries its own objective, rationale, test, measures and decision rules.
 
-**Owner approval:** Pending.
+**Owner approval:** Approved — 2026-10-04.
