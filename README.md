@@ -57,7 +57,7 @@ Repository-specific agent instructions are in [AGENTS.md](AGENTS.md).
 - [Product Definition](docs/product.md) — approved POC intent, scope, capabilities and external behaviour.
 - [Architecture Definition](docs/architecture.md) — approved technical architecture.
 
-Technical Spike artifacts (`technical-investigation-design.md`, `spike-implementation-plan.md`, and `technical-spike.md`) and normal Feature/Bug HLD, Implementation Plan and LLD artifacts are stored under `docs/changes/<issue-number>/` only when required by the SideGig Development Lifecycle.
+Technical Spike artifacts (`technical-investigation-design.md` and `technical-spike.md`) and normal Feature/Bug HLD, Implementation Plan and LLD artifacts are stored under `docs/changes/<issue-number>/` only when required by the SideGig Development Lifecycle.
 
 ## Deployment
 
