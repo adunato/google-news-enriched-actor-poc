@@ -42,6 +42,7 @@
 
 ### Experiment sequence
 
+<!-- prettier-ignore -->
 | Order | ID | Experiment | Purpose | Run when | Next if successful | Next if unsuccessful |
 | ---: | --- | --- | --- | --- | --- | --- |
 | 1 | A1 | <short experiment name> | <concise reason it exists> | **Always first** | <next experiment / area complete> | <next experiment / stop / TID review> |
