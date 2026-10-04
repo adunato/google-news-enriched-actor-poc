@@ -13,7 +13,6 @@ For a Technical Spike, use:
 
 - the controlling Issue;
 - approved Technical Investigation Design;
-- approved Spike Implementation Plan;
 - `docs/changes/<issue>/technical-spike.md`;
 - retained experiment evidence/probes;
 - Product/Architecture constraints;
@@ -33,9 +32,8 @@ If validation exposes a material product, architecture, scope, design or previou
 
 An individual experiment is valid when:
 
-- it was explicitly approved by the owner;
-- it remains inside the current TID approach and Spike Implementation Plan route;
-- the stated hypothesis/experiment was executed within its approved bounds;
+- it is an experiment authorised by the approved TID and its `Run when` condition was satisfied;
+- the defined experiment was executed within its approved bounds;
 - any autonomous correction was genuinely straightforward and did not change the hypothesis, mechanism, architecture/dependencies, evidence meaning, scope or risk;
 - representative environment/data requirements were met;
 - observations and inference are separated;
@@ -45,9 +43,7 @@ An individual experiment is valid when:
 
 Classify the result as `Supported`, `Rejected` or `Inconclusive`.
 
-If troubleshooting ceased to be straightforward, validation must confirm that execution stopped at an **Experiment Viability Checkpoint** rather than continuing into an unapproved diagnostic direction.
-
-Repeated/stubborn/surprising failures must also trigger the TID/plan option-viability perspective check before deeper candidate-specific diagnostics.
+If troubleshooting ceased to be straightforward, validation must confirm that execution stopped for a **TID/owner boundary checkpoint** rather than continuing into an unplanned diagnostic direction.
 
 Validation may report:
 
@@ -61,9 +57,8 @@ A Spike may be validated as ready to close only when:
 
 - the original Technical Question is resolved;
 - the Required Outcome is demonstrated or shown not feasible within approved constraints;
-- the TID accurately captures the material investigated solution space, boundaries and evidence criteria;
-- the Spike Implementation Plan accurately captures the route actually used or final supported route;
-- material TID approaches were investigated proportionately under the plan;
+- the TID accurately captures the material experiments, route/conditionality, boundaries and evidence criteria;
+- execution followed the approved TID route, including justified skips of conditional experiments;
 - the Supported Technical Specification contains only evidence-backed behaviour;
 - representative variability/limitations are explicit;
 - the final conclusion is `Feasible` or `Not feasible`;
@@ -77,7 +72,7 @@ After final Spike validation, the branch is eligible for the final integration P
 
 ## Completion report contract
 
-Report the Issue/type, validation scope (`Feature/Bug`, `Spike experiment`, or `Spike final`), criterion-to-evidence results, TID/plan conformance, representative coverage, observed versus inferred evidence, tests/probes/corrections, any experiment-viability checkpoint, outstanding questions, durable-document consistency and explicit result:
+Report the Issue/type, validation scope (`Feature/Bug`, `Spike experiment`, or `Spike final`), criterion-to-evidence results, TID conformance, representative coverage, observed versus inferred evidence, tests/probes/corrections, any TID/owner boundary checkpoint, outstanding questions, durable-document consistency and explicit result:
 
 - `Pass`;
 - `Experiment valid / Spike remains open`;
