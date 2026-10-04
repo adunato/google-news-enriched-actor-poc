@@ -34,12 +34,11 @@ Use the relevant skill and installed tool instead of recreating lifecycle behavi
 
 Before implementation, ensure the Feature/Bug Issue is development-ready. Use `refine-issue` when requirements or acceptance criteria need shaping, and `assess-change` to decide first whether prerequisite Technical Spike is required and then the minimum proportional design/planning path.
 
-When `assess-change` requires a Technical Spike, create/link one controlling Technical Spike Issue and use it as the investigation tracker. Set up one dedicated Spike branch, create/approve `technical-investigation-design.md`, create/approve `spike-implementation-plan.md`, then execute one explicitly approved bounded experiment at a time through `technical-spike.md`. Do not open a PR while the Spike is active. Straightforward mechanical corrections may complete the approved experiment; non-trivial troubleshooting requires the experiment-viability owner checkpoint before deeper diagnostics. After a supported final conclusion and final validation, create the final PR, integrate the evidence, then rerun `assess-change` on blocked Feature/Bug Issues. Normal Feature/Bug HLD/Implementation Plan/LLD remain downstream of the Spike.
+When `assess-change` requires a Technical Spike, create/link one controlling Technical Spike Issue and use it as the investigation tracker. Set up one dedicated Spike branch and create/approve `technical-investigation-design.md`. The TID defines the bounded experiments, sequence, conditional routing, evidence criteria and boundaries; do not create a separate Spike Implementation Plan. Execute the approved TID sequence through `technical-spike.md` without per-experiment approval. Straightforward mechanical corrections may complete an authorised experiment; return to the owner only when continuing would leave the approved TID or troubleshooting becomes a distinct investigation. Do not open a PR while the Spike is active. After a supported final conclusion and final validation, create the final PR, integrate the evidence, then rerun `assess-change` on blocked Feature/Bug Issues. Normal Feature/Bug HLD/Implementation Plan/LLD remain downstream of the Spike.
 
 Create change-specific artifacts only when required:
 
-- `technical-investigation-design.md` as the top-down Spike investigation design;
-- `spike-implementation-plan.md` as the Spike execution-routing plan;
+- `technical-investigation-design.md` as the complete Spike investigation design and experiment-routing artifact;
 - `technical-spike.md` as the living Spike experiment/evidence artifact;
 - `hld.md` for a material Feature/Bug change-design decision;
 - `implementation-plan.md` for meaningful repository-level implementation planning;
