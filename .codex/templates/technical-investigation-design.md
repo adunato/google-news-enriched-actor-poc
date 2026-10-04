@@ -1,101 +1,129 @@
 # Technical Investigation Design: <question / boundary>
 
-> Canonical top-down design artifact for a Technical Spike. It defines the technical search space and investigation strategy before individual experiments are approved. It is not a production HLD and does not record experiment chronology.
+> Canonical pre-execution design artifact for a Technical Spike. It explains the technical problem, defines the bounded experiments needed to answer it, and makes their order, conditionality and decision routing explicit. It is not a production HLD and it is not an experiment log.
 
 **Artifact ID:** `<stable-id>`  
 **Status:** `<Draft | Approved | Superseded>`  
 **Owner:** `<person or role>`  
-**Created / updated:** `<YYYY-MM-DD>`  
-**GitHub Spike Issue:** `<#issue or URL>`  
+**Created:** `<YYYY-MM-DD>`  
+**Updated:** `<YYYY-MM-DD>`  
+**GitHub Spike Issue:** `<descriptive Issue name + #number or URL>`  
 **Spike branch:** `<branch>`  
-**Blocked downstream Issue(s):** `<#issue(s) or URL(s)>`  
+**Blocked downstream Issue(s):** `<descriptive Issue name(s) + #number(s) or URL(s)>`  
 **Product Definition:** `<path / requirement references or None>`  
 **Architecture Definition:** `<path / section references or None>`
 
-## 1. Investigation Objective
+## 1. What this investigation is trying to achieve
 
-<State the Technical Question, why it matters to downstream engineering, and what decision this investigation must enable.>
+<Explain the product/capability problem and the technical question in plain language. Name affected downstream Issues/capabilities before using their numbers. State the measurable outcome the Spike must establish and why existing evidence is insufficient.>
 
-## 2. Current Understanding
+<Summarise only prior evidence that materially changes what should be tested now. Do not reproduce experiment chronology.>
 
-### Established facts
+---
 
-- <authoritative specification or directly observed fact>
-- <validated prior evidence>
+## 2. Investigation Area <A> — <plain-language question>
 
-### Material unknowns
+> Use Investigation Areas only when the Technical Question genuinely contains separable technical questions. A simple Spike may contain a single area.
 
-- <unknown that must be resolved>
+### Objective
 
-### Relevant prior evidence
+<State what this area must establish.>
 
-<Summarize only evidence that materially shapes the investigation. Reference historical artifacts rather than reproducing their chronology.>
+### Existing evidence and why this area is needed
 
-## 3. Investigation Structure
+- <relevant established fact or prior evidence>
+- <why that evidence leaves this specific uncertainty unresolved>
 
-Break the question into stable workstreams only when that improves clarity. A simple Spike may have one workstream.
+### Success criteria for this investigation area
 
-| ID  | Workstream / boundary | Question to resolve | Dependency          |
-| --- | --------------------- | ------------------- | ------------------- |
-| W1  | <boundary>            | <question>          | <None / dependency> |
+<State the measurable evidence required to complete this area, including representative environment/data and quantitative thresholds where applicable.>
 
-## 4. Candidate Approaches
+<State the boundary condition that would stop this area rather than silently expand the architecture or scope.>
 
-Identify the materially credible technical approaches for each workstream. These are high-level approaches, not individual hypotheses or experiments.
+### Experiment sequence
 
-| ID  | Workstream | Approach   | Technical shape / mechanism  | Why credible         | Material constraints / weakness | Initial disposition                                              |
-| --- | ---------- | ---------- | ---------------------------- | -------------------- | ------------------------------- | ---------------------------------------------------------------- |
-| A1  | W1         | <approach> | <how it works at high level> | <evidence/rationale> | <constraint>                    | <Primary / Fallback / Reference only / Deprioritised / Rejected> |
+| Order | ID | Experiment | Purpose | Run when | Next if successful | Next if unsuccessful |
+| ---: | --- | --- | --- | --- | --- | --- |
+| 1 | A1 | <short experiment name> | <concise reason it exists> | **Always first** | <next experiment / area complete> | <next experiment / stop / TID review> |
+| 2 | A2 | <short experiment name> | <concise reason it exists> | **Only if <trigger>** | <next route> | <next route> |
 
-Third-party/community implementations are evidence about possible approaches; they are not authoritative specifications unless the provider explicitly documents them as such.
+This table is the controlling procedural view for the area. Detailed experiment sections below explain each experiment; they do not create a different sequence or trigger model.
 
-## 5. Investigation Strategy
+### Experiment A1 — <name>
 
-For each workstream, define how the candidate set should be traversed without prescribing individual experiments.
+**Objective**  
+<What this experiment must establish or distinguish.>
 
-State:
+**Why this experiment exists**  
+<Why this test is necessary given the evidence already available. Explicitly distinguish a baseline/reproduction test from a new feasibility test when relevant.>
 
-- which approach is investigated first and why;
-- whether other approaches are mandatory comparisons or fallbacks;
-- the condition under which an approach has been tested sufficiently;
-- the condition for moving to another approach;
-- when the workstream can stop because its required outcome is demonstrated;
-- when the investigation must return for TID review rather than adding a new direction implicitly.
+**Test**  
+<The bounded experiment: representative environment/data, comparison/control, sequence and relevant setup. Be concrete enough that the executor knows what is being tested without inventing a different test.>
 
-## 6. Evidence and Decision Criteria
+**Measures**  
+- <observable measure>
+- <observable measure>
 
-Define the evidence needed to answer the Technical Question, including representative environment/data and quantitative thresholds where applicable.
+**Execution rule**  
+<Always run / run only if a specific predecessor condition is met.>
 
-| Workstream | Required evidence | Success / exit criterion | Not-feasible / escalation condition |
-| ---------- | ----------------- | ------------------------ | ----------------------------------- |
-| W1         | <evidence>        | <criterion>              | <condition>                         |
+**Decision / next step**
+- If <result>, <next route>.
+- If <result>, <next route>.
+- If continuing would require a materially different mechanism, dependency, architecture, evidence basis or investigation, stop for TID review/owner decision.
 
-## 7. Boundaries and Non-Goals
+### Experiment A2 — <name>
 
-- <approved constraint or excluded direction>
-- <technique that must not be introduced implicitly>
+<Repeat the same Objective / Why / Test / Measures / Execution rule / Decision structure for every planned experiment.>
 
-## 8. Design-Change Rule
+---
 
-The Spike may generate hypotheses and diagnostic experiments inside the approved TID. If evidence materially changes the workstream decomposition, candidate set, architectural mechanism, constraints, or investigation strategy, stop and update/review the TID before continuing.
+## 3. Constraints that apply to every experiment
 
-## 9. Open Questions
+- <approved architecture/product/runtime constraint>
+- <prohibited technique or dependency>
+- <cost/request/time/data-retention boundary>
+- <evidence or acceptance criterion that must not be silently weakened>
 
-<List design-level questions that must be resolved before approval. Do not put iteration-level hypotheses here. If none: “No outstanding investigation-design questions.”>
+A straightforward mechanical correction inside a defined experiment is allowed when it does not change what is being tested or what the evidence would mean. If troubleshooting becomes a different technical investigation, requires new machinery, or changes the experiment's purpose, stop and revise/review the TID before continuing.
 
-## 10. Summary and Approval
+---
 
-### Key decisions
+## 4. Evidence and decision rules
 
-- <workstream / candidate decision>
-- <boundary / evidence decision>
+Each experiment must make it possible to answer:
 
-### Approval
+1. What were we trying to establish?
+2. Why was this experiment necessary given what we already knew?
+3. What happened, using understandable measures?
+4. What does that result mechanically cause us to do next?
+
+Reuse valid historical evidence rather than recreating it unless current production-like behaviour is itself part of the question.
+
+Synthetic/local evidence may prove mechanics but cannot replace required representative live/in-environment evidence.
+
+A failed required acceptance run remains a failed result for that code/configuration. Do not rerun it unchanged merely to seek a different outcome.
+
+---
+
+## 5. Investigation completion
+
+<State how the Investigation Areas combine to answer the original Technical Question and what constitutes Feasible versus Not feasible.>
+
+<State what downstream Issue(s) or Product/Architecture decision must follow each terminal outcome.>
+
+## 6. Open design questions
+
+<List only questions that prevent approval of the investigation design. Do not put execution-time findings here. If none: “No outstanding investigation-design questions.”>
+
+## 7. Review and approval
 
 **Decision:** `<Approve | Hold | Reject>`  
 **Rationale:** `<decision and remaining conditions>`  
-**Required follow-up before Spike execution:** `<actions or None>`
+**Required follow-up before execution:** `<actions or None>`
+
+Approval authorises execution of the bounded experiment sequence and conditional transitions defined in this TID. A separate approval is not required for each experiment that remains within the approved design.
 
 ### Completion contract
 
-The TID is ready for approval when the technical question is decomposed sufficiently, the credible candidate approaches are understood and prioritised, investigation/transition rules and evidence criteria are explicit, and no material investigation-design decision remains unresolved. Individual hypotheses and experiment procedures belong in `technical-spike.md`, not this artifact.
+The TID is ready for approval when the technical problem is understandable without repository archaeology; any useful Investigation Areas are self-contained; every planned experiment has an objective, rationale, test, measures, execution rule and next-step rule; sequence/optionality/branching are obvious at a glance; success criteria and constraints are explicit; and no material investigation-design decision remains unresolved.
