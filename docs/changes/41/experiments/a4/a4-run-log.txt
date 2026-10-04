@@ -1,0 +1,13 @@
+Info: Log for run with ID "xxaa9DrYUPmi11Gdl":
+
+2026-10-04T18:32:02.389Z ACTOR: Pulling container image of build BAh1hAwf5Jns6mhoc from registry.
+2026-10-04T18:32:03.945Z ACTOR: Creating container.
+2026-10-04T18:32:04.062Z ACTOR: Starting container.
+2026-10-04T18:32:04.092Z ACTOR: Running under "LIMITED_PERMISSIONS".
+2026-10-04T18:32:04.447Z 
+2026-10-04T18:32:04.447Z > issue41-google-news-a4-resolution-20261004@0.0.1 start
+2026-10-04T18:32:04.448Z > node main.mjs
+2026-10-04T18:32:04.448Z 
+2026-10-04T18:32:05.230Z INFO  System info {"apifyVersion":"3.7.2","apifyClientVersion":"2.25.0","crawleeVersion":"3.18.2","osType":"Linux","nodeVersion":"v20.20.2"}
+2026-10-04T18:32:10.136Z {"startedAtUtc":"2026-10-04T18:32:05.194Z","completedAtUtc":"2026-10-04T18:32:10.127Z","totalRows":100,"successes":100,"counts":{"success_rpc":100},"byStageStatus":{"google_page:302":100,"google_page:200":100,"decoder_rpc:200":100}}
+2026-10-04T18:32:10.335Z ISSUE41_A4 {"totalRows":100,"validPublisherUrlCount":100,"target":95,"targetMet":true,"outcomeCounts":{"success_rpc":100}}

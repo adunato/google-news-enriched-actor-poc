@@ -1,0 +1,12 @@
+{
+  "name": "issue41-google-news-a4-resolution-20261004",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node main.mjs"
+  },
+  "dependencies": {
+    "apify": "3.7.2"
+  }
+}

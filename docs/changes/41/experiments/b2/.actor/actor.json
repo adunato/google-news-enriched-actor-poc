@@ -1,0 +1,21 @@
+{
+  "actorSpecification": 1,
+  "name": "issue41-google-news-a1-access-probe-20261004",
+  "title": "Issue 41 B2 Full Text Extraction Probe",
+  "description": "Private disposable Node 20 experiment for GitHub issue 41 B2.",
+  "version": "0.5",
+  "buildTag": "issue41-b2",
+  "defaultMemoryMbytes": 256,
+  "minMemoryMbytes": 256,
+  "maxMemoryMbytes": 256,
+  "input": {
+    "title": "B2 probe input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {}
+  },
+  "defaultRunOptions": {
+    "timeoutSecs": 900,
+    "memoryMbytes": 256
+  }
+}

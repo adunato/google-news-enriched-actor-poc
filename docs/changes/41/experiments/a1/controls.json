@@ -1,0 +1,36 @@
+{
+  "evidenceBasis": {
+    "artifact": "docs/changes/18/hosted-results.json",
+    "manifest": "docs/changes/18/input-manifest.json",
+    "priorRunId": "oiLOkd2rSc4WAYTAg",
+    "priorRunCompletedAtUtc": "2026-09-28T15:57:51.272Z",
+    "selectionRule": "Two GB and two US rows with distinct publisher hosts, each previously resolved by the hosted RPC probe and independently classified confirmed_match.",
+    "ageAtA1": "Six days; historical success establishes control provenance only, not current access."
+  },
+  "controls": [
+    {
+      "rowId": "q1-gb-01",
+      "country": "GB",
+      "sourceHost": "www.bbc.co.uk",
+      "googleNewsUrl": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE82RHZ4RmdaWXgxdWZ5ZXQwSkhmZzNPU2JDMGdYWXRGaTlwczVvU3Bqb09SUTU3eU9nZ05PX3NHM3VIUGNpcGNHSl9YNVZFaWU4T2tmNG1ia2t2bVd6MGc?oc=5"
+    },
+    {
+      "rowId": "q1-gb-02",
+      "country": "GB",
+      "sourceHost": "www.bbc.com",
+      "googleNewsUrl": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1vR2dmcDNUcFVqQzVQVWQ5WFBsUDhkbWNPd1ROOFZpV3pOd184NFIyTnd0THdhNTd0M2RQWWxpdFVBSWJodWVXcms5czFSa1RldlhQZVRzSlRFb0E?oc=5"
+    },
+    {
+      "rowId": "q1-us-01",
+      "country": "US",
+      "sourceHost": "www.tcu.edu",
+      "googleNewsUrl": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOQTh3dlV2cnNGaVBLSnJfbEF5Z1hDbnAzZFl4cHhxQzdFV3JoQmczQkpZUW1xeUdqdGJCdTVBNGxZdGJPYlB4TDA5cjFic2RIcVYyVDJ5cU90eVBJaXJzN050VndtS2JEM29kNDZWZDUwMUJmS0VzM25ueU5zNm92Z1l6RjJyTWctekE?oc=5"
+    },
+    {
+      "rowId": "q1-us-02",
+      "country": "US",
+      "sourceHost": "www.pbs.org",
+      "googleNewsUrl": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNcDlfMEZKSnZWZFVuUEJJUnBsWXA3NWpmSXI0aFl3dTUtcHFmOVJ4MmF6QmxWLXBCVDZ3eGFCeVhYQTh2V2piam8wR1JnYWdBYVJvR0hFU203UFZEMFJqMWw0aFc1aUxyZmNTNGpJVkdVU1hzR2hjUmxpNC1wZVJFWWRQMDlPdWxmdTEtRjhSQXNmeFktYkVHS1pEVFNDcUHSAaQBQVVfeXFMTTNpMXhPNXBsSFdCdnhSem52YWt6SUVCdjc3RHRhSGRlSlNsRV9ZRGp2bmx4ZS1YVzZXNW9hUUxTaHJLRG9lcW5vdjVGMWE5ZEh6dHFKTzVmZzQ4Mk52WENMUUVMQlZ5MTU4M2RKV205MmVtaXlYZzhnRDFLVGxadXhQVWJJSGhkblpiRWpSWll5bWp3T2c1cThxWFlQak8zX3ZuSHY?oc=5"
+    }
+  ]
+}

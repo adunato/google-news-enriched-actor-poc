@@ -1,0 +1,210 @@
+{
+  "evidenceType": "issue41_a1_google_news_access_characterization",
+  "startedAtUtc": "2026-10-04T18:16:33.305Z",
+  "completedAtUtc": "2026-10-04T18:16:35.445Z",
+  "environment": {
+    "runtime": "v20.20.2",
+    "platform": "linux",
+    "architecture": "x64",
+    "actorId": "JIogcgdHyCqAMHQ1P",
+    "buildId": "3Kfn6KAjPexTZSoxs",
+    "buildNumber": "0.2.1"
+  },
+  "configuration": {
+    "method": "GET",
+    "controlCount": 4,
+    "sequence": ["q1-gb-01", "q1-gb-02", "q1-us-01", "q1-us-02", "q1-gb-01 (repeat)"],
+    "maxRedirects": 5,
+    "timeoutMsPerControlIncludingRedirects": 10000,
+    "maxResponseBytes": 2097152,
+    "pauseBetweenControlRequestsMs": 350,
+    "userAgent": "Mozilla/5.0 issue-14-bounded-discovery/1.0",
+    "cookieHandling": "No cookie jar; Set-Cookie names observed only; no Cookie header sent; cookie values not retained.",
+    "outboundIdentity": "Not inspected; runtime exposes no safe identity value to this probe."
+  },
+  "controlsEvidenceBasis": {
+    "artifact": "docs/changes/18/hosted-results.json",
+    "manifest": "docs/changes/18/input-manifest.json",
+    "priorRunId": "oiLOkd2rSc4WAYTAg",
+    "priorRunCompletedAtUtc": "2026-09-28T15:57:51.272Z",
+    "selectionRule": "Two GB and two US rows with distinct publisher hosts, each previously resolved by the hosted RPC probe and independently classified confirmed_match.",
+    "ageAtA1": "Six days; historical success establishes control provenance only, not current access."
+  },
+  "controlsSha256": "3fd9cb32442c048f1a9d933fce15f537c3b599551e0e3c6717a0fb3da247330d",
+  "probeSha256": "9187e6211e85cbd45f8d14b769bdb0b0f4d6f5a3d475131363327bf709918e7a",
+  "requestCount": 10,
+  "resolverReadyCount": 5,
+  "sequenceStable": true,
+  "rows": [
+    {
+      "rowId": "q1-gb-01",
+      "sequencePosition": 1,
+      "repeat": false,
+      "outcome": "response_received",
+      "redirects": [
+        {
+          "requestNumber": 1,
+          "status": 302,
+          "fromHost": "news.google.com",
+          "toHost": "news.google.com",
+          "sanitizedDestinationUrl": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE82RHZ4RmdaWXgxdWZ5ZXQwSkhmZzNPU2JDMGdYWXRGaTlwczVvU3Bqb09SUTU3eU9nZ05PX3NHM3VIUGNpcGNHSl9YNVZFaWU4T2tmNG1ia2t2bVd6MGc",
+          "setCookieHeaderPresent": true,
+          "setCookieNames": ["NID", "GN_PREF"],
+          "cookieHeaderSent": false
+        }
+      ],
+      "finalStatus": 200,
+      "finalHost": "news.google.com",
+      "contentType": "text/html",
+      "responseBytesRead": 580490,
+      "responseTruncated": false,
+      "googlePageMarkers": {
+        "articleIdMarkerPresent": true,
+        "timestampMarkerPresent": true,
+        "signatureMarkerPresent": true,
+        "articleIdMatched": true,
+        "afInitDataCallbackPresent": true
+      },
+      "resolverReady": true,
+      "setCookieNames": ["NID", "GN_PREF"],
+      "cookieHeaderSent": false,
+      "elapsedMs": 218
+    },
+    {
+      "rowId": "q1-gb-02",
+      "sequencePosition": 2,
+      "repeat": false,
+      "outcome": "response_received",
+      "redirects": [
+        {
+          "requestNumber": 3,
+          "status": 302,
+          "fromHost": "news.google.com",
+          "toHost": "news.google.com",
+          "sanitizedDestinationUrl": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1vR2dmcDNUcFVqQzVQVWQ5WFBsUDhkbWNPd1ROOFZpV3pOd184NFIyTnd0THdhNTd0M2RQWWxpdFVBSWJodWVXcms5czFSa1RldlhQZVRzSlRFb0E",
+          "setCookieHeaderPresent": true,
+          "setCookieNames": ["NID", "GN_PREF"],
+          "cookieHeaderSent": false
+        }
+      ],
+      "finalStatus": 200,
+      "finalHost": "news.google.com",
+      "contentType": "text/html",
+      "responseBytesRead": 580381,
+      "responseTruncated": false,
+      "googlePageMarkers": {
+        "articleIdMarkerPresent": true,
+        "timestampMarkerPresent": true,
+        "signatureMarkerPresent": true,
+        "articleIdMatched": true,
+        "afInitDataCallbackPresent": true
+      },
+      "resolverReady": true,
+      "setCookieNames": ["NID", "GN_PREF"],
+      "cookieHeaderSent": false,
+      "elapsedMs": 123
+    },
+    {
+      "rowId": "q1-us-01",
+      "sequencePosition": 3,
+      "repeat": false,
+      "outcome": "response_received",
+      "redirects": [
+        {
+          "requestNumber": 5,
+          "status": 302,
+          "fromHost": "news.google.com",
+          "toHost": "news.google.com",
+          "sanitizedDestinationUrl": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOQTh3dlV2cnNGaVBLSnJfbEF5Z1hDbnAzZFl4cHhxQzdFV3JoQmczQkpZUW1xeUdqdGJCdTVBNGxZdGJPYlB4TDA5cjFic2RIcVYyVDJ5cU90eVBJaXJzN050VndtS2JEM29kNDZWZDUwMUJmS0VzM25ueU5zNm92Z1l6RjJyTWctekE",
+          "setCookieHeaderPresent": true,
+          "setCookieNames": ["NID", "GN_PREF"],
+          "cookieHeaderSent": false
+        }
+      ],
+      "finalStatus": 200,
+      "finalHost": "news.google.com",
+      "contentType": "text/html",
+      "responseBytesRead": 581819,
+      "responseTruncated": false,
+      "googlePageMarkers": {
+        "articleIdMarkerPresent": true,
+        "timestampMarkerPresent": true,
+        "signatureMarkerPresent": true,
+        "articleIdMatched": true,
+        "afInitDataCallbackPresent": true
+      },
+      "resolverReady": true,
+      "setCookieNames": ["NID", "GN_PREF"],
+      "cookieHeaderSent": false,
+      "elapsedMs": 142
+    },
+    {
+      "rowId": "q1-us-02",
+      "sequencePosition": 4,
+      "repeat": false,
+      "outcome": "response_received",
+      "redirects": [
+        {
+          "requestNumber": 7,
+          "status": 302,
+          "fromHost": "news.google.com",
+          "toHost": "news.google.com",
+          "sanitizedDestinationUrl": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNcDlfMEZKSnZWZFVuUEJJUnBsWXA3NWpmSXI0aFl3dTUtcHFmOVJ4MmF6QmxWLXBCVDZ3eGFCeVhYQTh2V2piam8wR1JnYWdBYVJvR0hFU203UFZEMFJqMWw0aFc1aUxyZmNTNGpJVkdVU1hzR2hjUmxpNC1wZVJFWWRQMDlPdWxmdTEtRjhSQXNmeFktYkVHS1pEVFNDcUHSAaQBQVVfeXFMTTNpMXhPNXBsSFdCdnhSem52YWt6SUVCdjc3RHRhSGRlSlNsRV9ZRGp2bmx4ZS1YVzZXNW9hUUxTaHJLRG9lcW5vdjVGMWE5ZEh6dHFKTzVmZzQ4Mk52WENMUUVMQlZ5MTU4M2RKV205MmVtaXlYZzhnRDFLVGxadXhQVWJJSGhkblpiRWpSWll5bWp3T2c1cThxWFlQak8zX3ZuSHY",
+          "setCookieHeaderPresent": true,
+          "setCookieNames": ["NID", "GN_PREF"],
+          "cookieHeaderSent": false
+        }
+      ],
+      "finalStatus": 200,
+      "finalHost": "news.google.com",
+      "contentType": "text/html",
+      "responseBytesRead": 587370,
+      "responseTruncated": false,
+      "googlePageMarkers": {
+        "articleIdMarkerPresent": true,
+        "timestampMarkerPresent": true,
+        "signatureMarkerPresent": true,
+        "articleIdMatched": true,
+        "afInitDataCallbackPresent": true
+      },
+      "resolverReady": true,
+      "setCookieNames": ["NID", "GN_PREF"],
+      "cookieHeaderSent": false,
+      "elapsedMs": 130
+    },
+    {
+      "rowId": "q1-gb-01",
+      "sequencePosition": 5,
+      "repeat": true,
+      "outcome": "response_received",
+      "redirects": [
+        {
+          "requestNumber": 9,
+          "status": 302,
+          "fromHost": "news.google.com",
+          "toHost": "news.google.com",
+          "sanitizedDestinationUrl": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE82RHZ4RmdaWXgxdWZ5ZXQwSkhmZzNPU2JDMGdYWXRGaTlwczVvU3Bqb09SUTU3eU9nZ05PX3NHM3VIUGNpcGNHSl9YNVZFaWU4T2tmNG1ia2t2bVd6MGc",
+          "setCookieHeaderPresent": true,
+          "setCookieNames": ["NID", "GN_PREF"],
+          "cookieHeaderSent": false
+        }
+      ],
+      "finalStatus": 200,
+      "finalHost": "news.google.com",
+      "contentType": "text/html",
+      "responseBytesRead": 580470,
+      "responseTruncated": false,
+      "googlePageMarkers": {
+        "articleIdMarkerPresent": true,
+        "timestampMarkerPresent": true,
+        "signatureMarkerPresent": true,
+        "articleIdMatched": true,
+        "afInitDataCallbackPresent": true
+      },
+      "resolverReady": true,
+      "setCookieNames": ["NID", "GN_PREF"],
+      "cookieHeaderSent": false,
+      "elapsedMs": 122
+    }
+  ]
+}

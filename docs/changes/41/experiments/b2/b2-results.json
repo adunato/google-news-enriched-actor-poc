@@ -1,0 +1,37 @@
+{
+  "experiment": "B2 — Extract with structured data plus Mozilla Readability",
+  "classification": "Inconclusive",
+  "candidateStatus": "Hold",
+  "buildId": "l3uVVuyZ0KLYMI15F",
+  "buildNumber": "0.5.1",
+  "runId": "AJSp7azbT9jHJC1gO",
+  "runStatus": "SUCCEEDED",
+  "datasetId": "BxTe7aJ5krgGojQZb",
+  "keyValueStoreId": "gtHV2cXpZZon47EIn",
+  "startedAt": "2026-10-04T19:07:13.006Z",
+  "finishedAt": "2026-10-04T19:07:17.76Z",
+  "runtimeMs": 4504,
+  "usageTotalUsd": 0.00011279546425077649,
+  "datasetItemCount": 0,
+  "datasetWrites": 0,
+  "keyValueStoreWrites": 1,
+  "observedStartupFacts": [
+    "Run reached Actor SDK system-info log under Node v20.20.2.",
+    "Run terminated 4.504 seconds after start with Apify status SUCCEEDED.",
+    "Dataset contained zero items; run metadata reports zero dataset writes.",
+    "Run key-value store contained one record and no B2_TEXT_* entries.",
+    "Log retained through SDK system info only; no B2 summary or row-processing log was emitted.",
+    "Run network receive was 1,596 bytes, consistent with no B1 HTML body retrieval."
+  ],
+  "diagnosticHypotheses": [
+    "An early exception may have occurred before the first row was processed and been obscured by Actor.exit in the finally path.",
+    "Cross-run access to the B1 key-value store may have been unavailable under the hosted Actor permission context."
+  ],
+  "hypothesesConfirmed": false,
+  "followUp": "Hold this candidate. Do not rerun unchanged, start B3, or continue troubleshooting until bounded triage establishes an in-TID corrective action.",
+  "retainedEvidence": [
+    "docs/changes/41/experiments/b2/b2-dataset.json",
+    "docs/changes/41/experiments/b2/b2-run-metadata.json",
+    "docs/changes/41/experiments/b2/b2-run-log.txt"
+  ]
+}

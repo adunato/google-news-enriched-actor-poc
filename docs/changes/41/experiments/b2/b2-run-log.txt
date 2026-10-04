@@ -1,0 +1,11 @@
+Info: Log for run with ID "AJSp7azbT9jHJC1gO":
+
+2026-10-04T19:07:13.268Z ACTOR: Pulling container image of build l3uVVuyZ0KLYMI15F from registry.
+2026-10-04T19:07:15.640Z ACTOR: Creating container.
+2026-10-04T19:07:15.775Z ACTOR: Starting container.
+2026-10-04T19:07:15.786Z ACTOR: Running under "LIMITED_PERMISSIONS".
+2026-10-04T19:07:16.160Z 
+2026-10-04T19:07:16.161Z > issue41-google-news-b2-readable-text-20261004@0.0.1 start
+2026-10-04T19:07:16.196Z > node main.mjs
+2026-10-04T19:07:16.277Z 
+2026-10-04T19:07:17.630Z INFO  System info {"apifyVersion":"3.7.2","apifyClientVersion":"2.25.0","crawleeVersion":"3.18.2","osType":"Linux","nodeVersion":"v20.20.2"}

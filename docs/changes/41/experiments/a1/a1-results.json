@@ -1,0 +1,205 @@
+{
+  "evidenceType": "issue41_a1_google_news_access_characterization",
+  "startedAtUtc": "2026-10-04T18:05:25.897Z",
+  "completedAtUtc": "2026-10-04T18:05:27.997Z",
+  "environment": {
+    "runtime": "v20.20.2",
+    "platform": "linux",
+    "architecture": "x64",
+    "actorId": "JIogcgdHyCqAMHQ1P",
+    "buildId": "9P7ZyZFLtjXe7jIpc",
+    "buildNumber": "0.1.1"
+  },
+  "configuration": {
+    "method": "GET",
+    "controlCount": 4,
+    "sequence": ["q1-gb-01", "q1-gb-02", "q1-us-01", "q1-us-02", "q1-gb-01 (repeat)"],
+    "maxRedirects": 5,
+    "timeoutMsPerControlIncludingRedirects": 10000,
+    "maxResponseBytes": 2097152,
+    "pauseBetweenControlRequestsMs": 350,
+    "userAgent": "Mozilla/5.0 issue-14-bounded-discovery/1.0",
+    "cookieHandling": "No cookie jar; Set-Cookie names observed only; no Cookie header sent; cookie values not retained.",
+    "outboundIdentity": "Not inspected; runtime exposes no safe identity value to this probe."
+  },
+  "controlsEvidenceBasis": {
+    "artifact": "docs/changes/18/hosted-results.json",
+    "manifest": "docs/changes/18/input-manifest.json",
+    "priorRunId": "oiLOkd2rSc4WAYTAg",
+    "priorRunCompletedAtUtc": "2026-09-28T15:57:51.272Z",
+    "selectionRule": "Two GB and two US rows with distinct publisher hosts, each previously resolved by the hosted RPC probe and independently classified confirmed_match.",
+    "ageAtA1": "Six days; historical success establishes control provenance only, not current access."
+  },
+  "controlsSha256": "3fd9cb32442c048f1a9d933fce15f537c3b599551e0e3c6717a0fb3da247330d",
+  "probeSha256": "fe0e7b9eb4a26b3b98db58c1c6f3d7abbcbd3ea4dc56bb82186bb206212cda66",
+  "requestCount": 10,
+  "resolverReadyCount": 5,
+  "sequenceStable": true,
+  "rows": [
+    {
+      "rowId": "q1-gb-01",
+      "sequencePosition": 1,
+      "repeat": false,
+      "outcome": "response_received",
+      "redirects": [
+        {
+          "requestNumber": 1,
+          "status": 302,
+          "fromHost": "news.google.com",
+          "toHost": "news.google.com",
+          "setCookieHeaderPresent": true,
+          "setCookieNames": ["NID", "GN_PREF"],
+          "cookieHeaderSent": false
+        }
+      ],
+      "finalStatus": 200,
+      "finalHost": "news.google.com",
+      "contentType": "text/html",
+      "responseBytesRead": 580471,
+      "responseTruncated": false,
+      "googlePageMarkers": {
+        "articleIdMarkerPresent": true,
+        "timestampMarkerPresent": true,
+        "signatureMarkerPresent": true,
+        "articleIdMatched": true,
+        "afInitDataCallbackPresent": true
+      },
+      "resolverReady": true,
+      "setCookieNames": ["NID", "GN_PREF"],
+      "cookieHeaderSent": false,
+      "elapsedMs": 216
+    },
+    {
+      "rowId": "q1-gb-02",
+      "sequencePosition": 2,
+      "repeat": false,
+      "outcome": "response_received",
+      "redirects": [
+        {
+          "requestNumber": 3,
+          "status": 302,
+          "fromHost": "news.google.com",
+          "toHost": "news.google.com",
+          "setCookieHeaderPresent": true,
+          "setCookieNames": ["NID", "GN_PREF"],
+          "cookieHeaderSent": false
+        }
+      ],
+      "finalStatus": 200,
+      "finalHost": "news.google.com",
+      "contentType": "text/html",
+      "responseBytesRead": 580391,
+      "responseTruncated": false,
+      "googlePageMarkers": {
+        "articleIdMarkerPresent": true,
+        "timestampMarkerPresent": true,
+        "signatureMarkerPresent": true,
+        "articleIdMatched": true,
+        "afInitDataCallbackPresent": true
+      },
+      "resolverReady": true,
+      "setCookieNames": ["NID", "GN_PREF"],
+      "cookieHeaderSent": false,
+      "elapsedMs": 110
+    },
+    {
+      "rowId": "q1-us-01",
+      "sequencePosition": 3,
+      "repeat": false,
+      "outcome": "response_received",
+      "redirects": [
+        {
+          "requestNumber": 5,
+          "status": 302,
+          "fromHost": "news.google.com",
+          "toHost": "news.google.com",
+          "setCookieHeaderPresent": true,
+          "setCookieNames": ["NID", "GN_PREF"],
+          "cookieHeaderSent": false
+        }
+      ],
+      "finalStatus": 200,
+      "finalHost": "news.google.com",
+      "contentType": "text/html",
+      "responseBytesRead": 581812,
+      "responseTruncated": false,
+      "googlePageMarkers": {
+        "articleIdMarkerPresent": true,
+        "timestampMarkerPresent": true,
+        "signatureMarkerPresent": true,
+        "articleIdMatched": true,
+        "afInitDataCallbackPresent": true
+      },
+      "resolverReady": true,
+      "setCookieNames": ["NID", "GN_PREF"],
+      "cookieHeaderSent": false,
+      "elapsedMs": 102
+    },
+    {
+      "rowId": "q1-us-02",
+      "sequencePosition": 4,
+      "repeat": false,
+      "outcome": "response_received",
+      "redirects": [
+        {
+          "requestNumber": 7,
+          "status": 302,
+          "fromHost": "news.google.com",
+          "toHost": "news.google.com",
+          "setCookieHeaderPresent": true,
+          "setCookieNames": ["NID", "GN_PREF"],
+          "cookieHeaderSent": false
+        }
+      ],
+      "finalStatus": 200,
+      "finalHost": "news.google.com",
+      "contentType": "text/html",
+      "responseBytesRead": 587374,
+      "responseTruncated": false,
+      "googlePageMarkers": {
+        "articleIdMarkerPresent": true,
+        "timestampMarkerPresent": true,
+        "signatureMarkerPresent": true,
+        "articleIdMatched": true,
+        "afInitDataCallbackPresent": true
+      },
+      "resolverReady": true,
+      "setCookieNames": ["NID", "GN_PREF"],
+      "cookieHeaderSent": false,
+      "elapsedMs": 151
+    },
+    {
+      "rowId": "q1-gb-01",
+      "sequencePosition": 5,
+      "repeat": true,
+      "outcome": "response_received",
+      "redirects": [
+        {
+          "requestNumber": 9,
+          "status": 302,
+          "fromHost": "news.google.com",
+          "toHost": "news.google.com",
+          "setCookieHeaderPresent": true,
+          "setCookieNames": ["NID", "GN_PREF"],
+          "cookieHeaderSent": false
+        }
+      ],
+      "finalStatus": 200,
+      "finalHost": "news.google.com",
+      "contentType": "text/html",
+      "responseBytesRead": 580498,
+      "responseTruncated": false,
+      "googlePageMarkers": {
+        "articleIdMarkerPresent": true,
+        "timestampMarkerPresent": true,
+        "signatureMarkerPresent": true,
+        "articleIdMatched": true,
+        "afInitDataCallbackPresent": true
+      },
+      "resolverReady": true,
+      "setCookieNames": ["NID", "GN_PREF"],
+      "cookieHeaderSent": false,
+      "elapsedMs": 118
+    }
+  ]
+}
