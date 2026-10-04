@@ -25,7 +25,7 @@ Do not create the final Spike PR until:
 
 - the original Technical Question is resolved;
 - the final result is `Feasible` or `Not feasible`;
-- the TID and Spike Implementation Plan accurately reflect the final investigation route/boundaries;
+- the TID accurately reflects the final investigation route/boundaries;
 - `technical-spike.md` contains the supported technical specification or infeasibility evidence;
 - downstream implications are explicit;
 - final Spike validation passes.
