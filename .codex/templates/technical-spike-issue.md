@@ -25,16 +25,15 @@
 
 <State the intended Spike depth and any owner constraint. If no special constraint exists, state “Proportionate to the bounded Technical Question”.>
 
-<List already-known approaches, sources or evidence worth considering in the Technical Investigation Design. These are leads, not preselected solutions or hypotheses.>
+<List already-known sources, possible mechanisms or evidence worth considering in the Technical Investigation Design. These are leads, not a required taxonomy.>
 
-- <known lead / source / approach>
-- <known lead / source / approach>
+- <known lead / source / mechanism>
+- <known lead / source / mechanism>
 
 ## Completion Criteria
 
 - [ ] The original Technical Question is answered with evidence sufficient for downstream design, or the Required Outcome is shown not feasible within the approved constraints.
-- [ ] The Technical Investigation Design records the relevant workstreams, credible candidate approaches, investigation strategy, boundaries and evidence criteria.
-- [ ] The Spike Implementation Plan records the ordered route, dependencies, entry/exit/fallback conditions and stop/return rules.
+- [ ] The Technical Investigation Design explains the problem/context, defines any useful Investigation Areas, specifies the bounded experiments, makes sequence/conditionality/branching explicit, and records evidence criteria and boundaries.
 - [ ] `technical-spike.md` records the material experiment history, evidence, limitations and supported technical specification.
 - [ ] Any final Feasible conclusion states exactly what downstream engineering may rely on.
 - [ ] Any final Not feasible conclusion states exactly which requirement/constraint cannot be satisfied and the required Product/Architecture/POC decision.
@@ -55,7 +54,6 @@ Use one dedicated Spike branch/workspace, normally `spike/<issue-number>-<slug>`
 Create and maintain:
 
 - `docs/changes/<issue-number>/technical-investigation-design.md`;
-- `docs/changes/<issue-number>/spike-implementation-plan.md`;
 - `docs/changes/<issue-number>/technical-spike.md`;
 - experiment-specific probes/evidence only where useful for reproducibility.
 
@@ -65,12 +63,10 @@ Do **not** open a pull request while the investigation is active. Create the fin
 
 - **Execution path:** Technical Spike.
 - **Production implementation:** Prohibited unless separately approved as reusable non-product tooling.
-- **Investigation design:** Complete and approve the Technical Investigation Design before experiment execution.
-- **Execution planning:** Complete and approve the Spike Implementation Plan before experiment execution.
-- **Experiment mode:** One explicitly approved bounded experiment at a time.
-- **Straightforward correction:** The agent may correct an obvious mechanical defect needed to complete the approved experiment only when the correction does not change the hypothesis, mechanism, architecture/dependencies, evidence meaning, scope or risk.
-- **Experiment viability:** When troubleshooting is no longer straightforward or becomes disproportionate to the experiment's information value, stop and return to the owner before deeper diagnostics.
-- **Direction control:** New candidate mechanisms, dependencies, infrastructure, workstreams or materially changed boundaries require plan/TID review rather than implicit adoption through troubleshooting.
-- **Owner context:** Every experiment approval checkpoint must be self-contained from Issue context through Spike/TID/plan position to the proposed experiment, assuming the owner has no recent artifacts open.
+- **Investigation design:** Complete and approve the Technical Investigation Design before experiment execution. The TID owns experiment definition, sequencing, conditional transitions, evidence criteria and boundaries.
+- **Execution authority:** TID approval authorises the defined bounded experiment sequence; no separate approval is required for each experiment.
+- **Straightforward correction:** The agent may correct an obvious mechanical defect needed to complete the current TID experiment only when the correction does not change its purpose, mechanism, architecture/dependencies, evidence meaning, scope or risk.
+- **Boundary control:** Stop for owner/TID review when continuing requires an unplanned experiment, materially different mechanism/dependency/infrastructure/runtime, changed evidence meaning/threshold/scope, or troubleshooting becomes a distinct investigation.
+- **Owner context:** Any boundary checkpoint must be self-contained from product/Issue context through evidence, proposed direction and the actual decision required.
 - **Completion:** Keep this Issue open until the Technical Question has a supported `Feasible` or `Not feasible` conclusion.
 - **Integration:** After final validation, create the final PR, integrate the Spike evidence, then rerun `assess-change` on every blocked downstream Issue.

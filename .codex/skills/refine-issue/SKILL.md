@@ -43,20 +43,18 @@ For a Technical Spike, capture the stable investigation contract:
 - starting evidence already established;
 - approved constraints/prohibited techniques;
 - intended investigation boundary;
-- known leads/sources/candidate approaches worth considering without selecting them;
+- known leads/sources/mechanisms worth considering without selecting a solution;
 - completion criteria;
 - blocked downstream Feature/Bug Issue(s);
 - the dedicated Spike branch/workspace expectation;
 - canonical artifact paths:
   - `docs/changes/<issue>/technical-investigation-design.md`;
-  - `docs/changes/<issue>/spike-implementation-plan.md`;
   - `docs/changes/<issue>/technical-spike.md`.
 
-Do **not** perform option selection, workstream design, execution routing or hypothesis design in the Issue body. The Issue is the stable management/tracking object:
+Do **not** perform experiment design or execution routing in the Issue body. The Issue is the stable management/tracking object:
 
-- TID owns problem decomposition and candidate approach strategy;
-- Spike Implementation Plan owns route/order/transition rules;
-- `technical-spike.md` owns bounded experiment execution and evidence.
+- the TID owns investigation decomposition, bounded experiment design, sequence/conditional routing, evidence criteria and boundaries;
+- `technical-spike.md` owns experiment execution and evidence.
 
 A Spike is not a substitute for the SideGig Research Methodology. If refinement shows the question needs broad/open-ended domain/provider/commercial/market research rather than bounded technical investigation, surface that boundary for owner decision.
 
@@ -72,7 +70,7 @@ When a Feature/Bug depends on a material unproven external/runtime boundary, pre
 
 Feature/Bug Issues preserve the template's `Development Lifecycle Assessment` with initial `Pending` values until `assess-change` populates it.
 
-Technical Spike Issues follow their dedicated Issue → TID → Spike Implementation Plan → bounded experiment loop → final PR lifecycle. They do not use the normal Feature/Bug HLD/Implementation Plan/LLD assessment before investigation begins.
+Technical Spike Issues follow their dedicated Issue → approved TID → bounded experiment execution → final PR lifecycle. They do not use the normal Feature/Bug HLD/Implementation Plan/LLD assessment before investigation begins.
 
 If refinement exposes an unresolved product decision, architecture ambiguity, missing dependency or no credible evidence path for a material outcome, report the Issue as not ready rather than inventing the answer.
 

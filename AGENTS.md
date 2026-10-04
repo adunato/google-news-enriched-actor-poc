@@ -34,14 +34,13 @@ Use the relevant skill and installed tool instead of recreating lifecycle behavi
 
 Before implementation, ensure the Feature/Bug Issue is development-ready. Use `refine-issue` when requirements or acceptance criteria need shaping, and `assess-change` to decide first whether prerequisite Technical Spike is required and then the minimum proportional design/planning path.
 
-When `assess-change` requires a Technical Spike, create/link one controlling Technical Spike Issue and one dedicated Spike branch. Produce and approve the Technical Investigation Design, then the Spike Implementation Plan, then execute one owner-approved experiment at a time with `technical-spike`. The TID owns the technical search space; the Spike plan owns option/workstream traversal; `technical-spike.md` owns the current experiment and evidence history. Do not open a PR while the Spike is still being investigated. Create the final PR only after a supported `Feasible`/`Not feasible` conclusion and final Spike validation. After integration, rerun `assess-change` on the blocked Feature/Bug Issue.
+When `assess-change` requires a Technical Spike, create/link one controlling Technical Spike Issue and one dedicated Spike branch. Produce and approve the Technical Investigation Design, which defines the bounded experiments, their order/conditional routing, evidence criteria and boundaries. Execute that approved TID sequence with `technical-spike` without per-experiment approval; return to the owner only when continuing would leave the TID or troubleshooting becomes a distinct investigation. `technical-spike.md` owns the execution/evidence history. Do not open a PR while the Spike is still being investigated. Create the final PR only after a supported `Feasible`/`Not feasible` conclusion and final Spike validation. After integration, rerun `assess-change` on the blocked Feature/Bug Issue.
 
 Every experiment approval checkpoint must be self-contained from Issue context down to the proposed experiment and assume the owner has no recent project context open. If troubleshooting stops being straightforward, the agent must stop at an Experiment Viability Checkpoint rather than choosing a deeper diagnostic direction autonomously.
 
 Create change-specific artifacts only when required:
 
-- `technical-investigation-design.md` for the top-down Technical Spike search space and evidence boundaries;
-- `spike-implementation-plan.md` for Technical Spike workstream/option sequencing and fallback rules;
+- `technical-investigation-design.md` for the complete Technical Spike experiment design, sequencing, routing and evidence boundaries;
 - `technical-spike.md` for the living Technical Spike experiment/evidence record;
 - `hld.md` for a material Feature/Bug change-design decision;
 - `implementation-plan.md` for meaningful repository-level implementation planning;
