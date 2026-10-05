@@ -1,1 +1,19 @@
-Info: Log for run with ID "VNatt0T7n2q8sngEa":
+2026-10-05T07:10:41.412Z ACTOR: Pulling container image of build T1HPbeieVgcdHvQpy from registry.
+2026-10-05T07:10:43.427Z ACTOR: Creating container.
+2026-10-05T07:10:43.507Z ACTOR: Starting container.
+2026-10-05T07:10:43.508Z ACTOR: Running under "LIMITED_PERMISSIONS".
+2026-10-05T07:10:43.828Z 
+2026-10-05T07:10:43.829Z > issue41-google-news-b2-diagnostic-20261005@0.0.2 start
+2026-10-05T07:10:43.829Z > node main.mjs
+2026-10-05T07:10:43.829Z 
+2026-10-05T07:10:45.218Z INFO  System info {"apifyVersion":"3.7.2","apifyClientVersion":"2.25.0","crawleeVersion":"3.18.2","osType":"Linux","nodeVersion":"v20.20.2"}
+2026-10-05T07:10:45.227Z ISSUE41_B2_D1 stage=fixture_read_start
+2026-10-05T07:10:45.234Z ISSUE41_B2_D1 stage=fixture_read_complete characters=105295
+2026-10-05T07:10:45.235Z ISSUE41_B2_D1 stage=fixture_hash_check_start
+2026-10-05T07:10:45.235Z ISSUE41_B2_D1 stage=fixture_hash_check_complete result=match
+2026-10-05T07:10:45.236Z ISSUE41_B2_D1 stage=fixture_parse_start
+2026-10-05T07:10:45.236Z ISSUE41_B2_D1 stage=fixture_parse_complete
+2026-10-05T07:10:45.236Z ISSUE41_B2_D1 stage=fixture_count_check_start
+2026-10-05T07:10:45.236Z ISSUE41_B2_D1 stage=fixture_count_check_complete totalRows=100 uniqueRows=100 cachedHtmlRows=53
+2026-10-05T07:10:45.237Z ISSUE41_B2_D1 stage=source_store_open_start
+2026-10-05T07:10:45.293Z ISSUE41_B2_D1 fatal {"stage":"source_store_open","name":"ApifyApiError","code":null}
