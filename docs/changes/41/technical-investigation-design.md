@@ -7,7 +7,7 @@
 **Status:** `Approved`  
 **Owner:** `Project owner`  
 **Created:** `2026-10-04`  
-**Updated:** `2026-10-04`  
+**Updated:** `2026-10-05`
 **GitHub Spike Issue:** `Prove Google News publisher resolution and full-text viability (#41)`  
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
@@ -218,7 +218,7 @@ Failures must remain row-local and distinguish publisher-access failures from ex
 | Order | ID | Experiment | Purpose | Run when | Next if successful | Next if unsuccessful |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | B1 | Measure current publisher-page access | Establish whether enough usable publisher HTML exists to make the 50/100 target possible | **Always first after Area A** | B2 if at least 50 rows provide usable HTML | Stop / return publisher-access boundary |
-| 2 | B2 | Extract with structured data plus Mozilla Readability | Test the primary lightweight extraction path on accessible HTML | **Only if B1 shows at least 50 usable HTML rows** | Area B feasible | B3 only if extraction quality, rather than access, is the remaining blocker |
+| 2 | B2 | Extract with structured data plus Mozilla Readability | Test the primary lightweight extraction path on accessible HTML | **Only if B1 shows at least 50 usable HTML rows** | Area B feasible | B3 only if extraction quality, rather than access, is the remaining blocker; if the candidate emits no usable experiment evidence, apply the single-run B2-D1 amendment below |
 | 3 | B3 | Test one alternative generic Node-native extractor | Check whether the remaining shortfall is specific to the primary parser | **Only if B2 misses because of extraction quality on accessible HTML** | Area B feasible | Stop / return extraction or architecture limitation |
 
 The table is the controlling procedural view for this area. Detailed experiment sections below explain each experiment; they do not change the sequence or trigger rules above.
@@ -316,6 +316,23 @@ Run **only if B2 misses because of extraction quality on accessible HTML**.
 - If the supported path reaches at least **50/100**, Investigation Area B is feasible.
 - If it remains below 50/100, stop and return the specific limitation. Any heavier mechanism requires a Product/Architecture decision.
 
+### Approved amendment — B2-D1 single diagnostic execution
+
+**Approval and scope**
+The project owner approved this amendment on **2026-10-05** after reviewing the Experiment Viability Checkpoint. It authorizes exactly one changed B2 candidate build and one private hosted run, identified as **B2-D1**. It does not authorize a second diagnostic or corrective run, a new extraction approach, or any change to the product acceptance criteria.
+
+**Why this amendment is needed**
+The first B2 candidate was reported as successful by the platform but produced zero dataset items, no cached-text evidence, and only startup log output. The cause was not established. This amendment adds bounded startup-stage evidence so the one permitted candidate can distinguish the fixture/hash/count gates, prior-run storage access, row processing, and dataset writing without changing what B2 extracts or how its result is scored.
+
+**Candidate changes permitted**
+On the existing B2 probe only, add sanitized stage markers around fixture read/hash/count checks, opening the B1 key-value store, entering/completing the 100-row loop, and beginning/completing the dataset write. Add fatal-error reporting that records the current stage and safe error classification, sets a failing process exit code, and never includes credentials, publisher response bodies, or extracted text. Make only the package/Actor version bookkeeping needed to identify the changed candidate. Do not change the parser, dependencies, runtime, input sample, 53 cached HTML objects, per-row processing, limits, scoring, output schema, or provenance fields.
+
+**Run rule and evidence**
+Run B2-D1 exactly once on the existing private Node.js 20 Actor under the original memory and timeout settings, using the byte-identical 100-row B2 fixture and only the 53 exact B1 response bodies in the existing B1 key-value store. No publisher or Google News fetch is permitted. Retain the exact candidate/build/run identity, sanitized logs, full 100-row outcome evidence, dataset and text-key inventory, runtime and final platform cost. Verify the sample hash, all 100 row mappings, and each cached body’s exact byte count and SHA-256 against B1. Retained article text remains private in run storage and must be reviewable for the 50/100 readability assessment.
+
+**Decision after the one run**
+If the run produces valid B2 evidence after verified cached HTML was meaningfully processed, classify the B2 result against the existing 50/100 target and resume the original TID route after validation. B3 is eligible only when that valid evidence demonstrates an extraction-quality shortfall on accessible HTML. Startup, source-store, cache-integrity, transport or other processing errors do not establish extraction quality, even if represented by 100 row-level failures; record them and stop. If the run does not produce valid B2 evidence or the cause remains unclear, record the boundary and stop. No further B2 diagnostic, unchanged rerun, corrective rerun, or B3 run is authorized by this amendment.
+
 ---
 
 ## 4. Constraints that apply to every experiment
@@ -381,4 +398,4 @@ No outstanding investigation-design questions.
 
 Approval authorises execution of the bounded experiment sequence and conditional transitions defined in this TID. A separate approval is not required for each experiment that remains within the approved design.
 
-**Owner approval:** Approved — 2026-10-04.
+**Owner approval:** Original bounded sequence approved — 2026-10-04. Amendment B2-D1 approved — 2026-10-05; exactly one changed private candidate build/run under the limits in the amendment above.

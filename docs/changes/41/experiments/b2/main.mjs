@@ -63,6 +63,18 @@ function bytesFromCache(value) {
   return null;
 }
 
+function safeErrorClass(error) {
+  const name =
+    error instanceof Error && /^[A-Za-z][A-Za-z0-9]{0,39}$/u.test(error.name)
+      ? error.name
+      : "UnknownError";
+  const code =
+    error && typeof error.code === "string" && /^[A-Z0-9_]{1,40}$/u.test(error.code)
+      ? error.code
+      : null;
+  return { name, code };
+}
+
 function resultBase(row) {
   return {
     rowId: row.rowId,
@@ -161,11 +173,21 @@ async function extractRow(row, cache) {
 }
 
 await Actor.init();
+let currentStage = "fixture_read";
 try {
+  console.log("ISSUE41_B2_D1 stage=fixture_read_start");
   const sampleText = await readFile(new URL("./input-sample.json", import.meta.url), "utf8");
-  if (sha256(sampleText) !== EXPECTED_SAMPLE_SHA256)
-    throw new Error("Frozen B2 sample hash mismatch");
+  console.log(`ISSUE41_B2_D1 stage=fixture_read_complete characters=${sampleText.length}`);
+  currentStage = "fixture_hash_check";
+  console.log("ISSUE41_B2_D1 stage=fixture_hash_check_start");
+  const sampleHash = sha256(sampleText);
+  if (sampleHash !== EXPECTED_SAMPLE_SHA256) throw new Error("Frozen B2 sample hash mismatch");
+  console.log("ISSUE41_B2_D1 stage=fixture_hash_check_complete result=match");
+  currentStage = "fixture_parse_and_count_check";
+  console.log("ISSUE41_B2_D1 stage=fixture_parse_start");
   const sample = JSON.parse(sampleText);
+  console.log("ISSUE41_B2_D1 stage=fixture_parse_complete");
+  console.log("ISSUE41_B2_D1 stage=fixture_count_check_start");
   if (
     sample.rows.length !== MAX_ROWS ||
     new Set(sample.rows.map((row) => row.rowId)).size !== MAX_ROWS
@@ -178,10 +200,18 @@ try {
       `B2 expected ${EXPECTED_B1_HTML_ROWS} retained B1 HTML rows; found ${eligibleCount}`,
     );
   }
+  console.log(
+    `ISSUE41_B2_D1 stage=fixture_count_check_complete totalRows=${sample.rows.length} uniqueRows=${new Set(sample.rows.map((row) => row.rowId)).size} cachedHtmlRows=${eligibleCount}`,
+  );
+  currentStage = "source_store_open";
+  console.log("ISSUE41_B2_D1 stage=source_store_open_start");
   const cache = await Actor.openKeyValueStore(sample.sourceB1KeyValueStoreId);
+  console.log("ISSUE41_B2_D1 stage=source_store_open_complete");
   const startedAtUtc = new Date().toISOString();
   const deadline = Date.now() + MAX_TOTAL_RUNTIME_MS;
   const rows = [];
+  currentStage = "row_loop";
+  console.log(`ISSUE41_B2_D1 stage=row_loop_start totalRows=${sample.rows.length}`);
   for (const row of sample.rows) {
     if (!row.b1UsableHtml) {
       rows.push(failure(row, "access_not_eligible", Date.now()));
@@ -193,6 +223,7 @@ try {
     }
     rows.push(await extractRow(row, cache));
   }
+  console.log(`ISSUE41_B2_D1 stage=row_loop_complete processedRows=${rows.length}`);
 
   const outcomeCounts = {};
   const methodCounts = {};
@@ -250,6 +281,9 @@ try {
     methodCounts,
     rows,
   };
+  currentStage = "dataset_write";
+  const datasetItemCount = 1 + rows.length;
+  console.log(`ISSUE41_B2_D1 stage=dataset_write_start itemCount=${datasetItemCount}`);
   await Actor.pushData([
     {
       evidenceType: evidence.evidenceType,
@@ -268,6 +302,8 @@ try {
     },
     ...rows.map((row) => ({ evidenceType: "issue41_b2_row", ...row })),
   ]);
+  console.log(`ISSUE41_B2_D1 stage=dataset_write_complete itemCount=${datasetItemCount}`);
+  currentStage = "summary_store_write";
   await Actor.setValue("B2_SUMMARY", evidence, { contentType: "application/json; charset=utf-8" });
   console.log(
     `ISSUE41_B2 ${JSON.stringify({
@@ -279,6 +315,19 @@ try {
       methodCounts,
     })}`,
   );
+} catch (error) {
+  process.exitCode = 1;
+  const errorClass = safeErrorClass(error);
+  console.error(`ISSUE41_B2_D1 fatal ${JSON.stringify({ stage: currentStage, ...errorClass })}`);
+  throw new Error(
+    `Issue 41 B2 diagnostic failed at ${currentStage} (${errorClass.name}${errorClass.code ? `, ${errorClass.code}` : ""})`,
+  );
 } finally {
-  await Actor.exit();
+  try {
+    await Actor.exit();
+  } catch (error) {
+    process.exitCode = 1;
+    const errorClass = safeErrorClass(error);
+    console.error(`ISSUE41_B2_D1 exit_error ${JSON.stringify(errorClass)}`);
+  }
 }
