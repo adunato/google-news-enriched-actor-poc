@@ -331,7 +331,40 @@ On the existing B2 probe only, add sanitized stage markers around fixture read/h
 Run B2-D1 exactly once on the existing private Node.js 20 Actor under the original memory and timeout settings, using the byte-identical 100-row B2 fixture and only the 53 exact B1 response bodies in the existing B1 key-value store. No publisher or Google News fetch is permitted. Retain the exact candidate/build/run identity, sanitized logs, full 100-row outcome evidence, dataset and text-key inventory, runtime and final platform cost. Verify the sample hash, all 100 row mappings, and each cached body’s exact byte count and SHA-256 against B1. Retained article text remains private in run storage and must be reviewable for the 50/100 readability assessment.
 
 **Decision after the one run**
+
 If the run produces valid B2 evidence after verified cached HTML was meaningfully processed, classify the B2 result against the existing 50/100 target and resume the original TID route after validation. B3 is eligible only when that valid evidence demonstrates an extraction-quality shortfall on accessible HTML. Startup, source-store, cache-integrity, transport or other processing errors do not establish extraction quality, even if represented by 100 row-level failures; record them and stop. If the run does not produce valid B2 evidence or the cause remains unclear, record the boundary and stop. No further B2 diagnostic, unchanged rerun, corrective rerun, or B3 run is authorized by this amendment.
+
+### Proposed amendment — B2-S1 single-record cached-body access witness
+
+**Status and authority**
+
+**Preparation approved for review only; proposed amendment and execution are not approved.** The existing approval for the bounded B2 sequence and the completed B2-D1 amendment does not authorize B2-S1. A separate explicit owner approval is required for exactly one private diagnostic build and hosted run under the resource and request envelope below; that approval must acknowledge the modeled standard-rate charge and its uncertainty. No live operation is part of preparing this proposal.
+
+**Question and rationale**
+
+Can the existing private Actor identity read one known, previously retained B1 HTML record through the official Apify JavaScript client, and does the returned byte buffer match the exact B1 body length and SHA-256? B2-D1 stopped while opening the B1 store, before any body was read. This proposal tests one metadata read and, only if the store exists, one fixed-record read. It does not repeat B1's publisher-access experiment.
+
+**S0 — local reconciliation before any hosted action**
+
+Re-read the retained B1 result, B1 key manifest and frozen B2 fixture locally. Confirm that the B2 source-store ID and source-run ID match B1, the fixture's byte hash matches its pinned value, it contains exactly 100 unique row IDs, its 53 eligible HTML references map one-to-one to the corresponding B1 rows, and their key, expected body length and SHA-256 values match. Select the first eligible row in frozen sample order as the deterministic witness. Any mismatch ends the proposal before a hosted request.
+
+The local preparation completed on 2026-10-05 with no B1/B2 mapping or expected body-metadata mismatch: the B2 fixture hash is `8bb9facc14fd7a5755c9337f7d9864ba6fb7958a44d6ae654b8e17ee84f63c8c`; the B1 source run/store IDs agree (`g7ndwu3G1M4orPt2h` / `C1KYtogOgGpkRyF2H`); all 100 row IDs are unique; and all 53 eligible row references match their B1 results. The deterministic witness is row `q1-gb-01`, key `B1_HTML_q1-gb-01`, expected body length `435577` bytes and SHA-256 `6f8d86bc1f95de5b118a55e4d4d89c39cf38a94c3ca9f5319e135dd357841dd9`. B1's manifest records a smaller storage size (`51179` bytes) for that key; this is not the response-body length and must not be compared as if it were raw body bytes. No live API or Actor call was made for S0.
+
+**S1 — proposed single private execution**
+
+Only after separate explicit owner approval, build and run the existing private Actor identity once, using the same Node.js 20 runtime and no package changes. Use `Actor.newClient({ maxRetries: 0, timeoutSecs: 5 })`. First call `.keyValueStore(sourceStoreId).get()` once. If metadata confirms the store exists, call `.getRecord(fixedKey, { buffer: true })` exactly once for the S0 witness. Treat `record.value` as the returned Buffer; compare `record.value.length` and the SHA-256 computed over `record.value` to the B1-recorded values, and retain the returned content type when present. Apply a 2 MiB maximum body bound. Configure and verify the actual run metadata at 256 MiB and 900 seconds; the invocation must pass an explicit 900-second timeout rather than rely on the platform default. Use an explicit `Actor.exit({ exitCode })` so a failed observation cannot be reported as a successful run.
+
+The S1 ceiling is at most two read-only KVS API requests, zero retries, five seconds per request and ten seconds total client-request time. Perform no `Actor.openKeyValueStore`, `getOrCreate`, store creation, publisher or Google News fetch, extraction, dataset write, new credential/permission request, package/dependency change or security harness. Do not retain or log the body, credentials, signed URLs, request headers or response contents. Retain only run identity/status, actual resource settings, request counts/timing, sanitized outcome/error class/status, and the fixed row/key plus expected and observed body length/SHA-256 and returned content type when present, needed to judge the witness.
+
+**Cost model and approval requirement**
+
+Using Apify's public Free/Starter rates checked 2026-10-05, the maximum 256 MiB × 900 second allocation is `0.0625 CU`; at `$0.20/CU`, that is `$0.0125` compute. Two key-value reads at `$0.005/1,000` add `$0.00001`. A response transfer of up to 2 MiB at `$0.05/GB` internal transfer is approximately `$0.000098`. The modeled standard-rate charge is approximately **$0.0127** for the stated run and request envelope. Public rates and resource-unit behavior are described at [Apify pricing](https://apify.com/pricing) and [Actor usage and resources](https://docs.apify.com/actors/running/usage-and-resources).
+
+This is an estimate, not a guaranteed total charge or enforced cap. The account's actual tariff is unknown, and metadata transfer, build, storage retention or other account-specific usage may add charges. The separate owner approval must acknowledge the modeled approximately `$0.0127` standard-rate charge and these uncertainties before S1 can be added to the approved execution sequence; no additional numeric spend ceiling is required by the TID controls.
+
+**Outcomes and stop rule**
+
+Classify exactly one terminal outcome: `store_absent`; `access_denied` (record safe HTTP status if available); `metadata_error`; `record_missing`; `body_over_limit`; `hash_mismatch`; or `read_witness` (byte length and SHA-256 match). Stop after this S1 observation for every outcome. If local S0 fails, make no hosted request. If S1 returns `read_witness`, it proves access only to this one record at that time; it does not prove that all 53 records are accessible, that B2 can resume, that article text is readable, or that the 50/100 target is feasible. If S1 fails, the cause remains bounded to the observed outcome; do not repair, retry, probe another key, process the cache, run B2/B3, or add a further step without a later approved design decision.
 
 ---
 
@@ -388,14 +421,16 @@ After the final Spike evidence is integrated, Issues #4 and #5 must be reassesse
 
 ## 7. Open design questions
 
-No outstanding investigation-design questions.
+The approved investigation sequence has no outstanding design questions. The separate B2-S1 proposal above is unapproved and requires owner review and explicit approval acknowledging its modeled charge and cost uncertainties before it can become part of an execution sequence.
 
 ## 8. Review and approval
 
-**Decision:** `Approve`  
-**Rationale:** The design directly covers the two blocked product capabilities, separates access from extraction, defines all bounded experiments and conditional routing, and preserves the approved lightweight architecture.  
-**Required follow-up before execution:** `None`
+**Decision:** `Approve` the original bounded experiment sequence only.
 
-Approval authorises execution of the bounded experiment sequence and conditional transitions defined in this TID. A separate approval is not required for each experiment that remains within the approved design.
+**Rationale:** The design directly covers the two blocked product capabilities, separates access from extraction, defines all bounded experiments and conditional routing, and preserves the approved lightweight architecture.
 
-**Owner approval:** Original bounded sequence approved — 2026-10-04. Amendment B2-D1 approved — 2026-10-05; exactly one changed private candidate build/run under the limits in the amendment above.
+**Required follow-up before execution:** None for the original approved sequence; the proposed B2-S1 amendment requires a separate explicit owner approval before execution.
+
+This approval authorises only the original bounded experiment sequence and its conditional transitions, together with the separately recorded B2-D1 amendment for its one completed and exhausted run. A separate approval is not required for each experiment that remains within that approved scope. The B2-S1 preparation is approved for review only; B2-S1 execution remains proposed and requires separate explicit owner approval acknowledging its fixed resource/request envelope, modeled standard-rate charge and uncertainty.
+
+**Owner approval:** Original bounded sequence approved — 2026-10-04. Amendment B2-D1 approved — 2026-10-05; its single changed private candidate build/run is complete and exhausted. Proposed amendment B2-S1 is not approved and is not covered by either prior approval; it requires separate explicit approval acknowledging the modeled standard-rate charge and its uncertainty before any execution.
