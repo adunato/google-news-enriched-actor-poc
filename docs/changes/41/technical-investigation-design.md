@@ -12,6 +12,8 @@
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
 
+**Current design decision:** Area B was reset on **2026-10-06** to a vanilla single-run publisher fetch → extraction → row-output flow. The prior cross-run cached-HTML/KVS diagnostic route is superseded.
+
 ## 1. What this investigation is trying to achieve
 
 Two product capabilities depend on live external behaviour.
@@ -198,210 +200,140 @@ Run **only after a small-control experiment has established a stable production-
 
 ### Objective
 
-Establish whether the lightweight hosted Actor can fetch public publisher pages and extract readable article text for at least **50/100** rows in the representative mixed-publisher sample.
+Establish whether the normal lightweight hosted Actor flow can fetch public publisher pages and extract readable article text for at least **50/100** rows in the representative mixed-publisher sample.
 
-### Existing evidence and why this area is needed
+### Current evidence
 
-- Publisher-page HTTP access in the hosted runtime is partial rather than universal.
-- There is not yet current representative hosted evidence proving the **50/100** readable-text target through the approved production path.
-- Access and extraction must be measured separately so an inaccessible page is not misclassified as a parser failure.
+- Area A is supported: A4 resolved 100/100 rows in the frozen representative sample to valid non-Google publisher URLs.
+- B1 previously fetched 53/100 rows as usable publisher HTML, so the sample has already shown enough live publisher access to make the 50/100 target plausible.
+- The first B2 candidate and its later B2-D1/B2-S1/B2-P1 diagnostics did **not** produce extraction-quality evidence.
+- The HTTP 403 observed during B2-S1 occurred while a later Actor run tried to inspect a prior run's B1 key-value store. That cross-run storage access was introduced only to isolate the experiment stages; it is **not part of the intended application flow** and is not evidence that the normal fetch/extract product flow fails.
+
+### Design correction approved 2026-10-06
+
+The active Area B route is reset to mirror the production architecture as directly as possible.
+
+The application is one hosted Actor. When full text is requested and a resolved publisher URL is available, that Actor should:
+
+1. fetch the publisher URL over ordinary bounded HTTP;
+2. pass the returned HTML directly to structured-data extraction / Mozilla Readability in the **same run**;
+3. record the fetch and extraction outcomes separately for that row; and
+4. write the enriched row to the normal dataset.
+
+Do **not** use prior-run cached HTML, cross-run KVS access, permission/grant investigation, alternate account identity, Console access, custom storage harnesses or equivalent diagnostic infrastructure for the active B2 route.
+
+The earlier cache-based B2-D1/B2-S1/B2-P1 path is retained only as historical evidence in `technical-spike.md`. It is superseded and must not be continued.
 
 ### Success criteria for this investigation area
 
-At least **50/100 retained rows** in the defined representative sample must produce non-empty readable article text with a consistent success status and word count.
+At least **50/100** rows in the defined representative sample must produce non-empty readable article text with a consistent success status and word count.
 
-Failures must remain row-local and distinguish publisher-access failures from extraction failures.
+Failures must remain row-local. For every row, evidence must distinguish:
 
-### Experiment sequence
+- publisher fetch failure;
+- successful HTML fetch followed by extraction failure;
+- successful extraction;
+- output/write failure if one occurs.
+
+This separation is achieved through normal per-row evidence in one Actor run; it does not require separate hosted runs.
+
+### Active experiment sequence
 
 <!-- prettier-ignore -->
-| Order | ID | Experiment | Purpose | Run when | Next if successful | Next if unsuccessful |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | B1 | Measure current publisher-page access | Establish whether enough usable publisher HTML exists to make the 50/100 target possible | **Always first after Area A** | B2 if at least 50 rows provide usable HTML | Stop / return publisher-access boundary |
-| 2 | B2 | Extract with structured data plus Mozilla Readability | Test the primary lightweight extraction path on accessible HTML | **Only if B1 shows at least 50 usable HTML rows** | Area B feasible | B3 only if extraction quality, rather than access, is the remaining blocker; if the candidate emits no usable experiment evidence, apply the single-run B2-D1 amendment below |
-| 3 | B3 | Test one alternative generic Node-native extractor | Check whether the remaining shortfall is specific to the primary parser | **Only if B2 misses because of extraction quality on accessible HTML** | Area B feasible | Stop / return extraction or architecture limitation |
+| Order | Experiment | Purpose | Run when | Next if successful | Next if unsuccessful |
+| --- | --- | --- | --- | --- | --- |
+| 1 | B1 — publisher-page access baseline | Historical live evidence that the sample can expose enough usable publisher HTML | **Completed** | Supports B2 | Historical only; do not reopen its cache |
+| 2 | B2 smoke test — vanilla end-to-end flow | Prove that the normal hosted fetch → extract → row-write path executes and identify the actual failing business stage if it does not | **Current next action** | Run B2 acceptance sample | Diagnose only the observed normal-flow stage; stop if continuing requires special harnessing |
+| 3 | B2 acceptance sample — vanilla end-to-end flow | Measure the actual >=50/100 full-text product target | **Only after the smoke test shows the normal flow executes correctly** | Area B feasible | Route by observed fetch vs extraction evidence |
+| 4 | B3 — one alternative generic Node-native extractor | Determine whether a measured extraction-quality shortfall is specific to the primary parser | **Only if the B2 acceptance run fetches enough HTML but misses the target because extraction quality is the demonstrated blocker** | Area B feasible | Stop / return extraction or architecture limitation |
 
-The table is the controlling procedural view for this area. Detailed experiment sections below explain each experiment; they do not change the sequence or trigger rules above.
-
-### Experiment B1 — Measure current publisher-page access
-
-**Objective**  
-Measure how many representative publisher pages are actually available to the hosted Actor before evaluating any parser.
-
-**Why this experiment exists**  
-The full-text target cannot be met if fewer than 50 representative rows provide usable publisher HTML. Access must therefore be measured before parser quality.
-
-**Test**  
-Using the defined representative publisher-URL sample, perform bounded ordinary HTTP fetches in the normal Apify Actor runtime.
-
-Do not run article extraction yet. Classify each row by access outcome.
-
-**Measures**
-
-- successful HTML fetches out of 100;
-- HTTP denial/error/timeout/robots or other access classes;
-- content type and whether the body is eligible article HTML;
-- request/runtime bounds.
-
-**Execution rule**  
-**Always run before B2.**
-
-**Decision / next step**
-
-- If fewer than 50 rows provide usable article HTML, stop Area B and return the publisher-access boundary.
-- If at least 50 rows provide usable article HTML, proceed to **B2**.
-
-### Experiment B2 — Extract with structured data plus Mozilla Readability
-
-**Objective**  
-Determine whether a simple Node-native extraction path can meet the product target on publisher HTML that is actually accessible.
-
-**Why this experiment exists**  
-The useful question is how a lightweight generic extraction path performs on representative hosted HTML, not whether it can parse synthetic content.
-
-**Test**  
-For rows successfully fetched in B1:
-
-1. use useful structured article data already present in the HTML when available;
-2. otherwise run Mozilla Readability on the already-fetched HTML;
-3. apply explicit bounded input/runtime guards;
-4. score the output for non-empty readable article text and consistent word count/status.
-
-The extractor must not perform its own hidden network retrieval.
-
-**Measures**
-
-- readable-text successes out of the full 100-row sample;
-- readable-text successes out of successfully fetched eligible HTML;
-- structured-data successes versus Readability successes;
-- extraction failures by class;
-- extraction time and material runtime/cost.
-
-**Execution rule**  
-Run **only if B1 shows at least 50 rows with usable article HTML**.
-
-**Decision / next step**
-
-- If at least **50/100** rows produce readable text, Investigation Area B is feasible.
-- If the target is missed mainly because publisher pages could not be fetched, stop. Do not change extractor.
-- If enough HTML was fetched to make 50/100 possible but extraction quality is the demonstrated remaining blocker, proceed to **B3**.
-
-### Experiment B3 — Test one alternative generic Node-native extractor
-
-**Objective**  
-Determine whether the remaining extraction shortfall is specific to the primary parser rather than a general limitation of the accessible HTML.
-
-**Why this experiment exists**  
-An alternative extractor only has information value when B2 has already shown that enough publisher HTML is accessible but the primary extraction path is the limiting factor.
-
-**Test**  
-Select one credible generic Node-native extraction algorithm with a materially different parsing approach.
-
-Run it against the **same already-fetched HTML cohort** and score it with the same success rules used in B2.
-
-Do not add publisher-specific rules or another runtime/service.
-
-**Measures**
-
-- readable-text successes out of 100;
-- incremental successes over B2;
-- regressions versus B2;
-- extraction time and material runtime/cost.
-
-**Execution rule**  
-Run **only if B2 misses because of extraction quality on accessible HTML**.
-
-**Decision / next step**
-
-- If the supported path reaches at least **50/100**, Investigation Area B is feasible.
-- If it remains below 50/100, stop and return the specific limitation. Any heavier mechanism requires a Product/Architecture decision.
-
-### Approved amendment — B2-D1 single diagnostic execution
-
-**Approval and scope**
-The project owner approved this amendment on **2026-10-05** after reviewing the Experiment Viability Checkpoint. It authorizes exactly one changed B2 candidate build and one private hosted run, identified as **B2-D1**. It does not authorize a second diagnostic or corrective run, a new extraction approach, or any change to the product acceptance criteria.
-
-**Why this amendment is needed**
-The first B2 candidate was reported as successful by the platform but produced zero dataset items, no cached-text evidence, and only startup log output. The cause was not established. This amendment adds bounded startup-stage evidence so the one permitted candidate can distinguish the fixture/hash/count gates, prior-run storage access, row processing, and dataset writing without changing what B2 extracts or how its result is scored.
-
-**Candidate changes permitted**
-On the existing B2 probe only, add sanitized stage markers around fixture read/hash/count checks, opening the B1 key-value store, entering/completing the 100-row loop, and beginning/completing the dataset write. Add fatal-error reporting that records the current stage and safe error classification, sets a failing process exit code, and never includes credentials, publisher response bodies, or extracted text. Make only the package/Actor version bookkeeping needed to identify the changed candidate. Do not change the parser, dependencies, runtime, input sample, 53 cached HTML objects, per-row processing, limits, scoring, output schema, or provenance fields.
-
-**Run rule and evidence**
-Run B2-D1 exactly once on the existing private Node.js 20 Actor under the original memory and timeout settings, using the byte-identical 100-row B2 fixture and only the 53 exact B1 response bodies in the existing B1 key-value store. No publisher or Google News fetch is permitted. Retain the exact candidate/build/run identity, sanitized logs, full 100-row outcome evidence, dataset and text-key inventory, runtime and final platform cost. Verify the sample hash, all 100 row mappings, and each cached body’s exact byte count and SHA-256 against B1. Retained article text remains private in run storage and must be reviewable for the 50/100 readability assessment.
-
-**Decision after the one run**
-
-If the run produces valid B2 evidence after verified cached HTML was meaningfully processed, classify the B2 result against the existing 50/100 target and resume the original TID route after validation. B3 is eligible only when that valid evidence demonstrates an extraction-quality shortfall on accessible HTML. Startup, source-store, cache-integrity, transport or other processing errors do not establish extraction quality, even if represented by 100 row-level failures; record them and stop. If the run does not produce valid B2 evidence or the cause remains unclear, record the boundary and stop. No further B2 diagnostic, unchanged rerun, corrective rerun, or B3 run is authorized by this amendment.
-
-### Approved amendment — B2-S1 single-record cached-body access witness
-
-**Status and authority**
-
-**Owner-approved 2026-10-06 for exactly one private diagnostic build and hosted run.** This approval is separate from the original bounded B2 sequence and the completed/exhausted B2-D1 amendment. It covers only the resource and request envelope below and acknowledges the modeled standard-rate charge and its uncertainty. No repeat, repair, additional key, extraction, B2 resume or B3 run is authorized by this amendment.
-
-**Question and rationale**
-
-Can the existing private Actor identity read one known, previously retained B1 HTML record through the official Apify JavaScript client, and does the returned byte buffer match the exact B1 body length and SHA-256? B2-D1 stopped while opening the B1 store, before any body was read. This proposal tests one metadata read and, only if the store exists, one fixed-record read. It does not repeat B1's publisher-access experiment.
-
-**S0 — local reconciliation before any hosted action**
-
-Re-read the retained B1 result, B1 key manifest and frozen B2 fixture locally. Confirm that the B2 source-store ID and source-run ID match B1, the fixture's byte hash matches its pinned value, it contains exactly 100 unique row IDs, its 53 eligible HTML references map one-to-one to the corresponding B1 rows, and their key, expected body length and SHA-256 values match. Select the first eligible row in frozen sample order as the deterministic witness. Any mismatch ends the proposal before a hosted request.
-
-The local preparation completed on 2026-10-05 with no B1/B2 mapping or expected body-metadata mismatch: the B2 fixture hash is `8bb9facc14fd7a5755c9337f7d9864ba6fb7958a44d6ae654b8e17ee84f63c8c`; the B1 source run/store IDs agree (`g7ndwu3G1M4orPt2h` / `C1KYtogOgGpkRyF2H`); all 100 row IDs are unique; and all 53 eligible row references match their B1 results. The deterministic witness is row `q1-gb-01`, key `B1_HTML_q1-gb-01`, expected body length `435577` bytes and SHA-256 `6f8d86bc1f95de5b118a55e4d4d89c39cf38a94c3ca9f5319e135dd357841dd9`. B1's manifest records a smaller storage size (`51179` bytes) for that key; this is not the response-body length and must not be compared as if it were raw body bytes. No live API or Actor call was made for S0.
-
-**S1 — approved single private execution**
-
-The owner approved on 2026-10-06 exactly one build and hosted run of existing private Actor `JIogcgdHyCqAMHQ1P`, using the same Node.js 20 runtime and unchanged pinned packages. Use `Actor.newClient({ maxRetries: 0, timeoutSecs: 5 })`. First call `.keyValueStore(sourceStoreId).get()` once. If metadata confirms the store exists, call `.getRecord(fixedKey, { buffer: true })` exactly once for the S0 witness. Treat `record.value` as the returned Buffer; compare `record.value.length` and the SHA-256 computed over `record.value` to the B1-recorded values, and retain the returned content type when present. Apply a 2 MiB maximum body bound. Configure and verify the actual run metadata at 256 MiB and 900 seconds; the invocation must pass an explicit 900-second timeout rather than rely on the platform default. Use an explicit `Actor.exit({ exitCode })` so a failed observation cannot be reported as a successful run.
-
-The S1 ceiling is at most two read-only KVS API requests, zero retries, five seconds per request and ten seconds total client-request time. Perform no `Actor.openKeyValueStore`, `getOrCreate`, store creation, publisher or Google News fetch, extraction, dataset write, new credential/permission request, package/dependency change or security harness. Do not retain or log the body, credentials, signed URLs, request headers or response contents. Retain only run identity/status, actual resource settings, request counts/timing, sanitized outcome/error class/status, and the fixed row/key plus expected and observed body length/SHA-256 and returned content type when present, needed to judge the witness.
-
-**Cost model and approval requirement**
-
-Using Apify's public Free/Starter rates checked 2026-10-05, the maximum 256 MiB × 900 second allocation is `0.0625 CU`; at `$0.20/CU`, that is `$0.0125` compute. Two key-value reads at `$0.005/1,000` add `$0.00001`. A response transfer of up to 2 MiB at `$0.05/GB` internal transfer is approximately `$0.000098`. The modeled standard-rate charge is approximately **$0.0127** for the stated run and request envelope. Public rates and resource-unit behavior are described at [Apify pricing](https://apify.com/pricing) and [Actor usage and resources](https://docs.apify.com/actors/running/usage-and-resources).
-
-This is an estimate, not a guaranteed total charge or enforced cap. The account's actual tariff is unknown, and metadata transfer, build, storage retention or other account-specific usage may add charges. The owner approved the one-run envelope while acknowledging the modeled approximately `$0.0127` standard-rate charge and these uncertainties; no additional numeric spend ceiling is required by the TID controls.
-
-**Outcomes and stop rule**
-
-Classify exactly one terminal outcome: `actor_startup_error`; `store_absent`; `access_denied` (record safe HTTP status if available); `metadata_error`; `record_missing`; `record_error`; `request_budget_stop`; `request_budget_exceeded`; `body_over_limit`; `hash_mismatch`; `diagnostic_error`; or `read_witness` (expected byte length and SHA-256 match; record returned content type when available). Stop after this S1 observation for every outcome. If local S0 fails, make no hosted request. If S1 returns `read_witness`, it proves access only to this one record at that time; it does not prove that all 53 records are accessible, that B2 can resume, that article text is readable, or that the 50/100 target is feasible. If S1 fails, the cause remains bounded to the observed outcome; do not repair, retry, probe another key, process the cache, run B2/B3, or add a further step without a later approved design decision.
-
-**Execution outcome (2026-10-06)**
-
-The single approved build and run completed. The first source-store metadata request returned `access_denied` with HTTP 403 and sanitized API type `insufficient-permissions`; the fixed-record request was not made. Classify B2-S1 **Inconclusive** for the record-witness question and stop. This observed denial is not evidence that the store or record is absent, does not establish whether B2-D1 failed for the same reason, and does not measure extraction quality. The one-run authorization is exhausted; no permission change, retry, B2 resume, B3 or corrective run is authorized. Detailed sanitized evidence is retained under `docs/changes/41/experiments/b2-s1/`.
-
-### Approved amendment — B2-P1 read-only ownership/access-grants comparison
-
-**Approval and scope**
-
-On **2026-10-06**, the owner approved one bounded, read-only metadata comparison following B2-S1, under the Technical Spike method. It does not reopen B2 extraction or authorize an Actor build/run, a key-value record read, a source write, an access/permission change, a new credential, or a new login. The amendment is limited to the existing configured Apify account credential and the two metadata GETs below, followed by a conditional single Console share/settings view only if API metadata is successfully retrieved but does not expose the relevant individual grant context. The Console view will be assigned separately by Main after reviewing the API outcome; this executor must stop before UI access.
+### B2 smoke test — vanilla hosted end-to-end flow
 
 **Question**
 
-Can read-only Apify metadata for the failed S1 run and its B1 source key-value store show whether the resource ownership and exposed general-access settings align with the identities involved? This may contextualize the S1 `insufficient-permissions` response. It cannot establish why the prior Actor request was denied, whether a body can be read, or whether extraction works.
+Can the normal hosted Actor perform the same operation the product is expected to perform: fetch a resolved publisher URL, extract readable text from that response, and write a row?
 
-**Bounded execution**
+**Test**
 
-Use the existing Apify JavaScript client version `2.25.0`, pinned by the B2-S1 dependency lock, with the normal, previously configured account credential only. Capture that credential from the existing CLI secure account configuration in memory; never print, log, write or otherwise retain it. Configure `maxRetries: 0` and `timeoutSecs: 5`. In order, make at most these two explicit GET requests and stop the sequence on any denied, unavailable, empty, mismatched or unexpected response:
+Use a very small deterministic set of publisher URLs from the existing representative sample that B1 previously classified as usable HTML. Use only the publisher URLs and row provenance from retained repository evidence; **do not read the old B1 HTML bodies or B1 KVS at runtime**.
 
-1. `GET /v2/actor-runs/hr2WzjPcLnZgHQYmZ` — retain the expected run ID, returned Actor ID, status, and any permission/general-access field actually exposed. Compare its user ID in memory with the store owner ID; persist only stable SHA-256 identifiers and the equality result, never raw user IDs.
-2. Only after a valid matching run response, `GET /v2/key-value-stores/C1KYtogOgGpkRyF2H` — retain the expected store ID, owner-ID hash, Actor ID, originating Actor-run ID, and the observed general-access field, preserving `null` distinctly from an unexposed field.
+For each smoke-test row, in one normal Actor execution:
 
-The two explicit API GETs together have at most ten seconds of configured request timeout. Console navigation can make additional UI requests, so no hard network-request cap is claimed for its conditional step. Record each SDK request outcome and elapsed time without inventing an HTTP success status where the client does not expose one. Filter API responses before persistence: do not retain usernames, email addresses, auth headers/tokens, signing keys, signed/public URLs or other unrelated fields. Do not infer that an absent ACL field means there are no individual grants. If the two metadata responses succeed but the applicable grant context remains unknown, Main may assign one attempt to view this store's access/share settings through the existing authenticated Console session. Follow the documented Store detail page → Actions → Share path; the view may inspect only access/share settings, not key lists, records or body previews. It may not change grants, invite users, retain personal grant details, use another account/login or expand into account inventory. Do not perform that view in this execution. See [Share storage](https://docs.apify.com/storage/share) and [Grant access rights](https://docs.apify.com/account/collaboration/access-rights).
+1. start row processing;
+2. perform the ordinary bounded publisher HTTP fetch;
+3. if eligible HTML is returned, immediately run the existing structured-data / Mozilla Readability extraction path on that in-memory response;
+4. emit the row-level fetch status, extraction status, word count when applicable and any safe failure class;
+5. write the row to the normal dataset.
 
-**Stops, evidence and cost**
+Use ordinary stage logging only: row start, fetch result, extraction result and row-write result. Do not introduce a diagnostic subsystem.
 
-No retries, other account, login, fallback credential, additional endpoint, resource inventory, KVS record/key request, dataset/log query, build, hosted run, publisher/Google News request, extraction, permission update or credential change is allowed. Any missing field or unsupported context remains `unknown`; every failed API step stops immediately and is recorded as observed. A successful pair means only that this configured account could retrieve those metadata responses at that time. It does not establish record/body access or explain the S1 run-level denial. Record endpoint, request count/timing, response classification/status only where actually exposed, IDs needed for resource correlation, hashed user identities and comparison booleans. These are metadata reads with no Actor compute allocation; exact account/API charges are unknown and are not represented as zero or guaranteed free. Official endpoint references: [Get run](https://docs.apify.com/api/v2/actor-run-get) and [Get store](https://docs.apify.com/api/v2/key-value-store-get).
+**Smoke-test success**
 
-**Readiness gate and routing**
+The smoke test succeeds when the Actor processes the complete small sample without a run-level infrastructure failure, emits a row outcome for every input, and demonstrates that successfully fetched HTML can reach the extraction stage and normal row output.
 
-Before the first live request, record this approval and complete local syntax, dependency and boundary-conformance checks for the isolated helper. The executor must then report exact files/checks and await Main's internal Validator/readiness confirmation. After the authorized GET sequence, stop and report the evidence. Main may assign the single conditional Console settings/share view only if both API responses were available and individual grant context remains unknown. Otherwise stop at the observed outcome. No result resumes B2, permits B3, authorizes a record read, or establishes the cause of D1/S1; any further investigation requires a separate owner decision and design.
+Individual publisher fetch or extraction failures are valid row evidence and do not make the Actor execution itself a failure.
 
-**Execution outcome (2026-10-06; API portion)**
+**If the smoke test fails**
 
-After the local readiness gate, both approved metadata GETs returned SDK response objects in the required order (526 ms for the run, 127 ms for the store; no raw HTTP success code was exposed by the client). The run identity and Actor ID matched the expected S1 values and status was `FAILED`; the client did not expose a separate run permission-level field. Run-resource and store `generalAccess` were both `FOLLOW_USER_SETTING`: each inherits the account-level general visibility setting, whose effective value was not observed. The run `generalAccess` field describes run-resource sharing, not the Actor's runtime permission. The store metadata matched the expected store ID, Actor ID and B1 creator run ID. The store owner ID hash matched the S1 run user ID hash; raw user IDs were not retained. No personal account fields, signing keys, URLs or unrelated response fields were retained. The API comparison supports ownership and creator-link alignment for the observed metadata but does not establish which exact token the S1 Actor call used, whether any individual grant exists, or why the S1 runtime request was denied. Individual grant context remains unknown. The actual `LIMITED_PERMISSIONS` evidence is separately recorded in the S1 run log. Main assigned the conditional one-view Console settings/share step to a read-only Explorer, whose preflight reported that no browser was available; after the owner availability opportunity, no browser was made available. No Console page view, login, or additional API request occurred. The conditional view is unavailable, so classify the metadata ownership comparison as Supported and the individual-grant/root-cause question as Inconclusive, then stop. No record read or extraction is authorized. See Apify's [General resource access](https://docs.apify.com/account/collaboration/general-resource-access) and [Actor permissions](https://docs.apify.com/actors/development/permissions) documentation.
+Diagnose the failure only at the normal business-flow stage actually observed:
 
----
+- before row processing → Actor entrypoint/configuration;
+- during ordinary publisher HTTP fetch → publisher-fetch path;
+- after fetch succeeds but during parsing/extraction → extraction path;
+- after extraction but before row output → normal dataset/output path.
+
+A simple mechanical defect in that normal path may be corrected and the smoke test repeated. If progress requires cross-run storage access, permission/grant investigation, special credentials, custom network/storage harnessing, another runtime or another diagnostic mechanism that the product itself would not use, stop and return to the owner rather than building that machinery.
+
+### B2 acceptance sample — vanilla hosted end-to-end flow
+
+**Objective**
+
+Measure the actual product capability using the production-like flow rather than replaying cached HTML.
+
+**Test**
+
+Run the same fetch → extract → row-write path against the defined 100-row representative sample.
+
+For each row with a resolved publisher URL:
+
+1. perform the bounded ordinary HTTP publisher fetch;
+2. classify the fetch outcome;
+3. when eligible HTML is returned, immediately attempt structured article data and then Mozilla Readability on that response;
+4. classify extraction independently from fetch;
+5. emit the normal row result, preserving the original Google News URL and resolved publisher URL.
+
+Do not persist or reopen publisher HTML between Actor runs merely to separate the measurements.
+
+**Measures**
+
+- successful readable-text rows out of the full 100-row sample;
+- successful publisher HTML fetches out of 100;
+- readable-text successes out of successfully fetched eligible HTML;
+- structured-data successes versus Readability successes;
+- fetch and extraction failure classes;
+- row-output completeness;
+- runtime and material cost.
+
+**Decision / next step**
+
+- **>=50/100 readable rows:** Investigation Area B is feasible.
+- **<50/100 mainly because publisher pages cannot be fetched:** return the publisher-access limitation; do not change extractor.
+- **Enough HTML is fetched to make 50/100 possible but extraction quality is the demonstrated blocker:** B3 becomes eligible.
+- **Run-level failure in the normal flow:** diagnose only the observed business stage under the smoke-test rule above.
+
+### B3 — Test one alternative generic Node-native extractor
+
+B3 remains unchanged in purpose: it is eligible only after valid B2 acceptance evidence demonstrates that extraction quality on successfully fetched HTML, rather than publisher access or run infrastructure, is the remaining blocker.
+
+Use one credible generic Node-native extractor with a materially different parsing approach against the same normal fetch/extract flow. Do not add publisher-specific rules, another runtime/service or special hosted infrastructure.
+
+If the supported path reaches at least **50/100**, Area B is feasible. Otherwise stop and return the demonstrated extraction or architecture limitation.
+
+### Superseded diagnostic route
+
+The cache-replay B2 candidate and the B2-D1, B2-S1 and B2-P1 investigations are historical only. They established that the experimental cross-run storage mechanism itself encountered execution/access friction, including one HTTP 403 `insufficient-permissions` response. They did **not** measure text-extraction quality and they do not establish a product-flow access limitation.
+
+No further work on that cross-run cache/permission route is authorized by this TID.
 
 ## 4. Constraints that apply to every experiment
 
