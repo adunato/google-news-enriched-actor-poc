@@ -1,0 +1,44 @@
+{
+  "amendment": "B2-M2",
+  "approvalDate": "2026-10-06",
+  "approvalRecorded": true,
+  "candidate": {
+    "actorId": "JIogcgdHyCqAMHQ1P",
+    "actorDefinitionVersion": "0.9",
+    "buildTag": "issue41-b2-m2-512"
+  },
+  "actorDefinitionChange": {
+    "file": "actor/.actor/actor.json",
+    "preChangeSha256": "336b3821536702caac4513d9898d5f3f6feb84cb9389464c01f646ad86ef3f9d",
+    "candidateSha256": "f7e0be5e43d10a274f13a9730f01df86bab98f632afb330504b671f4cf5d352f",
+    "old": {
+      "defaultMemoryMbytes": 256,
+      "minMemoryMbytes": 256,
+      "maxMemoryMbytes": 256,
+      "timeoutSecs": 900
+    },
+    "new": {
+      "defaultMemoryMbytes": 512,
+      "minMemoryMbytes": 512,
+      "maxMemoryMbytes": 512,
+      "timeoutSecs": 900
+    }
+  },
+  "unchangedCandidateHashes": {
+    "actor/main.mjs": "3196bd00171540f95b2ec140c6fa3dae5e5e0240444f20f60ee31833b930e76e",
+    "actor/dom-content-type.mjs": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+    "actor/package.json": "0a284a0555d300b0cc2df89e05bce1155210afeedfdc6f97e63fdcc2a9043194",
+    "actor/package-lock.json": "ae27e007cac19131f53050c9be4688b6270f214ae1203c38ea8280f5533eed7a",
+    "actor/.actor/INPUT_SCHEMA.json": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833",
+    "input-acceptance.json": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01"
+  },
+  "fixtureRows": {
+    "total": 100,
+    "uniqueRowIds": 100,
+    "uniquePublisherUrls": 95,
+    "duplicatePublisherUrlOccurrences": 5
+  },
+  "candidateOnlyConfigurationChange": true,
+  "buildStarted": false,
+  "publisherRequestsStarted": false
+}

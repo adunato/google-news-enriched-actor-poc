@@ -1,0 +1,17 @@
+{
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "buildId": "RAwgvVrKuREgjFr2D",
+  "buildNumber": "0.9.1",
+  "buildStatus": "SUCCEEDED",
+  "actorDefinitionVersion": "0.9",
+  "buildTag": "issue41-b2-m2-512",
+  "deployedDefinition": {
+    "defaultMemoryMbytes": 512,
+    "minMemoryMbytes": 512,
+    "maxMemoryMbytes": 512,
+    "timeoutSecs": 900
+  },
+  "exactBuildPreRequestGate": "PASS",
+  "publisherRequestsStarted": false,
+  "retrievedWith": "Read-only apify builds info <exact build ID> --json"
+}

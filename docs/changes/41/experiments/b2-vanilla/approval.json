@@ -1,6 +1,6 @@
 {
   "experiment": "B2 vanilla hosted fetch-extract-output",
-  "status": "original route exhausted; B2-M1 exercised invalid-bound / Inconclusive; B2-M2 proposal pending explicit owner approval",
+  "status": "B2-M1 invalid-bound / Inconclusive; B2-M2 timed out after 99 rows and is exhausted; B2-F1 preparation only, pending owner approval",
   "approvedAtUtcDate": "2026-10-06",
   "approvalScope": "One ordinary private Node.js 20 Actor candidate and a three-row smoke run; only if the smoke gate passes, use the same build for the full 100-row acceptance run under the TID route.",
   "actorId": "JIogcgdHyCqAMHQ1P",
@@ -103,7 +103,9 @@
   },
   "b2M2Proposal": {
     "amendment": "B2-M2 configuration-only 512-MiB candidate",
-    "status": "proposed_pending_explicit_owner_approval",
+    "status": "approved_build_gate_passed_single_run_timed_out_99_of_100_inconclusive_exhausted",
+    "approvedAtUtcDate": "2026-10-06",
+    "authorizationEvidence": "The user replied 'Okay, go ahead' after the bounded configuration-only build, exact-build memory verification gate, and conditional single-run proposal were explained.",
     "priorEvidence": {
       "b2M1RunId": "68bftskIZe5eABnuO",
       "b2M1BuildId": "s7Np4qeIg5sXxAdti",
@@ -124,7 +126,50 @@
       "maximumHostedRuns": 1,
       "runOnlyAfterExactBuildDefinitionVerification": true,
       "runActualMemoryMustBe512Mbytes": true,
-      "failureOrMismatchStopsWithoutRetry": true
+      "failureOrMismatchStopsWithoutRetry": true,
+      "buildTag": "issue41-b2-m2-512",
+      "actorDefinitionVersion": "0.9"
+    },
+    "prebuildGate": {
+      "status": "local_integrity_and_schema_pass; internal_readiness_confirmed",
+      "evidenceFile": "prebuild-integrity-b2-m2.json",
+      "candidateActorDefinitionSha256": "f7e0be5e43d10a274f13a9730f01df86bab98f632afb330504b671f4cf5d352f",
+      "sourceAndFixtureHashesMatchReviewedCandidate": true,
+      "apifySchemaValidation": "passed",
+      "repositoryValidate": "did_not_pass; lint reported 36 no-undef errors in Issue 41 experiment files; no baseline comparison was made",
+      "internalReadinessConfirmedAtUtcDate": "2026-10-06",
+      "buildStarted": false,
+      "publisherRequestsStarted": false
+    },
+    "candidateBuild": {
+      "buildId": "RAwgvVrKuREgjFr2D",
+      "buildNumber": "0.9.1",
+      "status": "SUCCEEDED",
+      "buildDefinitionEvidenceFile": "build-definition-b2-m2.json",
+      "exactBuildMetadataGate": "PASS",
+      "embeddedActorId": "JIogcgdHyCqAMHQ1P",
+      "embeddedVersion": "0.9",
+      "embeddedTag": "issue41-b2-m2-512",
+      "defaultMemoryMbytes": 512,
+      "minMemoryMbytes": 512,
+      "maxMemoryMbytes": 512,
+      "timeoutSecs": 900,
+      "publisherRequestsStarted": false,
+      "conditionalRunPendingInternalConfirmation": false
+    },
+    "executionOutcome": {
+      "runId": "gR3LVlfnSkXLQrTSp",
+      "status": "TIMED-OUT",
+      "finishedAt": "2026-10-06T11:39:17.103Z",
+      "durationSeconds": 899.778,
+      "actualMemoryMbytes": 512,
+      "actualTimeoutSecs": 900,
+      "datasetId": "6LKoRvdqN7H7pwAqN",
+      "datasetItems": 99,
+      "missingRowId": "q2-gb-10",
+      "classification": "Inconclusive / incomplete; no 100-row score, below-50 conclusion, or B3 eligibility is established.",
+      "actualUsageUsd": 0.025717196236630276,
+      "computeUnits": 0.12496916666666667
     },
     "acceptance": "Only a normal completed 100-row run with independently reviewed readable text can score the 50/100 target; fewer than 50 eligible HTML rows is access-limited evidence. B3 is conditional on sufficient HTML and a confirmed extraction-quality blocker.",
     "costModel": {
@@ -132,6 +177,104 @@
       "isAllInCap": false,
       "uncertainty": "Account rates, transfer, storage, build/API usage and run duration can change actual total charges."
     },
-    "executionAuthorized": false
+    "executionAuthorized": false,
+    "authorizationExhausted": true,
+    "authorizationLimits": "One configuration-only candidate build and one hosted run after the exact 512-MiB/900-second gate. Both are complete; no retries or other changes were authorized.",
+    "resultEvidence": {
+      "runMetadata": "run-metadata-b2-m2.json",
+      "sanitizedResults": "results-b2-m2.json",
+      "privateRunLog": "private/b2-m2-run-log.txt",
+      "privateDataset": "private/b2-m2-dataset-full.json"
+    }
+  },
+  "b2F1Proposal": {
+    "amendment": "B2-F1 bounded publisher HTTP-stage logging",
+    "status": "proposed_pending_explicit_owner_approval",
+    "preparedAtUtcDate": "2026-10-06",
+    "approvalEvidence": null,
+    "preparationOnly": true,
+    "executionAuthorized": false,
+    "priorEvidence": {
+      "b2M2RunId": "gR3LVlfnSkXLQrTSp",
+      "b2M2Status": "TIMED-OUT after 899.778 seconds; 99 of 100 dataset rows; no run_summary",
+      "missingRowId": "q2-gb-10",
+      "lastObservedStage": "row_start",
+      "actualMemoryMbytes": 512,
+      "actualTimeoutSecs": 900,
+      "peakMemoryBytes": 481587200,
+      "actualUsageUsd": 0.025717196236630276,
+      "runWidePublisherRequestCount": "unknown; attempted request count for the pending row was not recorded"
+    },
+    "question": "Would bounded stage markers around the existing ordinary HTTP request lifecycle identify where a publisher row stops progressing, without changing request, abort, cleanup, extraction, or output behavior?",
+    "proposedScope": {
+      "sourceFile": "actor/main.mjs only",
+      "maximumNewBuilds": 1,
+      "maximumHostedRuns": 1,
+      "actorId": "JIogcgdHyCqAMHQ1P",
+      "buildMemoryMbytes": 512,
+      "runMemoryMbytes": 512,
+      "timeoutSecs": 900,
+      "inputFile": "input-acceptance.json",
+      "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+      "rowCount": 100,
+      "uniqueRowIds": 100,
+      "uniquePublisherUrls": 95,
+      "duplicatePublisherUrlOccurrences": 5,
+      "unchangedHttpBounds": {
+        "concurrency": 4,
+        "rowHttpChainTimeoutMs": 10000,
+        "responseBodyMaxBytes": 2097152,
+        "redirectsAfterInitialRequest": 5,
+        "maximumHttpGets": 600
+      },
+      "dependenciesRuntimeParserInputAndActorConfigUnchanged": true,
+      "noGoogleRequestsCacheReadsBrowserProxyCredentialsPermissionsOrProductChanges": true
+    },
+    "proposedObservability": {
+      "markers": [
+        "request_start",
+        "await_fetch",
+        "response",
+        "redirect",
+        "body_read",
+        "cancel",
+        "abort_fired",
+        "catch",
+        "cleanup"
+      ],
+      "fields": [
+        "rowId",
+        "stage",
+        "elapsedMs",
+        "requestCount",
+        "redirectCount",
+        "httpStatus",
+        "normalizedMime",
+        "bodyBytes",
+        "errorClass",
+        "errorCode"
+      ],
+      "rules": [
+        "Markers are nonthrowing and do not change request, abort, cancellation, body reading, catch or cleanup behavior.",
+        "Attach a one-shot abort observer only if it can be removed without changing existing behavior.",
+        "Cleanup and logging failures must not mask the original error.",
+        "Do not log URLs, redirect locations, raw headers, credentials, tokens, bodies, extracted text or raw error messages.",
+        "PublisherRequestCount values from written rows are dataset-observed counts only; the pending row's request count and run-wide total remain unknown unless directly observed."
+      ]
+    },
+    "acceptanceAndStopRules": [
+      "Before build, verify only observability instrumentation changed; verify dependencies, parser, actor configuration, frozen input, hashes and HTTP bounds remain unchanged.",
+      "Build exactly one candidate. Before any publisher request, verify exact Actor/build and embedded 512-MiB default/min/max memory and 900-second timeout; mismatch stops without a run.",
+      "Run exactly once on the frozen 100-row input, pinned to the verified build, with explicit 512 MiB/900 seconds and unchanged HTTP limits.",
+      "A failed or incomplete run remains Inconclusive / Hold and authorizes no retry, correction or further diagnostic direction.",
+      "Only a normally completed 100-row run proceeds to independent review of every counted article; at least 50 coherent readable texts supports the tested target.",
+      "B3 remains conditional on at least 50 eligible HTML rows and independent evidence that extraction quality is the remaining blocker."
+    ],
+    "costModel": {
+      "full900SecondComputeEstimate": "0.125 compute units / approximately $0.025 at the previously referenced $0.20 per compute-unit standard rate",
+      "isAllInCap": false,
+      "uncertainty": "Actual account rates, transfer, build, storage and API costs may differ; record actual hosted usage."
+    },
+    "decisionRequired": "Explicit owner approval before any B2-F1 source edit, build or run."
   }
 }

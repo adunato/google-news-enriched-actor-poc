@@ -1,0 +1,51 @@
+{
+  "experiment": "B2-M2",
+  "runId": "gR3LVlfnSkXLQrTSp",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "status": "TIMED-OUT",
+  "startedAt": "2026-10-06T11:24:17.062Z",
+  "finishedAt": "2026-10-06T11:39:17.103Z",
+  "durationSeconds": 899.778,
+  "buildId": "RAwgvVrKuREgjFr2D",
+  "buildNumber": "0.9.1",
+  "buildTag": "issue41-b2-m2-512",
+  "inputFile": "input-acceptance.json",
+  "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+  "options": {
+    "memoryMbytes": 512,
+    "timeoutSecs": 900
+  },
+  "stats": {
+    "computeUnits": 0.12496916666666667,
+    "memAverageBytes": 168046823.51070514,
+    "memMaxBytes": 481587200,
+    "memCurrentBytes": 0,
+    "netRxBytes": 6332216,
+    "netTxBytes": 1094932
+  },
+  "usage": {
+    "totalUsd": 0.025717196236630276,
+    "byCategory": {
+      "ACTOR_COMPUTE_UNITS": 0.024993833333333337,
+      "DATASET_READS": 0,
+      "DATASET_WRITES": 0.000495,
+      "KEY_VALUE_STORE_READS": 5e-6,
+      "KEY_VALUE_STORE_WRITES": 5e-5,
+      "KEY_VALUE_STORE_LISTS": 0,
+      "REQUEST_QUEUE_READS": 0,
+      "REQUEST_QUEUE_WRITES": 0,
+      "DATA_TRANSFER_INTERNAL_GBYTES": 2.1485984325408937e-5,
+      "DATA_TRANSFER_EXTERNAL_GBYTES": 0.00015187691897153855,
+      "PROXY_RESIDENTIAL_TRANSFER_GBYTES": 0,
+      "PROXY_SERPS": 0,
+      "PROXY_UNBLOCKER_UNITS": 0
+    },
+    "totalComputeUnits": 0.12496916666666667
+  },
+  "dataset": {
+    "id": "6LKoRvdqN7H7pwAqN",
+    "itemCount": 99,
+    "writeCount": 99
+  },
+  "platformUsageBillingModel": "USER"
+}
