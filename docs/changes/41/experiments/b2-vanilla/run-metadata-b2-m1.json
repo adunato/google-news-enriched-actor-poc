@@ -1,0 +1,67 @@
+{
+  "runId": "68bftskIZe5eABnuO",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "buildId": "s7Np4qeIg5sXxAdti",
+  "buildNumber": "0.8.1",
+  "status": "FAILED",
+  "exitCode": 1,
+  "startedAt": "2026-10-06T10:52:17.167Z",
+  "finishedAt": "2026-10-06T10:52:25.014Z",
+  "durationMs": 7660,
+  "runtimeStats": {
+    "runTimeSecs": 7.66,
+    "memoryAverageBytes": 118127727.94672586,
+    "memoryMaxBytes": 215339008,
+    "memoryCurrentBytes": 0,
+    "computeUnits": 0.0005319444444444445,
+    "netRxBytes": 634984,
+    "netTxBytes": 55319
+  },
+  "resources": {
+    "timeoutSecs": 900,
+    "memoryMbytes": 256,
+    "maxTotalChargeUsdSetByUser": false
+  },
+  "usageTotalUsdFromRunInfo": 0.0002176187299274736,
+  "usage": {
+    "ACTOR_COMPUTE_UNITS": 0.0005319444444444445,
+    "DATASET_READS": 0,
+    "DATASET_WRITES": 9,
+    "KEY_VALUE_STORE_READS": 1,
+    "KEY_VALUE_STORE_WRITES": 1,
+    "KEY_VALUE_STORE_LISTS": 0,
+    "REQUEST_QUEUE_READS": 0,
+    "REQUEST_QUEUE_WRITES": 0,
+    "DATA_TRANSFER_INTERNAL_GBYTES": 0.00011493545025587082,
+    "DATA_TRANSFER_EXTERNAL_GBYTES": 0.00002741534262895584,
+    "PROXY_RESIDENTIAL_TRANSFER_GBYTES": 0,
+    "PROXY_SERPS": 0,
+    "PROXY_UNBLOCKER_UNITS": 0
+  },
+  "usageUsd": {
+    "ACTOR_COMPUTE_UNITS": 0.0001063888888888889,
+    "DATASET_READS": 0,
+    "DATASET_WRITES": 0.000045,
+    "KEY_VALUE_STORE_READS": 0.000005,
+    "KEY_VALUE_STORE_WRITES": 0.00005,
+    "KEY_VALUE_STORE_LISTS": 0,
+    "REQUEST_QUEUE_READS": 0,
+    "REQUEST_QUEUE_WRITES": 0,
+    "DATA_TRANSFER_INTERNAL_GBYTES": 0.000005746772512793541,
+    "DATA_TRANSFER_EXTERNAL_GBYTES": 0.000005483068525791169,
+    "PROXY_RESIDENTIAL_TRANSFER_GBYTES": 0,
+    "PROXY_SERPS": 0,
+    "PROXY_UNBLOCKER_UNITS": 0
+  },
+  "usageTotalUsdFromLaterRunList": 0.0002176187299274736,
+  "usageTotalUsdNote": "Run-info and run-list responses differed slightly; both observed values are retained.",
+  "defaultDatasetId": "gvwkEaUKCsnDPCONo",
+  "datasetItemCount": 9,
+  "runtime": {
+    "nodeVersion": "v20.20.2",
+    "apifyVersion": "3.7.2"
+  },
+  "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+  "applicationStartupLogMemoryMbytes": "256",
+  "deployedBuildSourceHashes": "See build-metadata-smoke.json; same exact build ID."
+}

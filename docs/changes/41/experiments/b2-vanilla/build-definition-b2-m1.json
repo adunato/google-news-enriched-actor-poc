@@ -1,0 +1,17 @@
+{
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "buildId": "s7Np4qeIg5sXxAdti",
+  "buildNumber": "0.8.1",
+  "buildTag": "issue41-b2-vanilla",
+  "buildStatus": "SUCCEEDED",
+  "actorDefinition": {
+    "defaultRunOptions": {
+      "memoryMbytes": 256,
+      "timeoutSecs": 900
+    },
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 256
+  },
+  "retrievedBy": "Read-only `apify builds info s7Np4qeIg5sXxAdti --json`",
+  "classification": "The deployed exact build definition permits a maximum of 256 MiB. This does not establish which component handled the CLI's 512-MiB request or why the run used 256 MiB."
+}

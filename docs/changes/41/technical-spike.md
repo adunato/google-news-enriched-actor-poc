@@ -58,19 +58,19 @@ If the normal flow fails, evidence must identify the actual business-flow stage:
 
 **Active route:** `B2 — vanilla hosted fetch → extract → row output`
 
-**Route status:** `The smoke gate passed; the single 100-row acceptance run failed after partial processing. The termination cause is undetermined; Area B is on Hold.`
+**Route status:** `The vanilla smoke gate passed. The original 256-MiB 100-row acceptance run was Inconclusive after partial processing. B2-M1 requested 512 MiB but used 256 MiB and is Invalid-bound / Inconclusive; the exact deployed build has maxMemoryMbytes=256, while CLI/platform request handling remains unestablished. The 512-MiB hypothesis was not tested. Its approval is exhausted; Area B remains on Hold. A configuration-only B2-M2 proposal is pending explicit owner approval.`
 
 Area A remains supported. B1 remains useful historical evidence that 53/100 rows were fetchable, but its retained HTML cache is no longer an input to B2.
 
 The previous B2 cache-replay candidate and B2-D1/B2-S1/B2-P1 diagnostics are **Historical / Superseded**. Their evidence remains retained for traceability, but no further work should attempt to solve their cross-run KVS permission behaviour.
 
-The three-row smoke sample (`q1-gb-01`, `q1-gb-02`, `q1-gb-05`) passed independent review, and the one authorized 100-row acceptance run has been executed. It failed after partial processing; no termination cause is established. Area B is on Hold, and the current action is owner review of a separately proposed bounded follow-up. Do not rerun, change resources or begin B3 under the exhausted authorization.
+The three-row smoke sample (`q1-gb-01`, `q1-gb-02`, `q1-gb-05`) passed independent review. The original 256-MiB acceptance run was Inconclusive after partial processing; no termination cause is established. The user subsequently approved exactly one B2-M1 run using the same build and fixture with 512 MiB requested. That single call occurred, but actual resources were 256 MiB / 900 seconds. Read-only metadata confirms the exact deployed build's max memory was 256 MiB; component handling of the request remains unknown. The approved 512-MiB hypothesis was not tested. No further run, rebuild or correction is authorized under that approval. A separately bounded configuration-only B2-M2 proposal appears below and remains pending explicit owner approval.
 
 ## 4. Current Experiment Execution
 
 **TID authorisation:** `tid-41-google-news-resolution-full-text — Approved; Area B mainstream-flow reset and B2 smoke → conditional acceptance route approved 2026-10-06`
 
-The owner approved the current vanilla sequence on 2026-10-06. The approval covers one smoke run and, only if its gate passes, the 100-row acceptance run on the same build. No further owner checkpoint is required between those TID steps. B2-D1/B2-S1/B2-P1 permissions and cache-replay authorizations are historical and exhausted.
+The owner approved the current vanilla sequence on 2026-10-06. The approval covered one smoke run and, only if its gate passed, one 100-row acceptance run on the same build; both authorizations are exercised. After the acceptance run reached a TID boundary, the user separately approved exactly one B2-M1 run requesting 512 MiB as recorded below. That approval is exercised and exhausted. B2-D1/B2-S1/B2-P1 permissions and cache-replay authorizations are historical and exhausted.
 
 ### Current experiment — B2 vanilla-flow smoke test
 
@@ -100,19 +100,19 @@ For every smoke-test row, the hosted Actor performs the normal application seque
 
 **Retained acceptance evidence:** Sanitized row outcomes and hashes are in `experiments/b2-vanilla/results-acceptance.json`; sanitized same-run resource/runtime/usage metadata is in `experiments/b2-vanilla/run-metadata-acceptance.json`; the full hosted log and partial dataset, including article text for the 10 emitted rows, remain only in ignored `experiments/b2-vanilla/private/`. No full text is retained in Git.
 
-**Current stop boundary (2026-10-06):** The acceptance run reached the normal publisher-fetch, extraction and dataset-output path for a partial set before the process was killed. The exact termination cause is not established; proximity to the configured memory allocation is an observation, not a confirmed cause. No simple mechanical defect was established from the retained evidence. Changing resource allocation or adding another diagnostic direction would leave the approved one-run sequence. The smoke and single acceptance authorizations are exercised. Keep Area B and the overall Spike conclusion on Hold/Pending; do not rerun, change resources, add diagnostics, or begin B3 without a separately reviewed and explicitly approved bounded proposal.
+**Historical boundary after the 256-MiB acceptance run, before B2-M1 (2026-10-06):** The run reached the normal publisher-fetch, extraction and dataset-output path for a partial set before the process was killed. The exact termination cause is not established; proximity to the configured memory allocation is an observation, not a confirmed cause. No simple mechanical defect was established from the retained evidence. At that point, the vanilla smoke and original acceptance authorizations were exercised. The later B2-M1 owner approval and its completed invalid-bound outcome are recorded below.
 
-## Proposed owner checkpoint — B2-M1 one higher-memory acceptance run (2026-10-06; NOT APPROVED)
+## Owner checkpoint — B2-M1 one higher-memory acceptance run (approved 2026-10-06)
 
-**Decision state:** Preparation only. The approval to run the earlier vanilla smoke and one 100-row acceptance run is exhausted. B2-M1 has not been approved and authorizes no current build, run, resource change or additional investigation.
+**Decision state:** The earlier vanilla smoke and one 100-row acceptance approval are exhausted. B2-M1 was first presented as a pending proposal; on 2026-10-06 the user replied “ok” to the explicit request to approve exactly one same-build 100-row run requesting 512 MiB. That approval was exercised once and is exhausted. No other build, run, resource change or investigation is authorized by it.
 
 ### Issue context and current evidence
 
 Issue #41 asks whether the Node.js 20 Apify Actor can resolve at least 95/100 representative Google News rows to publisher URLs and produce readable article text for at least 50/100. A4 supports 100/100 publisher URLs for the fixed sample. Historical B1 retained 53/100 usable publisher HTML responses. The same-build vanilla smoke run passed independent review: all three selected rows fetched HTML, produced reviewed text and reached the normal dataset. The single 100-row acceptance run used frozen input hash `ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01`, 256 MiB, and build `s7Np4qeIg5sXxAdti`; it failed after partial processing with 10 dataset rows and 11 logged publisher GETs. Nine completed rows have extraction candidates and one row's request returned HTTP 403; `q1-us-01` fetched eligible HTML but has no extraction/output event. Three more rows started without fetch results, and 86 rows never started. The log ends with `SIGKILL`; max observed memory was 255,164,416 bytes. The cause is undetermined, so the run does not establish a below-50/100 result or make B3 eligible. Area B remains on Hold and the Spike conclusion remains Pending.
 
-### Proposed question and bounded change
+### Approved question and bounded run (now exhausted)
 
-Would the unchanged normal 100-row flow complete when run with 512 MiB? Memory pressure is a plausible hypothesis from the observed peak and process termination, but it is not a confirmed cause. If approved, perform exactly one hosted run using the existing private Actor `JIogcgdHyCqAMHQ1P`, same existing build `s7Np4qeIg5sXxAdti` / `0.8.1` / `issue41-b2-vanilla`, and the same frozen 100-row fixture with 100 unique IDs and 95 unique publisher URLs. **Change only the run memory allocation from 256 MiB to 512 MiB.** Do not rebuild or change code, dependencies, input, actor identity or runtime.
+Would the unchanged normal 100-row flow complete when run with 512 MiB? Memory pressure is a plausible hypothesis from the observed peak and process termination, but it is not a confirmed cause. The approved run uses the existing private Actor `JIogcgdHyCqAMHQ1P`, same existing build `s7Np4qeIg5sXxAdti` / `0.8.1` / `issue41-b2-vanilla`, and the same frozen 100-row fixture with 100 unique IDs and 95 unique publisher URLs. **Change only the run memory allocation from 256 MiB to 512 MiB.** Do not rebuild or change code, dependencies, input, actor identity or runtime.
 
 Keep Node.js 20, timeout 900 seconds, concurrency four, 10-second per-row HTTP chain timeout, 2 MiB response limit and five redirects after the initial request (maximum six GETs per row). Continue using ordinary publisher HTTP, same-response in-memory extraction, normal row output and safe stage logs. Do not access prior-run cache/KVS, fetch Google News, change permissions/credentials, use browser/proxy/another runtime, add diagnostics, or extend the run beyond the approved bounds.
 
@@ -127,7 +127,31 @@ Retain the exact run/build identity, frozen input hash, configured/observed reso
 
 At 512 MiB for a full 900 seconds, compute is modeled at 0.125 CU / approximately `$0.025` using the previously cited `$0.20/CU` standard rate. This is compute-only, not a guaranteed total or enforced spending cap; actual account rates, transfer, storage, build/API usage and duration can change charges.
 
-**Approval requested:** Explicit owner approval of exactly this one same-build, same-fixture, 512-MiB acceptance run. Until granted, remain on Hold/Pending; do not execute B2-M1.
+**Approval recorded:** The user explicitly approved exactly this one same-build, same-fixture acceptance run requesting 512 MiB on 2026-10-06. The approval is exercised and exhausted. The actual run used 256 MiB, so the approved memory hypothesis was not tested. Preserve the evidence and stop. The overall Spike remains Pending until the original full-text question is resolved.
+
+### B2-M1 execution result (2026-10-06)
+
+The single sanitized invocation was `apify call JIogcgdHyCqAMHQ1P --build issue41-b2-vanilla --input-file ..\input-acceptance.json --memory 512 --timeout 900 --silent --json`. Local CLI evidence is `apify-cli/1.10.0`; its `call --help` describes `--memory` as the amount allocated in megabytes. The command returned failure, but run `68bftskIZe5eABnuO` exists and identifies exact build `s7Np4qeIg5sXxAdti` / `0.8.1` and the approved fixture hash. The request specified 512 MiB; same-run metadata and the startup log both show actual 256 MiB and a 900-second timeout. No cause for the memory mismatch is established or inferred.
+
+The run ended `FAILED`, exit code `1`, after 7.660 seconds; the hosted log ends with `npm error signal SIGKILL`, without establishing its cause. Peak memory was `215339008` bytes and reported usage was `$0.0002176187299274736`. Dataset `gvwkEaUKCsnDPCONo` contains 9 rows. The sanitized log records 13 row starts, 10 publisher GETs (9 eligible HTTP 200 and one HTTP 403), 10 extraction outcomes (9 successes and one fetch-ineligible skip), 9 writes, and 87 input rows without a row-start event. The private dataset has 8 rows with successful extraction and one denied-fetch row; article quality was not independently scored because the run was incomplete and invalid-bound. These partial counts do not establish a complete 50/100 result, a below-50 result, or B3 eligibility.
+
+**Classification and boundary:** `Invalid-bound / Inconclusive — valid partial execution, approved 512-MiB hypothesis not tested.` Actual memory remained 256 MiB. Do not interpret the outcome as evidence for or against the 512-MiB hypothesis, infer a resource-configuration cause, or claim an out-of-memory diagnosis. The single B2-M1 approval is consumed; no retry, rebuild, configuration change, further diagnostic or B3 is authorized. Area B remains on Hold and the overall Spike remains Pending.
+
+**Retained B2-M1 evidence:** `experiments/b2-vanilla/results-b2-m1.json`, `run-metadata-b2-m1.json`, and `approval.json`; ignored `private/b2-m1-run-log.txt` and `private/b2-m1-dataset.json` retain sanitized run evidence and the private output needed for any later authorized review. No full text is in Git.
+
+### Proposed owner checkpoint — B2-M2 configuration-only 512-MiB candidate (pending approval)
+
+**Decision state:** Preparation only. B2-M1's one-run approval is exercised and exhausted. B2-M2 is a new proposal, not approved for any Actor configuration edit, build or run.
+
+**Issue context:** Issue #41 asks whether the Node.js 20 Apify Actor can resolve at least 95/100 representative Google News rows to publisher URLs and produce independently readable article text for at least 50/100 rows. A4 supports the publisher-resolution target on the fixed sample. The B2 smoke passed independent review, but both 100-row acceptance attempts were incomplete. Full-text feasibility remains unresolved; Area B is on Hold and the overall Spike conclusion is Pending.
+
+**Observed evidence:** B2-M1 requested 512 MiB on exact build `s7Np4qeIg5sXxAdti`, but run metadata and startup log show 256 MiB. Read-only metadata for that exact deployed build confirms actor definition default/min/max memory were each 256 MiB, with timeout 900 seconds. This establishes the build's memory maximum; it does not establish which component handled the CLI's 512-MiB request or explain the run termination. B2-M1 is Invalid-bound / Inconclusive, and the 512-MiB hypothesis was not tested. See `experiments/b2-vanilla/build-definition-b2-m1.json` and the M1 run evidence above.
+
+**Proposed question and change:** Would the unchanged normal publisher-fetch → in-memory extraction → default-dataset flow complete on a new build whose Actor definition permits and defaults to 512 MiB? If approved, change only `actor/.actor/actor.json`: set default/min/max memory to 512 MiB and keep timeout 900 seconds. Preserve the entrypoint, helper, package files, Node 20 runtime, parser behavior, fixture bytes and hashes unchanged. Record a pre-build digest check. Build exactly one new version/tag. Before any publisher request, read metadata for that exact build and require the existing Actor ID plus definition default/min/max 512 MiB and timeout 900 seconds; any missing/mismatching field stops before a run. If it passes, perform one run on the unchanged 100-row fixture (hash `ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01`; 100 row IDs, 95 distinct publisher URLs, five repeated URL occurrences retained) with explicit 512-MiB/900-second settings. Require actual run metadata to confirm 512 MiB before scoring; otherwise classify Invalid-bound / Inconclusive and stop.
+
+Keep concurrency four, 10-second HTTP-chain bound, 2 MiB response-body cap and five redirects after the initial request. Use ordinary publisher requests, same-response extraction and the normal dataset only. No Google News requests, prior-run cache/KVS, new dependencies, diagnostics, credentials, permissions, browser, proxy or alternate runtime are in scope. If the valid run completes all 100 rows, independently review text against the full denominator: at least 50 coherent readable article texts supports the tested target. Fewer than 50 eligible HTML rows is access-limited evidence and stops. B3 is eligible only if at least 50 eligible HTML rows are present and review confirms extraction quality is the blocker. Any build mismatch, failed/incomplete run or resource mismatch stops the amendment without retry, rebuild, resource ladder or B3.
+
+The compute estimate at 512 MiB for 900 seconds is 0.125 CU / approximately `$0.025` at the previously cited `$0.20/CU` standard rate; this is compute-only, not a guaranteed total or spending cap. Record actual usage and cost. **Approval requested:** explicit owner approval of this one configuration-only build and the conditional one-run sequence. Until approved, do not edit `actor.json`, build or run.
 
 ### Evidence
 
@@ -312,11 +336,11 @@ For every experiment record:
 **Spike state:** `Open`  
 **Area A:** `Supported` — A4 resolved 100/100 sample rows.
 
-**Area B:** `Unresolved / Hold` — B1 historically fetched 53 usable HTML responses. The current vanilla smoke gate passed independent review. The one authorized 100-row acceptance run failed after partial processing; no simple mechanical defect or confirmed termination cause was established. The original cache-replay B2 candidate and B2-D1/B2-S1/B2-P1 diagnostics did not produce extraction-quality evidence and are superseded. The observed KVS 403 belongs to that diagnostic path and is not treated as a product-flow failure.
+**Area B:** `Unresolved / Hold` — B1 historically fetched 53 usable HTML responses. The vanilla smoke gate passed independent review. The original 256-MiB acceptance run was Inconclusive after partial processing. B2-M1's one-run approval is exhausted: it requested 512 MiB, but same-run evidence reports 256 MiB; exact-build metadata confirms its maximum was 256 MiB, while component request handling remains unknown. Thus the 512-MiB hypothesis was not tested. B2-M1 is Invalid-bound / Inconclusive. A bounded configuration-only B2-M2 proposal is pending explicit owner approval; no execution is authorized. The original cache-replay B2 candidate and B2-D1/B2-S1/B2-P1 diagnostics are superseded; their 403 belongs only to that diagnostic path.
 
 **Spike conclusion:** `Pending`; neither downstream capability is yet unblocked.
 
-**Required next action:** `Wait for owner review of a separately proposed bounded follow-up. The one-run acceptance authorization has been exercised; no rerun, resource change, diagnostic expansion, or B3 parser experiment is authorized by the current route. Keep the overall conclusion Pending.`
+**Required next action:** `Review the concrete B2-M2 proposal and obtain explicit owner approval before any configuration edit, build or run. Until then, keep Area B on Hold and the overall conclusion Pending. B2-M1 cannot be retried under its exhausted approval; no resource change or B3 is authorized.`
 
 **Troubleshooting boundary:** `If the vanilla flow fails, diagnose only the normal stage that failed. Do not resume the cross-run KVS/permission route or introduce special hosted harnessing merely to make the experiment run.`
 

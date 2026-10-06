@@ -1,6 +1,6 @@
 {
   "experiment": "B2 vanilla hosted fetch-extract-output",
-  "status": "approved_current_route_readiness_pending",
+  "status": "original route exhausted; B2-M1 exercised invalid-bound / Inconclusive; B2-M2 proposal pending explicit owner approval",
   "approvedAtUtcDate": "2026-10-06",
   "approvalScope": "One ordinary private Node.js 20 Actor candidate and a three-row smoke run; only if the smoke gate passes, use the same build for the full 100-row acceptance run under the TID route.",
   "actorId": "JIogcgdHyCqAMHQ1P",
@@ -63,5 +63,75 @@
     "If fewer than 50 rows yield eligible HTML in acceptance, report the access-limited result and stop; do not run B3.",
     "Run B3 only if at least 50 eligible HTML responses are fetched and independent quality review shows extraction quality is the remaining blocker.",
     "Retain metrics and hashes in Git; retain no full HTML or article text in Git."
-  ]
+  ],
+  "b2M1Approval": {
+    "amendment": "B2-M1 higher-memory acceptance run",
+    "status": "approved_one_run_exercised_invalid_bound_inconclusive",
+    "approvedAtUtcDate": "2026-10-06",
+    "authorizationEvidence": "The user replied 'ok' to the explicit request to approve exactly the proposed same-build, same-input 512-MiB run.",
+    "actorId": "JIogcgdHyCqAMHQ1P",
+    "buildId": "s7Np4qeIg5sXxAdti",
+    "buildNumber": "0.8.1",
+    "buildTag": "issue41-b2-vanilla",
+    "inputFile": "input-acceptance.json",
+    "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "rowCount": 100,
+    "uniqueRowIds": 100,
+    "uniquePublisherUrls": 95,
+    "duplicatePublisherUrlOccurrences": 5,
+    "changedRunSetting": "Requested memoryMbytes: 512 (previous acceptance run used 256 MiB); observed actual memoryMbytes: 256, so the approved memory hypothesis was not tested.",
+    "unchangedRunSettings": {
+      "timeoutSecs": 900,
+      "concurrency": 4,
+      "rowHttpChainTimeoutMs": 10000,
+      "responseBodyMaxBytes": 2097152,
+      "redirectsAfterInitialRequest": 5
+    },
+    "buildSourceOrDependencyChanges": false,
+    "maximumRuns": 1,
+    "runId": "68bftskIZe5eABnuO",
+    "datasetId": "gvwkEaUKCsnDPCONo",
+    "observedActualMemoryMbytes": 256,
+    "observedTimeoutSecs": 900,
+    "classification": "Invalid-bound / Inconclusive; 512-MiB hypothesis not tested. No inference about why actual memory remained 256 MiB.",
+    "noRetryOrFurtherDiagnostic": true,
+    "costModel": {
+      "full900SecondComputeEstimate": "0.125 compute units / approximately $0.025 at the previously referenced $0.20 per compute-unit standard rate",
+      "isAllInCap": false,
+      "uncertainty": "Account rates, transfer, storage, build/API usage and run duration can change actual total charges."
+    }
+  },
+  "b2M2Proposal": {
+    "amendment": "B2-M2 configuration-only 512-MiB candidate",
+    "status": "proposed_pending_explicit_owner_approval",
+    "priorEvidence": {
+      "b2M1RunId": "68bftskIZe5eABnuO",
+      "b2M1BuildId": "s7Np4qeIg5sXxAdti",
+      "requestedMemoryMbytes": 512,
+      "observedMemoryMbytes": 256,
+      "deployedBuildDefinitionFile": "build-definition-b2-m1.json",
+      "deployedBuildMaxMemoryMbytes": 256,
+      "b2M1Classification": "Invalid-bound / Inconclusive; the 512-MiB hypothesis was not tested."
+    },
+    "proposedScope": {
+      "configurationFile": "actor/.actor/actor.json only",
+      "defaultRunOptionsMemoryMbytes": 512,
+      "minMemoryMbytes": 512,
+      "maxMemoryMbytes": 512,
+      "timeoutSecs": 900,
+      "sourceDependenciesRuntimeInputUnchanged": true,
+      "maximumNewBuilds": 1,
+      "maximumHostedRuns": 1,
+      "runOnlyAfterExactBuildDefinitionVerification": true,
+      "runActualMemoryMustBe512Mbytes": true,
+      "failureOrMismatchStopsWithoutRetry": true
+    },
+    "acceptance": "Only a normal completed 100-row run with independently reviewed readable text can score the 50/100 target; fewer than 50 eligible HTML rows is access-limited evidence. B3 is conditional on sufficient HTML and a confirmed extraction-quality blocker.",
+    "costModel": {
+      "full900SecondComputeEstimate": "0.125 compute units / approximately $0.025 at the previously referenced $0.20 per compute-unit standard rate",
+      "isAllInCap": false,
+      "uncertainty": "Account rates, transfer, storage, build/API usage and run duration can change actual total charges."
+    },
+    "executionAuthorized": false
+  }
 }
