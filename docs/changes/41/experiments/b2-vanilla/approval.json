@@ -1,6 +1,6 @@
 {
   "experiment": "B2 vanilla hosted fetch-extract-output",
-  "status": "B2-M1 invalid-bound / Inconclusive; B2-M2 timed out after 99 rows and is exhausted; B2-F1 preparation only, pending owner approval",
+  "status": "B2-F1 exhausted; failed after 48/100 rows; valid partial execution / Inconclusive / Hold; B2-M3 memory-snapshot proposal pending explicit owner approval.",
   "approvedAtUtcDate": "2026-10-06",
   "approvalScope": "One ordinary private Node.js 20 Actor candidate and a three-row smoke run; only if the smoke gate passes, use the same build for the full 100-row acceptance run under the TID route.",
   "actorId": "JIogcgdHyCqAMHQ1P",
@@ -189,11 +189,11 @@
   },
   "b2F1Proposal": {
     "amendment": "B2-F1 bounded publisher HTTP-stage logging",
-    "status": "proposed_pending_explicit_owner_approval",
+    "status": "owner_approved_one_logging_only_build_and_conditional_run",
     "preparedAtUtcDate": "2026-10-06",
-    "approvalEvidence": null,
-    "preparationOnly": true,
-    "executionAuthorized": false,
+    "approvalEvidence": "The user replied \"ok go ahead\" to the self-contained B2-F1 checkpoint. Approval is limited to one logging-only candidate build and, after exact-build verification, one 100-row run.",
+    "preparationOnly": false,
+    "executionAuthorized": true,
     "priorEvidence": {
       "b2M2RunId": "gR3LVlfnSkXLQrTSp",
       "b2M2Status": "TIMED-OUT after 899.778 seconds; 99 of 100 dataset rows; no run_summary",
@@ -275,6 +275,68 @@
       "isAllInCap": false,
       "uncertainty": "Actual account rates, transfer, build, storage and API costs may differ; record actual hosted usage."
     },
-    "decisionRequired": "Explicit owner approval before any B2-F1 source edit, build or run."
+    "decisionRequired": "None; the explicitly approved single build and conditional run were exercised and are exhausted.",
+    "approvedAtUtcDate": "2026-10-06",
+    "executionLimits": "Exactly one logging-only candidate build and one conditional run after the 512-MiB/900-second exact-build gate. No retry, correction or additional diagnostic direction.",
+    "executionResult": {
+      "buildId": "atE5VAJGFJrkEIxcc",
+      "buildNumber": "0.10.1",
+      "version": "0.10",
+      "buildTag": "issue41-b2-f1",
+      "runId": "JN325UzL4IFpdnTMR",
+      "status": "FAILED",
+      "exitCode": 1,
+      "durationMillis": 34444,
+      "memoryMbytes": 512,
+      "timeoutSecs": 900,
+      "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+      "datasetId": "cYabo9B58uiaRwNp6",
+      "datasetItemCount": 48,
+      "eligibleHtmlRows": 36,
+      "httpDeniedRows": 12,
+      "successfulExtractionRows": 36,
+      "datasetObservedPublisherRequests": 49,
+      "runWidePublisherRequestCount": "Unknown",
+      "computeUnits": 0.004783888888888889,
+      "actualUsageTotalUsd": 0.0012892433482723103,
+      "peakMemoryBytes": 510668800,
+      "result": "Inconclusive / Hold; partial execution; original acceptance incomplete; no retry or further diagnostic direction.",
+      "stageFinding": "q2-gb-10 completed fetch/body-read/cleanup/extraction/write; final captured concurrent stages q3-gb-10 body_read start and q3-us-02 await_fetch; no run_summary.",
+      "sigkillDoesNotProve": "OOM or instrumentation causality.",
+      "evidence": [
+        "build-definition-b2-f1.json",
+        "run-metadata-b2-f1.json",
+        "results-b2-f1.json",
+        "private/stage-log-b2-f1.txt",
+        "private/dataset-b2-f1.json"
+      ],
+      "loggedRequestStartMarkers": 53,
+      "loggedResponseMarkers": 51,
+      "runWideOnWirePublisherRequestCount": null
+    }
+  },
+  "b2M3Proposal": {
+    "status": "Proposed; owner approval pending",
+    "question": "Do nonthrowing native process.memoryUsage snapshots at row and stage boundaries explain the high-peak-memory incomplete B2 runs without changing HTTP, extraction, cleanup, or output behavior?",
+    "scope": "One isolated candidate build and one conditional fixed-100-row run on Actor JIogcgdHyCqAMHQ1P, Node 20, 512 MiB / 900 seconds; retain F1 stage logs and add snapshots at row start/end and before/after fetch, JSDOM construction, structured-data extraction, Readability, and DOM close.",
+    "limits": {
+      "concurrency": 4,
+      "rowHttpChainTimeoutMs": 10000,
+      "responseBodyMaxBytes": 2097152,
+      "redirectsAfterInitialRequest": 5,
+      "maximumPlannedPublisherGets": 600,
+      "inputFile": "input-acceptance.json",
+      "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+      "rowCount": 100,
+      "uniqueRowIds": 100,
+      "uniquePublisherUrls": 95,
+      "duplicatePublisherUrlOccurrences": 5
+    },
+    "fields": ["rowId", "stage", "elapsedMs", "rss", "heapUsed", "external", "arrayBuffers"],
+    "redaction": "Never log URLs, headers, bodies, article text, credentials, tokens, or raw errors.",
+    "evidenceLimits": "Boundary snapshots cannot observe memory during an awaited request or prove OOM causality; concurrent workers limit per-row attribution.",
+    "stop": "Exactly one build and one run after separate explicit owner approval and internal gates; then stop. Incomplete run is Inconclusive/Hold, no correction/retry/memory increase/B3.",
+    "computeEstimate": "0.125 CU / about $0.025 at cited standard rate for 900 seconds; compute-only, not guaranteed total or cap.",
+    "approvalRequired": "Separate explicit owner approval before implementation/build/run."
   }
 }

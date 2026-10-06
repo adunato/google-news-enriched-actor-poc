@@ -1,0 +1,19 @@
+{
+  "experiment": "B2-F1",
+  "buildId": "atE5VAJGFJrkEIxcc",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "status": "SUCCEEDED",
+  "buildNumber": "0.10.1",
+  "actorVersion": "0.10",
+  "buildTag": "issue41-b2-f1",
+  "sourceType": "SOURCE_FILES",
+  "sourceFilesCount": 9,
+  "mainSourceSha256": "1c8902808cfd11833d83ca6d3b3147cade68c4c5cfe14a9fc3fa72c67ddc57f7",
+  "actorConfigSource": ".actor/actor.json",
+  "minMemoryMbytes": 512,
+  "defaultMemoryMbytes": 512,
+  "maxMemoryMbytes": 512,
+  "timeoutSecs": 900,
+  "buildOptionsMemoryMbytes": 4096,
+  "verifiedAtUtc": "2026-10-06T15:47:35Z"
+}

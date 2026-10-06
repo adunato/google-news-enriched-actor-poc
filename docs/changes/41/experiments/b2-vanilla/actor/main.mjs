@@ -25,6 +25,43 @@ function safeError(error) {
   return { errorClass: name, errorCode: code };
 }
 
+function normalizedMime(contentType) {
+  const mime = String(contentType || "")
+    .split(";", 1)[0]
+    .trim()
+    .toLowerCase();
+  return /^[a-z0-9!#$&^_.+-]+\/[a-z0-9!#$&^_.+-]+$/u.test(mime) ? mime : "unknown";
+}
+
+function logHttpStage(rowId, startedAt, state, stage, details = {}) {
+  const error = details.error || {};
+  try {
+    console.log(
+      `ISSUE41_B2_F1 ${JSON.stringify({
+        rowId,
+        stage,
+        elapsedMs: Date.now() - startedAt,
+        requestCount: state.requestCount,
+        redirectCount: state.redirectCount,
+        httpStatus: state.httpStatus ?? "none",
+        normalizedMime: state.normalizedMime,
+        bodyBytes: details.bodyBytes ?? state.bodyBytes ?? "unknown",
+        errorClass: error.errorClass ?? "none",
+        errorCode: error.errorCode ?? "none",
+        phase: details.phase ?? "none",
+      })}`,
+    );
+  } catch {
+    // Diagnostic logging must never affect the HTTP request or its result.
+  }
+}
+
+async function cancelResponseBody(response, logStage, phase) {
+  logStage("cancel", { phase: `${phase}_start` });
+  await response.body?.cancel();
+  logStage("cancel", { phase: `${phase}_complete` });
+}
+
 function countWords(text) {
   return (text.match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu) || []).length;
 }
@@ -69,15 +106,19 @@ function structuredArticleText(document) {
   return candidates.sort((left, right) => right.length - left.length)[0] || null;
 }
 
-async function readBoundedBody(response) {
+async function readBoundedBody(response, logStage) {
+  logStage("body_read", { phase: "start" });
   const declaredLength = Number(response.headers.get("content-length") || 0);
   if (declaredLength > MAX_BODY_BYTES) {
-    await response.body?.cancel();
+    await cancelResponseBody(response, logStage, "declared_limit");
     throw Object.assign(new Error("Response exceeds the configured body bound"), {
       code: "BODY_LIMIT",
     });
   }
-  if (!response.body) return Buffer.alloc(0);
+  if (!response.body) {
+    logStage("body_read", { phase: "complete", bodyBytes: 0 });
+    return Buffer.alloc(0);
+  }
 
   const reader = response.body.getReader();
   const chunks = [];
@@ -88,7 +129,9 @@ async function readBoundedBody(response) {
       if (done) break;
       byteLength += value.byteLength;
       if (byteLength > MAX_BODY_BYTES) {
+        logStage("cancel", { phase: "stream_limit_start" });
         await reader.cancel();
+        logStage("cancel", { phase: "stream_limit_complete" });
         throw Object.assign(new Error("Response exceeds the configured body bound"), {
           code: "BODY_LIMIT",
         });
@@ -98,6 +141,7 @@ async function readBoundedBody(response) {
   } finally {
     reader.releaseLock();
   }
+  logStage("body_read", { phase: "complete", bodyBytes: byteLength });
   return Buffer.concat(chunks, byteLength);
 }
 
@@ -135,10 +179,27 @@ async function fetchPublisher(row) {
   let requestCount = 0;
   let redirectCount = 0;
   const stages = [];
+  const state = {
+    requestCount,
+    redirectCount,
+    httpStatus: null,
+    normalizedMime: "unknown",
+    bodyBytes: null,
+  };
+  const logStage = (stage, details) => logHttpStage(row.rowId, startedAt, state, stage, details);
+  const abortObserver = () => logStage("abort_fired");
+  let abortObserverAttached = false;
 
   try {
+    try {
+      signal.addEventListener("abort", abortObserver, { once: true });
+      abortObserverAttached = true;
+    } catch {
+      // Observation is optional; attaching it must not change request behavior.
+    }
     for (let redirectIndex = 0; redirectIndex <= MAX_REDIRECTS; redirectIndex += 1) {
       requestCount += 1;
+      state.requestCount = requestCount;
       const current = new URL(currentUrl);
       if (!["http:", "https:"].includes(current.protocol)) {
         return {
@@ -150,7 +211,11 @@ async function fetchPublisher(row) {
         };
       }
 
-      const response = await fetch(currentUrl, {
+      state.httpStatus = null;
+      state.normalizedMime = "unknown";
+      state.bodyBytes = null;
+      logStage("request_start");
+      const pendingResponse = fetch(currentUrl, {
         method: "GET",
         headers: {
           accept: "text/html,application/xhtml+xml",
@@ -159,11 +224,17 @@ async function fetchPublisher(row) {
         redirect: "manual",
         signal,
       });
+      logStage("await_fetch");
+      const response = await pendingResponse;
       const location = response.headers.get("location");
       stages.push({ status: response.status, host: current.hostname.toLowerCase() });
+      state.httpStatus = response.status;
+      state.normalizedMime = normalizedMime(response.headers.get("content-type"));
+      logStage("response");
 
       if ([301, 302, 303, 307, 308].includes(response.status) && location) {
-        await response.body?.cancel();
+        logStage("redirect");
+        await cancelResponseBody(response, logStage, "redirect");
         if (redirectIndex === MAX_REDIRECTS) {
           return {
             fetchStatus: "redirect_limit",
@@ -187,6 +258,7 @@ async function fetchPublisher(row) {
         }
         currentUrl = nextUrl.href;
         redirectCount += 1;
+        state.redirectCount = redirectCount;
         continue;
       }
 
@@ -195,7 +267,7 @@ async function fetchPublisher(row) {
       const finalUrl = currentUrl;
       const final = safeUrlDetails(finalUrl);
       if (!response.ok) {
-        await response.body?.cancel();
+        await cancelResponseBody(response, logStage, "http_error");
         return {
           fetchStatus: [401, 403, 429].includes(response.status) ? "http_denied" : "http_error",
           httpStatus: response.status,
@@ -209,7 +281,7 @@ async function fetchPublisher(row) {
         };
       }
       if (!html) {
-        await response.body?.cancel();
+        await cancelResponseBody(response, logStage, "non_html");
         return {
           fetchStatus: "non_html",
           httpStatus: response.status,
@@ -223,7 +295,8 @@ async function fetchPublisher(row) {
         };
       }
 
-      const body = await readBoundedBody(response);
+      const body = await readBoundedBody(response, logStage);
+      state.bodyBytes = body.length;
       if (body.length === 0) {
         return {
           fetchStatus: "empty_html",
@@ -256,6 +329,8 @@ async function fetchPublisher(row) {
     }
     throw Object.assign(new Error("Redirect loop ended unexpectedly"), { code: "REDIRECT_LIMIT" });
   } catch (error) {
+    const safe = safeError(error);
+    logStage("catch", { error: safe });
     return {
       fetchStatus:
         error instanceof Error && ["TimeoutError", "AbortError"].includes(error.name)
@@ -263,12 +338,21 @@ async function fetchPublisher(row) {
           : error?.code === "BODY_LIMIT"
             ? "body_limit"
             : "request_error",
-      ...safeError(error),
+      ...safe,
       fetchElapsedMs: Date.now() - startedAt,
       requestCount,
       redirectCount,
       stages,
     };
+  } finally {
+    if (abortObserverAttached) {
+      try {
+        signal.removeEventListener("abort", abortObserver);
+      } catch {
+        // Observer cleanup must not replace the original request result.
+      }
+    }
+    logStage("cleanup");
   }
 }
 

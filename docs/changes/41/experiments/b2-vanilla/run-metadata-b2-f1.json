@@ -1,0 +1,78 @@
+{
+  "experiment": "B2-F1",
+  "runId": "JN325UzL4IFpdnTMR",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "buildId": "atE5VAJGFJrkEIxcc",
+  "buildTag": "issue41-b2-f1",
+  "status": "FAILED",
+  "exitCode": 1,
+  "startedAt": "2026-10-06T15:48:39.822Z",
+  "finishedAt": "2026-10-06T15:49:14.413Z",
+  "durationMillis": 34444,
+  "memoryMbytes": 512,
+  "timeoutSecs": 900,
+  "nodeVersion": "20.20.2",
+  "inputFile": "input-acceptance.json",
+  "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+  "inputRows": 100,
+  "uniqueRowIds": 100,
+  "uniquePublisherUrls": 95,
+  "duplicatePublisherUrlOccurrences": 5,
+  "peakMemoryBytes": 510668800,
+  "averageMemoryBytes": 359743978.89694136,
+  "computeUnits": 0.004783888888888889,
+  "actualUsageTotalUsd": 0.0012892433482723103,
+  "datasetId": "cYabo9B58uiaRwNp6",
+  "datasetItemCount": 48,
+  "datasetObservedPublisherRequests": 49.0,
+  "datasetObservedRequestScope": "Sum of publisherRequestCount over retained dataset rows only; run-wide total is unknown because processing ended before all rows were written.",
+  "classification": "Inconclusive: valid partial execution, acceptance incomplete; Area B Hold / Spike open.",
+  "observations": [
+    "Platform run status FAILED with exit code 1; retained log contains npm signal SIGKILL.",
+    "F1 stage instrumentation observed response, body_read, cleanup, and downstream extraction/write for q2-gb-10.",
+    "Last row markers show q3-gb-10 response 200 and body_read start, then q3-us-02 request_start/await_fetch; no q3-gb-10 body_read completion/cancel/cleanup and no run_summary.",
+    "SIGKILL alone does not establish OOM or instrumentation causality.",
+    "No acceptance quality threshold or B3 eligibility is established."
+  ],
+  "options": {
+    "memoryMbytes": 512,
+    "timeoutSecs": 900
+  },
+  "stats": {
+    "durationMillis": 34444,
+    "runTimeSecs": 34.444,
+    "memAvgBytes": 359743978.89694136,
+    "memMaxBytes": 510668800,
+    "netRxBytes": 2595593,
+    "netTxBytes": 268243
+  },
+  "usage": {
+    "computeUnits": 0.004783888888888889,
+    "actualUsageTotalUsd": 0.0012892433482723103,
+    "usdComponents": {
+      "ACTOR_COMPUTE_UNITS": 0.0009567777777777777,
+      "DATASET_READS": 0,
+      "DATASET_WRITES": 0.00024000000000000003,
+      "KEY_VALUE_STORE_READS": 5e-6,
+      "KEY_VALUE_STORE_WRITES": 5e-5,
+      "KEY_VALUE_STORE_LISTS": 0,
+      "REQUEST_QUEUE_READS": 0,
+      "REQUEST_QUEUE_WRITES": 0,
+      "DATA_TRANSFER_INTERNAL_GBYTES": 1.2490479275584222e-5,
+      "DATA_TRANSFER_EXTERNAL_GBYTES": 2.4975091218948367e-5,
+      "PROXY_RESIDENTIAL_TRANSFER_GBYTES": 0,
+      "PROXY_SERPS": 0,
+      "PROXY_UNBLOCKER_UNITS": 0
+    }
+  },
+  "dataset": {
+    "id": "cYabo9B58uiaRwNp6",
+    "itemCount": 48,
+    "actorId": "JIogcgdHyCqAMHQ1P",
+    "runId": "JN325UzL4IFpdnTMR",
+    "datasetObservedPublisherRequests": 49.0
+  },
+  "loggedRequestStartMarkers": 53,
+  "loggedResponseMarkers": 51,
+  "runWideOnWirePublisherRequestCount": null
+}
