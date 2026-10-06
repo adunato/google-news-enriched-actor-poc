@@ -1,0 +1,14 @@
+{
+  "name": "issue41-google-news-b2-diagnostic-20261005",
+  "version": "0.0.2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node main.mjs"
+  },
+  "dependencies": {
+    "apify": "3.7.2",
+    "@mozilla/readability": "0.6.0",
+    "jsdom": "29.0.1"
+  }
+}

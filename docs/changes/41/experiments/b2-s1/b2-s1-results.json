@@ -1,0 +1,38 @@
+{
+  "experiment": "B2-S1 — single-record cached-body access witness",
+  "classification": "Inconclusive",
+  "candidateStatus": "Hold",
+  "outcome": "access_denied",
+  "question": "Can the existing private Actor identity read metadata for the retained B1 store and then read one fixed record buffer?",
+  "observed": {
+    "runId": "hr2WzjPcLnZgHQYmZ",
+    "buildId": "jop1JEffyaJM2tiNR",
+    "runStatus": "FAILED",
+    "exitCode": 1,
+    "configuredMemoryMbytes": 256,
+    "effectiveTimeoutSecs": 900,
+    "durationMs": 3252,
+    "usageTotalUsd": 0.00009530627192060154,
+    "sourceStoreId": "C1KYtogOgGpkRyF2H",
+    "sourceReadRequestCount": 1,
+    "metadataRequestElapsedMs": 64,
+    "httpStatus": 403,
+    "apiType": "insufficient-permissions",
+    "errorClass": "ApifyApiError",
+    "recordReadAttempted": false
+  },
+  "expectedWitness": {
+    "rowId": "q1-gb-01",
+    "key": "B1_HTML_q1-gb-01",
+    "bytes": 435577,
+    "sha256": "6f8d86bc1f95de5b118a55e4d4d89c39cf38a94c3ca9f5319e135dd357841dd9"
+  },
+  "interpretation": "The current Actor identity was denied access at the store metadata request. This is not evidence that the B1 store or fixed record is missing, is not evidence of publisher access failure, and does not measure extraction quality.",
+  "route": "Stop after the single approved run. No permission change, retry, second read, B2 resume, B3, or corrective run is authorized.",
+  "evidence": [
+    "b2-s1-build-metadata.json",
+    "b2-s1-run-metadata.json",
+    "b2-s1-run-log.txt",
+    "b2-s1-approval.json"
+  ]
+}

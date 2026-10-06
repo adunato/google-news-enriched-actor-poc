@@ -1,0 +1,53 @@
+{
+  "experiment": "B2-S1",
+  "classification": "Inconclusive",
+  "candidateStatus": "Hold",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "buildId": "jop1JEffyaJM2tiNR",
+  "buildNumber": "0.7.1",
+  "buildTag": "issue41-b2-s1",
+  "runId": "hr2WzjPcLnZgHQYmZ",
+  "runStatus": "FAILED",
+  "exitCode": 1,
+  "startedAtUtc": "2026-10-06T06:12:52.874Z",
+  "finishedAtUtc": "2026-10-06T06:12:56.303Z",
+  "runtime": "Node.js v20.20.2 (Linux x64)",
+  "configuredMemoryMbytes": 256,
+  "effectiveTimeoutSecs": 900,
+  "durationMs": 3252,
+  "computeUnits": 0.00022583333333333334,
+  "peakMemoryBytes": 14254080,
+  "netRxBytes": 428,
+  "netTxBytes": 730,
+  "sourceRunId": "g7ndwu3G1M4orPt2h",
+  "sourceStoreId": "C1KYtogOgGpkRyF2H",
+  "sourceReadRequestCount": 1,
+  "sourceReadRequests": [
+    {
+      "operation": "store_metadata_get",
+      "elapsedMs": 64,
+      "outcome": "access_denied",
+      "errorClass": "ApifyApiError",
+      "apiType": "insufficient-permissions",
+      "httpStatus": 403
+    }
+  ],
+  "recordReadAttempted": false,
+  "expectedWitness": {
+    "rowId": "q1-gb-01",
+    "key": "B1_HTML_q1-gb-01",
+    "bytes": 435577,
+    "sha256": "6f8d86bc1f95de5b118a55e4d4d89c39cf38a94c3ca9f5319e135dd357841dd9"
+  },
+  "observedWitness": null,
+  "defaultDatasetId": "WF2yztDdSEYShc4OI",
+  "defaultKeyValueStoreId": "bXsxaAw0Gbtm9qg2V",
+  "datasetWrites": 0,
+  "keyValueStoreReadsReportedByPlatform": 0,
+  "keyValueStoreWritesReportedByPlatform": 1,
+  "defaultInputStoreNote": "The run was supplied the two-byte empty JSON input. The probe source contains no KVS write call; the source B1 store was never written.",
+  "usageTotalUsd": 0.00009530627192060154,
+  "stopReason": "The first source-store metadata request returned HTTP 403 insufficient-permissions. No fixed-record request was made. Stop all B2-S1 activity after this single run.",
+  "interpretationLimit": "Observed access denial for this Actor identity; this does not prove the B1 store or record is absent, does not establish whether B2-D1 had the same cause, and says nothing about extraction quality or publisher access.",
+  "metadataSource": "Sanitized fields selected from apify runs info --json --verbose; signed URLs, URL-signing secrets, user identifiers, and unrelated Actor history were excluded."
+}

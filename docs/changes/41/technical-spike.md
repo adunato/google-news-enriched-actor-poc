@@ -6,9 +6,9 @@
 **Status:** `Open`  
 **Owner:** `Project owner`  
 **Created:** `2026-10-04`  
-**Updated:** `2026-10-05`
+**Updated:** `2026-10-06`
 **GitHub Spike Issue:** `Prove Google News publisher resolution and full-text viability (#41)`  
-**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Approved, amended 2026-10-05 for one B2-D1 run**
+**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Approved; B2-D1 amended 2026-10-05 and B2-S1 amended 2026-10-06 for one run each**
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
 
@@ -33,10 +33,11 @@ If either cannot be achieved within the approved constraints, identify the exact
 - The B1 challenge-marker check is a body-text heuristic; its 29 `challenge_html` results are not confirmed access denials.
 - B2 has not produced row-level extraction evidence; the 50/100 readable-text target remains unresolved.
 - The approved B2-D1 candidate passed fixture hash/count checks but failed at source-store opening before any row processing; the underlying cause remains undetermined.
+- B2-S1 used its one owner-approved run; the Actor identity received HTTP 403 `insufficient-permissions` on the source-store metadata request before reading the fixed record.
 
 ### Remaining uncertainty
 
-- why opening the previous run's key-value store failed with a sanitized `ApifyApiError` during the one permitted diagnostic;
+- whether the B2-D1 failure and B2-S1's observed 403 share a cause; the B2-D1 log did not retain a status or API type;
 - whether the approved generic extraction path produces readable article text for at least 50 of the full 100 rows;
 - how much the B1 challenge-marker heuristic overclassified ordinary article text.
 
@@ -45,15 +46,15 @@ If either cannot be achieved within the approved constraints, identify the exact
 **Investigation Area:** `B — Retrieve readable publisher article text`
 
 **TID experiment:** `B2 — Extract with structured data plus Mozilla Readability`
-**Route status:** `B2-D1 completed — Inconclusive; stop at the approved boundary`
+**Route status:** `B2-D1 and B2-S1 complete — Inconclusive; stop with full-text viability unresolved`
 
 A1 completed with a stable resolver-input path in its small control sequence. A4 met the publisher-URL acceptance threshold on all 100 frozen sample rows. B1 then produced 53 rows of eligible cached HTML, meeting the TID's 50-row gate. Area A is supported and B2 was eligible, but its first candidate run emitted no dataset rows or text evidence. The owner approved the single B2-D1 diagnostic amendment on 2026-10-05. Full-text viability remains unresolved.
 
-The amended TID authorized one changed private B2 candidate and one hosted run with startup-stage markers and sanitized fatal-error reporting. That run failed during source-store opening before row processing, so no valid B2 extraction evidence exists. The one-run authority is exhausted; no further diagnostic, corrective rerun, or B3 is authorized.
+The B2-D1 amendment authorized one changed private B2 candidate and one hosted run with startup-stage markers and sanitized fatal-error reporting. That run failed during source-store opening before row processing, so no valid B2 extraction evidence exists and that authority is exhausted. The owner then approved exactly one B2-S1 diagnostic build/run. Its first read-only request to inspect the existing B1 store returned HTTP 403 `insufficient-permissions`; it did not attempt the fixed-record read. This is an access denial for the current Actor identity, not evidence that the store or record is missing, not proof that B2-D1 had the same cause, and not extraction-quality evidence. The S1 authorization is exhausted. No further run or permission change is authorized; full-text viability remains unresolved.
 
 ## 4. Current Experiment Execution
 
-**TID authorisation:** `tid-41-google-news-resolution-full-text — Approved 2026-10-04; B2-D1 amendment approved 2026-10-05`
+**TID authorisation:** `tid-41-google-news-resolution-full-text — Approved 2026-10-04; B2-D1 amendment approved 2026-10-05; B2-S1 amendment approved 2026-10-06`
 
 ### Experiment definition
 
@@ -149,15 +150,23 @@ Stop after B2-D1 if valid extraction evidence was not produced. Startup, source-
 
 **Retained evidence:** `docs/changes/41/experiments/b2/b2-d1-results.json`, `b2-d1-dataset.json`, `b2-d1-run-metadata.json`, `b2-d1-run-log.txt` and `b2-d1-kvs-manifest.json`. The record contains no source-cache bodies, extracted text, credentials or signed storage URLs.
 
-### Proposed B2-S1 — preparation approved for review; execution unapproved
+### B2-S1 — Approved single-record cached-body access witness
 
-The B2-D1 authorization is exhausted. Preparation of this B2-S1 proposal is approved for review only; execution remains proposed and requires separate explicit owner approval. Neither the original TID approval nor the B2-D1 approval authorizes it. No API call, Actor build or hosted run was made while preparing this proposal. It does not change the current `Pending` conclusion or the B2-D1 `Inconclusive / On Hold` result.
+The B2-D1 authorization is exhausted. On 2026-10-06, the owner approved exactly one private build and hosted run for B2-S1, as separately specified in the TID. At approval, no S1 API call, Actor build or hosted run had occurred. The owner acknowledged the modeled approximately `$0.0127` standard-rate charge and its uncertainty. The single S1 authorization is now exercised and exhausted; the overall Spike conclusion remains `Pending` and B2-D1 remains `Inconclusive / On Hold`.
 
 Local S0 reconciliation completed on 2026-10-05: the frozen fixture hash is `8bb9facc14fd7a5755c9337f7d9864ba6fb7958a44d6ae654b8e17ee84f63c8c`; the 100 unique fixture rows match their B1 references, including all 53 eligible HTML cache references, with no mapping or expected body-metadata mismatches. The first eligible row is `q1-gb-01`, key `B1_HTML_q1-gb-01`, expected body length `435577` bytes and SHA-256 `6f8d86bc1f95de5b118a55e4d4d89c39cf38a94c3ca9f5319e135dd357841dd9`. The B1 source run/store IDs are `g7ndwu3G1M4orPt2h` / `C1KYtogOgGpkRyF2H`. The manifest's `51179`-byte storage size is not the raw response-body length.
 
-The proposed S1 would make one metadata read for the existing B1 store and, only if it exists, one fixed-record read using `getRecord(key, { buffer: true })`. Treat `record.value` as the returned Buffer; compare `record.value.length` and the SHA-256 computed over `record.value` against the B1 witness, and retain the returned content type when present. The proposed bounds are the existing private Actor and Node.js 20 runtime, 256 MiB/900 seconds explicitly set and verified, zero retries, a five-second client timeout per request, no more than two read-only KVS requests/ten seconds, and a 2 MiB body maximum. It would not fetch publishers or Google News, extract text, write dataset rows, create/open another store, add dependencies, or retain/log the body or credentials. Every terminal outcome stops; even a successful witness establishes access to only that one record, not all 53 cached bodies or full-text viability. Further work would require a later reviewed design.
+S1 makes one metadata read for the existing B1 store and, only if it exists, one fixed-record read using `getRecord(key, { buffer: true })`. Treat `record.value` as the returned Buffer; compare `record.value.length` and the SHA-256 computed over `record.value` against the B1 witness, and retain the returned content type when present. The approved bounds are the existing private Actor and Node.js 20 runtime, 256 MiB/900 seconds explicitly set and verified, zero retries, a five-second client timeout per request, no more than two read-only KVS requests/ten seconds, and a 2 MiB body maximum. It does not fetch publishers or Google News, extract text, write dataset rows, create/open another store, add dependencies, or retain/log the body or credentials. Every terminal outcome stops; even a successful witness establishes access to only that one record, not all 53 cached bodies or full-text viability. Further work would require a later reviewed design.
 
-At Apify public Free/Starter rates checked 2026-10-05, the maximum 256 MiB/900-second allocation models `$0.0125` compute; two KVS reads add `$0.00001`, and up to 2 MiB transfer adds about `$0.000098`, for an estimated **$0.0127** standard-rate charge under the stated envelope. This is not a guaranteed total charge or enforced cap: the account tariff is unknown, and metadata transfer, build, retained storage or other account usage may add cost. S1 remains unapproved pending separate explicit owner approval for exactly one private diagnostic build and hosted run, acknowledging this estimate and its uncertainty. A separate numeric spend ceiling is not required by the TID controls. See [Apify pricing](https://apify.com/pricing) and [Actor usage and resources](https://docs.apify.com/actors/running/usage-and-resources).
+At Apify public Free/Starter rates checked 2026-10-05, the maximum 256 MiB/900-second allocation models `$0.0125` compute; two KVS reads add `$0.00001`, and up to 2 MiB transfer adds about `$0.000098`, for an estimated **$0.0127** standard-rate charge under the stated envelope. This is not a guaranteed total charge or enforced cap: the account tariff is unknown, and metadata transfer, build, retained storage or other account usage may add cost. The owner approved one build/run while acknowledging this estimate and uncertainty; no additional numeric spend ceiling was required by the TID controls. See [Apify pricing](https://apify.com/pricing) and [Actor usage and resources](https://docs.apify.com/actors/running/usage-and-resources).
+
+**Execution result (2026-10-06):** Build `jop1JEffyaJM2tiNR` / `0.7.1` succeeded. The single run `hr2WzjPcLnZgHQYmZ` used that exact build with configured 256 MiB and 900 seconds; it ran on Node.js `v20.20.2` (Linux x64), completed in 3.252 seconds and reported final run usage of `$0.00009530627192060154`. One source-store metadata request took 64 ms and returned HTTP 403, API type `insufficient-permissions`, class `ApifyApiError`. The Actor exited 1 and the platform status was `FAILED`. The fixed-record request was not attempted; there were zero dataset writes and the platform reported zero KVS reads. The platform reported one KVS write for the run's default store; the diagnostic source contains no KVS write call. No body or secret was retained.
+
+**Classification and stop:** B2-S1 is **Inconclusive** for the single-record witness question and **On Hold**. The observed 403 establishes that the current Actor identity could not inspect B1 store metadata. It does not establish that the store or record is absent, that B2-D1 had the same cause, that publisher access failed, or that extraction quality is inadequate. Stop here: no permission change, second source request, corrective run, B2 resume or B3 is authorized. The overall Spike conclusion remains `Pending`.
+
+**Next boundary:** Active experimentation stops here. If the owner wants to continue, the next authorized work is preparation only of a separately scoped permission/access investigation design for review. This does not authorize a permission or credential change, a new source-store request, a build, or another hosted run.
+
+**Retained evidence:** `docs/changes/41/experiments/b2-s1/b2-s1-approval.json`, `b2-s1-build-metadata.json`, `b2-s1-run-metadata.json`, `b2-s1-run-log.txt` and `b2-s1-results.json`. The run metadata is a sanitized selection; signed storage URLs, URL-signing keys, user identifiers and unrelated Actor history were excluded.
 
 ## 6. Supported Technical Specification
 
@@ -201,12 +210,16 @@ For every experiment record:
 **Spike state:** `Open`  
 **Area A:** `Supported` — A4 resolved 100/100 sample rows.
 
-**Area B:** `Unresolved` — B1 passed the access gate; B2-D1 stopped at source-store opening before processing any cached HTML.
+**Area B:** `Unresolved / On Hold` — B1 retained 53 usable HTML responses. B2-D1 stopped before processing cached HTML with an unknown cause. The separately approved B2-S1 run received HTTP 403 `insufficient-permissions` on its one metadata request to the B1 source store; it made no record read. Both D1 and S1 run approvals are exhausted. This establishes denial of that request only, not whether the store or record exists, whether the cached body is readable, or whether extraction can meet its target.
 
 **Spike conclusion:** `Pending`; neither downstream capability is unblocked.
-**Required next action:** `Review the post-run Experiment Viability Checkpoint below; no further experiment is authorized.`
+**Required next action:** `Keep the Spike on hold. The owner may authorize preparation only of a separately scoped permission/access investigation design, or leave the Spike on hold. No new probe, access grant, credential change, build or run is authorized by this record.`
 
-**Pre-run checkpoint note:** The following checkpoint records the context and decision that authorized B2-D1. Its approval was exercised once; the fresh post-run checkpoint follows it.
+**Historical checkpoint note:** The following checkpoint records the 2026-10-05 B2-D1 decision and is retained as history. Its single-run approval was exercised and exhausted. It was superseded by the 2026-10-06 B2-S1 approval and result, recorded in the current post-S1 boundary below. No approval in the historical checkpoint authorizes additional work.
+
+## Historical checkpoint: B2-D1 post-run (superseded)
+
+The checkpoint below preserves the owner context and decision state immediately after B2-D1 on 2026-10-05. Its evidence and approval remain historical; the checkpoint's decision request and next-step language are superseded by the current post-S1 boundary at the end of this file.
 
 ## Product and Issue context
 
@@ -276,6 +289,27 @@ The original product question remains unchanged, but the approved bounded sequen
 
 Stop active experimentation at this evidence boundary, keep the overall Spike conclusion `Pending`, and keep the full-text downstream Issue blocked. Do not run the alternate parser because extraction quality was never measured. Do not revise the TID without a supported next experiment or change product/architecture constraints because no such boundary was demonstrated. A new TID can be considered only if the owner separately requests more investigation with a fresh, bounded question and approval.
 
-## Decision requested
+## Historical decision requested (superseded)
 
-Confirm that the Spike remains paused at this boundary with publisher resolution supported for the tested sample and full-text viability unresolved; or direct preparation of a separate TID for a newly scoped investigation. This checkpoint authorizes no further build, run, correction, parser change or access test.
+At the time this checkpoint was written, the decision was whether to remain paused or prepare a separate TID. B2-S1 was later separately approved and executed once. This historical checkpoint does not authorize any additional build, run, correction, parser change or access test.
+
+## Current post-S1 boundary and owner decision (2026-10-06)
+
+### Issue context
+
+Issue #41 asks whether the hosted Node.js 20 Apify Actor can resolve at least 95 of 100 representative Google News links to publisher URLs and produce readable article text for at least 50 of those 100 rows. The publisher-link feature (#4) and optional full-text feature (#5) remain blocked pending a supported Spike conclusion and reassessment. The product must retain the original Google News URL, isolate row failures, and remain lightweight and HTTP-first.
+
+### Current evidence
+
+- A4 resolved 100/100 rows to valid non-Google publisher URLs in the fixed sample, supporting only the tested sample.
+- B1 retained 53 usable HTML responses, enough to attempt the 50/100 extraction target. Its 29 challenge-page exclusions remain a text heuristic, not confirmed denials.
+- B2-D1 did not process cached HTML; its underlying cause remains unknown. Its prior-run source-store opening failure does not establish the cause of S1's later denial.
+- The one approved B2-S1 run used the existing hosted Actor identity and attempted one metadata request to the B1 source KVS. That request returned HTTP 403 `insufficient-permissions`; the fixed record request was not attempted. No HTML was read and no extraction outcome was produced. The run failed visibly with exit code 1. See `experiments/b2-s1/b2-s1-run-metadata.json`, `b2-s1-run-log.txt`, and `b2-s1-results.json`.
+
+### Interpretation and stop condition
+
+The S1 result supports only that this metadata request was denied for the current hosted identity. It does not show that the store or record is missing, that the cached body is unreadable, that publisher access failed, or that extraction quality is insufficient. S1's one-run approval is exhausted. Area B remains inconclusive, the overall Spike conclusion remains `Pending`, and no B3 parser experiment is justified.
+
+### Recommendation and decision requested
+
+Keep the Spike on hold. The owner may authorize preparation only of a separately scoped permission/access investigation design, or keep the Spike on hold without further work. Any future design must define its own bounded question and evidence requirements. This record authorizes no new live probe, permission/access grant, credential change, build, run, extraction work or continuation of B2. Publisher resolution remains supported for the tested sample; full-text viability remains unresolved.

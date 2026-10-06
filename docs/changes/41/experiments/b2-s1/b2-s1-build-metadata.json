@@ -1,0 +1,24 @@
+{
+  "experiment": "B2-S1",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "actorVersion": "0.7",
+  "buildTag": "issue41-b2-s1",
+  "buildId": "jop1JEffyaJM2tiNR",
+  "buildNumber": "0.7.1",
+  "buildStatus": "SUCCEEDED",
+  "buildStartedAtUtc": "2026-10-06T06:12:07.683Z",
+  "buildFinishedAtUtc": "2026-10-06T06:12:22.817Z",
+  "runtimeBase": "apify/actor-node:20",
+  "pinnedPackageSet": {
+    "apify": "3.7.2",
+    "@mozilla/readability": "0.6.0",
+    "jsdom": "29.0.1"
+  },
+  "sourceSha256": {
+    "main.mjs": "0736ABF6A187DC27A122D5C18D51B7A97686C20FC23709F78323B443A0A56256",
+    "package-lock.json": "0F8D6F664A35984B1A15A9153CEB6B4A58726E8B44AC61F27256AB7722A85734",
+    ".actor/actor.json": "CC23E802E35EE49F577CF862509D3A069B817D571B43A1F2CA11A4F12856EE53"
+  },
+  "payloadBytes": 110961,
+  "buildNote": "One private build. The hosted build output reported a deprecated transitive lodash.isequal package warning inherited from the unchanged pinned package lock."
+}

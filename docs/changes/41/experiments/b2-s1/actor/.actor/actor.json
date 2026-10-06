@@ -1,0 +1,21 @@
+{
+  "actorSpecification": 1,
+  "name": "issue41-google-news-a1-access-probe-20261004",
+  "title": "Issue 41 B2-S1 Cached Body Access Witness",
+  "description": "One-record read-only storage access witness for Technical Spike #41.",
+  "version": "0.7",
+  "buildTag": "issue41-b2-s1",
+  "defaultMemoryMbytes": 256,
+  "minMemoryMbytes": 256,
+  "maxMemoryMbytes": 256,
+  "input": {
+    "title": "B2-S1 diagnostic input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {}
+  },
+  "defaultRunOptions": {
+    "timeoutSecs": 900,
+    "memoryMbytes": 256
+  }
+}

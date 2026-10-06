@@ -1,0 +1,9 @@
+2026-10-06T06:12:53.066Z ACTOR: Pulling container image of build jop1JEffyaJM2tiNR from registry.
+2026-10-06T06:12:55.046Z ACTOR: Creating container.
+2026-10-06T06:12:55.327Z ACTOR: Starting container.
+2026-10-06T06:12:55.328Z ACTOR: Running under "LIMITED_PERMISSIONS".
+2026-10-06T06:12:55.633Z > issue41-google-news-b2-diagnostic-20261005@0.0.2 start
+2026-10-06T06:12:55.633Z > node main.mjs
+2026-10-06T06:12:56.237Z INFO  System info {"apifyVersion":"3.7.2","apifyClientVersion":"2.25.0","crawleeVersion":"3.18.2","osType":"Linux","nodeVersion":"v20.20.2"}
+2026-10-06T06:12:56.244Z B2-S1 {"stage":"store_metadata_read_start","sourceStoreId":"C1KYtogOgGpkRyF2H"}
+2026-10-06T06:12:56.280Z B2-S1 {"stage":"store_metadata_read","experiment":"B2-S1","outcome":"access_denied","actorId":"JIogcgdHyCqAMHQ1P","runId":"hr2WzjPcLnZgHQYmZ","runtime":{"nodeVersion":"v20.20.2","platform":"linux","architecture":"x64","memoryMbytes":256},"sourceRunId":"g7ndwu3G1M4orPt2h","sourceStoreId":"C1KYtogOgGpkRyF2H","sourceReadRequestCount":1,"requestTimings":[{"operation":"store_metadata_get","elapsedMs":64}],"requestElapsedTotalMs":64,"clientTimeoutSecsPerRequest":5,"requestElapsedLimitMs":10000,"witness":{"rowId":"q1-gb-01","key":"B1_HTML_q1-gb-01","expectedBytes":435577,"expectedSha256":"6f8d86bc1f95de5b118a55e4d4d89c39cf38a94c3ca9f5319e135dd357841dd9","observedBytes":null,"observedSha256":null,"contentType":null},"apiError":{"errorClass":"ApifyApiError","errorCode":null,"apiType":"insufficient-permissions","httpStatus":403},"elapsedMs":78}

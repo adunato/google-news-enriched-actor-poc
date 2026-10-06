@@ -334,11 +334,11 @@ Run B2-D1 exactly once on the existing private Node.js 20 Actor under the origin
 
 If the run produces valid B2 evidence after verified cached HTML was meaningfully processed, classify the B2 result against the existing 50/100 target and resume the original TID route after validation. B3 is eligible only when that valid evidence demonstrates an extraction-quality shortfall on accessible HTML. Startup, source-store, cache-integrity, transport or other processing errors do not establish extraction quality, even if represented by 100 row-level failures; record them and stop. If the run does not produce valid B2 evidence or the cause remains unclear, record the boundary and stop. No further B2 diagnostic, unchanged rerun, corrective rerun, or B3 run is authorized by this amendment.
 
-### Proposed amendment — B2-S1 single-record cached-body access witness
+### Approved amendment — B2-S1 single-record cached-body access witness
 
 **Status and authority**
 
-**Preparation approved for review only; proposed amendment and execution are not approved.** The existing approval for the bounded B2 sequence and the completed B2-D1 amendment does not authorize B2-S1. A separate explicit owner approval is required for exactly one private diagnostic build and hosted run under the resource and request envelope below; that approval must acknowledge the modeled standard-rate charge and its uncertainty. No live operation is part of preparing this proposal.
+**Owner-approved 2026-10-06 for exactly one private diagnostic build and hosted run.** This approval is separate from the original bounded B2 sequence and the completed/exhausted B2-D1 amendment. It covers only the resource and request envelope below and acknowledges the modeled standard-rate charge and its uncertainty. No repeat, repair, additional key, extraction, B2 resume or B3 run is authorized by this amendment.
 
 **Question and rationale**
 
@@ -350,9 +350,9 @@ Re-read the retained B1 result, B1 key manifest and frozen B2 fixture locally. C
 
 The local preparation completed on 2026-10-05 with no B1/B2 mapping or expected body-metadata mismatch: the B2 fixture hash is `8bb9facc14fd7a5755c9337f7d9864ba6fb7958a44d6ae654b8e17ee84f63c8c`; the B1 source run/store IDs agree (`g7ndwu3G1M4orPt2h` / `C1KYtogOgGpkRyF2H`); all 100 row IDs are unique; and all 53 eligible row references match their B1 results. The deterministic witness is row `q1-gb-01`, key `B1_HTML_q1-gb-01`, expected body length `435577` bytes and SHA-256 `6f8d86bc1f95de5b118a55e4d4d89c39cf38a94c3ca9f5319e135dd357841dd9`. B1's manifest records a smaller storage size (`51179` bytes) for that key; this is not the response-body length and must not be compared as if it were raw body bytes. No live API or Actor call was made for S0.
 
-**S1 — proposed single private execution**
+**S1 — approved single private execution**
 
-Only after separate explicit owner approval, build and run the existing private Actor identity once, using the same Node.js 20 runtime and no package changes. Use `Actor.newClient({ maxRetries: 0, timeoutSecs: 5 })`. First call `.keyValueStore(sourceStoreId).get()` once. If metadata confirms the store exists, call `.getRecord(fixedKey, { buffer: true })` exactly once for the S0 witness. Treat `record.value` as the returned Buffer; compare `record.value.length` and the SHA-256 computed over `record.value` to the B1-recorded values, and retain the returned content type when present. Apply a 2 MiB maximum body bound. Configure and verify the actual run metadata at 256 MiB and 900 seconds; the invocation must pass an explicit 900-second timeout rather than rely on the platform default. Use an explicit `Actor.exit({ exitCode })` so a failed observation cannot be reported as a successful run.
+The owner approved on 2026-10-06 exactly one build and hosted run of existing private Actor `JIogcgdHyCqAMHQ1P`, using the same Node.js 20 runtime and unchanged pinned packages. Use `Actor.newClient({ maxRetries: 0, timeoutSecs: 5 })`. First call `.keyValueStore(sourceStoreId).get()` once. If metadata confirms the store exists, call `.getRecord(fixedKey, { buffer: true })` exactly once for the S0 witness. Treat `record.value` as the returned Buffer; compare `record.value.length` and the SHA-256 computed over `record.value` to the B1-recorded values, and retain the returned content type when present. Apply a 2 MiB maximum body bound. Configure and verify the actual run metadata at 256 MiB and 900 seconds; the invocation must pass an explicit 900-second timeout rather than rely on the platform default. Use an explicit `Actor.exit({ exitCode })` so a failed observation cannot be reported as a successful run.
 
 The S1 ceiling is at most two read-only KVS API requests, zero retries, five seconds per request and ten seconds total client-request time. Perform no `Actor.openKeyValueStore`, `getOrCreate`, store creation, publisher or Google News fetch, extraction, dataset write, new credential/permission request, package/dependency change or security harness. Do not retain or log the body, credentials, signed URLs, request headers or response contents. Retain only run identity/status, actual resource settings, request counts/timing, sanitized outcome/error class/status, and the fixed row/key plus expected and observed body length/SHA-256 and returned content type when present, needed to judge the witness.
 
@@ -360,11 +360,15 @@ The S1 ceiling is at most two read-only KVS API requests, zero retries, five sec
 
 Using Apify's public Free/Starter rates checked 2026-10-05, the maximum 256 MiB × 900 second allocation is `0.0625 CU`; at `$0.20/CU`, that is `$0.0125` compute. Two key-value reads at `$0.005/1,000` add `$0.00001`. A response transfer of up to 2 MiB at `$0.05/GB` internal transfer is approximately `$0.000098`. The modeled standard-rate charge is approximately **$0.0127** for the stated run and request envelope. Public rates and resource-unit behavior are described at [Apify pricing](https://apify.com/pricing) and [Actor usage and resources](https://docs.apify.com/actors/running/usage-and-resources).
 
-This is an estimate, not a guaranteed total charge or enforced cap. The account's actual tariff is unknown, and metadata transfer, build, storage retention or other account-specific usage may add charges. The separate owner approval must acknowledge the modeled approximately `$0.0127` standard-rate charge and these uncertainties before S1 can be added to the approved execution sequence; no additional numeric spend ceiling is required by the TID controls.
+This is an estimate, not a guaranteed total charge or enforced cap. The account's actual tariff is unknown, and metadata transfer, build, storage retention or other account-specific usage may add charges. The owner approved the one-run envelope while acknowledging the modeled approximately `$0.0127` standard-rate charge and these uncertainties; no additional numeric spend ceiling is required by the TID controls.
 
 **Outcomes and stop rule**
 
-Classify exactly one terminal outcome: `store_absent`; `access_denied` (record safe HTTP status if available); `metadata_error`; `record_missing`; `body_over_limit`; `hash_mismatch`; or `read_witness` (byte length and SHA-256 match). Stop after this S1 observation for every outcome. If local S0 fails, make no hosted request. If S1 returns `read_witness`, it proves access only to this one record at that time; it does not prove that all 53 records are accessible, that B2 can resume, that article text is readable, or that the 50/100 target is feasible. If S1 fails, the cause remains bounded to the observed outcome; do not repair, retry, probe another key, process the cache, run B2/B3, or add a further step without a later approved design decision.
+Classify exactly one terminal outcome: `actor_startup_error`; `store_absent`; `access_denied` (record safe HTTP status if available); `metadata_error`; `record_missing`; `record_error`; `request_budget_stop`; `request_budget_exceeded`; `body_over_limit`; `hash_mismatch`; `diagnostic_error`; or `read_witness` (expected byte length and SHA-256 match; record returned content type when available). Stop after this S1 observation for every outcome. If local S0 fails, make no hosted request. If S1 returns `read_witness`, it proves access only to this one record at that time; it does not prove that all 53 records are accessible, that B2 can resume, that article text is readable, or that the 50/100 target is feasible. If S1 fails, the cause remains bounded to the observed outcome; do not repair, retry, probe another key, process the cache, run B2/B3, or add a further step without a later approved design decision.
+
+**Execution outcome (2026-10-06)**
+
+The single approved build and run completed. The first source-store metadata request returned `access_denied` with HTTP 403 and sanitized API type `insufficient-permissions`; the fixed-record request was not made. Classify B2-S1 **Inconclusive** for the record-witness question and stop. This observed denial is not evidence that the store or record is absent, does not establish whether B2-D1 failed for the same reason, and does not measure extraction quality. The one-run authorization is exhausted; no permission change, retry, B2 resume, B3 or corrective run is authorized. Detailed sanitized evidence is retained under `docs/changes/41/experiments/b2-s1/`.
 
 ---
 
@@ -421,16 +425,16 @@ After the final Spike evidence is integrated, Issues #4 and #5 must be reassesse
 
 ## 7. Open design questions
 
-The approved investigation sequence has no outstanding design questions. The separate B2-S1 proposal above is unapproved and requires owner review and explicit approval acknowledging its modeled charge and cost uncertainties before it can become part of an execution sequence.
+The approved investigation sequence has no outstanding design questions. B2-S1 is a separately approved, one-run diagnostic amendment; it does not authorize further experimentation or change the extraction acceptance target.
 
 ## 8. Review and approval
 
-**Decision:** `Approve` the original bounded experiment sequence only.
+**Decision:** `Approve` the original bounded experiment sequence and the separately recorded B2-D1 and B2-S1 amendments within their stated limits.
 
 **Rationale:** The design directly covers the two blocked product capabilities, separates access from extraction, defines all bounded experiments and conditional routing, and preserves the approved lightweight architecture.
 
-**Required follow-up before execution:** None for the original approved sequence; the proposed B2-S1 amendment requires a separate explicit owner approval before execution.
+**Required follow-up before execution:** None. The single B2-S1 authorization has been exercised and is exhausted regardless of outcome.
 
-This approval authorises only the original bounded experiment sequence and its conditional transitions, together with the separately recorded B2-D1 amendment for its one completed and exhausted run. A separate approval is not required for each experiment that remains within that approved scope. The B2-S1 preparation is approved for review only; B2-S1 execution remains proposed and requires separate explicit owner approval acknowledging its fixed resource/request envelope, modeled standard-rate charge and uncertainty.
+The original approval authorises only the bounded experiment sequence and its conditional transitions. B2-D1 was separately approved for one run on 2026-10-05 and is complete/exhausted. B2-S1 was separately approved on 2026-10-06 for exactly one private build and hosted run under its fixed resource/request envelope, acknowledging the modeled standard-rate charge and uncertainty. That run is complete and the authorization is exhausted; no further diagnostic or corrective run is authorized.
 
-**Owner approval:** Original bounded sequence approved — 2026-10-04. Amendment B2-D1 approved — 2026-10-05; its single changed private candidate build/run is complete and exhausted. Proposed amendment B2-S1 is not approved and is not covered by either prior approval; it requires separate explicit approval acknowledging the modeled standard-rate charge and its uncertainty before any execution.
+**Owner approval:** Original bounded sequence approved — 2026-10-04. Amendment B2-D1 approved — 2026-10-05; its single changed private candidate build/run is complete and exhausted. Amendment B2-S1 approved — 2026-10-06 for exactly one private build and hosted run under its resource/request envelope and acknowledged modeled cost uncertainty; run `hr2WzjPcLnZgHQYmZ` is complete and the authorization is exhausted.

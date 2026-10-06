@@ -1,0 +1,40 @@
+{
+  "experiment": "B2-S1",
+  "status": "approved_single_run_exercised_and_exhausted",
+  "approvedAtUtcDate": "2026-10-06",
+  "approvalScope": "Exactly one private diagnostic build and hosted run using the existing Actor identity; stop after the fixed witness or first failure.",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "runtime": "Node.js 20",
+  "memoryMbytes": 256,
+  "timeoutSecs": 900,
+  "client": {
+    "maxRetries": 0,
+    "timeoutSecs": 5,
+    "maximumReadOnlySourceStoreRequests": 2,
+    "maximumCombinedRequestElapsedMs": 10000
+  },
+  "sourceRunId": "g7ndwu3G1M4orPt2h",
+  "sourceStoreId": "C1KYtogOgGpkRyF2H",
+  "witnessRowId": "q1-gb-01",
+  "witnessKey": "B1_HTML_q1-gb-01",
+  "expectedBytes": 435577,
+  "expectedSha256": "6f8d86bc1f95de5b118a55e4d4d89c39cf38a94c3ca9f5319e135dd357841dd9",
+  "maximumBodyBytes": 2097152,
+  "modeledStandardRateChargeUsd": 0.0127,
+  "costAcknowledgement": "Owner accepted the modeled approximately $0.0127 standard-rate charge and uncertainty; actual tariff, build, metadata transfer, retained storage and other usage can change the total. This is not a guaranteed cap.",
+  "execution": {
+    "buildId": "jop1JEffyaJM2tiNR",
+    "buildNumber": "0.7.1",
+    "runId": "hr2WzjPcLnZgHQYmZ",
+    "outcome": "access_denied",
+    "authorizationExhausted": true
+  },
+  "forbidden": [
+    "publisher_or_google_news_fetch",
+    "dataset_write",
+    "source_store_write_or_creation",
+    "extraction",
+    "retry_or_second_run",
+    "new_dependency_or_credential"
+  ]
+}
