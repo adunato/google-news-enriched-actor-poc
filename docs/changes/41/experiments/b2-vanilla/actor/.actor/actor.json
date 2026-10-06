@@ -1,0 +1,16 @@
+{
+  "actorSpecification": 1,
+  "name": "issue41-google-news-b2-vanilla-20261006",
+  "title": "Issue 41 B2 Vanilla Flow",
+  "description": "Private Issue 41 bounded same-run publisher fetch, full-text extraction and dataset-output experiment.",
+  "version": "0.8",
+  "buildTag": "issue41-b2-vanilla",
+  "dockerfile": "Dockerfile",
+  "input": "INPUT_SCHEMA.json",
+  "defaultRunOptions": {
+    "timeoutSecs": 900,
+    "memoryMbytes": 256
+  },
+  "minMemoryMbytes": 256,
+  "maxMemoryMbytes": 256
+}

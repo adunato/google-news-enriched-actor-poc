@@ -1,0 +1,69 @@
+{
+  "runId": "ydot4zQVlwhb5BFmz",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "buildId": "s7Np4qeIg5sXxAdti",
+  "buildNumber": "0.8.1",
+  "status": "SUCCEEDED",
+  "exitCode": 0,
+  "startedAt": "2026-10-06T10:19:18.420Z",
+  "finishedAt": "2026-10-06T10:19:24.332Z",
+  "durationMs": 5776,
+  "runtimeStats": {
+    "runTimeSecs": 5.776,
+    "memoryAverageBytes": 57901819.57832043,
+    "memoryMaxBytes": 126849024,
+    "computeUnits": 0.0004011111111111111,
+    "netRxBytes": 196846,
+    "netTxBytes": 8952
+  },
+  "resources": {
+    "timeoutSecs": 900,
+    "memoryMbytes": 256,
+    "maxTotalChargeUsdSetByUser": false
+  },
+  "usageTotalUsd": 0.00015115540744198693,
+  "usage": {
+    "ACTOR_COMPUTE_UNITS": 0.0004011111111111111,
+    "DATASET_READS": 0,
+    "DATASET_WRITES": 3,
+    "KEY_VALUE_STORE_READS": 1,
+    "KEY_VALUE_STORE_WRITES": 1,
+    "KEY_VALUE_STORE_LISTS": 0,
+    "REQUEST_QUEUE_READS": 0,
+    "REQUEST_QUEUE_WRITES": 0,
+    "DATA_TRANSFER_INTERNAL_GBYTES": 0.00001866370439529419,
+    "DATA_TRANSFER_EXTERNAL_GBYTES": 0,
+    "PROXY_RESIDENTIAL_TRANSFER_GBYTES": 0,
+    "PROXY_SERPS": 0,
+    "PROXY_UNBLOCKER_UNITS": 0
+  },
+  "usageUsd": {
+    "ACTOR_COMPUTE_UNITS": 0.00008022222222222222,
+    "DATASET_READS": 0,
+    "DATASET_WRITES": 0.000015000000000000002,
+    "KEY_VALUE_STORE_READS": 0.000005,
+    "KEY_VALUE_STORE_WRITES": 0.00005,
+    "KEY_VALUE_STORE_LISTS": 0,
+    "REQUEST_QUEUE_READS": 0,
+    "REQUEST_QUEUE_WRITES": 0,
+    "DATA_TRANSFER_INTERNAL_GBYTES": 9.331852197647095e-7,
+    "DATA_TRANSFER_EXTERNAL_GBYTES": 0,
+    "PROXY_RESIDENTIAL_TRANSFER_GBYTES": 0,
+    "PROXY_SERPS": 0,
+    "PROXY_UNBLOCKER_UNITS": 0
+  },
+  "defaultDatasetId": "JbO5AUmkA6FxO5sHA",
+  "datasetItemCount": 3,
+  "runtime": {
+    "nodeVersion": "v20.20.2",
+    "apifyVersion": "3.7.2"
+  },
+  "sourceSha256": {
+    "actor/main.mjs": "3196bd00171540f95b2ec140c6fa3dae5e5e0240444f20f60ee31833b930e76e",
+    "actor/dom-content-type.mjs": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+    "actor/package.json": "0a284a0555d300b0cc2df89e05bce1155210afeedfdc6f97e63fdcc2a9043194",
+    "actor/package-lock.json": "ae27e007cac19131f53050c9be4688b6270f214ae1203c38ea8280f5533eed7a",
+    "actor/.actor/INPUT_SCHEMA.json": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833"
+  },
+  "inputSha256": "ff90a06c2e45bb2ef3cd2ce06e3d8ba6b7993b106ed5b13897ab10992bf83128"
+}

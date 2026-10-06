@@ -243,9 +243,9 @@ This separation is achieved through normal per-row evidence in one Actor run; it
 | Order | Experiment | Purpose | Run when | Next if successful | Next if unsuccessful |
 | --- | --- | --- | --- | --- | --- |
 | 1 | B1 — publisher-page access baseline | Historical live evidence that the sample can expose enough usable publisher HTML | **Completed** | Supports B2 | Historical only; do not reopen its cache |
-| 2 | B2 smoke test — vanilla end-to-end flow | Prove that the normal hosted fetch → extract → row-write path executes and identify the actual failing business stage if it does not | **Current next action** | Run B2 acceptance sample | Diagnose only the observed normal-flow stage; stop if continuing requires special harnessing |
-| 3 | B2 acceptance sample — vanilla end-to-end flow | Measure the actual >=50/100 full-text product target | **Only after the smoke test shows the normal flow executes correctly** | Area B feasible | Route by observed fetch vs extraction evidence |
-| 4 | B3 — one alternative generic Node-native extractor | Determine whether a measured extraction-quality shortfall is specific to the primary parser | **Only if the B2 acceptance run fetches enough HTML but misses the target because extraction quality is the demonstrated blocker** | Area B feasible | Stop / return extraction or architecture limitation |
+| 2 | B2 smoke test — vanilla end-to-end flow | Prove that the normal hosted fetch → extract → row-write path executes and identify the actual failing business stage if it does not | **Completed 2026-10-06; gate passed independent review** | B2 acceptance sample (completed) | Diagnose only the observed normal-flow stage; stop if continuing requires special harnessing |
+| 3 | B2 acceptance sample — vanilla end-to-end flow | Measure the actual >=50/100 full-text product target | **Completed 2026-10-06; Inconclusive / incomplete partial run** | Area B feasible only after a completed run and independent >=50/100 readable-text review | Current Hold; proposed B2-M1 requires separate explicit owner approval |
+| 4 | B3 — one alternative generic Node-native extractor | Determine whether a measured extraction-quality shortfall is specific to the primary parser | **Not eligible from current partial evidence** | Area B feasible | Stop / return extraction or architecture limitation |
 
 ### B2 smoke test — vanilla hosted end-to-end flow
 
@@ -257,6 +257,8 @@ Can the normal hosted Actor perform the same operation the product is expected t
 
 Use a very small deterministic set of publisher URLs from the existing representative sample that B1 previously classified as usable HTML. Use only the publisher URLs and row provenance from retained repository evidence; **do not read the old B1 HTML bodies or B1 KVS at runtime**.
 
+The smoke sample is the first three B1-eligible rows in the retained sample order: `q1-gb-01`, `q1-gb-02` and `q1-gb-05`. The acceptance sample is the complete frozen 100-row A4 sample, with every original occurrence retained and no deduplication. Both runs use the same ordinary fetch/extraction/output implementation and Node.js 20 Actor identity.
+
 For each smoke-test row, in one normal Actor execution:
 
 1. start row processing;
@@ -264,6 +266,8 @@ For each smoke-test row, in one normal Actor execution:
 3. if eligible HTML is returned, immediately run the existing structured-data / Mozilla Readability extraction path on that in-memory response;
 4. emit the row-level fetch status, extraction status, word count when applicable and any safe failure class;
 5. write the row to the normal dataset.
+
+**Common bounds:** Run four rows concurrently. Each row's complete HTTP redirect/fetch/body-read chain has a 10-second timeout, a 2 MiB response-body maximum and at most five redirects after its initial request (six HTTP GETs maximum per row). The three-row smoke therefore makes at most 18 publisher GETs; the 100-row acceptance run makes at most 600. Allocate 256 MiB and explicitly set a 900-second Actor timeout for each hosted run. Do not request Google News or other sources during B2. Each run records actual platform usage. A full 900-second allocation models about 0.0625 compute units (about $0.0125 at the Free/Starter $0.20/CU standard rate shown in [Apify pricing](https://apify.com/pricing)), but this is not an all-in cap or guaranteed charge because account rates, bandwidth, build, storage and API costs may vary.
 
 Use ordinary stage logging only: row start, fetch result, extraction result and row-write result. Do not introduce a diagnostic subsystem.
 
@@ -388,16 +392,47 @@ After the final Spike evidence is integrated, Issues #4 and #5 must be reassesse
 
 ## 7. Open design questions
 
-The approved investigation sequence has no outstanding design questions. B2-S1 is a separately approved, one-run diagnostic amendment; it does not authorize further experimentation or change the extraction acceptance target.
+The current vanilla Area B question and conditional route were approved and have been executed. The 100-row acceptance run ended after partial processing and did not establish a completed acceptance result or its termination cause. The older B2-D1, B2-S1 and B2-P1 cache/permission diagnostics are superseded and their individual authorizations are exhausted; they do not govern the current B2 candidate or change the extraction acceptance target. A proposed single memory-only follow-up, B2-M1, is recorded below and is **not approved**.
 
 ## 8. Review and approval
 
-**Decision:** `Approve` the original bounded experiment sequence and the separately recorded B2-D1 and B2-S1 amendments within their stated limits.
+**Decision:** `Approve` the original bounded experiment sequence and its conditional transitions. The owner separately approved the 2026-10-06 Area B mainstream-flow reset and the current B2 smoke → conditional 100-row acceptance route within the bounds above.
 
 **Rationale:** The design directly covers the two blocked product capabilities, separates access from extraction, defines all bounded experiments and conditional routing, and preserves the approved lightweight architecture.
 
-**Required follow-up before execution:** None. The single B2-S1 authorization has been exercised and is exhausted regardless of outcome.
+**Required follow-up before execution:** None for the original Area B route; its smoke and acceptance steps have been run. B2-M1 below is a separate, proposed amendment and has no execution authority unless the owner explicitly approves it.
 
-The original approval authorises only the bounded experiment sequence and its conditional transitions. B2-D1 was separately approved for one run on 2026-10-05 and is complete/exhausted. B2-S1 was separately approved on 2026-10-06 for exactly one private build and hosted run under its fixed resource/request envelope, acknowledging the modeled standard-rate charge and uncertainty. That run is complete and the authorization is exhausted; no further diagnostic or corrective run is authorized.
+The original approval authorises only the bounded experiment sequence and its conditional transitions. B2-D1, B2-S1 and B2-P1 were separately approved under superseded diagnostic designs and are complete/exhausted. The current Area B reset replaces those cache-replay routes with ordinary same-run publisher fetch, in-memory extraction and default-dataset output. No prior-run KVS access, permissions work, alternate credentials, special harness or B2-D1 diagnostic instrumentation is part of the current route.
 
-**Owner approval:** Original bounded sequence approved — 2026-10-04. Amendment B2-D1 approved — 2026-10-05; its single changed private candidate build/run is complete and exhausted. Amendment B2-S1 approved — 2026-10-06 for exactly one private build and hosted run under its resource/request envelope and acknowledged modeled cost uncertainty; run `hr2WzjPcLnZgHQYmZ` is complete and the authorization is exhausted.
+**Owner approval:** Original bounded sequence approved — 2026-10-04. B2-D1 approved — 2026-10-05 and exhausted. B2-S1 and B2-P1 approved — 2026-10-06 and exhausted. The current vanilla Area B reset and B2 smoke → conditional 100-row acceptance route were approved — 2026-10-06 under the bounds recorded in Area B.
+
+## Proposed amendment B2-M1 — one higher-memory acceptance run (2026-10-06; NOT APPROVED)
+
+**Status:** Preparation only. This amendment is proposed and awaits explicit owner approval. It changes no existing approval or experiment evidence and authorizes no hosted action while pending.
+
+### Issue and investigation context
+
+Issue #41 asks whether the approved Node.js 20 Apify Actor can resolve at least 95/100 representative Google News rows to publisher URLs and produce readable article text for at least 50/100 rows. A4 supports the publisher-resolution target on the fixed sample. The Area B vanilla smoke gate passed independent review. The one approved 100-row vanilla acceptance run used build `s7Np4qeIg5sXxAdti` and the frozen 100-row input (`100` unique row IDs, `95` unique publisher URLs, five repeated URL occurrences retained), but ended `FAILED` after partial processing: 10 dataset rows and 11 fetch requests were logged before `SIGKILL`. The failure cause is undetermined; proximity to 256 MiB is observed evidence, not a confirmed out-of-memory diagnosis. The run did not establish a complete 50/100 result and does not make B3 eligible. Area B and the overall Spike remain on Hold/Pending.
+
+### Question and hypothesis
+
+Would running the unchanged vanilla 100-row acceptance candidate with 512 MiB allow the normal fetch → in-memory extraction → default-dataset flow to complete and produce reviewable acceptance evidence? The memory-limit hypothesis is plausible but unconfirmed. This experiment changes only the run memory allocation; it does not add diagnostics or alter the tested application flow.
+
+### Proposed bounded method
+
+If and only if the owner explicitly approves B2-M1, perform exactly **one** hosted run of the existing private Actor `JIogcgdHyCqAMHQ1P` using the already-built exact build `s7Np4qeIg5sXxAdti` / version `0.8.1` / tag `issue41-b2-vanilla`. Do not rebuild or change source, dependencies, input, actor identity, or runtime. Use the existing frozen acceptance fixture with SHA-256 `ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01`; it contains all 100 original row occurrences, 100 unique row IDs, and 95 unique publisher URLs.
+
+Change only configured memory from 256 MiB to **512 MiB**. Keep the 900-second Actor timeout, concurrency 4, 10-second per-row HTTP chain timeout, 2 MiB body maximum, five redirects after the initial request (maximum six GETs per row), existing Node.js 20 runtime and pinned parser packages. The run uses ordinary publisher HTTP, same-response extraction and the default dataset; no Google News fetches, prior-run cache/KVS access, new build, new credentials, permission changes, browser, proxy, other runtime, or diagnostic instrumentation.
+
+### Evidence and routing
+
+Retain the exact build/run IDs, frozen input hash, actual configured resources, platform status/exit code, duration, final usage, observed peak memory, total and row-level fetch outcomes/HTTP statuses/request counts, extraction outcomes/methods/word counts/text hashes, dataset completeness, and sanitized stage log. Keep complete article text and HTML out of Git; retain reviewable article text only in the private/ignored hosted dataset. Independently assess text quality against the full 100-row denominator; nonempty output, word count, or a success flag alone does not establish readability.
+
+- If the run completes and at least 50 rows contain coherent readable article text on independent review, Area B is supported for this sample.
+- If it completes but fewer than 50 rows are fetchable as eligible HTML, classify the observed access evidence and stop; do not call the result a final product-feasibility conclusion solely from this run.
+- B3 is eligible only if a completed run provides at least 50 accessible HTML rows and independent evidence shows extraction quality is the remaining blocker, under the existing TID B3 condition.
+- If the run fails or is incomplete, classify B2-M1 as Inconclusive, preserve the failure evidence, and stop. No second run, rebuild, source correction, memory increase, diagnostic expansion, or B3 follows this amendment.
+
+At 512 MiB for the full 900-second allocation, compute is modeled at 0.125 CU / approximately `$0.025` using the previously cited `$0.20/CU` standard rate. This is a compute-only estimate, not a guaranteed total or enforced spend cap; actual account rates, bandwidth, storage, build/API usage and run duration may change total charges. Record actual platform usage.
+
+**Approval request:** The owner may approve or decline exactly the single B2-M1 run described above. Until explicit approval is recorded, the Spike remains on Hold/Pending and no build, run, or other execution is authorized by this proposal.

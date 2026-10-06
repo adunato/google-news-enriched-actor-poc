@@ -1,0 +1,148 @@
+{
+  "title": "Issue 41 B2 vanilla sample input",
+  "description": "Bounded fixed publisher sample used for the Issue 41 smoke and acceptance runs.",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "sampleId": {
+      "title": "Sample type",
+      "description": "Identifies whether this run uses the three-row smoke sample or the full representative sample.",
+      "type": "string",
+      "editor": "select",
+      "enum": ["smoke", "acceptance"]
+    },
+    "source": {
+      "title": "Sample provenance",
+      "description": "Source note for the fixed Issue 41 sample metadata.",
+      "type": "string",
+      "editor": "textfield"
+    },
+    "rowCount": {
+      "title": "Declared row count",
+      "description": "Expected number of rows in the supplied sample.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "uniqueRowIds": {
+      "title": "Declared unique row count",
+      "description": "Expected number of distinct row IDs in the supplied sample.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "rows": {
+      "title": "Resolved sample rows",
+      "description": "Publisher URLs and original Google News row provenance from the retained representative sample.",
+      "type": "array",
+      "editor": "json",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "required": [
+          "rowId",
+          "query",
+          "country",
+          "language",
+          "title",
+          "sourceName",
+          "sourceHost",
+          "googleNewsUrl",
+          "googleNewsUrlHash",
+          "publisherUrl",
+          "publisherHost",
+          "publisherUrlHash",
+          "urlResolved",
+          "urlResolutionStatus"
+        ],
+        "properties": {
+          "rowId": {
+            "title": "Row ID",
+            "description": "Stable row identity from the frozen sample.",
+            "type": "string",
+            "editor": "textfield"
+          },
+          "query": {
+            "title": "Query",
+            "description": "Search query associated with this row.",
+            "type": "string",
+            "editor": "textfield"
+          },
+          "country": {
+            "title": "Country",
+            "description": "Google News edition associated with this row.",
+            "type": "string",
+            "editor": "textfield"
+          },
+          "language": {
+            "title": "Language",
+            "description": "Language associated with this row.",
+            "type": "string",
+            "editor": "textfield"
+          },
+          "title": {
+            "title": "Article title",
+            "description": "Original article title from the retained sample.",
+            "type": "string",
+            "editor": "textfield"
+          },
+          "sourceName": {
+            "title": "Source name",
+            "description": "Publisher source name from the retained sample.",
+            "type": "string",
+            "editor": "textfield"
+          },
+          "sourceHost": {
+            "title": "Source host",
+            "description": "Google News source host from the retained sample.",
+            "type": "string",
+            "editor": "textfield"
+          },
+          "googleNewsUrl": {
+            "title": "Google News URL",
+            "description": "Original Google News URL retained as provenance.",
+            "type": "string",
+            "editor": "textfield"
+          },
+          "googleNewsUrlHash": {
+            "title": "Google News URL hash",
+            "description": "SHA-256 of the original Google News URL.",
+            "type": "string",
+            "editor": "textfield"
+          },
+          "publisherUrl": {
+            "title": "Publisher URL",
+            "description": "Resolved publisher URL fetched by this experiment.",
+            "type": "string",
+            "editor": "textfield"
+          },
+          "publisherHost": {
+            "title": "Publisher host",
+            "description": "Publisher host from the retained resolution result.",
+            "type": "string",
+            "editor": "textfield"
+          },
+          "publisherUrlHash": {
+            "title": "Publisher URL hash",
+            "description": "SHA-256 of the resolved publisher URL.",
+            "type": "string",
+            "editor": "textfield"
+          },
+          "urlResolved": {
+            "title": "URL resolved",
+            "description": "Whether the retained row has a valid publisher destination.",
+            "type": "boolean"
+          },
+          "urlResolutionStatus": {
+            "title": "Resolution status",
+            "description": "Resolution outcome from the retained A4 result.",
+            "type": "string",
+            "editor": "textfield"
+          }
+        }
+      }
+    }
+  },
+  "required": ["sampleId", "source", "rowCount", "uniqueRowIds", "rows"]
+}

@@ -58,17 +58,19 @@ If the normal flow fails, evidence must identify the actual business-flow stage:
 
 **Active route:** `B2 — vanilla hosted fetch → extract → row output`
 
-**Route status:** `Ready to execute new smoke test`
+**Route status:** `The smoke gate passed; the single 100-row acceptance run failed after partial processing. The termination cause is undetermined; Area B is on Hold.`
 
 Area A remains supported. B1 remains useful historical evidence that 53/100 rows were fetchable, but its retained HTML cache is no longer an input to B2.
 
 The previous B2 cache-replay candidate and B2-D1/B2-S1/B2-P1 diagnostics are **Historical / Superseded**. Their evidence remains retained for traceability, but no further work should attempt to solve their cross-run KVS permission behaviour.
 
-The current next step is a small deterministic hosted smoke test using resolved publisher URLs from the representative sample. The Actor must fetch each publisher page live and immediately run extraction on the returned HTML in the same execution. If that normal flow works, proceed to the full 100-row B2 acceptance run.
+The three-row smoke sample (`q1-gb-01`, `q1-gb-02`, `q1-gb-05`) passed independent review, and the one authorized 100-row acceptance run has been executed. It failed after partial processing; no termination cause is established. Area B is on Hold, and the current action is owner review of a separately proposed bounded follow-up. Do not rerun, change resources or begin B3 under the exhausted authorization.
 
 ## 4. Current Experiment Execution
 
-**TID authorisation:** `tid-41-google-news-resolution-full-text — Approved; Area B mainstream-flow reset approved 2026-10-06`
+**TID authorisation:** `tid-41-google-news-resolution-full-text — Approved; Area B mainstream-flow reset and B2 smoke → conditional acceptance route approved 2026-10-06`
+
+The owner approved the current vanilla sequence on 2026-10-06. The approval covers one smoke run and, only if its gate passes, the 100-row acceptance run on the same build. No further owner checkpoint is required between those TID steps. B2-D1/B2-S1/B2-P1 permissions and cache-replay authorizations are historical and exhausted.
 
 ### Current experiment — B2 vanilla-flow smoke test
 
@@ -82,6 +84,51 @@ For every smoke-test row, the hosted Actor performs the normal application seque
 4. fetch status, extraction status and word count/failure class are recorded;
 5. the row is written to the normal dataset.
 
+**Prepared candidate and samples:** The isolated candidate is `experiments/b2-vanilla/actor/`. It uses the existing pinned Apify `3.7.2`, Mozilla Readability `0.6.0` and jsdom `29.0.1` dependencies on Node.js 20. The smoke fixture `experiments/b2-vanilla/input-smoke.json` contains 3 unique rows. The acceptance fixture `experiments/b2-vanilla/input-acceptance.json` contains 100 unique row IDs and 95 unique publisher URLs; five repeated URL occurrences remain separate rows, without deduplication. Both fixtures were derived by joining A4 resolved rows to B1 input provenance; only URLs/provenance and row metadata were used. Neither fixture contains B1 cache keys, HTML bytes or body hashes. Their SHA-256 values are recorded in `experiments/b2-vanilla/approval.json`.
+
+**Bounds and evidence:** Both runs use concurrency 4, a 10-second per-row HTTP chain timeout, 2 MiB body limit, five redirects after the initial request (maximum six GETs per row), 256 MiB and an explicit 900-second Actor timeout. This means at most 18 publisher GETs in smoke and 600 in acceptance; no Google News requests are made. The estimated compute for a full 900-second allocation is about 0.0625 CU / $0.0125 at the previously referenced $0.20/CU standard rate. This is not an all-in limit: actual account rates, bandwidth, build, storage and API charges can differ. Actual hosted usage will be recorded. Extracted article text is a normal private dataset output needed for quality review; no full text or HTML is retained in Git, and logs contain no URLs or article text.
+
+**Local readiness:** Syntax, dependency import/version, sample mapping/count/hash, Apify input-schema, and a local Windows-1252 response-decoding check pass. The charset from the publisher HTTP content type is preserved when JSDOM decodes response bytes.
+
+**Smoke result (2026-10-06):** Build `s7Np4qeIg5sXxAdti` / version `0.8.1`, tagged `issue41-b2-vanilla`; run `ydot4zQVlwhb5BFmz`; dataset `JbO5AUmkA6FxO5sHA`. The run succeeded on Node `v20.20.2` / Apify `3.7.2`, used configured 256 MiB and 900 seconds, ran for 5.776 seconds, and cost `$0.00015115540744198693`. The frozen smoke input hash was `ff90a06c2e45bb2ef3cd2ce06e3d8ba6b7993b106ed5b13897ab10992bf83128`. All 3 rows returned eligible HTML (HTTP 200; one publisher GET per row), produced nonempty Mozilla Readability outputs (368, 1,012 and 584 words), and were written to the normal dataset; 3/3 rows had extraction status `success`. The smoke gate passed independent review. Platform usage also reports one key-value-store read and one write. The candidate made no cross-run store calls; it used the normal Actor input/output methods and default dataset.
+
+**Retained smoke evidence:** Sanitized per-row outcomes and content hashes are in `experiments/b2-vanilla/results-smoke.json`; sanitized run/build identity, resource, runtime and usage metadata are in `experiments/b2-vanilla/run-metadata-smoke.json`; the safe hosted log is `experiments/b2-vanilla/private/smoke-run-log.txt`. Full text for independent content-quality review is retained only in ignored `experiments/b2-vanilla/private/smoke-dataset.json`; it is not included in Git.
+
+**100-row acceptance result (2026-10-06):** The one authorized acceptance run used the same build `s7Np4qeIg5sXxAdti` / `0.8.1` and exact acceptance input SHA-256 `ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01`. Run `HjdQa5oV2GD4dS4VY` ended `FAILED` with exit code 1 after 8.857 seconds, at configured 256 MiB / 900 seconds; the run-info response reported `$0.0002400319082223707`, while a subsequent CLI run listing reported `$0.00024049202814035948`. Both values are retained because they differed. Maximum observed memory was 255,164,416 bytes. The retained dataset contains 10 rows for 10 distinct input IDs. The stage log records 11 publisher GETs: 10 eligible HTTP 200 responses and one HTTP 403; nine rows have logged successful Readability extraction and dataset writes, while `q1-us-01` has an eligible-fetch result but no extraction or dataset result before termination. Three further started rows have no fetch result, and the remaining 86 inputs have no row-start event. The hosted log ends with `npm error signal SIGKILL`; this observation does not by itself establish the cause. The single acceptance run is consumed; no rerun or deeper diagnosis was performed.
+
+**Experiment classification:** `Inconclusive — valid partial execution, acceptance incomplete.` This run does not establish a below-50/100 result, and it does not make B3 eligible. Area B remains on Hold and the overall Spike remains open with conclusion `Pending`.
+
+**Retained acceptance evidence:** Sanitized row outcomes and hashes are in `experiments/b2-vanilla/results-acceptance.json`; sanitized same-run resource/runtime/usage metadata is in `experiments/b2-vanilla/run-metadata-acceptance.json`; the full hosted log and partial dataset, including article text for the 10 emitted rows, remain only in ignored `experiments/b2-vanilla/private/`. No full text is retained in Git.
+
+**Current stop boundary (2026-10-06):** The acceptance run reached the normal publisher-fetch, extraction and dataset-output path for a partial set before the process was killed. The exact termination cause is not established; proximity to the configured memory allocation is an observation, not a confirmed cause. No simple mechanical defect was established from the retained evidence. Changing resource allocation or adding another diagnostic direction would leave the approved one-run sequence. The smoke and single acceptance authorizations are exercised. Keep Area B and the overall Spike conclusion on Hold/Pending; do not rerun, change resources, add diagnostics, or begin B3 without a separately reviewed and explicitly approved bounded proposal.
+
+## Proposed owner checkpoint — B2-M1 one higher-memory acceptance run (2026-10-06; NOT APPROVED)
+
+**Decision state:** Preparation only. The approval to run the earlier vanilla smoke and one 100-row acceptance run is exhausted. B2-M1 has not been approved and authorizes no current build, run, resource change or additional investigation.
+
+### Issue context and current evidence
+
+Issue #41 asks whether the Node.js 20 Apify Actor can resolve at least 95/100 representative Google News rows to publisher URLs and produce readable article text for at least 50/100. A4 supports 100/100 publisher URLs for the fixed sample. Historical B1 retained 53/100 usable publisher HTML responses. The same-build vanilla smoke run passed independent review: all three selected rows fetched HTML, produced reviewed text and reached the normal dataset. The single 100-row acceptance run used frozen input hash `ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01`, 256 MiB, and build `s7Np4qeIg5sXxAdti`; it failed after partial processing with 10 dataset rows and 11 logged publisher GETs. Nine completed rows have extraction candidates and one row's request returned HTTP 403; `q1-us-01` fetched eligible HTML but has no extraction/output event. Three more rows started without fetch results, and 86 rows never started. The log ends with `SIGKILL`; max observed memory was 255,164,416 bytes. The cause is undetermined, so the run does not establish a below-50/100 result or make B3 eligible. Area B remains on Hold and the Spike conclusion remains Pending.
+
+### Proposed question and bounded change
+
+Would the unchanged normal 100-row flow complete when run with 512 MiB? Memory pressure is a plausible hypothesis from the observed peak and process termination, but it is not a confirmed cause. If approved, perform exactly one hosted run using the existing private Actor `JIogcgdHyCqAMHQ1P`, same existing build `s7Np4qeIg5sXxAdti` / `0.8.1` / `issue41-b2-vanilla`, and the same frozen 100-row fixture with 100 unique IDs and 95 unique publisher URLs. **Change only the run memory allocation from 256 MiB to 512 MiB.** Do not rebuild or change code, dependencies, input, actor identity or runtime.
+
+Keep Node.js 20, timeout 900 seconds, concurrency four, 10-second per-row HTTP chain timeout, 2 MiB response limit and five redirects after the initial request (maximum six GETs per row). Continue using ordinary publisher HTTP, same-response in-memory extraction, normal row output and safe stage logs. Do not access prior-run cache/KVS, fetch Google News, change permissions/credentials, use browser/proxy/another runtime, add diagnostics, or extend the run beyond the approved bounds.
+
+### Evidence, outcomes and stop rule
+
+Retain the exact run/build identity, frozen input hash, configured/observed resources, platform status/exit, duration, usage, peak memory, per-row fetch and extraction outcomes, HTTP statuses/request counts, output completeness, hashes/word counts, and sanitized stage log. Keep complete article text out of Git and retain it only in ignored/private hosted dataset evidence for independent quality review.
+
+- A completed run with at least 50 independently reviewed coherent article texts supports Area B for this sample.
+- A completed run with fewer than 50 eligible HTML rows is access-limited evidence; stop and do not label full-text feasibility from it alone.
+- B3 remains eligible only if a completed run fetches at least 50 eligible HTML rows and independent review shows extraction quality is the remaining blocker.
+- Any failed or incomplete run is Inconclusive; preserve it and stop. No second run, further memory increase, rebuild, code correction, diagnostic expansion or B3 follows B2-M1.
+
+At 512 MiB for a full 900 seconds, compute is modeled at 0.125 CU / approximately `$0.025` using the previously cited `$0.20/CU` standard rate. This is compute-only, not a guaranteed total or enforced spending cap; actual account rates, transfer, storage, build/API usage and duration can change charges.
+
+**Approval requested:** Explicit owner approval of exactly this one same-build, same-fixture, 512-MiB acceptance run. Until granted, remain on Hold/Pending; do not execute B2-M1.
+
 ### Evidence
 
 Use ordinary stage evidence only:
@@ -93,17 +140,17 @@ Use ordinary stage evidence only:
 
 No diagnostic subsystem, cross-run store access, alternate credentials, permission/grant changes, Console inspection or custom hosted harness is part of this experiment.
 
-### Decision rule
+### Approved TID decision rule (executed for this candidate)
 
-- If the smoke run processes the complete small sample, emits a row result for every input and demonstrates that successfully fetched HTML reaches extraction and normal row output, proceed to the **100-row B2 acceptance run**.
+- If the smoke run processes the complete small sample, emits a row result for every input and demonstrates that successfully fetched HTML reaches extraction and normal row output, proceed to the **100-row B2 acceptance run**. The smoke gate passed independent review, and the one permitted acceptance run was executed; its outcome is recorded below.
 - If it fails before row processing, investigate the normal Actor entrypoint/configuration.
 - If ordinary HTTP fetch fails, investigate the publisher-fetch path.
 - If fetch succeeds but parsing/extraction fails, investigate the extraction path.
 - If extraction succeeds but row output fails, investigate normal dataset delivery.
 
-A straightforward defect in the normal product path may be corrected and the smoke test repeated. If continuing requires special storage/network/security/permission machinery that the product itself would not use, stop and return to the owner rather than constructing that machinery.
+A straightforward defect in the normal product path may be corrected and the smoke test repeated under the approved TID. No such straightforward defect has been established for the current failed acceptance run; that generic TID provision does not override the current Hold or authorize a new run. If continuing requires special storage/network/security/permission machinery that the product itself would not use, stop and return to the owner rather than constructing that machinery.
 
-### Full B2 acceptance run after smoke success
+### Full B2 acceptance run after smoke success (executed; see result below)
 
 Run the same one-run fetch → extract → row-output flow across the defined 100-row representative sample. Score readable text against the full 100-row denominator and retain separate per-row fetch and extraction outcomes.
 
@@ -265,11 +312,11 @@ For every experiment record:
 **Spike state:** `Open`  
 **Area A:** `Supported` — A4 resolved 100/100 sample rows.
 
-**Area B:** `Unresolved / Active` — B1 historically fetched 53 usable HTML responses. The original cache-replay B2 candidate and B2-D1/B2-S1/B2-P1 diagnostics did not produce extraction-quality evidence and are now superseded. The observed KVS 403 belongs to that diagnostic path and is not treated as a product-flow failure.
+**Area B:** `Unresolved / Hold` — B1 historically fetched 53 usable HTML responses. The current vanilla smoke gate passed independent review. The one authorized 100-row acceptance run failed after partial processing; no simple mechanical defect or confirmed termination cause was established. The original cache-replay B2 candidate and B2-D1/B2-S1/B2-P1 diagnostics did not produce extraction-quality evidence and are superseded. The observed KVS 403 belongs to that diagnostic path and is not treated as a product-flow failure.
 
 **Spike conclusion:** `Pending`; neither downstream capability is yet unblocked.
 
-**Required next action:** `Run the approved vanilla B2 smoke test: live publisher fetch → in-memory structured-data/Readability extraction → normal dataset row, all within one hosted Actor run. Do not access the prior B1 cache. If the smoke test succeeds, run the same flow on the 100-row representative sample and score the >=50/100 target.`
+**Required next action:** `Wait for owner review of a separately proposed bounded follow-up. The one-run acceptance authorization has been exercised; no rerun, resource change, diagnostic expansion, or B3 parser experiment is authorized by the current route. Keep the overall conclusion Pending.`
 
 **Troubleshooting boundary:** `If the vanilla flow fails, diagnose only the normal stage that failed. Do not resume the cross-run KVS/permission route or introduce special hosted harnessing merely to make the experiment run.`
 

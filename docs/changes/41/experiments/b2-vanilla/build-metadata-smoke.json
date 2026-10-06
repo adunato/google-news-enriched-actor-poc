@@ -1,0 +1,15 @@
+{
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "buildId": "s7Np4qeIg5sXxAdti",
+  "buildNumber": "0.8.1",
+  "buildTag": "issue41-b2-vanilla",
+  "status": "SUCCEEDED",
+  "sourceHashes": {
+    "actor/main.mjs": "3196bd00171540f95b2ec140c6fa3dae5e5e0240444f20f60ee31833b930e76e",
+    "actor/dom-content-type.mjs": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+    "actor/package.json": "0a284a0555d300b0cc2df89e05bce1155210afeedfdc6f97e63fdcc2a9043194",
+    "actor/package-lock.json": "ae27e007cac19131f53050c9be4688b6270f214ae1203c38ea8280f5533eed7a",
+    "actor/.actor/INPUT_SCHEMA.json": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833"
+  },
+  "note": "Build source hashes are retained with run metadata; no additional build was performed."
+}

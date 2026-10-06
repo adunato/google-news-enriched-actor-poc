@@ -1,0 +1,67 @@
+{
+  "experiment": "B2 vanilla hosted fetch-extract-output",
+  "status": "approved_current_route_readiness_pending",
+  "approvedAtUtcDate": "2026-10-06",
+  "approvalScope": "One ordinary private Node.js 20 Actor candidate and a three-row smoke run; only if the smoke gate passes, use the same build for the full 100-row acceptance run under the TID route.",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "runtime": {
+    "nodeMajor": 20,
+    "memoryMbytes": 256,
+    "timeoutSecs": 900,
+    "dependencies": {
+      "apify": "3.7.2",
+      "@mozilla/readability": "0.6.0",
+      "jsdom": "29.0.1"
+    }
+  },
+  "flow": "Actor.getInput -> bounded ordinary publisher HTTP fetch -> structured articleBody then Mozilla Readability on the same in-memory response -> Actor.pushData to the default dataset.",
+  "limits": {
+    "concurrency": 4,
+    "rowHttpChainTimeoutMs": 10000,
+    "responseBodyMaxBytes": 2097152,
+    "redirectsAfterInitialRequest": 5,
+    "maximumHttpGetsPerRow": 6,
+    "maximumSmokeHttpGets": 18,
+    "maximumAcceptanceHttpGets": 600,
+    "crossRunStorage": false,
+    "additionalDataSources": false,
+    "deduplication": false
+  },
+  "samples": {
+    "sourceIssue18ManifestSha256": "d1ed2bea31efc54358ac24d991a9037ec0f0840ccd50547c01bd794c64389f3c",
+    "sourceIssue18RowArraySha256": "fdbab474e5764350c547080c0002f042b062e03f157a270d5b9474d846ad2f2a",
+    "smoke": {
+      "file": "input-smoke.json",
+      "sha256": "ff90a06c2e45bb2ef3cd2ce06e3d8ba6b7993b106ed5b13897ab10992bf83128",
+      "rowCount": 3,
+      "uniqueRowIds": 3,
+      "rowIdsInOrder": ["q1-gb-01", "q1-gb-02", "q1-gb-05"]
+    },
+    "acceptance": {
+      "file": "input-acceptance.json",
+      "sha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+      "rowCount": 100,
+      "uniqueRowIds": 100,
+      "uniquePublisherUrls": 95,
+      "duplicatePublisherUrlOccurrences": 5,
+      "deduplication": "Disabled; all 100 original row occurrences remain separate."
+    }
+  },
+  "scoring": {
+    "fullTextTarget": "At least 50 independently reviewed readable article texts across all 100 rows.",
+    "candidateRule": "Nonempty extracted text, word count and extractor status are evidence inputs only; they do not alone prove readable article text.",
+    "qualityReview": "Exclude navigation, login, cookie, challenge, subscription and error-page text. Do not add an arbitrary minimum word-count threshold."
+  },
+  "costModel": {
+    "full900SecondComputeEstimate": "About 0.0625 compute units / $0.0125 at the previously referenced $0.20 per compute-unit standard rate.",
+    "isAllInCap": false,
+    "uncertainty": "Actual account rates, bandwidth, build, storage and API costs may differ; record actual hosted usage and cost."
+  },
+  "stopRules": [
+    "Do not continue from smoke to acceptance unless smoke produces a row output for each input and demonstrates eligible fetched HTML reaching extraction and normal dataset output.",
+    "Do not repeat an unchanged failed candidate.",
+    "If fewer than 50 rows yield eligible HTML in acceptance, report the access-limited result and stop; do not run B3.",
+    "Run B3 only if at least 50 eligible HTML responses are fetched and independent quality review shows extraction quality is the remaining blocker.",
+    "Retain metrics and hashes in Git; retain no full HTML or article text in Git."
+  ]
+}

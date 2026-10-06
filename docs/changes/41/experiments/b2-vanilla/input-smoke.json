@@ -1,0 +1,56 @@
+{
+  "sampleId": "smoke",
+  "source": "Issue 41 A4 resolved row metadata joined with B1 input provenance; no B1 HTML/cache data included",
+  "rowCount": 3,
+  "uniqueRowIds": 3,
+  "rows": [
+    {
+      "rowId": "q1-gb-01",
+      "query": "world news",
+      "country": "GB",
+      "language": "en-GB",
+      "title": "News media must stay relevant or 'society will struggle', says World News Day organiser",
+      "sourceName": "bbc.co.uk",
+      "sourceHost": "www.bbc.co.uk",
+      "googleNewsUrl": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE82RHZ4RmdaWXgxdWZ5ZXQwSkhmZzNPU2JDMGdYWXRGaTlwczVvU3Bqb09SUTU3eU9nZ05PX3NHM3VIUGNpcGNHSl9YNVZFaWU4T2tmNG1ia2t2bVd6MGc?oc=5",
+      "googleNewsUrlHash": "82aeb3e5dd5ae7880fe57f4cc1f4d1d90ba17f94af8d22ad60ff90d9256bd652",
+      "publisherUrl": "https://www.bbc.co.uk/news/articles/cmwyz9q3l6pno",
+      "publisherHost": "www.bbc.co.uk",
+      "publisherUrlHash": "b070af934fa113c3",
+      "urlResolved": true,
+      "urlResolutionStatus": "success_rpc"
+    },
+    {
+      "rowId": "q1-gb-02",
+      "query": "world news",
+      "country": "GB",
+      "language": "en-GB",
+      "title": "Who are the Houthis in Yemen and what do they want?",
+      "sourceName": "bbc.com",
+      "sourceHost": "www.bbc.com",
+      "googleNewsUrl": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1vR2dmcDNUcFVqQzVQVWQ5WFBsUDhkbWNPd1ROOFZpV3pOd184NFIyTnd0THdhNTd0M2RQWWxpdFVBSWJodWVXcms5czFSa1RldlhQZVRzSlRFb0E?oc=5",
+      "googleNewsUrlHash": "cee93dbd6fa64601a5e134b59b7c8a598448c96d5d0c2872354cdc7124ed3a6a",
+      "publisherUrl": "https://www.bbc.com/news/articles/cqy7z228kee3o",
+      "publisherHost": "www.bbc.com",
+      "publisherUrlHash": "d995e5681751b398",
+      "urlResolved": true,
+      "urlResolutionStatus": "success_rpc"
+    },
+    {
+      "rowId": "q1-gb-05",
+      "query": "world news",
+      "country": "GB",
+      "language": "en-GB",
+      "title": "Cyril Hilsum, former GEC research boss and Institute of Physics president, dies aged 101",
+      "sourceName": "Physics World",
+      "sourceHost": "physicsworld.com",
+      "googleNewsUrl": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNVGRBTnNaQS1QN2dKRVVzYmF6SFNhbE1tV29fV1JLc2pkY2ptYm9JRTZaZVZ5MXF0OHotYVdWcFdLMFRNc3ZGRUxWblZfek42TjhhbloycXU5OU1KU0ZZQnFpdnVZcmljOEtST0VWSVVhN3hibjRELUJnZDRRdVBHZVgyUDBWdHNmM3N1bXcxZlBxNnpVMTFqUGdSeFBNaFh3S2ZPWDRyZWFvVWI5QWxzWnVJQkQ?oc=5",
+      "googleNewsUrlHash": "dd4c540980450111cdaab084a267bd762f3092c9aad8b4d9563dea39f288d95e",
+      "publisherUrl": "https://physicsworld.com/a/cyril-hilsum-former-gec-research-boss-and-institute-of-physics-president-dies-aged-101/",
+      "publisherHost": "physicsworld.com",
+      "publisherUrlHash": "ea76991900f7c163",
+      "urlResolved": true,
+      "urlResolutionStatus": "success_rpc"
+    }
+  ]
+}
