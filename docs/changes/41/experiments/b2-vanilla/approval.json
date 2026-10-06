@@ -1,6 +1,6 @@
 {
   "experiment": "B2 vanilla hosted fetch-extract-output",
-  "status": "B2-F1 exhausted; failed after 48/100 rows; valid partial execution / Inconclusive / Hold; B2-M3 memory-snapshot proposal pending explicit owner approval.",
+  "status": "B2-F1 exhausted; B2-M3 approved build/run complete. M3 valid partial execution timed out at 899.861s with 99/100 rows; Inconclusive / Hold; no readability target or B3 eligibility established.",
   "approvedAtUtcDate": "2026-10-06",
   "approvalScope": "One ordinary private Node.js 20 Actor candidate and a three-row smoke run; only if the smoke gate passes, use the same build for the full 100-row acceptance run under the TID route.",
   "actorId": "JIogcgdHyCqAMHQ1P",
@@ -316,7 +316,7 @@
     }
   },
   "b2M3Proposal": {
-    "status": "Proposed; owner approval pending",
+    "status": "Completed 2026-10-06: build SMDOTSyU2SjIeivha / 0.10.2 passed exact metadata; run vgzCZFf5HpZ9nWeho TIMED-OUT at 899.861s with 99/100 rows. Inconclusive / Hold; approval exhausted; no rerun. Area B awaits a separate owner checkpoint.",
     "question": "Do nonthrowing native process.memoryUsage snapshots at row and stage boundaries explain the high-peak-memory incomplete B2 runs without changing HTTP, extraction, cleanup, or output behavior?",
     "scope": "One isolated candidate build and one conditional fixed-100-row run on Actor JIogcgdHyCqAMHQ1P, Node 20, 512 MiB / 900 seconds; retain F1 stage logs and add snapshots at row start/end and before/after fetch, JSDOM construction, structured-data extraction, Readability, and DOM close.",
     "limits": {
@@ -335,8 +335,26 @@
     "fields": ["rowId", "stage", "elapsedMs", "rss", "heapUsed", "external", "arrayBuffers"],
     "redaction": "Never log URLs, headers, bodies, article text, credentials, tokens, or raw errors.",
     "evidenceLimits": "Boundary snapshots cannot observe memory during an awaited request or prove OOM causality; concurrent workers limit per-row attribution.",
-    "stop": "Exactly one build and one run after separate explicit owner approval and internal gates; then stop. Incomplete run is Inconclusive/Hold, no correction/retry/memory increase/B3.",
+    "stop": "The approved single build/run are complete. Stop after this evidence; no correction, retry, memory increase, or B3 under this approval. Keep Area B on Hold pending an owner checkpoint.",
     "computeEstimate": "0.125 CU / about $0.025 at cited standard rate for 900 seconds; compute-only, not guaranteed total or cap.",
-    "approvalRequired": "Separate explicit owner approval before implementation/build/run."
+    "approvalRequired": "Already explicitly approved by the user on 2026-10-06; no additional approval is required for the routine version/tag identity correction. Internal exact-build gate remains required before publisher requests.",
+    "approvedAtUtcDate": "2026-10-06",
+    "userApproval": "The user explicitly replied Okay, go ahead to the self-contained B2-M3 checkpoint on 2026-10-06.",
+    "executionLimits": "Exactly one source-observability candidate build and, only after exact-build verification, one fixed 100-row run. No retry, source correction, memory increase or further diagnostics.",
+    "prebuildIntegrity": "prebuild-integrity-b2-m3.json",
+    "version": "0.10",
+    "buildTag": "issue41-b2-m3",
+    "candidateMainSha256": "ea861e1ea8cae537c5f139567654bf73138e8f1499c96432e13d43c53553cd33",
+    "identityCorrection": "The first version 0.11 CLI request was rejected before build creation because the Actor had reached its version limit. The same approved build succeeded as SMDOTSyU2SjIeivha / 0.10.2 under existing version 0.10 and unique tag issue41-b2-m3; exact source/config metadata passed and the F1 build/tag mapping remained unchanged. The one run completed as TIMED-OUT at 899.861 seconds after 99 rows; its authorization is exhausted.",
+    "buildId": "SMDOTSyU2SjIeivha",
+    "buildNumber": "0.10.2",
+    "buildEvidence": "build-definition-b2-m3.json",
+    "executionStatus": "TIMED-OUT; 99/100 rows; Inconclusive / Hold; approval exhausted.",
+    "runId": "vgzCZFf5HpZ9nWeho",
+    "runEvidence": "run-metadata-b2-m3.json",
+    "resultEvidence": "results-b2-m3.json",
+    "memoryEvidence": "memory-snapshots-b2-m3.json",
+    "stageEvidence": "sanitized-stage-evidence-b2-m3.json",
+    "actualUsageUsd": 0.025723639751517115
   }
 }

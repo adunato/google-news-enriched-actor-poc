@@ -56,6 +56,25 @@ function logHttpStage(rowId, startedAt, state, stage, details = {}) {
   }
 }
 
+function logMemorySnapshot(rowId, rowStartedAt, stage) {
+  try {
+    const memory = process.memoryUsage();
+    console.log(
+      `ISSUE41_B2_M3 ${JSON.stringify({
+        rowId,
+        stage,
+        elapsedMs: Date.now() - rowStartedAt,
+        rss: memory.rss,
+        heapUsed: memory.heapUsed,
+        external: memory.external,
+        arrayBuffers: memory.arrayBuffers,
+      })}`,
+    );
+  } catch {
+    // Diagnostic snapshots must never affect the Actor's work.
+  }
+}
+
 async function cancelResponseBody(response, logStage, phase) {
   logStage("cancel", { phase: `${phase}_start` });
   await response.body?.cancel();
@@ -172,7 +191,7 @@ function safeUrlDetails(value) {
   };
 }
 
-async function fetchPublisher(row) {
+async function fetchPublisher(row, rowStartedAt) {
   const startedAt = Date.now();
   const signal = AbortSignal.timeout(ROW_HTTP_TIMEOUT_MS);
   let currentUrl = row.publisherUrl;
@@ -215,6 +234,7 @@ async function fetchPublisher(row) {
       state.normalizedMime = "unknown";
       state.bodyBytes = null;
       logStage("request_start");
+      logMemorySnapshot(row.rowId, rowStartedAt, "fetch_before");
       const pendingResponse = fetch(currentUrl, {
         method: "GET",
         headers: {
@@ -226,6 +246,7 @@ async function fetchPublisher(row) {
       });
       logStage("await_fetch");
       const response = await pendingResponse;
+      logMemorySnapshot(row.rowId, rowStartedAt, "fetch_after");
       const location = response.headers.get("location");
       stages.push({ status: response.status, host: current.hostname.toLowerCase() });
       state.httpStatus = response.status;
@@ -356,18 +377,24 @@ async function fetchPublisher(row) {
   }
 }
 
-function extractArticle(body, finalUrl, contentType) {
+function extractArticle(body, finalUrl, contentType, rowId, rowStartedAt) {
   const startedAt = Date.now();
+  logMemorySnapshot(rowId, rowStartedAt, "jsdom_construction_before");
   const dom = new JSDOM(body, {
     url: finalUrl,
     contentType: domContentType(contentType),
   });
+  logMemorySnapshot(rowId, rowStartedAt, "jsdom_construction_after");
   try {
     let extractionMethod = "structured_article_body";
+    logMemorySnapshot(rowId, rowStartedAt, "jsonld_before");
     let articleText = structuredArticleText(dom.window.document);
+    logMemorySnapshot(rowId, rowStartedAt, "jsonld_after");
     if (!articleText) {
       extractionMethod = "mozilla_readability";
+      logMemorySnapshot(rowId, rowStartedAt, "readability_before");
       const article = new Readability(dom.window.document, { disableJSONLD: true }).parse();
+      logMemorySnapshot(rowId, rowStartedAt, "readability_after");
       articleText = normalizeText(article?.textContent);
     }
     const words = countWords(articleText || "");
@@ -390,14 +417,18 @@ function extractArticle(body, finalUrl, contentType) {
       extractionElapsedMs: Date.now() - startedAt,
     };
   } finally {
+    logMemorySnapshot(rowId, rowStartedAt, "dom_close_before");
     dom.window.close();
+    logMemorySnapshot(rowId, rowStartedAt, "dom_close_after");
   }
 }
 
 async function processRow(row, sampleId) {
   const rowStart = Date.now();
+  logMemorySnapshot(row.rowId, rowStart, "row_start");
   console.log(`ISSUE41_B2 sample=${sampleId} stage=row_start rowId=${row.rowId}`);
-  const fetchResult = await fetchPublisher(row);
+  const fetchResult = await fetchPublisher(row, rowStart);
+  logMemorySnapshot(row.rowId, rowStart, "fetch_complete");
   console.log(
     `ISSUE41_B2 sample=${sampleId} stage=fetch_result rowId=${row.rowId} status=${fetchResult.fetchStatus} httpStatus=${fetchResult.httpStatus ?? "none"} requests=${fetchResult.requestCount} redirects=${fetchResult.redirectCount} elapsedMs=${fetchResult.fetchElapsedMs}`,
   );
@@ -414,6 +445,8 @@ async function processRow(row, sampleId) {
         fetchResult.body,
         fetchResult.finalUrl,
         fetchResult.contentType,
+        row.rowId,
+        rowStart,
       );
       console.log(
         `ISSUE41_B2 sample=${sampleId} stage=extraction_result rowId=${row.rowId} status=${extractionResult.fullTextStatus} method=${extractionResult.extractionMethod ?? "none"} wordCount=${extractionResult.wordCount} elapsedMs=${extractionResult.extractionElapsedMs ?? 0}`,
@@ -455,6 +488,7 @@ async function processRow(row, sampleId) {
     rowElapsedMs: Date.now() - rowStart,
   };
   delete output.body;
+  logMemorySnapshot(row.rowId, rowStart, "row_end");
   return output;
 }
 

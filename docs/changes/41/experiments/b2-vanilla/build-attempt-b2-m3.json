@@ -1,0 +1,30 @@
+{
+  "experiment": "B2-M3",
+  "approvalDate": "2026-10-06",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "candidate": {
+    "version": "0.11 (rejected request); corrected approved build identity: 0.10",
+    "buildTag": "issue41-b2-m3",
+    "mainSha256": "ea861e1ea8cae537c5f139567654bf73138e8f1499c96432e13d43c53553cd33",
+    "memoryMbytes": 512,
+    "timeoutSecs": 900
+  },
+  "cli": "apify-cli/1.10.0",
+  "attemptedCommand": "Initial rejected request: apify push JIogcgdHyCqAMHQ1P --json --version 0.11 --build-tag issue41-b2-m3 --wait-for-finish 900",
+  "attemptResult": "Rejected before build creation",
+  "exitCode": 1,
+  "safeError": "The Actor can have at most 10 versions.",
+  "buildId": null,
+  "runStarted": false,
+  "publisherRequests": 0,
+  "classification": "The initial version 0.11 request was rejected before build creation. The routine identity correction used existing version 0.10 with unique tag issue41-b2-m3; the one approved build then succeeded. This is the same approved experiment, not a new experiment or acceptance rerun.",
+  "identityCorrection": "The version 0.11 request was rejected before build creation. No build ID or publisher requests exist. The approved single build remains pending using existing version 0.10 and unique tag issue41-b2-m3; existing F1 build/tag atE5VAJGFJrkEIxcc / issue41-b2-f1 was verified and must remain unchanged. No version/build/tag deletion is authorized.",
+  "followUpBuild": {
+    "buildId": "SMDOTSyU2SjIeivha",
+    "buildNumber": "0.10.2",
+    "version": "0.10",
+    "buildTag": "issue41-b2-m3",
+    "status": "SUCCEEDED",
+    "metadata": "build-definition-b2-m3.json"
+  }
+}

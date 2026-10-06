@@ -1,0 +1,29 @@
+{
+  "experiment": "B2-M3",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "buildId": "SMDOTSyU2SjIeivha",
+  "buildNumber": "0.10.2",
+  "version": "0.10",
+  "buildTag": "issue41-b2-m3",
+  "status": "SUCCEEDED",
+  "sourceSha256": "ea861e1ea8cae537c5f139567654bf73138e8f1499c96432e13d43c53553cd33",
+  "actorConfig": {
+    "minMemoryMbytes": 512,
+    "defaultMemoryMbytes": 512,
+    "maxMemoryMbytes": 512,
+    "timeoutSecs": 900
+  },
+  "startedAt": "2026-10-06T19:52:08.365Z",
+  "finishedAt": "2026-10-06T19:52:20.532Z",
+  "durationMillis": 12095,
+  "computeUnits": 0.013438888888888889,
+  "usageTotalUsd": 0.002687777777777778,
+  "verification": "Build source .actor/actor.json and main.mjs read from this exact build metadata; no publisher requests made.",
+  "f1MappingPreserved": {
+    "buildId": "atE5VAJGFJrkEIxcc",
+    "version": "0.10",
+    "buildNumber": "0.10.1",
+    "buildTag": "issue41-b2-f1",
+    "status": "SUCCEEDED"
+  }
+}

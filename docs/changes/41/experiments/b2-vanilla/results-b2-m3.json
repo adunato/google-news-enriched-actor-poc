@@ -1,0 +1,46 @@
+{
+  "experiment": "B2-M3",
+  "classification": "Inconclusive / Hold; valid partial execution, acceptance incomplete",
+  "runId": "vgzCZFf5HpZ9nWeho",
+  "buildId": "SMDOTSyU2SjIeivha",
+  "datasetId": "PQP4nNa5ChtPBTXjQ",
+  "expectedRows": 100,
+  "datasetRows": 99,
+  "uniqueDatasetRowIds": 99,
+  "missingRowId": "q3-us-01",
+  "datasetObservedPublisherRequestCount": 100.0,
+  "runWideRequestTotal": "Unknown: run_summary was not emitted; missing row request count is unavailable.",
+  "fetchStatusCounts": {
+    "eligible_html": 62,
+    "http_denied": 16,
+    "request_error": 1,
+    "timeout": 20
+  },
+  "httpStatusCounts": {
+    "null": 21,
+    "200": 62,
+    "401": 3,
+    "403": 13
+  },
+  "extractionStatusCounts": {
+    "no_readable_text_candidate": 1,
+    "not_attempted_fetch_ineligible": 37,
+    "success": 61
+  },
+  "successfulExtractionCandidates": 61,
+  "qualityReview": "Not performed; extraction success and word counts are not independent readability validation.",
+  "memoryMarkers": 972,
+  "httpStageMarkers": 589,
+  "runSummaryPresent": false,
+  "observedTermination": "Apify TIMED-OUT at 899.861 seconds with 99 of 100 rows; exitCode null",
+  "q3Us01Observed": "One GET returned HTTP 200 text/html; body_read started; abort_fired logged about 15.5 seconds after row start. No body_read completion, cancellation, catch/error, cleanup, fetch result, extraction, or write was logged. Cause unknown.",
+  "memoryObservation": "Platform memMaxBytes 368906240. Boundary markers for q3-us-01 stop at fetch_after; these observations do not establish OOM or memory-causation.",
+  "actualUsageUsd": 0.025723639751517115,
+  "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+  "evidence": {
+    "metadata": "run-metadata-b2-m3.json",
+    "memory": "memory-snapshots-b2-m3.json",
+    "stages": "sanitized-stage-evidence-b2-m3.json",
+    "privateDataset": "private/dataset-b2-m3.json"
+  }
+}

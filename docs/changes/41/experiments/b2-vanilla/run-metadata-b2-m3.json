@@ -1,0 +1,51 @@
+{
+  "experiment": "B2-M3",
+  "runId": "vgzCZFf5HpZ9nWeho",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "buildId": "SMDOTSyU2SjIeivha",
+  "buildNumber": "0.10.2",
+  "buildTag": "issue41-b2-m3",
+  "status": "TIMED-OUT",
+  "exitCode": null,
+  "startedAt": "2026-10-06T19:54:04.966Z",
+  "finishedAt": "2026-10-06T20:09:04.976Z",
+  "durationSecs": 899.861,
+  "options": {
+    "memoryMbytes": 512,
+    "timeoutSecs": 900,
+    "build": "issue41-b2-m3"
+  },
+  "input": {
+    "sha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "rows": 100,
+    "uniqueRowIds": 100,
+    "uniquePublisherUrls": 95,
+    "duplicatePublisherUrlOccurrences": 5
+  },
+  "defaultDatasetId": "PQP4nNa5ChtPBTXjQ",
+  "datasetRows": 99,
+  "platformStats": {
+    "memMaxBytes": 368906240,
+    "memAvgBytes": 163271025.78213713,
+    "memCurrentBytes": 0,
+    "computeUnits": 0.12498069444444444
+  },
+  "usageTotalUsd": 0.025723639751517115,
+  "usage": {
+    "ACTOR_COMPUTE_UNITS": 0.12498069444444444,
+    "DATASET_READS": 0,
+    "DATASET_WRITES": 99,
+    "KEY_VALUE_STORE_READS": 1,
+    "KEY_VALUE_STORE_WRITES": 1,
+    "KEY_VALUE_STORE_LISTS": 0,
+    "REQUEST_QUEUE_READS": 0,
+    "REQUEST_QUEUE_WRITES": 0,
+    "DATA_TRANSFER_INTERNAL_GBYTES": 0.0004046279937028885,
+    "DATA_TRANSFER_EXTERNAL_GBYTES": 0.0007863473147153854,
+    "PROXY_RESIDENTIAL_TRANSFER_GBYTES": 0,
+    "PROXY_SERPS": 0,
+    "PROXY_UNBLOCKER_UNITS": 0
+  },
+  "runSummaryPresent": false,
+  "metadataSource": "Read-only final metadata for the exact M3 run; signed URLs and account identifiers omitted."
+}

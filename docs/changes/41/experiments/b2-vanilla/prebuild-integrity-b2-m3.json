@@ -1,0 +1,72 @@
+{
+  "experiment": "B2-M3",
+  "approval": {
+    "approvedAtUtcDate": "2026-10-06",
+    "userApproval": "The user explicitly replied Okay, go ahead to the bounded B2-M3 checkpoint.",
+    "scope": "Exactly one memory-observability candidate build and, only after exact-build verification, one frozen 100-row run."
+  },
+  "candidate": {
+    "actorId": "JIogcgdHyCqAMHQ1P",
+    "version": "0.10",
+    "buildTag": "issue41-b2-m3",
+    "entrypoint": "actor/main.mjs",
+    "baselineF1MainSha256": "1c8902808cfd11833d83ca6d3b3147cade68c4c5cfe14a9fc3fa72c67ddc57f7",
+    "candidateMainSha256": "ea861e1ea8cae537c5f139567654bf73138e8f1499c96432e13d43c53553cd33"
+  },
+  "runtime": {
+    "nodeMajor": 20,
+    "memoryMbytes": 512,
+    "timeoutSecs": 900,
+    "actorDefinitionSha256": "f7e0be5e43d10a274f13a9730f01df86bab98f632afb330504b671f4cf5d352f"
+  },
+  "frozenInput": {
+    "path": "input-acceptance.json",
+    "sha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "rowCount": 100,
+    "uniqueRowIds": 100,
+    "uniquePublisherUrls": 95,
+    "duplicatePublisherUrlOccurrences": 5
+  },
+  "protectedHashes": {
+    "dom-content-type.mjs": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+    "package.json": "0a284a0555d300b0cc2df89e05bce1155210afeedfdc6f97e63fdcc2a9043194",
+    "package-lock.json": "ae27e007cac19131f53050c9be4688b6270f214ae1203c38ea8280f5533eed7a",
+    "INPUT_SCHEMA.json": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833"
+  },
+  "requestAndProcessingBounds": {
+    "concurrency": 4,
+    "rowHttpChainTimeoutMs": 10000,
+    "responseBodyMaxBytes": 2097152,
+    "redirectsAfterInitialRequest": 5,
+    "maximumPlannedPublisherGets": 600
+  },
+  "memorySnapshot": {
+    "sourceChangeOnly": "Nonthrowing process.memoryUsage snapshots; prior B2-F1 HTTP-stage logging remains unchanged.",
+    "stages": [
+      "row_start",
+      "fetch_before",
+      "fetch_after",
+      "fetch_complete",
+      "jsdom_construction_before",
+      "jsdom_construction_after",
+      "jsonld_before",
+      "jsonld_after",
+      "readability_before",
+      "readability_after",
+      "dom_close_before",
+      "dom_close_after",
+      "row_end"
+    ],
+    "fields": ["rowId", "stage", "elapsedMs", "rss", "heapUsed", "external", "arrayBuffers"],
+    "redaction": "No URL, header, body, article text, credential, token, or raw error is logged."
+  },
+  "checks": {
+    "nodeCheck": "node --check main.mjs passed.",
+    "schema": "apify validate-schema passed; Actor schema unchanged.",
+    "format": "npm run format:check passed.",
+    "nonthrowingLogger": "Inline local check injected memoryUsage and console.log failures; helper swallowed both and emitted only the fixed numeric-field whitelist.",
+    "diffReview": "Only main.mjs changes in the Actor candidate; transport, awaits, abort/cancel, parser, cleanup and dataset output control flow unchanged.",
+    "npmValidate": "Not run; prior issue-scoped validation evidence records an existing lint limitation in experiment files."
+  },
+  "status": "Candidate checks and prebuild integrity passed; corrected version 0.10 build SMDOTSyU2SjIeivha / 0.10.2 exact metadata passed and preserved F1 mapping. The one conditional run then TIMED-OUT at 899.861 seconds after 99/100 rows. M3 is Inconclusive / Hold and exhausted; no retry or further diagnostic is authorized."
+}
