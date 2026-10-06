@@ -8,7 +8,7 @@
 **Created:** `2026-10-04`  
 **Updated:** `2026-10-06`
 **GitHub Spike Issue:** `Prove Google News publisher resolution and full-text viability (#41)`  
-**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Approved; B2-D1 amended 2026-10-05, B2-S1 amended 2026-10-06 for one run, and B2-P1 read-only metadata comparison approved 2026-10-06**
+**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Approved; Area B mainstream-flow reset approved 2026-10-06. Earlier B2-D1/B2-S1/B2-P1 amendments are superseded historical routes.**
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
 
@@ -25,58 +25,89 @@ If either cannot be achieved within the approved constraints, identify the exact
 
 ### Established facts
 
-- An existing Google News publisher-resolution mechanism is present in the repository.
-- Hosted Google News requests can encounter a consent redirect before that resolver executes.
-- A1 reached the resolver-ready page state for all five bounded controls using stateless hosted HTTP requests.
-- A4 resolved 100/100 rows in the frozen representative sample to valid non-Google publisher URLs.
-- B1 classified 53/100 rows as eligible cached HTML under its recorded response-status, content-type, body-size and challenge-marker rule.
-- The B1 challenge-marker check is a body-text heuristic; its 29 `challenge_html` results are not confirmed access denials.
-- B2 has not produced row-level extraction evidence; the 50/100 readable-text target remains unresolved.
-- The approved B2-D1 candidate passed fixture hash/count checks but failed at source-store opening before any row processing; the underlying cause remains undetermined.
-- B2-S1 used its one owner-approved run; the Actor identity received HTTP 403 `insufficient-permissions` on the source-store metadata request before reading the fixed record.
+- A1 reached the resolver-ready Google News page state using ordinary hosted HTTP.
+- A4 resolved **100/100** rows in the frozen representative sample to valid non-Google publisher URLs. Area A is supported.
+- B1 subsequently fetched **53/100** rows as usable publisher HTML. This demonstrated that, at that time, the representative sample contained enough accessible HTML to make the **50/100** full-text target possible.
+- The original B2 candidate did not produce row-level extraction evidence.
+- B2-D1, B2-S1 and B2-P1 then investigated a cross-run design in which a later Actor tried to reopen B1's retained HTML from an earlier run.
+- B2-S1 observed HTTP 403 `insufficient-permissions` while inspecting the prior B1 store. That is evidence about the **diagnostic storage path**, not about the application's normal publisher fetch → extraction flow.
+- The intended application architecture does not require a later Actor run to reopen an earlier run's publisher HTML. Fetch and extraction are one normal enrichment flow inside the same Actor execution.
+
+### Owner decision — 2026-10-06
+
+The cross-run cached-HTML/KVS troubleshooting route is superseded.
+
+Area B is reset to the mainstream product flow:
+
+`resolved publisher URL → ordinary HTTP fetch → in-memory structured-data/Readability extraction → row output`
+
+The active experiment must remain as close as possible to normal hosted Apify operation. Do not continue permission/grant investigation, prior-run KVS access, Console diagnostics or other special harnessing solely to preserve the previous experimental separation.
 
 ### Remaining uncertainty
 
-- whether the B2-D1 failure and B2-S1's observed 403 share a cause; the B2-D1 log did not retain a status or API type;
-- whether the approved generic extraction path produces readable article text for at least 50 of the full 100 rows;
-- how much the B1 challenge-marker heuristic overclassified ordinary article text.
+The unresolved product question is now simply whether the normal one-run hosted flow can:
+
+1. execute fetch → extraction → row output correctly; and
+2. produce readable article text for at least **50/100** rows in the representative sample.
+
+If the normal flow fails, evidence must identify the actual business-flow stage: Actor startup/row processing, publisher fetch, extraction, or row output.
 
 ## 3. Current Investigation Position
 
 **Investigation Area:** `B — Retrieve readable publisher article text`
 
-**TID experiment:** `B2 — Extract with structured data plus Mozilla Readability`; additive read-only diagnostic `B2-P1 — ownership/access-grants metadata comparison`
-**Route status:** `B2-D1 and B2-S1 Inconclusive; B2-P1 metadata ownership comparison Supported, individual-grant/root-cause question Inconclusive because the conditional Console view was unavailable; full-text work remains On Hold`
+**Active route:** `B2 — vanilla hosted fetch → extract → row output`
 
-A1 completed with a stable resolver-input path in its small control sequence. A4 met the publisher-URL acceptance threshold on all 100 frozen sample rows. B1 then produced 53 rows of eligible cached HTML, meeting the TID's 50-row gate. Area A is supported and B2 was eligible, but its first candidate run emitted no dataset rows or text evidence. The owner approved the single B2-D1 diagnostic amendment on 2026-10-05. Full-text viability remains unresolved.
+**Route status:** `Ready to execute new smoke test`
 
-The B2-D1 amendment authorized one changed private B2 candidate and one hosted run with startup-stage markers and sanitized fatal-error reporting. That run failed during source-store opening before row processing, so no valid B2 extraction evidence exists and that authority is exhausted. The owner then approved exactly one B2-S1 diagnostic build/run. Its first read-only request to inspect the existing B1 store returned HTTP 403 `insufficient-permissions`; it did not attempt the fixed-record read. This is an access denial for the current Actor identity, not evidence that the store or record is missing, not proof that B2-D1 had the same cause, and not extraction-quality evidence. The S1 authorization is exhausted. The owner has since approved B2-P1, a separate, bounded read-only comparison of the S1 run and B1 store metadata. No Actor run, permission change or credential change is authorized; full-text viability remains unresolved.
+Area A remains supported. B1 remains useful historical evidence that 53/100 rows were fetchable, but its retained HTML cache is no longer an input to B2.
+
+The previous B2 cache-replay candidate and B2-D1/B2-S1/B2-P1 diagnostics are **Historical / Superseded**. Their evidence remains retained for traceability, but no further work should attempt to solve their cross-run KVS permission behaviour.
+
+The current next step is a small deterministic hosted smoke test using resolved publisher URLs from the representative sample. The Actor must fetch each publisher page live and immediately run extraction on the returned HTML in the same execution. If that normal flow works, proceed to the full 100-row B2 acceptance run.
 
 ## 4. Current Experiment Execution
 
-**TID authorisation:** `tid-41-google-news-resolution-full-text — Approved 2026-10-04; B2-D1 amendment approved 2026-10-05; B2-S1 amendment and B2-P1 metadata comparison approved 2026-10-06`
+**TID authorisation:** `tid-41-google-news-resolution-full-text — Approved; Area B mainstream-flow reset approved 2026-10-06`
 
-### Experiment definition
+### Current experiment — B2 vanilla-flow smoke test
 
-**B2-D1** was the one owner-approved diagnostic execution attached to B2. It used the same structured-data/Readability candidate, the exact 53 HTML response bodies retained by B1, and the original 100-row denominator. It failed at source-store opening before row processing, so it provided no extraction evidence. The first candidate and B2-D1 remain on Hold; the authorized diagnostic is exhausted.
+Use a very small deterministic set of publisher URLs from the representative sample that B1 previously classified as usable HTML. The retained B1 evidence may be used only to select the row IDs / publisher URLs; **do not read B1's cached HTML or B1 KVS at runtime**.
 
-Score the 53 accessible-HTML rows against the full 100-row denominator. For every row retain the Issue 18 row ID, original Google News URL and resolved publisher URL; distinguish rows with no HTML from extraction outcomes. Report non-empty readable text, extraction method, a consistent word count and failure class where applicable.
+For every smoke-test row, the hosted Actor performs the normal application sequence in one run:
 
-### Operational bounds
+1. row processing starts;
+2. ordinary bounded HTTP fetch of the resolved publisher URL;
+3. if eligible HTML is returned, structured article data / Mozilla Readability runs immediately on that in-memory response;
+4. fetch status, extraction status and word count/failure class are recorded;
+5. the row is written to the normal dataset.
 
-Keep the run deliberately small and bounded.
+### Evidence
 
-Record the exact fixtures, request count, runtime settings and retained evidence when the experiment is implemented.
+Use ordinary stage evidence only:
 
-Do not add browser automation, proxies/unblocking, custom egress/security machinery or another runtime.
+- row started;
+- fetch succeeded / failed;
+- extraction succeeded / failed;
+- row write succeeded / failed.
 
-### Permitted straightforward corrections
+No diagnostic subsystem, cross-run store access, alternate credentials, permission/grant changes, Console inspection or custom hosted harness is part of this experiment.
 
-Only the exact diagnostic instrumentation described by approved TID amendment B2-D1 is authorized in addition to the unchanged B2 mechanism. After the single D1 run, no further corrections or runs are authorized by this amendment.
+### Decision rule
 
-### Stop conditions
+- If the smoke run processes the complete small sample, emits a row result for every input and demonstrates that successfully fetched HTML reaches extraction and normal row output, proceed to the **100-row B2 acceptance run**.
+- If it fails before row processing, investigate the normal Actor entrypoint/configuration.
+- If ordinary HTTP fetch fails, investigate the publisher-fetch path.
+- If fetch succeeds but parsing/extraction fails, investigate the extraction path.
+- If extraction succeeds but row output fails, investigate normal dataset delivery.
 
-Stop after B2-D1 if valid extraction evidence was not produced. Startup, source-store, cache-integrity, transport or other processing errors do not establish extraction quality even when represented by 100 row outcomes. No second diagnostic, corrective run, unchanged rerun, or B3 run is authorized unless valid B2 extraction evidence demonstrates the TID's extraction-quality condition and subsequent validation supports that route.
+A straightforward defect in the normal product path may be corrected and the smoke test repeated. If continuing requires special storage/network/security/permission machinery that the product itself would not use, stop and return to the owner rather than constructing that machinery.
+
+### Full B2 acceptance run after smoke success
+
+Run the same one-run fetch → extract → row-output flow across the defined 100-row representative sample. Score readable text against the full 100-row denominator and retain separate per-row fetch and extraction outcomes.
+
+The target remains **>=50/100** readable article-text successes. B3 becomes eligible only if valid B2 evidence shows enough publisher HTML was fetched to make the target possible but the primary extraction path is the demonstrated remaining blocker.
 
 ## 5. Experiment Log
 
@@ -110,6 +141,12 @@ Stop after B2-D1 if valid extraction evidence was not produced. Startup, source-
 
 **Evidence normalization:** The local A4 results JSON was regenerated from the retained hosted dataset and sanitized run metadata after correcting a serialization newline. JSON whitespace in generated dataset/metadata artifacts was normalized for the repository formatter; their parsed values were verified unchanged. The hosted run was not repeated, and the frozen A4 manifest and its recorded hashes were not modified.
 
+### Owner reset — return Area B to the normal product flow (2026-10-06)
+
+After review of the B2-D1/B2-S1/B2-P1 path, the owner concluded that the cross-run cached-HTML mechanism had become diagnostic infrastructure unrelated to the intended application flow. The resulting KVS permission investigation was therefore a rabbit hole rather than evidence about full-text product feasibility.
+
+The active design now mirrors the approved architecture directly: fetch the publisher page and immediately extract text in the same hosted Actor run. B1's retained cache and all later cache-access diagnostics remain historical evidence only. The B2 smoke test and subsequent acceptance run must not depend on prior-run storage access.
+
 ### B1 — Measure current publisher-page access
 
 **Eligibility and result:** B1 followed the supported Area A result and was the mandatory first Area B experiment. It is classified **Supported for the TID's access gate**: 53/100 rows met the explicit usable-HTML eligibility rule, reaching the 50-row condition for B2. This establishes access eligibility for this fixed sample/candidate; it does not establish readable article text or full-text feasibility.
@@ -118,11 +155,11 @@ Stop after B2-D1 if valid extraction evidence was not produced. Startup, source-
 
 **Hosted execution and outcomes:** Private disposable Actor `JIogcgdHyCqAMHQ1P`, build `gHv4JmdlSO8RgczOg` / `0.4.1`, run `g7ndwu3G1M4orPt2h`, dataset `J4MaTPxn3EDcjuUIO`, key-value store `C1KYtogOgGpkRyF2H`; run status `SUCCEEDED`. It ran on Apify Linux x64, Node `v20.20.2`, configured at 256 MiB and 900 seconds, from 2026-10-04 18:48:02.916 UTC to 18:48:29.119 UTC. The run made 101 HTTP requests and cost `$0.0036840330466909542` by final Apify usage total, including 101 dataset writes and 54 key-value writes. Outcome classes were 53 `usable_html`, 18 `http_denied` and 29 `challenge_html`; all 100 row mappings are present, and all 53 eligible rows have retained HTML keys.
 
-**Interpretation and route:** The TID's B2 gate is met because 53 rows qualify under the declared transport/content-type/body eligibility rule. The `challenge_html` classification is a body-text heuristic and may conservatively match ordinary article text; those 29 rows are not described as a confirmed access boundary, and this heuristic does not prove extraction quality. B2 must use only the 53 cached HTML responses and assess text quality separately, with the full 100-row denominator.
+**Interpretation and route:** The historical B1 gate was met because 53 rows qualified under the declared transport/content-type/body eligibility rule. The `challenge_html` classification is a body-text heuristic and may conservatively match ordinary article text; those 29 rows are not described as a confirmed access boundary, and this heuristic does not prove extraction quality. The later decision to replay B1's cached HTML in a separate B2 run is now superseded. Current B2 uses live publisher fetch and extraction in the same Actor execution while still recording access and extraction outcomes separately.
 
 **Retained evidence:** `docs/changes/41/experiments/b1/input-sample.json`, `b1-results.json`, `b1-dataset.json`, `b1-run-metadata.json`, `b1-run-log.txt` and `b1-kvs-manifest.json` preserve the exact sample mapping, row-level outcomes, run evidence and cache-key/size inventory. The first run-info snapshot showed provisional usage of `$0.00010043147036764356`; the final run-info refresh reports `$0.0036840330466909542` and is the controlling cost. Cached bodies remain in the Apify run key-value store identified above; no raw body was copied into the dataset or run log.
 
-### B2 — Extract with structured data plus Mozilla Readability (candidate on Hold)
+### Historical / superseded — original cache-replay B2 candidate
 
 **Eligibility and result:** B2 was eligible after B1 retained 53 HTML bodies. The first B2 candidate is classified **Inconclusive**: no row was processed, no extraction result was emitted, and this run does not measure the 50/100 readable-text target. The candidate remains **On Hold** pending bounded triage; this is not evidence that the extractor met or failed the product threshold.
 
@@ -132,7 +169,7 @@ Stop after B2-D1 if valid extraction evidence was not produced. Startup, source-
 
 **Retained evidence:** `docs/changes/41/experiments/b2/input-sample.json`, `b2-results.json`, `b2-dataset.json`, `b2-run-metadata.json` and `b2-run-log.txt` preserve the candidate's sample, empty result and run evidence. The exact B1 HTML cache remains identified in the B1 record and was not modified.
 
-### B2-D1 — Single approved diagnostic execution
+### Historical / superseded — B2-D1 diagnostic execution
 
 **Authorization:** On 2026-10-05, the project owner approved the TID amendment for exactly one changed B2 build and one private hosted run, identified as B2-D1. The change is limited to sanitized stage markers at the fixture/hash/count checks, B1 key-value-store open, row-loop boundaries and dataset-write boundaries, plus sanitized fatal/Actor-exit error reporting that preserves a failing process exit status. Package and Actor version metadata identify the candidate. Parser behavior, pinned dependencies, Node 20 runtime, 100-row fixture, 53 cached HTML bodies, limits, scoring, output schema and provenance are unchanged.
 
@@ -150,7 +187,7 @@ Stop after B2-D1 if valid extraction evidence was not produced. Startup, source-
 
 **Retained evidence:** `docs/changes/41/experiments/b2/b2-d1-results.json`, `b2-d1-dataset.json`, `b2-d1-run-metadata.json`, `b2-d1-run-log.txt` and `b2-d1-kvs-manifest.json`. The record contains no source-cache bodies, extracted text, credentials or signed storage URLs.
 
-### B2-S1 — Approved single-record cached-body access witness
+### Historical / superseded — B2-S1 cached-body access witness
 
 The B2-D1 authorization is exhausted. On 2026-10-06, the owner approved exactly one private build and hosted run for B2-S1, as separately specified in the TID. At approval, no S1 API call, Actor build or hosted run had occurred. The owner acknowledged the modeled approximately `$0.0127` standard-rate charge and its uncertainty. The single S1 authorization is now exercised and exhausted; the overall Spike conclusion remains `Pending` and B2-D1 remains `Inconclusive / On Hold`.
 
@@ -168,7 +205,7 @@ At Apify public Free/Starter rates checked 2026-10-05, the maximum 256 MiB/900-s
 
 **Retained evidence:** `docs/changes/41/experiments/b2-s1/b2-s1-approval.json`, `b2-s1-build-metadata.json`, `b2-s1-run-metadata.json`, `b2-s1-run-log.txt` and `b2-s1-results.json`. The run metadata is a sanitized selection; signed storage URLs, URL-signing keys, user identifiers and unrelated Actor history were excluded.
 
-### B2-P1 — Read-only ownership/access-grants metadata comparison
+### Historical / superseded — B2-P1 ownership/access-grants comparison
 
 **Approval and status (2026-10-06):** The owner approved a bounded, read-only comparison of metadata for the failed S1 run and the B1 source store, with a conditional one-view inspection of that store's Console access/share settings only if both metadata GETs succeed but individual grant context remains unknown. This is not a new full-text experiment and does not resume B2. The existing Actor run was `hr2WzjPcLnZgHQYmZ`; its existing Actor was `JIogcgdHyCqAMHQ1P`; the B1 source store is `C1KYtogOgGpkRyF2H`, associated in retained evidence with B1 creator run `g7ndwu3G1M4orPt2h`.
 
@@ -228,12 +265,13 @@ For every experiment record:
 **Spike state:** `Open`  
 **Area A:** `Supported` — A4 resolved 100/100 sample rows.
 
-**Area B:** `Unresolved / On Hold` — B1 retained 53 usable HTML responses. B2-D1 stopped before processing cached HTML with an unknown cause. B2-S1 received HTTP 403 `insufficient-permissions` on one source-store metadata request and made no record read; its single-run approval is exhausted. B2-P1 supports matching store/run ownership and creator linkage. Both resources report `FOLLOW_USER_SETTING`, meaning they inherit the account-level general visibility setting; its effective value and individual grants remain unknown. No Console share-settings view occurred because no browser was available after the owner availability opportunity. The metadata comparison does not explain S1's denial or establish body readability or extraction success.
+**Area B:** `Unresolved / Active` — B1 historically fetched 53 usable HTML responses. The original cache-replay B2 candidate and B2-D1/B2-S1/B2-P1 diagnostics did not produce extraction-quality evidence and are now superseded. The observed KVS 403 belongs to that diagnostic path and is not treated as a product-flow failure.
 
-**Spike conclusion:** `Pending`; neither downstream capability is unblocked.
-**Required next action:** `No further metadata or Actor action under B2-P1. The conditional Console view was unavailable and this bounded route is complete. Keep full-text viability unresolved and On Hold. Any later access investigation requires a separate owner decision and bounded design; no permission/grant change, credential change, API request, build/run, record read or extraction is authorized.`
+**Spike conclusion:** `Pending`; neither downstream capability is yet unblocked.
 
-**Historical checkpoint note:** The following checkpoint records the 2026-10-05 B2-D1 decision and is retained as history. Its single-run approval was exercised and exhausted. It was superseded by the 2026-10-06 B2-S1 approval/result, then by the later B2-P1 metadata comparison and current boundary. No approval in the historical checkpoint authorizes additional work.
+**Required next action:** `Run the approved vanilla B2 smoke test: live publisher fetch → in-memory structured-data/Readability extraction → normal dataset row, all within one hosted Actor run. Do not access the prior B1 cache. If the smoke test succeeds, run the same flow on the 100-row representative sample and score the >=50/100 target.`
+
+**Troubleshooting boundary:** `If the vanilla flow fails, diagnose only the normal stage that failed. Do not resume the cross-run KVS/permission route or introduce special hosted harnessing merely to make the experiment run.`
 
 ## Historical checkpoint: B2-D1 post-run (superseded)
 
