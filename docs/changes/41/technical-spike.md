@@ -8,7 +8,7 @@
 **Created:** `2026-10-04`  
 **Updated:** `2026-10-06`
 **GitHub Spike Issue:** `Prove Google News publisher resolution and full-text viability (#41)`  
-**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Approved; B2-D1 amended 2026-10-05 and B2-S1 amended 2026-10-06 for one run each**
+**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Approved; B2-D1 amended 2026-10-05, B2-S1 amended 2026-10-06 for one run, and B2-P1 read-only metadata comparison approved 2026-10-06**
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
 
@@ -45,16 +45,16 @@ If either cannot be achieved within the approved constraints, identify the exact
 
 **Investigation Area:** `B — Retrieve readable publisher article text`
 
-**TID experiment:** `B2 — Extract with structured data plus Mozilla Readability`
-**Route status:** `B2-D1 and B2-S1 complete — Inconclusive; stop with full-text viability unresolved`
+**TID experiment:** `B2 — Extract with structured data plus Mozilla Readability`; additive read-only diagnostic `B2-P1 — ownership/access-grants metadata comparison`
+**Route status:** `B2-D1 and B2-S1 Inconclusive; B2-P1 metadata ownership comparison Supported, individual-grant/root-cause question Inconclusive because the conditional Console view was unavailable; full-text work remains On Hold`
 
 A1 completed with a stable resolver-input path in its small control sequence. A4 met the publisher-URL acceptance threshold on all 100 frozen sample rows. B1 then produced 53 rows of eligible cached HTML, meeting the TID's 50-row gate. Area A is supported and B2 was eligible, but its first candidate run emitted no dataset rows or text evidence. The owner approved the single B2-D1 diagnostic amendment on 2026-10-05. Full-text viability remains unresolved.
 
-The B2-D1 amendment authorized one changed private B2 candidate and one hosted run with startup-stage markers and sanitized fatal-error reporting. That run failed during source-store opening before row processing, so no valid B2 extraction evidence exists and that authority is exhausted. The owner then approved exactly one B2-S1 diagnostic build/run. Its first read-only request to inspect the existing B1 store returned HTTP 403 `insufficient-permissions`; it did not attempt the fixed-record read. This is an access denial for the current Actor identity, not evidence that the store or record is missing, not proof that B2-D1 had the same cause, and not extraction-quality evidence. The S1 authorization is exhausted. No further run or permission change is authorized; full-text viability remains unresolved.
+The B2-D1 amendment authorized one changed private B2 candidate and one hosted run with startup-stage markers and sanitized fatal-error reporting. That run failed during source-store opening before row processing, so no valid B2 extraction evidence exists and that authority is exhausted. The owner then approved exactly one B2-S1 diagnostic build/run. Its first read-only request to inspect the existing B1 store returned HTTP 403 `insufficient-permissions`; it did not attempt the fixed-record read. This is an access denial for the current Actor identity, not evidence that the store or record is missing, not proof that B2-D1 had the same cause, and not extraction-quality evidence. The S1 authorization is exhausted. The owner has since approved B2-P1, a separate, bounded read-only comparison of the S1 run and B1 store metadata. No Actor run, permission change or credential change is authorized; full-text viability remains unresolved.
 
 ## 4. Current Experiment Execution
 
-**TID authorisation:** `tid-41-google-news-resolution-full-text — Approved 2026-10-04; B2-D1 amendment approved 2026-10-05; B2-S1 amendment approved 2026-10-06`
+**TID authorisation:** `tid-41-google-news-resolution-full-text — Approved 2026-10-04; B2-D1 amendment approved 2026-10-05; B2-S1 amendment and B2-P1 metadata comparison approved 2026-10-06`
 
 ### Experiment definition
 
@@ -164,9 +164,27 @@ At Apify public Free/Starter rates checked 2026-10-05, the maximum 256 MiB/900-s
 
 **Classification and stop:** B2-S1 is **Inconclusive** for the single-record witness question and **On Hold**. The observed 403 establishes that the current Actor identity could not inspect B1 store metadata. It does not establish that the store or record is absent, that B2-D1 had the same cause, that publisher access failed, or that extraction quality is inadequate. Stop here: no permission change, second source request, corrective run, B2 resume or B3 is authorized. The overall Spike conclusion remains `Pending`.
 
-**Next boundary:** Active experimentation stops here. If the owner wants to continue, the next authorized work is preparation only of a separately scoped permission/access investigation design for review. This does not authorize a permission or credential change, a new source-store request, a build, or another hosted run.
+**Next boundary at S1 completion:** Active experimentation stopped here. A later owner decision separately authorized the bounded read-only metadata comparison recorded below. That later approval does not authorize an Actor build/run, record read, permission or credential change, or extraction work.
 
 **Retained evidence:** `docs/changes/41/experiments/b2-s1/b2-s1-approval.json`, `b2-s1-build-metadata.json`, `b2-s1-run-metadata.json`, `b2-s1-run-log.txt` and `b2-s1-results.json`. The run metadata is a sanitized selection; signed storage URLs, URL-signing keys, user identifiers and unrelated Actor history were excluded.
+
+### B2-P1 — Read-only ownership/access-grants metadata comparison
+
+**Approval and status (2026-10-06):** The owner approved a bounded, read-only comparison of metadata for the failed S1 run and the B1 source store, with a conditional one-view inspection of that store's Console access/share settings only if both metadata GETs succeed but individual grant context remains unknown. This is not a new full-text experiment and does not resume B2. The existing Actor run was `hr2WzjPcLnZgHQYmZ`; its existing Actor was `JIogcgdHyCqAMHQ1P`; the B1 source store is `C1KYtogOgGpkRyF2H`, associated in retained evidence with B1 creator run `g7ndwu3G1M4orPt2h`.
+
+**Question:** Can the existing configured Apify account read the S1 run metadata and B1 store metadata, and do their exposed owner/Actor/run/general-access fields align? This may contextualize the S1 403, but it cannot establish the cause of that denial or whether stored HTML can be read.
+
+**Bounded method:** The isolated helper uses Apify JavaScript client `2.25.0`, pinned through the existing B2-S1 dependency lock. It obtains the already configured CLI account token into memory only; token and raw error messages are never printed, logged or written. It sets zero retries and a five-second client timeout, then calls the run metadata GET once followed by the store metadata GET once only after a valid expected run response. Maximum is two GET requests and ten seconds combined configured request timeouts. Any denied, unavailable, empty, mismatched or unexpected response stops the sequence. Only safe IDs/status, actual exposed permission/general-access fields, elapsed/request outcomes, hashes of user IDs and the equality result are retained. `null` general access is distinguished from an unexposed field; missing access-control metadata is not treated as proof that no individual grant exists. No record/key/body, Actor log, dataset, build/run, source write, other account, credential, login, publisher page or Google News request is in scope.
+
+**Conditional Console step:** I will not open the Console. If and only if both API responses succeed and the relevant individual grant context remains unknown, Main may assign one read-only Explorer attempt through the existing authenticated session, following the store detail page's Actions → Share path. Console navigation may make additional UI requests; the two-GET API cap does not apply to those requests. The view is limited to access/share settings; it must not inspect keys or records, preview bodies, alter grants, invite users, use a new login/account, expand into account inventory, or retain personal grant details. If an API response is denied, unavailable or unexpected, stop and report before any Console action. The path is documented by Apify's [Share storage](https://docs.apify.com/storage/share) and [Grant access rights](https://docs.apify.com/account/collaboration/access-rights) pages.
+
+**Readiness and execution:** The helper and approval record passed the internal readiness gate before live requests. Syntax, pinned-client import/version, SDK method availability, zero-retry/five-second configuration, approval JSON and formatting checks passed; a separate local check confirmed the preconfigured CLI token could be captured in memory without displaying it. The approved two-GET API sequence then completed once. An assigned read-only Explorer found no browser available for the conditional Console view; after the owner availability opportunity, no browser was made available. The Explorer did not open the Console, log in, or issue another API call.
+
+**API result (2026-10-06):** The run metadata GET returned an SDK response object in 526 ms. Its run ID and Actor ID matched the expected S1 run, status was `FAILED`, `generalAccess` was `FOLLOW_USER_SETTING`, and no separate `permissionLevel` field was exposed. The store metadata GET returned an SDK response object in 127 ms. Store ID, Actor ID and B1 creator run ID matched the retained expected values; the store owner ID hash matched the S1 run user ID hash. Store `generalAccess` was also `FOLLOW_USER_SETTING`. These values mean the resources inherit the account-level general visibility setting; the effective account setting was not observed. The run's `generalAccess` is a run-resource sharing field, not the Actor runtime permission level. The SDK did not expose a raw HTTP success status; none is claimed. Individual grants remain unknown. No raw user IDs, email/username, token, signed URL, signing key or unrelated metadata was persisted. The filtered evidence is `experiments/b2-p1/b2-p1-results.json`.
+
+**Current route and boundary:** The matching owner and creator links support the metadata ownership comparison. The account-level `FOLLOW_USER_SETTING` values do not reveal the effective general setting or individual grants, and run `generalAccess` does not expose runtime permission. S1's `LIMITED_PERMISSIONS` evidence comes separately from the retained S1 run log. The conditional Console settings/share trigger was met, but no browser was available after the owner availability opportunity; no Console page was viewed. Classify the metadata ownership comparison as Supported and the individual-grant/root-cause question as Inconclusive. This does not explain the S1 403, prove a record/body is accessible, or measure extraction quality. Stop here: no further API request, Console attempt, access change, build, Actor run, record read, B2 resumption or B3 is authorized. Full-text feasibility remains unresolved and On Hold. See Apify's [General resource access](https://docs.apify.com/account/collaboration/general-resource-access) and [Actor permissions](https://docs.apify.com/actors/development/permissions) documentation.
+
+**Retained evidence:** `experiments/b2-p1/approval.json`, `experiments/b2-p1/readonly-ownership-check.mjs`, and the helper-generated `experiments/b2-p1/b2-p1-results.json` after the single authorized attempt. No account token, raw user ID, email/username, signed URL, HTML or record body belongs in these artifacts.
 
 ## 6. Supported Technical Specification
 
@@ -210,16 +228,16 @@ For every experiment record:
 **Spike state:** `Open`  
 **Area A:** `Supported` — A4 resolved 100/100 sample rows.
 
-**Area B:** `Unresolved / On Hold` — B1 retained 53 usable HTML responses. B2-D1 stopped before processing cached HTML with an unknown cause. The separately approved B2-S1 run received HTTP 403 `insufficient-permissions` on its one metadata request to the B1 source store; it made no record read. Both D1 and S1 run approvals are exhausted. This establishes denial of that request only, not whether the store or record exists, whether the cached body is readable, or whether extraction can meet its target.
+**Area B:** `Unresolved / On Hold` — B1 retained 53 usable HTML responses. B2-D1 stopped before processing cached HTML with an unknown cause. B2-S1 received HTTP 403 `insufficient-permissions` on one source-store metadata request and made no record read; its single-run approval is exhausted. B2-P1 supports matching store/run ownership and creator linkage. Both resources report `FOLLOW_USER_SETTING`, meaning they inherit the account-level general visibility setting; its effective value and individual grants remain unknown. No Console share-settings view occurred because no browser was available after the owner availability opportunity. The metadata comparison does not explain S1's denial or establish body readability or extraction success.
 
 **Spike conclusion:** `Pending`; neither downstream capability is unblocked.
-**Required next action:** `Keep the Spike on hold. The owner may authorize preparation only of a separately scoped permission/access investigation design, or leave the Spike on hold. No new probe, access grant, credential change, build or run is authorized by this record.`
+**Required next action:** `No further metadata or Actor action under B2-P1. The conditional Console view was unavailable and this bounded route is complete. Keep full-text viability unresolved and On Hold. Any later access investigation requires a separate owner decision and bounded design; no permission/grant change, credential change, API request, build/run, record read or extraction is authorized.`
 
-**Historical checkpoint note:** The following checkpoint records the 2026-10-05 B2-D1 decision and is retained as history. Its single-run approval was exercised and exhausted. It was superseded by the 2026-10-06 B2-S1 approval and result, recorded in the current post-S1 boundary below. No approval in the historical checkpoint authorizes additional work.
+**Historical checkpoint note:** The following checkpoint records the 2026-10-05 B2-D1 decision and is retained as history. Its single-run approval was exercised and exhausted. It was superseded by the 2026-10-06 B2-S1 approval/result, then by the later B2-P1 metadata comparison and current boundary. No approval in the historical checkpoint authorizes additional work.
 
 ## Historical checkpoint: B2-D1 post-run (superseded)
 
-The checkpoint below preserves the owner context and decision state immediately after B2-D1 on 2026-10-05. Its evidence and approval remain historical; the checkpoint's decision request and next-step language are superseded by the current post-S1 boundary at the end of this file.
+The checkpoint below preserves the owner context and decision state immediately after B2-D1 on 2026-10-05. Its evidence and approval remain historical; its decision request and next-step language were later superseded by the S1 checkpoint and the current B2-P1 record above.
 
 ## Product and Issue context
 
@@ -293,20 +311,20 @@ Stop active experimentation at this evidence boundary, keep the overall Spike co
 
 At the time this checkpoint was written, the decision was whether to remain paused or prepare a separate TID. B2-S1 was later separately approved and executed once. This historical checkpoint does not authorize any additional build, run, correction, parser change or access test.
 
-## Current post-S1 boundary and owner decision (2026-10-06)
+## Historical post-S1 boundary and owner decision (2026-10-06; superseded by completed B2-P1)
 
 ### Issue context
 
 Issue #41 asks whether the hosted Node.js 20 Apify Actor can resolve at least 95 of 100 representative Google News links to publisher URLs and produce readable article text for at least 50 of those 100 rows. The publisher-link feature (#4) and optional full-text feature (#5) remain blocked pending a supported Spike conclusion and reassessment. The product must retain the original Google News URL, isolate row failures, and remain lightweight and HTTP-first.
 
-### Current evidence
+### Evidence as of S1 completion
 
 - A4 resolved 100/100 rows to valid non-Google publisher URLs in the fixed sample, supporting only the tested sample.
 - B1 retained 53 usable HTML responses, enough to attempt the 50/100 extraction target. Its 29 challenge-page exclusions remain a text heuristic, not confirmed denials.
 - B2-D1 did not process cached HTML; its underlying cause remains unknown. Its prior-run source-store opening failure does not establish the cause of S1's later denial.
 - The one approved B2-S1 run used the existing hosted Actor identity and attempted one metadata request to the B1 source KVS. That request returned HTTP 403 `insufficient-permissions`; the fixed record request was not attempted. No HTML was read and no extraction outcome was produced. The run failed visibly with exit code 1. See `experiments/b2-s1/b2-s1-run-metadata.json`, `b2-s1-run-log.txt`, and `b2-s1-results.json`.
 
-### Interpretation and stop condition
+### S1 interpretation and stop condition at that time
 
 The S1 result supports only that this metadata request was denied for the current hosted identity. It does not show that the store or record is missing, that the cached body is unreadable, that publisher access failed, or that extraction quality is insufficient. S1's one-run approval is exhausted. Area B remains inconclusive, the overall Spike conclusion remains `Pending`, and no B3 parser experiment is justified.
 

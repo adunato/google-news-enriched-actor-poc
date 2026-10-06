@@ -7,7 +7,7 @@
 **Status:** `Approved`  
 **Owner:** `Project owner`  
 **Created:** `2026-10-04`  
-**Updated:** `2026-10-05`
+**Updated:** `2026-10-06`
 **GitHub Spike Issue:** `Prove Google News publisher resolution and full-text viability (#41)`  
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
@@ -369,6 +369,37 @@ Classify exactly one terminal outcome: `actor_startup_error`; `store_absent`; `a
 **Execution outcome (2026-10-06)**
 
 The single approved build and run completed. The first source-store metadata request returned `access_denied` with HTTP 403 and sanitized API type `insufficient-permissions`; the fixed-record request was not made. Classify B2-S1 **Inconclusive** for the record-witness question and stop. This observed denial is not evidence that the store or record is absent, does not establish whether B2-D1 failed for the same reason, and does not measure extraction quality. The one-run authorization is exhausted; no permission change, retry, B2 resume, B3 or corrective run is authorized. Detailed sanitized evidence is retained under `docs/changes/41/experiments/b2-s1/`.
+
+### Approved amendment — B2-P1 read-only ownership/access-grants comparison
+
+**Approval and scope**
+
+On **2026-10-06**, the owner approved one bounded, read-only metadata comparison following B2-S1, under the Technical Spike method. It does not reopen B2 extraction or authorize an Actor build/run, a key-value record read, a source write, an access/permission change, a new credential, or a new login. The amendment is limited to the existing configured Apify account credential and the two metadata GETs below, followed by a conditional single Console share/settings view only if API metadata is successfully retrieved but does not expose the relevant individual grant context. The Console view will be assigned separately by Main after reviewing the API outcome; this executor must stop before UI access.
+
+**Question**
+
+Can read-only Apify metadata for the failed S1 run and its B1 source key-value store show whether the resource ownership and exposed general-access settings align with the identities involved? This may contextualize the S1 `insufficient-permissions` response. It cannot establish why the prior Actor request was denied, whether a body can be read, or whether extraction works.
+
+**Bounded execution**
+
+Use the existing Apify JavaScript client version `2.25.0`, pinned by the B2-S1 dependency lock, with the normal, previously configured account credential only. Capture that credential from the existing CLI secure account configuration in memory; never print, log, write or otherwise retain it. Configure `maxRetries: 0` and `timeoutSecs: 5`. In order, make at most these two explicit GET requests and stop the sequence on any denied, unavailable, empty, mismatched or unexpected response:
+
+1. `GET /v2/actor-runs/hr2WzjPcLnZgHQYmZ` — retain the expected run ID, returned Actor ID, status, and any permission/general-access field actually exposed. Compare its user ID in memory with the store owner ID; persist only stable SHA-256 identifiers and the equality result, never raw user IDs.
+2. Only after a valid matching run response, `GET /v2/key-value-stores/C1KYtogOgGpkRyF2H` — retain the expected store ID, owner-ID hash, Actor ID, originating Actor-run ID, and the observed general-access field, preserving `null` distinctly from an unexposed field.
+
+The two explicit API GETs together have at most ten seconds of configured request timeout. Console navigation can make additional UI requests, so no hard network-request cap is claimed for its conditional step. Record each SDK request outcome and elapsed time without inventing an HTTP success status where the client does not expose one. Filter API responses before persistence: do not retain usernames, email addresses, auth headers/tokens, signing keys, signed/public URLs or other unrelated fields. Do not infer that an absent ACL field means there are no individual grants. If the two metadata responses succeed but the applicable grant context remains unknown, Main may assign one attempt to view this store's access/share settings through the existing authenticated Console session. Follow the documented Store detail page → Actions → Share path; the view may inspect only access/share settings, not key lists, records or body previews. It may not change grants, invite users, retain personal grant details, use another account/login or expand into account inventory. Do not perform that view in this execution. See [Share storage](https://docs.apify.com/storage/share) and [Grant access rights](https://docs.apify.com/account/collaboration/access-rights).
+
+**Stops, evidence and cost**
+
+No retries, other account, login, fallback credential, additional endpoint, resource inventory, KVS record/key request, dataset/log query, build, hosted run, publisher/Google News request, extraction, permission update or credential change is allowed. Any missing field or unsupported context remains `unknown`; every failed API step stops immediately and is recorded as observed. A successful pair means only that this configured account could retrieve those metadata responses at that time. It does not establish record/body access or explain the S1 run-level denial. Record endpoint, request count/timing, response classification/status only where actually exposed, IDs needed for resource correlation, hashed user identities and comparison booleans. These are metadata reads with no Actor compute allocation; exact account/API charges are unknown and are not represented as zero or guaranteed free. Official endpoint references: [Get run](https://docs.apify.com/api/v2/actor-run-get) and [Get store](https://docs.apify.com/api/v2/key-value-store-get).
+
+**Readiness gate and routing**
+
+Before the first live request, record this approval and complete local syntax, dependency and boundary-conformance checks for the isolated helper. The executor must then report exact files/checks and await Main's internal Validator/readiness confirmation. After the authorized GET sequence, stop and report the evidence. Main may assign the single conditional Console settings/share view only if both API responses were available and individual grant context remains unknown. Otherwise stop at the observed outcome. No result resumes B2, permits B3, authorizes a record read, or establishes the cause of D1/S1; any further investigation requires a separate owner decision and design.
+
+**Execution outcome (2026-10-06; API portion)**
+
+After the local readiness gate, both approved metadata GETs returned SDK response objects in the required order (526 ms for the run, 127 ms for the store; no raw HTTP success code was exposed by the client). The run identity and Actor ID matched the expected S1 values and status was `FAILED`; the client did not expose a separate run permission-level field. Run-resource and store `generalAccess` were both `FOLLOW_USER_SETTING`: each inherits the account-level general visibility setting, whose effective value was not observed. The run `generalAccess` field describes run-resource sharing, not the Actor's runtime permission. The store metadata matched the expected store ID, Actor ID and B1 creator run ID. The store owner ID hash matched the S1 run user ID hash; raw user IDs were not retained. No personal account fields, signing keys, URLs or unrelated response fields were retained. The API comparison supports ownership and creator-link alignment for the observed metadata but does not establish which exact token the S1 Actor call used, whether any individual grant exists, or why the S1 runtime request was denied. Individual grant context remains unknown. The actual `LIMITED_PERMISSIONS` evidence is separately recorded in the S1 run log. Main assigned the conditional one-view Console settings/share step to a read-only Explorer, whose preflight reported that no browser was available; after the owner availability opportunity, no browser was made available. No Console page view, login, or additional API request occurred. The conditional view is unavailable, so classify the metadata ownership comparison as Supported and the individual-grant/root-cause question as Inconclusive, then stop. No record read or extraction is authorized. See Apify's [General resource access](https://docs.apify.com/account/collaboration/general-resource-access) and [Actor permissions](https://docs.apify.com/actors/development/permissions) documentation.
 
 ---
 

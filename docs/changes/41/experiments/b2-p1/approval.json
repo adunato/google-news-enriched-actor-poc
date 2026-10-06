@@ -1,0 +1,83 @@
+{
+  "experiment": "B2-P1",
+  "status": "metadata_ownership_supported_grant_context_inconclusive_conditional_console_view_unavailable",
+  "approvedAtUtcDate": "2026-10-06",
+  "approvalScope": "One read-only comparison of existing S1 Actor-run metadata and B1 source-store metadata using the existing configured Apify account credential, followed by at most one Main-assigned read-only Console access/share settings view only if both GETs succeed but individual grant context remains unknown.",
+  "expectedActorId": "JIogcgdHyCqAMHQ1P",
+  "s1RunId": "hr2WzjPcLnZgHQYmZ",
+  "b1SourceStoreId": "C1KYtogOgGpkRyF2H",
+  "b1CreatorRunId": "g7ndwu3G1M4orPt2h",
+  "client": {
+    "library": "existing pinned apify-client dependency from B2-S1 lockfile",
+    "version": "2.25.0",
+    "authCategory": "existing configured Apify CLI account token captured in memory only",
+    "maxRetries": 0,
+    "timeoutSecsPerRequest": 5,
+    "maximumExplicitApiGets": 2,
+    "maximumCombinedConfiguredRequestTimeoutSecs": 10
+  },
+  "apiSequence": [
+    {
+      "method": "GET",
+      "path": "/v2/actor-runs/hr2WzjPcLnZgHQYmZ",
+      "once": true,
+      "nextStep": "Only on a valid matching run response, request store metadata once. Otherwise stop."
+    },
+    {
+      "method": "GET",
+      "path": "/v2/key-value-stores/C1KYtogOgGpkRyF2H",
+      "once": true,
+      "nextStep": "Stop after response or error; no further API calls."
+    }
+  ],
+  "conditionalConsoleView": {
+    "authorized": true,
+    "trigger": "Both API responses succeed and relevant individual grant context remains unknown.",
+    "executor": "Only if separately assigned by Main after API evidence review.",
+    "limit": "One attempt through the existing authenticated Console session to view the existing store detail page Actions > Share settings only. Console navigation may make additional UI requests; the two-GET API cap does not apply to the UI network. No keys, records, body previews, grant edits, invitations, new login/account, broader inventory, or personal grant details retained.",
+    "status": "unavailable_after_owner_opportunity",
+    "preflight": "Assigned read-only Explorer reported no browser available. No browser became available after the owner availability opportunity; no Console page view, login, or additional API request occurred."
+  },
+  "forbidden": [
+    "Actor build or hosted run",
+    "Key-value record/key/body read",
+    "Any API request beyond the two listed GETs",
+    "Retry, fallback account, new login, new credential, or permission/access change",
+    "Dataset/log/source write, publisher/Google News request, extraction, or B2/B3 continuation",
+    "Printing/logging/persisting token, raw user ID, email, username, signed URL, signing key, or unrelated response metadata"
+  ],
+  "cost": {
+    "hostedCompute": "none authorized",
+    "apiAccountCharges": "unknown; do not assume zero or guaranteed free"
+  },
+  "execution": {
+    "apiRequestsAttempted": 2,
+    "runMetadata": "sdk_response_received_expected_run_and_actor_matched",
+    "storeMetadata": "sdk_response_received_expected_store_actor_and_b1_run_matched",
+    "storeOwnerMatchesS1RunUser": true,
+    "runGeneralAccess": "FOLLOW_USER_SETTING",
+    "storeGeneralAccess": "FOLLOW_USER_SETTING",
+    "effectiveAccountGeneralAccess": "unknown",
+    "individualGrantContext": "unknown",
+    "runPermissionLevel": "not_exposed",
+    "priorS1RuntimePermissionEvidence": "S1 run log separately records LIMITED_PERMISSIONS; B2-P1 run generalAccess is a run-resource sharing field, not the Actor runtime permission level.",
+    "generalAccessInterpretation": "FOLLOW_USER_SETTING means the resource inherits the account-level general visibility setting. The effective setting was not observed; it does not reveal Restricted/Read or individual grants.",
+    "conditionalConsoleTriggerMet": true,
+    "conditionalConsolePreflight": "no_browser_available",
+    "consoleViewAttempted": false,
+    "apiSequenceAuthorizationConsumed": true,
+    "metadataComparison": "supported_for_observed_owner_and_creator_link_alignment_only",
+    "grantContextAndS1RootCause": "inconclusive",
+    "consoleViewStatus": "unavailable_after_owner_opportunity",
+    "overallApprovalConsumed": true,
+    "stop": "No further API, Console, permission, credential, build/run, record read, or extraction action is authorized by B2-P1."
+  },
+  "officialApiReferences": [
+    "https://docs.apify.com/api/v2/actor-run-get",
+    "https://docs.apify.com/api/v2/key-value-store-get",
+    "https://docs.apify.com/storage/share",
+    "https://docs.apify.com/account/collaboration/access-rights",
+    "https://docs.apify.com/account/collaboration/general-resource-access",
+    "https://docs.apify.com/actors/development/permissions"
+  ]
+}

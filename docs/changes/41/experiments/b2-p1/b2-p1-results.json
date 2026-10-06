@@ -1,0 +1,60 @@
+{
+  "experiment": "B2-P1",
+  "authorizationDate": "2026-10-06",
+  "authCategory": "existing_configured_apify_cli_account_token_captured_in_memory",
+  "actorIdExpected": "JIogcgdHyCqAMHQ1P",
+  "runIdExpected": "hr2WzjPcLnZgHQYmZ",
+  "storeIdExpected": "C1KYtogOgGpkRyF2H",
+  "b1CreatorRunIdExpected": "g7ndwu3G1M4orPt2h",
+  "requestPolicy": {
+    "maxRetries": 0,
+    "timeoutSecsPerRequest": 5,
+    "maximumApiRequests": 2,
+    "maximumCombinedTimeoutMs": 10000
+  },
+  "apiRequestsAttempted": 2,
+  "requests": [
+    {
+      "endpoint": "/v2/actor-runs/hr2WzjPcLnZgHQYmZ",
+      "method": "GET",
+      "elapsedMs": 526,
+      "outcome": "response"
+    },
+    {
+      "endpoint": "/v2/key-value-stores/C1KYtogOgGpkRyF2H",
+      "method": "GET",
+      "elapsedMs": 127,
+      "outcome": "response"
+    }
+  ],
+  "startedAtUtc": "2026-10-06T07:20:16.852Z",
+  "apifyClientVersion": "2.25.0",
+  "run": {
+    "id": "hr2WzjPcLnZgHQYmZ",
+    "actorId": "JIogcgdHyCqAMHQ1P",
+    "userIdSha256": "25c0ded73cbf011ae4abaf57a4100261577da6c6694f6e24f244def82fe0c5b8",
+    "status": "FAILED",
+    "permissionLevel": {
+      "state": "not_exposed"
+    },
+    "generalAccess": {
+      "state": "observed",
+      "value": "FOLLOW_USER_SETTING"
+    }
+  },
+  "store": {
+    "id": "C1KYtogOgGpkRyF2H",
+    "ownerUserIdSha256": "25c0ded73cbf011ae4abaf57a4100261577da6c6694f6e24f244def82fe0c5b8",
+    "ownerMatchesS1RunUser": true,
+    "actorId": "JIogcgdHyCqAMHQ1P",
+    "actorRunId": "g7ndwu3G1M4orPt2h",
+    "generalAccess": {
+      "state": "observed",
+      "value": "FOLLOW_USER_SETTING"
+    }
+  },
+  "elapsedRequestTimeoutMs": 655,
+  "finishedAtUtc": "2026-10-06T07:20:18.980Z",
+  "outcome": "metadata_comparison_complete",
+  "interpretationLimit": "This reports only metadata exposed to the configured account. Missing ACL fields or an unknown/null generalAccess value do not prove that no individual grant exists. It does not explain the prior Actor-run 403 or prove record/body access."
+}
