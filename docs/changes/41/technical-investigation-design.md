@@ -4,7 +4,7 @@
 > This document defines what must be tested, why each experiment exists, what it measures, and exactly when it should run. It is not an experiment log.
 
 **Artifact ID:** `tid-41-google-news-resolution-full-text`  
-**Status:** `Original sequence approved; B2-R2 completed and exhausted; B2-R3 design proposal only, unapproved`
+**Status:** `Original sequence approved; B2-R2 completed and exhausted; B2-R3 executable amendment prepared, awaiting owner approval`
 **Owner:** `Project owner`  
 **Created:** `2026-10-04`  
 **Updated:** `2026-10-07`
@@ -12,7 +12,7 @@
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
 
-**Current design decision:** Area B was reset on **2026-10-06** to a vanilla single-run publisher fetch → extraction → row-output flow. B2-R2 was approved and executed once on **2026-10-07**; its hosted run timed out at 899.854 seconds after 98/100 outputs and is Inconclusive / Hold. Its approval is exhausted. B2-R2 superseded the unapproved, unexecuted primitive-only B2-R1 proposal. B2-R3 is proposed design work only; no experiment, source change, build, or run is authorized.
+**Current design decision:** Area B was reset on **2026-10-06** to a vanilla single-run publisher fetch → extraction → row-output flow. B2-R2 was approved and executed once on **2026-10-07**; its hosted run timed out at 899.854 seconds after 98/100 outputs and is Inconclusive / Hold. Its approval is exhausted. B2-R2 superseded the unapproved, unexecuted primitive-only B2-R1 proposal. B2-R3 now has a complete executable amendment but remains **unapproved**: no source/test change, build, hosted run, or publisher request is authorized until the owner approves this amendment.
 
 ## 1. What this investigation is trying to achieve
 
@@ -249,7 +249,9 @@ This separation is achieved through normal per-row evidence in one Actor run; it
 | 5 | B2-M3 — bounded memory-stage snapshots | Observe memory at row and processing-stage boundaries after B2-F1 ended with SIGKILL, without changing fetch, parsing, cleanup, or output behavior | **Completed 2026-10-06; valid partial execution, TIMED-OUT at 899.861s after 99/100 rows** | No normal completion; readable-text target was not assessed | Inconclusive / Hold; approval exhausted, no retry or further diagnostic |
 | 6 | B2-R1 — local Node 20 abort/read-settlement check | Determine whether a pending response-body read settles after the existing Node 20 `AbortSignal.timeout` fires on a loopback response | **Superseded; never approved or executed** | Superseded by B2-R2; no local test | No R1 execution authority |
 | 7 | B2-R2 — hosted body-read settlement observation | Observe actual read/stream settlement after abort on the vanilla hosted path | **Completed 2026-10-07; timed out at 899.854s with 98/100 rows** | Inconclusive / Hold; no acceptance target assessed | Approval exhausted; no retry or further diagnostic; Spike remains open |
-| 8 | B3 — one alternative generic Node-native extractor | Determine whether a measured extraction-quality shortfall is specific to the primary parser | **Not eligible from current evidence** | Area B feasible only after the target is supported | Stop / return extraction or architecture limitation |
+| 8 | B2-R3a — actual-helper seam and reproduction gate | Extract the real bounded body reader without behavior change and establish whether a controlled unfinished HTTP body can reproduce the post-abort pending-read condition at that seam | **Awaiting owner approval; run first if approved** | B2-R3b only if the unchanged helper remains pending through the local watchdog while normal/bound controls pass | Stop / Hold; do not implement containment if the test cannot discriminate the observed failure mode |
+| 9 | B2-R3b — bounded pending-read containment and acceptance | Make the existing 10-second HTTP abort capable of releasing a pending body read, prove bounded cleanup/continuation locally, then run one normal frozen 100-row hosted acceptance if all local and build gates pass | **Conditional on approved B2-R3a reproduction** | Completed 100-row run routes to independent readability scoring and the existing Area B/B3 rules | Any local containment failure, build mismatch, or incomplete hosted run stops Inconclusive / Hold; no retry or deeper diagnostic |
+| 10 | B3 — one alternative generic Node-native extractor | Determine whether a measured extraction-quality shortfall is specific to the primary parser | **Not eligible from current evidence** | Area B feasible only after the target is supported | Stop / return extraction or architecture limitation |
 
 ### B2 smoke test — vanilla hosted end-to-end flow
 
@@ -536,14 +538,156 @@ At 512 MiB for 900 seconds, compute is estimated at 0.125 CU / approximately `$0
 
 **B2-R2 execution result (2026-10-07):** Build `GvJKHPRZBtQdnQhwS` / `0.10.3` passed exact candidate and embedded resource checks. Run `kRbP0jJtLZtWuKxOh` used the frozen input (100 IDs, 95 unique publisher URLs, five repeated occurrences), actual 512 MiB / 900 seconds, and timed out at 899.854 seconds (`exitCode: null` in platform metadata). The CLI wait process exited 1; this is separate from the platform run status. The default dataset contains 98 unique rows; missing IDs are `q3-us-02` and `q4-gb-02`. The 98 rows contain 76 eligible HTML, 16 HTTP-denied, five timeouts, and one request error; extraction statuses are 75 success candidates, one no-readable-text candidate, and 22 not attempted. These are operational outcomes, not independent article-readability judgments. Their publisher request counts sum to 99 dataset-observed requests; the run-wide total is unknown. Platform peak memory was 511,270,912 bytes and actual total usage was `$0.025715634668674735`; neither establishes memory causality. The final log contains 1,049 R2 row markers, two worker-join markers, and no run summary. q3-us-02 and q4-gb-02 each reached an abort and a two-second post-abort snapshot while the body read remained in flight (`readerClosedState: pending`), with no later marker or row result. They are separate-row observations; they do not reproduce q3-us-01's historical cause. q3-us-01 did not acquire a reader; its pending state is only an initialization placeholder. The snapshot overwrites `currentPhase` with `post_abort_observation`, so it does not preserve the underlying phase at that instant. The evidence is in `experiments/b2-vanilla/run-metadata-b2-r2.json`, `results-b2-r2.json`, and `sanitized-stage-evidence-b2-r2.json`; the raw log and dataset remain in ignored `experiments/b2-vanilla/private/`. Classify B2-R2 as valid partial execution, Inconclusive / Hold. It establishes neither completion of the 100-row acceptance nor a below-50 result; B3 is not eligible and the approval is exhausted.
 
-## Proposed B2-R3 — bounded row containment design (design only; unapproved)
+## Proposed B2-R3 — bounded pending-read containment (executable amendment; awaiting owner approval)
 
-**Status and authority:** B2-R2 is complete and its one-run approval is exhausted. This proposal authorizes design work only. It does not authorize code or test changes, builds, hosted runs, publisher requests, or any further experiment. R1 remains superseded, never approved, and unexecuted.
+**Status and authority:** B2-R2 is complete and its one-run approval is exhausted. The design-only authority granted for B2-R3 has now been used to complete this amendment. The amendment is ready for owner review but remains **unapproved**. Until approval is received, it authorizes no source/test change, local execution, Actor build, hosted run, or publisher request.
 
-**Issue context and question:** Issue #41 asks whether the hosted Node.js 20 Actor can resolve at least 95 of 100 Google News URLs to publisher URLs and produce readable article text for at least 50 of those rows. B2-R2 timed out at 899.854 seconds with 98/100 outputs. For `q3-us-02` and `q4-gb-02`, the final observed snapshots showed a body read in flight and `reader.closed` pending after abort, with no later settlement or row output. The earlier M3 missing row completed in that run; these separate-row observations do not establish its cause. The new design question is whether the Actor can contain exactly one row whose body read remains pending after abort, preserve the original Google News URL and resolved publisher URL, and continue with the next healthy row. This asks about fail-soft containment, not why a publisher, network, or runtime stalled.
+### Question
 
-**Design work required before any executable amendment:** Identify a safe seam in the actual helper and specify a finite per-row deadline, bounded handling of a pending read and cleanup, and treatment of late settlement so it cannot produce an unhandled rejection, duplicate output, or unbounded work. Preserve partial HTML success when available, both provenance URLs, and normal processing of the next healthy row. Assess event-loop blocking, races, cleanup, and resource-leak risks. The relevant `readBoundedBody(response, logStage)` helper is currently non-exported in `main.mjs`, whose import starts the Actor. Extracting it into a side-effect-free module would change source and requires separate approval. Do not assume that such extraction is safe or already approved.
+Can the real bounded publisher-body reader be made fail-soft when the existing HTTP timeout fires while one `ReadableStreamDefaultReader.read()` remains pending, so that the affected row becomes a normal timeout outcome and the Actor continues to later rows without changing the approved HTTP-first architecture?
 
-A useful later test design should compare the current helper with a candidate at the actual helper seam, using a controlled unfinished HTTP response, an outer watchdog, and a clear reproduction gate. A deliberately pending read may be included only as a separately labelled artificial worst-case fault; it can test helper containment but must not be presented as evidence that ordinary hosted publisher responses behave that way. Define how the test verifies a fail-soft timeout row, original Google News and resolved publisher URLs, any preserved partial HTML success, exactly one row output, continuation to the next healthy row, bounded cleanup, and absence of unhandled rejection or resource leak. The precise deadlines, cleanup limits, caps, candidate/source diff, evidence fields, focused local tests, and stop rules remain undecided and must be justified in the design; do not invent values now. A loopback request that aborts normally would not establish containment for a deliberately pending read or explain the hosted R2 outcome.
+This is a containment question. It does **not** attempt to prove why the two B2-R2 publisher responses stalled.
 
-**Routing:** First decide whether a safe actual-helper seam and meaningful bounded test can be specified within the current product and architecture boundaries. If not, stop and return to the owner with that limitation. If so, complete a bounded, executable TID amendment for owner review. Any execution requires a separate explicit owner approval after that design is complete. Keep the original 100-row outcome gate, 50/100 readable-text target, and B3 conditional rule unchanged. Area B remains On Hold; no automatic source change, test, build, run, or parser experiment follows this proposal.
+### Why this is a meaningful production seam
+
+The current hosted candidate calls `readBoundedBody(response, logStage, r2Trace)` directly inside the ordinary publisher fetch path. The helper is non-exported only because it lives in `main.mjs`, whose top-level import starts the Actor. Its body-stream logic has no Actor dependency and can be moved, together with the existing response-body cancellation helper and 2 MiB body bound, into one side-effect-free module without changing the product mechanism.
+
+The current Node 20/Web Streams contract provides a specific containment primitive: releasing a `ReadableStreamDefaultReader` while a `read()` request is pending causes that pending read promise to reject, and reader cancellation is the standard signal that the consumer is no longer interested in the stream. The candidate therefore does not add a second runtime, watchdog service, proxy, retry layer, or publisher-specific mechanism. It makes the existing row timeout observable at the exact helper that was seen waiting after abort.
+
+### B2-R3a — actual-helper seam and reproduction gate
+
+**Objective**
+
+Prove that the test exercises the real helper and can distinguish the observed failure mode before any containment behavior is added.
+
+**Source change**
+
+Make one behavior-neutral extraction only:
+
+- move `cancelResponseBody()`, `readBoundedBody()`, and the existing 2 MiB body-limit constant from `experiments/b2-vanilla/actor/main.mjs` to a new side-effect-free `experiments/b2-vanilla/actor/body-stream.mjs`;
+- export the two helpers and import them from `main.mjs`;
+- do not change their operational logic, arguments, timeout behavior, fetch behavior, output, logging callbacks, dependencies, Actor configuration, or input.
+
+Add `body-stream.test.mjs` using Node's built-in `node:test`; add no dependency.
+
+**Local controls**
+
+Run tests serially with `node --test --test-concurrency=1 body-stream.test.mjs`.
+
+The controls must establish that the extracted unchanged helper:
+
+1. returns the exact bytes from a normally completed finite HTML response;
+2. preserves the declared-length body-limit failure;
+3. preserves the streamed body-limit failure; and
+4. is the helper under test rather than a copied implementation.
+
+**Reproduction fixture**
+
+Use a loopback HTTP server only. It returns HTTP 200 / HTML headers, writes a small body prefix, and deliberately leaves the response body unfinished. Fetch it with an `AbortSignal.timeout(250)`, obtain the real fetch `Response`, then call the extracted unchanged helper. A separate 2-second outer **test-only** watchdog records whether the helper has settled; after that observation it destroys the loopback connection so the test process cannot hang.
+
+The 250 ms / 2 s values accelerate a deterministic local test only; they are not product limits and are not evidence about hosted publisher latency.
+
+**R3a reproduction gate**
+
+R3a is Supported only if:
+
+- all normal/body-bound controls pass; and
+- after the fetch signal has aborted, the unchanged actual helper is still unsettled when the 2-second watchdog observes it.
+
+If the helper settles before that watchdog, the local fixture does not reproduce the relevant pending-read behavior. Stop B2-R3 as **Inconclusive / Hold**. Do not implement the candidate merely because the hosted run once stalled.
+
+Retain only concise sanitized test evidence: Node version, test names, abort/watchdog timings, settlement state, and pass/fail. No publisher requests occur in R3a.
+
+### B2-R3b — containment candidate and acceptance
+
+**Run when**
+
+Only if B2-R3a passes its reproduction gate and the owner has approved this complete amendment.
+
+**Candidate source change**
+
+Starting from the behavior-neutral R3a seam:
+
+1. pass the already-existing per-row HTTP `AbortSignal` into `readBoundedBody()`;
+2. for each pending `reader.read()`, race the read outcome against that existing signal's abort event;
+3. if the read wins, keep the current behavior;
+4. if the abort wins while a read is pending:
+   - release the reader lock so the pending read is forced to settle;
+   - consume the late read outcome so it cannot become an unhandled rejection;
+   - after the stream is unlocked, request best-effort body cancellation and attach rejection handling, but **do not await cancellation on the row's critical path**;
+   - throw the signal's timeout reason (or an equivalent `TimeoutError` only if the runtime supplies no reason), so the existing `fetchPublisher()` classification remains `timeout`;
+5. never return accumulated partial bytes after the timeout wins;
+6. preserve normal success when the body finishes before the timeout wins.
+
+No second timer is added to production code. The existing `ROW_HTTP_TIMEOUT_MS = 10_000` remains the only publisher HTTP-chain deadline. Redirect count, body-size cap, concurrency, parser, dataset output, provenance fields, and all acceptance thresholds remain unchanged.
+
+**Race and cleanup requirements**
+
+The implementation must:
+
+- remove its abort listener on normal completion;
+- tolerate a signal that is already aborted when body reading begins;
+- avoid double release/cancel effects;
+- handle synchronous or asynchronous cancellation failure without replacing the row's timeout classification;
+- leave no unhandled rejection from the original read, `reader.closed`, or best-effort cancellation;
+- not treat a partial body as successful HTML;
+- not block the worker while waiting for cleanup after the row has timed out.
+
+### B2-R3b local proof
+
+Use the same actual `body-stream.mjs` helper and the same serial Node test command.
+
+The candidate must pass:
+
+1. all R3a normal/body-bound controls unchanged;
+2. the same unfinished loopback response: the helper must settle as a timeout before the 2-second watchdog, and a subsequent healthy loopback response must be read successfully;
+3. a separately labelled **artificial worst-case stream** whose next `read()` remains pending and whose underlying cancellation promise is deliberately left pending: the helper must still return control as a timeout before the watchdog because row completion must not depend on cleanup settlement;
+4. no observed `unhandledRejection` during either containment test after allowing late read/cancel settlement opportunity;
+5. no duplicate helper completion.
+
+The artificial stream proves only containment behavior. It is not evidence that hosted publishers or Undici produce that exact fault.
+
+If any local candidate test fails, classify B2-R3b **Rejected / Hold** and stop. Do not build or run the Actor.
+
+### Hosted candidate gate and one acceptance run
+
+Only after every local gate passes:
+
+- change the isolated Actor build tag to `issue41-b2-r3` under existing Actor definition version `0.10`;
+- keep Node 20, all dependencies, 512 MiB memory, 900-second Actor timeout, concurrency four, the 10-second HTTP-chain timeout, 2 MiB body cap, redirect limit, parser behavior and frozen input unchanged;
+- make no Google News requests, prior-run cache/KVS reads, proxy/browser/unblocking calls, permission changes, credentials, retries, alternate runtime, or external service calls beyond the ordinary publisher HTTP requests already represented by B2;
+- create exactly **one** candidate build.
+
+Before any publisher request, verify the exact build contains only the approved helper extraction/containment, focused test file, import/signature wiring and build-tag change; verify the frozen input SHA-256 remains `ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01`; and verify the build definition still reports 512 MiB default/min/max memory and 900-second timeout. Any mismatch stops without a hosted run.
+
+If the build gate passes, execute exactly **one** frozen 100-row hosted acceptance run using that exact build and the existing normal fetch → in-memory extraction → default-dataset flow.
+
+### Hosted evidence and scoring
+
+A valid completed R3 run requires:
+
+- platform run success and normal run summary;
+- exactly 100 dataset rows with 100 unique frozen row IDs and no duplicates;
+- one row outcome for every input row;
+- original Google News URL and resolved publisher URL preserved on every row;
+- any contained pending-read event represented as that row's ordinary timeout/fetch-failure outcome rather than a missing row or run-level stall;
+- no dataset-write failure or run-level processing failure.
+
+If the run completes, independently review every `fullTextStatus=success` candidate for coherent readable article text before scoring the existing >=50/100 target.
+
+Routing remains unchanged:
+
+- **>=50/100 independently readable texts:** Area B is Supported for the tested sample; combine with supported Area A for the Spike conclusion.
+- **Completed run, >=50 eligible HTML but <50 readable texts:** B3 becomes eligible under its existing extraction-quality condition.
+- **Completed run with <50 eligible HTML:** record the access result and return to TID/owner review; do not invoke B3 automatically.
+- **Any incomplete/failed hosted run:** B2-R3 is Inconclusive / Hold. No retry, new timeout, resource increase, deeper stream diagnostic, publisher-specific fix, or alternate runtime follows this amendment.
+
+The previous R2 run used about $0.0257 total platform usage at the same 512-MiB / 900-second ceiling. R3 authorizes one comparable hosted run only; actual usage remains evidence, not a guaranteed cap.
+
+### Approval boundary
+
+Approval of this amendment authorizes the complete conditional B2-R3a → B2-R3b sequence above: the behavior-neutral helper extraction and local reproduction test; the containment candidate and local proof only if R3a reproduces; then one candidate build and one hosted 100-row run only if every local/build gate passes.
+
+Approval does **not** authorize a retry, another containment mechanism, a second hosted build/run, new diagnostics, resource changes, dependency changes, browser/proxy infrastructure, publisher-specific handling, or investigation of the root cause of the B2-R2 stalls.
+
+Until the owner approves this amendment, Area B remains **On Hold** and no B2-R3 execution is authorized.
