@@ -8,7 +8,7 @@
 **Created:** `2026-10-04`  
 **Updated:** `2026-10-07`
 **GitHub Spike Issue:** `Prove Google News publisher resolution and full-text viability (#41)`  
-**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Original route and 2026-10-06 Area B reset approved; B2-R2 completed and exhausted; B2-R3 approved; R3a executed Inconclusive / Hold under Node.js 20; reproduction gate not met; B2-R3b not eligible. Earlier B2-D1/B2-S1/B2-P1 routes are superseded historical evidence; B2-R1 was never approved or executed.**
+**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Original route and 2026-10-06 Area B reset approved; B2-R2 completed and exhausted; B2-R3 approved; R3a executed Inconclusive / Hold under Node.js 20; reproduction gate not met; B2-R3b not eligible. B2-R4 hosted diagnostic is a DRAFT only: NOT APPROVED / NOT EXECUTED. Earlier B2-D1/B2-S1/B2-P1 routes are superseded historical evidence; B2-R1 was never approved or executed.**
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
 
@@ -70,7 +70,7 @@ The three-row smoke sample (`q1-gb-01`, `q1-gb-02`, `q1-gb-05`) passed independe
 
 **TID authorisation:** `tid-41-google-news-resolution-full-text — Approved; Area B mainstream-flow reset and B2 smoke → conditional acceptance route approved 2026-10-06`
 
-**Current execution authority:** B2-M3 and B2-R2 approvals are exhausted. B2-R1 was never approved or executed. The approved B2-R3 amendment authorized its conditional sequence. R3a has run once and is Inconclusive / Hold because its reproduction gate was not met. No further experiment, containment change, build, hosted run or publisher request is authorized by this amendment. The original 100-row outcome gate and conditional B3 rule remain unchanged.
+**Current execution authority:** B2-M3 and B2-R2 approvals are exhausted. B2-R1 was never approved or executed. The approved B2-R3 amendment authorized its conditional sequence; R3a ran once and is Inconclusive / Hold because its reproduction gate was not met, so R3b is not eligible. B2-R4 is only a draft hosted diagnostic proposal; it has no owner approval and authorizes no source change, build, hosted run, publisher request, or other experiment. Any further investigation requires approval of a complete TID amendment. The original 100-row outcome gate and conditional B3 rule remain unchanged.
 
 The owner approved the current vanilla sequence on 2026-10-06. The approval covered one smoke run and, only if its gate passed, one 100-row acceptance run on the same build; both authorizations are exercised. After the acceptance run reached a TID boundary, the user separately approved exactly one B2-M1 run requesting 512 MiB as recorded below. That approval is exercised and exhausted. Later B2-M2 and B2-F1 approvals were also exercised and exhausted. B2-D1/B2-S1/B2-P1 permissions and cache-replay authorizations are historical and exhausted.
 
@@ -384,7 +384,7 @@ The compute estimate is 0.125 CU / about `$0.025` for 900 seconds at the previou
 
 **Spike conclusion:** `Pending`; neither downstream capability is yet unblocked.
 
-**Required next action:** `Design only: assess whether a safe actual-helper seam and bounded containment test can be specified for the proposed B2-R3 question. If it can, prepare a complete executable TID amendment for owner review; if it cannot, return the design limitation to the owner. No implementation, test, build, hosted run, publisher request, or other execution is authorized. Area B remains On Hold and full-text feasibility unresolved.`
+**Required next action:** `Owner review of the complete B2-R4 hosted diagnostic proposal in technical-investigation-design.md. Decide whether to approve its one monitored build attempt, one conditional API run, explicit run-only $0.10 cap, build-cost risk, marker/log bounds, and diagnostic thresholds, or keep Area B on Hold. R4 remains Draft / Not approved / Not executed. No source preparation, build, hosted run, publisher request, or other execution is authorized. Full-text feasibility remains unresolved.`
 
 **Troubleshooting boundary:** `If the vanilla flow fails, diagnose only the normal stage that failed. Do not resume the cross-run KVS/permission route or introduce special hosted harnessing merely to make the experiment run.`
 
@@ -589,3 +589,14 @@ The executable was `C:\nvm4w\nodejs\node.exe`, Node `v20.19.0`, with bundled Und
 **Experiment validity:** Valid execution of the approved R3a reproduction gate; result Inconclusive / Hold. The prior fabricated Node 22 record remains invalid and is not part of this result.
 
 **Learnings:** None.
+
+
+## Proposed B2-R4 design handoff — hosted body-read diagnosis (draft, not approved)
+
+R3a remains a valid Node.js 20 execution classified **Inconclusive / Hold**; the local unfinished-response fixture did not reproduce a helper that stayed pending through the watchdog. The prior B2-R2 hosted run remains incomplete at 98/100 rows, with two separate post-abort pending-read observations. These facts do not establish a common cause, prove extraction hung, or support the 50/100 readability target. The earlier 256 MiB SIGKILL after 10 rows is a distinct run with unknown phase and cause.
+
+The TID now contains a proposed B2-R4 hosted diagnostic using a separate copy of the verified historical R2 Actor source and fixed input. If later approved, it would add bounded stage markers and a final-image Node/Undici version probe without changing the R2 request/read/cancel/extraction/output control flow. One candidate build and one private 100-row hosted run would be allowed only after provenance, semantic, runtime, cost, and evidence-cap gates pass. The diagnostic would compare where progress stops; it cannot fix the behavior or pass Issue #41's product targets. R3a files remain protected and are not part of the proposed R4 candidate.
+
+**Draft status and owner decision:** B2-R4 is **NOT APPROVED / NOT EXECUTED**. The proposal defines one monitored build attempt with a 120-second guard and best-effort abort, then one API run with `maxTotalChargeUsd=0.10` only if every gate passes. The run cap does not cover build cost; the build has no hard dollar cap and abort has no guaranteed termination time. New proposal limits are 40 marker records per row, 4,006 per run, 768 UTF-8 bytes per marker, and 4 MiB total marker bytes, plus a 70-eligible-HTML representativeness gate and timer-delay flags. They require explicit owner approval. Missing/capped evidence or a missing required 30-second snapshot routes to Inconclusive / Hold and cannot establish a pending condition beyond the last observed event. No source preparation, build, hosted run, publisher request, retry, or deeper diagnostic has occurred for R4.
+
+The TID includes a self-contained owner checkpoint and the approval boundary. Until the open design questions are resolved and the final TID is explicitly approved, the Spike remains open / Area B On Hold, no experiment is authorized, and downstream Issues #4 and #5 remain blocked.
