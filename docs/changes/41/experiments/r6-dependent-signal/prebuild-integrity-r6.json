@@ -1,6 +1,6 @@
 {
   "artifact": "Issue 41 R6 prebuild integrity and preparation gate",
-  "status": "OWNER_APPROVED_PREPARATION_AND_INDEPENDENT_REVIEW_PASSED; READY_FOR_ONE_GUARDED_BUILD_GATE; EXACT_RUNTIME_GATE_PENDING; NOT_BUILT; NOT_RUN",
+  "status": "OWNER_APPROVED_R6_SEQUENCE; PREPARATION_AND_INDEPENDENT_REVIEW_PASSED; ONE_BUILD_ATTEMPT_ABORTED_BEFORE_FINAL_IMAGE; R6_INCONCLUSIVE_HOLD; ADDITIONAL_BUILD_NOT_APPROVED; EXACT_RUNTIME_GATE_NOT_EXECUTED; HOSTED_RUN_NOT_STARTED",
   "approvedTidCommit": "af1a080a64406babaf34fb3e057f9c59c6a2bd7d",
   "provenanceManifest": "provenance-r6.json",
   "uploadSourceRoot": "docs/changes/41/experiments/r6-dependent-signal/actor/",
@@ -123,11 +123,46 @@
       "dependencyChanges": false
     }
   },
+  "operationalOutcome": {
+    "buildAttemptId": "FkSA4NwJQrud5GPAe",
+    "buildAttemptStatus": "ABORTED",
+    "finalImageProduced": false,
+    "exactRuntimeGate": "NOT EXECUTED",
+    "offlineDataUrlObserverGate": "NOT EXECUTED",
+    "hostedRunStarted": false,
+    "publisherRequests": 0,
+    "r6Classification": "INCONCLUSIVE / HOLD",
+    "additionalBuildAttempt": "NOT APPROVED; original one-build authority consumed",
+    "operatorEvidence": "r6-operator-evidence.json"
+  },
+  "offlineCorrectedMonitorCheck": {
+    "module": "r6-build-monitor.psm1",
+    "moduleSha256": "1e9bd77815eadb869da43415269e68fdae0d22f0f2659623f5e485b6f09234f9",
+    "checkScript": "r6-build-monitor-check.ps1",
+    "checkScriptSha256": "50da7093bf13b9a6d39bc060eff0328371c8c32a706e835489f71087aa4c8f60",
+    "command": "pwsh -NoProfile -File docs/changes/41/experiments/r6-dependent-signal/r6-build-monitor-check.ps1",
+    "runtime": "PowerShell 7.6.5 Core",
+    "culture": "en-GB",
+    "result": "PASS",
+    "externalRequests": 0,
+    "actorApiRequests": 0,
+    "builds": 0,
+    "runs": 0,
+    "abortRequests": 0,
+    "caseGroups": [
+      "strict timestamp parsing and en-GB JSON string preservation",
+      "anchor validation and fresh-status validation",
+      "successful POST receipt-bound monotonic clock and stale initialization rejection",
+      "terminal-before-abort and one latched abort",
+      "bounded post-abort observation",
+      "monotonic-clock regression fails closed"
+    ],
+    "limitations": "Pure offline state/guard logic only; no API transport, build, image, runtime probe, Actor run, or publisher behavior was exercised. The check was not used to resume or retry the aborted build."
+  },
   "notYetPerformed": [
-    "Exact Node v20.20.2 / Undici 6.24.1 final-image runtime and offline benchmark gate",
+    "Exact Node v20.20.2 / Undici 6.24.1 final-image runtime and offline benchmark gate; no final image was produced",
     "Apify schema validation in R6 candidate",
-    "Hosted Actor upload or build",
-    "Hosted Actor run or publisher request"
+    "Any hosted Actor run or publisher request; no run POST was attempted and publisher request count is zero"
   ],
   "guardedSequenceAfterReview": {
     "buildAttempts": 1,

@@ -1,6 +1,6 @@
 {
   "artifact": "Issue 41 R6 dependent abort-signal diagnostic candidate provenance",
-  "status": "OWNER_APPROVED_PREPARATION_AND_INDEPENDENT_REVIEW_PASSED; READY_FOR_ONE_GUARDED_BUILD_GATE; EXACT_RUNTIME_GATE_PENDING; NOT_BUILT; NOT_RUN",
+  "status": "OWNER_APPROVED_R6_SEQUENCE; PREPARATION_AND_INDEPENDENT_REVIEW_PASSED; ONE_BUILD_ATTEMPT_ABORTED_BEFORE_FINAL_IMAGE; R6_INCONCLUSIVE_HOLD; ADDITIONAL_BUILD_NOT_APPROVED; EXACT_RUNTIME_GATE_NOT_EXECUTED; HOSTED_RUN_NOT_STARTED",
   "preparedAtUtcDate": "2026-10-07",
   "ownerApproval": {
     "approvedAtUtcDate": "2026-10-07",
@@ -94,9 +94,35 @@
   "remoteMetadataBoundary": "Explicitly target Actor ID JIogcgdHyCqAMHQ1P. Keep the existing remote Actor name, default run settings, visibility, pricing, version mappings, R2/R4 builds and tags unchanged. The R6 run, if all later gates pass, explicitly requests the approved private 512 MiB / 900 second settings.",
   "externalActions": {
     "publisherRequestsStarted": false,
-    "actorApiRequestsStarted": false,
-    "uploadStarted": false,
-    "buildStarted": false,
+    "actorApiRequestsStarted": true,
+    "uploadStarted": true,
+    "buildStarted": true,
     "hostedRunStarted": false
+  },
+  "latestOperationalOutcome": {
+    "buildId": "FkSA4NwJQrud5GPAe",
+    "buildStatus": "ABORTED",
+    "finalImageProduced": false,
+    "runtimeGateExecuted": false,
+    "offlineDataUrlGateExecuted": false,
+    "publisherRequests": 0,
+    "hostedRunPostAttempts": 0,
+    "additionalBuildAttempt": "NOT APPROVED; original one-build authority consumed",
+    "operatorEvidence": "r6-operator-evidence.json"
+  },
+  "correctedOfflineBuildMonitor": {
+    "module": "r6-build-monitor.psm1",
+    "moduleSha256": "1e9bd77815eadb869da43415269e68fdae0d22f0f2659623f5e485b6f09234f9",
+    "checkScript": "r6-build-monitor-check.ps1",
+    "checkScriptSha256": "50da7093bf13b9a6d39bc060eff0328371c8c32a706e835489f71087aa4c8f60",
+    "command": "pwsh -NoProfile -File docs/changes/41/experiments/r6-dependent-signal/r6-build-monitor-check.ps1",
+    "runtime": "PowerShell 7.6.5 Core, en-GB",
+    "result": "PASS",
+    "networkRequests": 0,
+    "actorApiRequests": 0,
+    "builds": 0,
+    "runs": 0,
+    "abortRequests": 0,
+    "additionalBuildApproval": "REQUIRED; not approved"
   }
 }
