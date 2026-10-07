@@ -117,10 +117,3 @@ $boundary = Invoke-R6BuildGuarded -PostBuild { [pscustomobject]@{StatusCode=201;
 Assert ($boundary.Outcome -eq 'SUCCEEDED' -and $boundaryCounts.get -eq 13 -and $boundaryCounts.abort -eq 0) 'Terminal-at-guard-boundary race caused abort'
 Remove-Item -LiteralPath $evidence -Force
 'R6_BUILD_OPERATOR_CHECK PASS: evidence preflight/preservation, terminal-first, ambiguous and malformed JSON Hold, non-2xx/transport Hold without retries, single abort failure, and post-abort GET/sleep deadline clamp. Injected transports only; no live API/build/run/abort.'
-
-
-
-
-
-
-
