@@ -1,16 +1,47 @@
 {
   "experiment": "B2-R3a actual-helper seam and reproduction gate",
-  "recordStatus": "INVALIDATED — NOT EXECUTED",
-  "correctionDate": "2026-10-07",
-  "correction": "The prior contents falsely asserted a Node v22.16.0 execution and test result. The prepared command had not been run. Do not treat the former contents as experiment evidence.",
-  "priorFalseRecordCommits": ["8881f73", "21d3946", "e204354"],
-  "verifiedStatus": {
-    "sourceAndTestPreparationCommitted": true,
-    "testCommandExecuted": false,
-    "nodeVersion": null,
-    "testResults": null,
-    "reproductionObservation": null
+  "recordStatus": "ACTUAL EXECUTION RESULT",
+  "executedAt": "2026-10-07",
+  "sourceCandidateHead": "21b9eeaf67d823e0959b083be4f6fa146684ae1b",
+  "command": "node --test --test-concurrency=1 body-stream.test.mjs",
+  "workingDirectory": "docs/changes/41/experiments/b2-vanilla/actor",
+  "execution": {
+    "executable": "C:\\nvm4w\\nodejs\\node.exe",
+    "nodeVersion": "v20.19.0",
+    "undiciVersion": "6.21.1",
+    "wallTimeMs": 3435,
+    "exitCode": 1,
+    "safetyBoundSeconds": 30,
+    "safetyBoundReached": false,
+    "stdoutLogCreatedAt": "2026-10-07T12:36:48.321Z",
+    "timestampNote": "This is the stdout log file creation time, not an asserted exact process start time."
   },
-  "routing": "R3a remains authorized and pending Node.js 20 execution. R3b remains conditional on the approved R3a reproduction gate.",
-  "note": "This file is an audit correction only, not an experiment result. Replace it with sanitized execution evidence after R3a is actually run."
+  "tests": {
+    "finite body returns exact bytes": "passed",
+    "declared body limit is preserved": "passed",
+    "stream body limit is preserved": "passed",
+    "unfinished HTTP body reproduction gate": "failed"
+  },
+  "reproductionObservation": {
+    "signalAborted": true,
+    "observedPendingAtWatchdog": false,
+    "elapsedMsAtObservation": 2014,
+    "helperOutcome": "rejected",
+    "errorName": "TimeoutError",
+    "exactSettlementTimeCaptured": false
+  },
+  "classification": "Inconclusive / Hold; reproduction gate not met",
+  "experimentValidity": "Valid execution of the approved R3a reproduction gate",
+  "preparationReview": "Independent review found no blocking defect. The single oversized-chunk control does not establish cumulative overflow; the cleanup timer starts after the watchdog observation. These are non-blocking for the approved R3a gate.",
+  "auditCorrection": {
+    "priorFalseNode22RecordInvalid": true,
+    "correctionCommit": "21b9eeaf67d823e0959b083be4f6fa146684ae1b",
+    "priorFalseRecordCommits": ["8881f73", "21d3946", "e204354"]
+  },
+  "routing": "R3a did not reproduce a pending read after abort through the watchdog. B2-R3b, containment implementation, build, hosted run, publisher request, retry, and deeper diagnostic are not eligible under the approved amendment. Area B remains On Hold; Issues #4 and #5 remain blocked.",
+  "limitations": [
+    "This local loopback result does not explain or disprove the separate hosted B2-R2 observations.",
+    "The exact helper settlement time was not captured; only its rejected outcome by the approximately two-second watchdog observation was recorded."
+  ],
+  "learnings": "None"
 }

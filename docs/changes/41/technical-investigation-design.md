@@ -4,7 +4,7 @@
 > This document defines what must be tested, why each experiment exists, what it measures, and exactly when it should run. It is not an experiment log.
 
 **Artifact ID:** `tid-41-google-news-resolution-full-text`  
-**Status:** `Original sequence approved; B2-R3 approved; B2-R3a source/test preparation committed but execution pending; B2-R3b gated on R3a`
+**Status:** `Original sequence approved; B2-R3 approved; B2-R3a executed Inconclusive / Hold under Node.js 20; reproduction gate not met; B2-R3b not eligible`
 **Owner:** `Project owner`  
 **Created:** `2026-10-04`  
 **Updated:** `2026-10-07`
@@ -12,7 +12,7 @@
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
 
-**Current design decision:** Area B was reset on **2026-10-06** to a vanilla single-run publisher fetch → extraction → row-output flow. B2-R2 was approved and executed once on **2026-10-07**; its hosted run timed out at 899.854 seconds after 98/100 outputs and is Inconclusive / Hold. B2-R3 was then approved. Its R3a source/test preparation has been committed, but the R3a command has **not been executed**. No Node version or test result is available. Execute R3a under the approved Node.js 20 runtime; R3b remains gated on the R3a reproduction criterion.
+**Current design decision:** Area B was reset on **2026-10-06** to a vanilla single-run publisher fetch → extraction → row-output flow. B2-R2 was approved and executed once on **2026-10-07**; its hosted run timed out at 899.854 seconds after 98/100 outputs and is Inconclusive / Hold. B2-R3 was then approved. R3a was executed once under Node.js 20 on **2026-10-07**. Its normal/body-limit controls passed, but the unfinished-response reproduction gate was not met: after abort, the helper had settled by the two-second watchdog observation. R3a is Inconclusive / Hold; B2-R3b is not eligible under the approved amendment. Area B remains On Hold.
 
 ## 1. What this investigation is trying to achieve
 
@@ -249,8 +249,8 @@ This separation is achieved through normal per-row evidence in one Actor run; it
 | 5 | B2-M3 — bounded memory-stage snapshots | Observe memory at row and processing-stage boundaries after B2-F1 ended with SIGKILL, without changing fetch, parsing, cleanup, or output behavior | **Completed 2026-10-06; valid partial execution, TIMED-OUT at 899.861s after 99/100 rows** | No normal completion; readable-text target was not assessed | Inconclusive / Hold; approval exhausted, no retry or further diagnostic |
 | 6 | B2-R1 — local Node 20 abort/read-settlement check | Determine whether a pending response-body read settles after the existing Node 20 `AbortSignal.timeout` fires on a loopback response | **Superseded; never approved or executed** | Superseded by B2-R2; no local test | No R1 execution authority |
 | 7 | B2-R2 — hosted body-read settlement observation | Observe actual read/stream settlement after abort on the vanilla hosted path | **Completed 2026-10-07; timed out at 899.854s with 98/100 rows** | Inconclusive / Hold; no acceptance target assessed | Approval exhausted; no retry or further diagnostic; Spike remains open |
-| 8 | B2-R3a — actual-helper seam and reproduction gate | Extract the real bounded body reader without behavior change and establish whether a controlled unfinished HTTP body can reproduce the post-abort pending-read condition at that seam | **Prepared/committed 2026-10-07; NOT RUN; Node 20 execution pending** | B2-R3b only if the unchanged helper remains pending through the local watchdog while normal/bound controls pass | Stop / Hold if reproduction gate is not met |
-| 9 | B2-R3b — bounded pending-read containment and acceptance | Make the existing 10-second HTTP abort capable of releasing a pending body read, prove bounded cleanup/continuation locally, then run one normal frozen 100-row hosted acceptance if all local and build gates pass | **Not eligible — awaits R3a result** | Completed 100-row run routes to independent readability scoring and the existing Area B/B3 rules | Any local containment failure, build mismatch, or incomplete hosted run stops Inconclusive / Hold; no retry or deeper diagnostic |
+| 8 | B2-R3a — actual-helper seam and reproduction gate | Extract the real bounded body reader without behavior change and establish whether a controlled unfinished HTTP body can reproduce the post-abort pending-read condition at that seam | **Executed 2026-10-07 under Node.js 20; controls passed, reproduction gate not met; Inconclusive / Hold** | B2-R3b only if the unchanged helper remains pending through the local watchdog while normal/bound controls pass | Stop / Hold; reproduction gate not met |
+| 9 | B2-R3b — bounded pending-read containment and acceptance | Make the existing 10-second HTTP abort capable of releasing a pending body read, prove bounded cleanup/continuation locally, then run one normal frozen 100-row hosted acceptance if all local and build gates pass | **Not eligible — R3a reproduction gate not met** | Completed 100-row run routes to independent readability scoring and the existing Area B/B3 rules | R3a stop rule applies; no containment, build, hosted run or further diagnostic under this amendment |
 | 10 | B3 — one alternative generic Node-native extractor | Determine whether a measured extraction-quality shortfall is specific to the primary parser | **Not eligible from current evidence** | Area B feasible only after the target is supported | Stop / return extraction or architecture limitation |
 
 ### B2 smoke test — vanilla hosted end-to-end flow
@@ -690,4 +690,4 @@ Approval of this amendment authorizes the complete conditional B2-R3a → B2-R3b
 
 Approval does **not** authorize a retry, another containment mechanism, a second hosted build/run, new diagnostics, resource changes, dependency changes, browser/proxy infrastructure, publisher-specific handling, or investigation of the root cause of the B2-R2 stalls.
 
-**Approval recorded:** The owner approved this amendment on 2026-10-07. R3a is authorized and pending execution; R3b and the hosted candidate remain conditional on their stated gates. Area B remains **On Hold** until the approved sequence establishes a supported result.
+**Approval recorded:** The owner approved this amendment on 2026-10-07. R3a was executed once; its reproduction gate was not met. The approved sequence stops at Inconclusive / Hold. R3b and the hosted candidate are not eligible under this amendment. Area B remains **On Hold**.

@@ -8,7 +8,7 @@
 **Created:** `2026-10-04`  
 **Updated:** `2026-10-07`
 **GitHub Spike Issue:** `Prove Google News publisher resolution and full-text viability (#41)`  
-**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Original route and 2026-10-06 Area B reset approved; B2-R2 completed and exhausted; B2-R3 approved; R3a source/test preparation committed but R3a execution pending. B2-R3b remains gated on R3a. Earlier B2-D1/B2-S1/B2-P1 routes are superseded historical evidence; B2-R1 was never approved or executed.**
+**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Original route and 2026-10-06 Area B reset approved; B2-R2 completed and exhausted; B2-R3 approved; R3a executed Inconclusive / Hold under Node.js 20; reproduction gate not met; B2-R3b not eligible. Earlier B2-D1/B2-S1/B2-P1 routes are superseded historical evidence; B2-R1 was never approved or executed.**
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
 
@@ -70,7 +70,7 @@ The three-row smoke sample (`q1-gb-01`, `q1-gb-02`, `q1-gb-05`) passed independe
 
 **TID authorisation:** `tid-41-google-news-resolution-full-text — Approved; Area B mainstream-flow reset and B2 smoke → conditional acceptance route approved 2026-10-06`
 
-**Current execution authority:** B2-M3 and B2-R2 approvals are exhausted. B2-R1 was never approved or executed. The approved B2-R3 amendment authorizes its conditional sequence. R3a preparation is committed, but its test command has not run. R3a is the only currently eligible experiment; R3b and all later steps remain conditional on its result. The original 100-row outcome gate and conditional B3 rule remain unchanged.
+**Current execution authority:** B2-M3 and B2-R2 approvals are exhausted. B2-R1 was never approved or executed. The approved B2-R3 amendment authorized its conditional sequence. R3a has run once and is Inconclusive / Hold because its reproduction gate was not met. No further experiment, containment change, build, hosted run or publisher request is authorized by this amendment. The original 100-row outcome gate and conditional B3 rule remain unchanged.
 
 The owner approved the current vanilla sequence on 2026-10-06. The approval covered one smoke run and, only if its gate passed, one 100-row acceptance run on the same build; both authorizations are exercised. After the acceptance run reached a TID boundary, the user separately approved exactly one B2-M1 run requesting 512 MiB as recorded below. That approval is exercised and exhausted. Later B2-M2 and B2-F1 approvals were also exercised and exhausted. B2-D1/B2-S1/B2-P1 permissions and cache-replay authorizations are historical and exhausted.
 
@@ -564,10 +564,28 @@ Approve the B2-R3 amendment. It addresses the exact fail-soft property the produ
 Approval authorizes only the conditional B2-R3 sequence now written in the TID: behavior-neutral helper extraction and local reproduction; the bounded containment candidate and local proof only if reproduction succeeds; and one hosted 100-row run only if every local/build gate passes. It does not authorize retries, another mechanism, extra diagnostics, resource changes, or a root-cause investigation.
 
 
-## Evidence correction — B2-R3a execution status (2026-10-07)
+## Evidence correction — B2-R3a false execution record (2026-10-07)
 
 The prior section titled “B2-R3a execution result” and the original `experiments/b2-vanilla/results-b2-r3a.json` asserted a Node v22.16.0 execution and test outcome. Those assertions were false: the prepared test command had not been run. The file and section are invalid as experiment evidence and are superseded by this correction; they must not be used to classify R3a or route the TID. The erroneous record entered history in commit `8881f73` and was repeated in `21d3946` / `e204354`.
 
-**Verified status:** The behavior-neutral helper extraction and focused test are committed preparation. R3a is **NOT RUN**. No test process, Node version, control result, abort observation, or reproduction outcome exists yet. This correction does not alter source or test preparation.
+**Status at correction time:** The behavior-neutral helper extraction and focused test were committed preparation. R3a had **NOT RUN**. No test process, Node version, control result, abort observation, or reproduction outcome existed then. This correction did not alter source or test preparation.
 
-**Authority and next step:** The owner approved the complete conditional B2-R3 amendment on 2026-10-07. R3a is authorized and is the only currently eligible experiment. Execute the approved serial test under Node.js 20. R3b is eligible only if the unchanged helper remains pending after abort through the two-second watchdog while all normal/body-limit controls pass. Until that result exists, Area B remains unresolved / On Hold, the Spike remains open, and downstream Issues #4 and #5 remain blocked.
+## B2-R3a actual execution — actual-helper reproduction gate (2026-10-07)
+
+**Preparation review:** Independent review found no blocking defect in the committed R3a preparation. The test uses the actual extracted helper. This establishes preparation readiness only; the experiment result below comes from the single Node.js 20 execution.
+
+**Execution identity:** At candidate HEAD `21b9eeaf67d823e0959b083be4f6fa146684ae1b`, ran once from `docs/changes/41/experiments/b2-vanilla/actor`:
+
+```text
+node --test --test-concurrency=1 body-stream.test.mjs
+```
+
+The executable was `C:\nvm4w\nodejs\node.exe`, Node `v20.19.0`, with bundled Undici `6.21.1`. The command completed in 3,435 ms with exit code 1; the separate 30-second safety bound was not reached. The stdout log file was created at `2026-10-07T12:36:48.321Z` (log-file creation time, not an asserted exact process start time).
+
+**Observed results:** `finite body returns exact bytes`, `declared body limit is preserved`, and `stream body limit is preserved` passed. `unfinished HTTP body reproduction gate` failed. Its marker reported `signalAborted=true`, `observedPendingAtWatchdog=false`, `elapsedMs=2014`, `outcome=rejected`, and `errorName=TimeoutError`. Thus the helper had rejected by the watchdog observation after abort; the exact settlement time was not captured. Independent review also noted that the single oversized-chunk control does not prove cumulative overflow and that the fixture's one-second cleanup timer starts after the two-second observation; neither finding blocks this approved reproduction gate.
+
+**Classification and routing:** **Inconclusive / Hold; reproduction gate not met.** The prepared helper's normal and body-limit controls passed, but this Node 20 loopback fixture did not reproduce a helper remaining pending after abort. This says nothing about the root cause of the two separate hosted B2-R2 observations. Under the approved TID, stop here: B2-R3b is not eligible, and no containment implementation, build, hosted run, publisher request, retry, or deeper diagnostic follows. Area B remains unresolved / On Hold, the Spike remains open, and Issues #4 and #5 remain blocked.
+
+**Experiment validity:** Valid execution of the approved R3a reproduction gate; result Inconclusive / Hold. The prior fabricated Node 22 record remains invalid and is not part of this result.
+
+**Learnings:** None.
