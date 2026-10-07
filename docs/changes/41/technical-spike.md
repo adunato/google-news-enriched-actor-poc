@@ -8,7 +8,7 @@
 **Created:** `2026-10-04`  
 **Updated:** `2026-10-07`
 **GitHub Spike Issue:** `Prove Google News publisher resolution and full-text viability (#41)`  
-**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Original route approved; Area B mainstream-flow reset approved 2026-10-06. Earlier B2-D1/B2-S1/B2-P1 amendments are superseded historical routes. B2-R2 was explicitly approved 2026-10-07 and supersedes unexecuted B2-R1.**
+**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Original route and 2026-10-06 Area B reset approved; B2-R2 completed and exhausted; B2-R3 design proposal only, unapproved. Earlier B2-D1/B2-S1/B2-P1 routes are superseded historical evidence; B2-R1 was never approved or executed.**
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
 
@@ -70,7 +70,7 @@ The three-row smoke sample (`q1-gb-01`, `q1-gb-02`, `q1-gb-05`) passed independe
 
 **TID authorisation:** `tid-41-google-news-resolution-full-text — Approved; Area B mainstream-flow reset and B2 smoke → conditional acceptance route approved 2026-10-06`
 
-**Current execution authority:** All B2-M3 authority is exhausted. B2-R1 was not approved or executed. On 2026-10-07 the owner approved B2-R2 for exactly one instrumentation-only candidate build and one conditional hosted run after local integrity and exact-build gates. No further diagnostic, fix, retry, resource change, or B3 is authorized.
+**Current execution authority:** B2-M3 and B2-R2 approvals are exhausted. B2-R1 was never approved or executed. B2-R3 is a proposed design-only handoff; no source, test, build, run, publisher request, or other diagnostic is authorized. The original 100-row outcome gate and conditional B3 rule remain unchanged.
 
 The owner approved the current vanilla sequence on 2026-10-06. The approval covered one smoke run and, only if its gate passed, one 100-row acceptance run on the same build; both authorizations are exercised. After the acceptance run reached a TID boundary, the user separately approved exactly one B2-M1 run requesting 512 MiB as recorded below. That approval is exercised and exhausted. Later B2-M2 and B2-F1 approvals were also exercised and exhausted. B2-D1/B2-S1/B2-P1 permissions and cache-replay authorizations are historical and exhausted.
 
@@ -384,7 +384,7 @@ The compute estimate is 0.125 CU / about `$0.025` for 900 seconds at the previou
 
 **Spike conclusion:** `Pending`; neither downstream capability is yet unblocked.
 
-**Required next action:** `Owner checkpoint required. B2-R2’s single approved build/run has been consumed and ended Inconclusive / Hold. Do not start another run, rebuild, source change, resource change, or B3 without a separately approved TID amendment. Area B remains On Hold and full-text feasibility unresolved.`
+**Required next action:** `Design only: assess whether a safe actual-helper seam and bounded containment test can be specified for the proposed B2-R3 question. If it can, prepare a complete executable TID amendment for owner review; if it cannot, return the design limitation to the owner. No implementation, test, build, hosted run, publisher request, or other execution is authorized. Area B remains On Hold and full-text feasibility unresolved.`
 
 **Troubleshooting boundary:** `If the vanilla flow fails, diagnose only the normal stage that failed. Do not resume the cross-run KVS/permission route or introduce special hosted harnessing merely to make the experiment run.`
 
@@ -484,3 +484,38 @@ The S1 result supports only that this metadata request was denied for the curren
 ### Recommendation and decision requested
 
 Keep the Spike on hold. The owner may authorize preparation only of a separately scoped permission/access investigation design, or keep the Spike on hold without further work. Any future design must define its own bounded question and evidence requirements. This record authorizes no new live probe, permission/access grant, credential change, build, run, extraction work or continuation of B2. Publisher resolution remains supported for the tested sample; full-text viability remains unresolved.
+
+## Owner handoff — proposed B2-R3 containment design (2026-10-07)
+
+## Product and Issue context
+
+Issue #41 asks whether the hosted Node.js 20 Actor can resolve at least 95 of 100 representative Google News URLs to publisher URLs and produce readable article text for at least 50 of those rows. The original Google News URL must remain available as provenance, and a failure on one row must not prevent healthy rows from being processed. Issues #4 and #5 remain blocked pending a supported Spike conclusion.
+
+## Why this Spike exists
+
+B2-R2 timed out after 98 of 100 rows. Two separate rows reached abort and a post-abort snapshot with the body read still in flight and `reader.closed` pending; neither produced a later settlement or row output. The earlier M3 missing row completed in that run. These observations do not establish why the R2 rows stalled or a common cause. The 100-row acceptance is incomplete, and the 50/100 readable-text target is unassessed.
+
+## What we have learned so far
+
+- Area A supports 100/100 valid publisher URLs for the tested sample. B1 retained 53 usable HTML responses.
+- The vanilla smoke gate passed, but the 256-MiB baseline and later acceptance attempts ended incomplete or invalid-bound. B2-R2 is the latest run and is Inconclusive / Hold at 98/100 rows.
+- In R2, `q3-us-02` and `q4-gb-02` separately showed a pending body read and pending `reader.closed` after abort, with no subsequent row result. The earlier M3 row is not the same row and completed. No root cause, memory-limit termination, 50/100 result, or B3 condition is established.
+- All experiment approvals are exhausted. The Spike remains open; Area B remains On Hold.
+
+## What we propose to do next
+
+Design only a bounded proposal asking whether the Actor can contain exactly one row whose body read remains pending after abort, retain the original Google News URL and resolved publisher URL, and continue with the next healthy row. The design must first identify a safe seam in the actual helper; current `main.mjs` starts the Actor on import, so extracting a side-effect-free helper would be a source change requiring separate approval. Define finite row deadlines; bounded pending-read, cancellation and cleanup handling; and late-settlement behavior that avoids unhandled rejections, duplicate output, false success from a partial body, and unbounded work while preserving valid partial-HTML behavior where the current contract permits it. The actual `readBoundedBody(response, logStage)` helper is non-exported in `main.mjs`, whose import starts the Actor; extraction to a side-effect-free module is a source change requiring separate approval. A possible test design should compare current and candidate behavior at the actual helper seam using a controlled unfinished HTTP response, outer watchdog, and reproduction gate; a deliberately pending read may be a separately labelled artificial worst-case fault. This could test containment at the helper seam, but would not establish the hosted cause. Exact numeric limits and executable details are not yet designed.
+
+If no safe helper seam and meaningful bounded test can be specified within current boundaries, stop and return that limitation to the owner. If they can, finish a complete executable TID amendment for owner review. This handoff authorizes no code, test, build, publisher request, hosted run, or further investigation. Any execution needs separate explicit owner approval.
+
+## Direction and complexity check
+
+The proposed question stays within the existing fail-soft Actor behavior and does not change Product or Architecture decisions. The design must demonstrate that its test seam exercises the actual helper; a loopback request that aborts normally would not prove the deliberately pending-read containment case or explain R2. Do not add dependencies, a second runtime, browser, proxy, paid service, security harness, or unbounded cleanup. If a safe bounded test requires changing those boundaries or the evidence cannot distinguish containment from an artificial fault, return to the owner instead of expanding scope.
+
+## Recommendation
+
+Prepare only the B2-R3 design assessment described above. Preserve the R2 Inconclusive / Hold result and its approval exhaustion. Keep the original 100-row outcome gate, 50/100 readability target, and B3 conditional rule unchanged. Do not implement a containment mechanism or run a test until a complete executable TID amendment is reviewed and separately approved by the owner.
+
+## Decision requested
+
+**Current decision:** B2-R3 design work only; no experiment execution approval has been requested or received. A fresh session should reread Issue #41, the TID and Spike record, and the primary skills, then continue design only. First determine whether the safe actual-helper seam and bounded test can be designed. Return a complete executable TID amendment for a separate owner decision if feasible; otherwise stop and report the design limitation. The Spike remains Open, Area B remains On Hold, and Issues #4 and #5 remain blocked.
