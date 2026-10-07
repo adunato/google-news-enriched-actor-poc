@@ -1,6 +1,6 @@
 {
   "experiment": "B2 vanilla hosted fetch-extract-output",
-  "status": "B2-F1 exhausted; B2-M3 approved build/run complete. M3 valid partial execution timed out at 899.861s with 99/100 rows; Inconclusive / Hold; no readability target or B3 eligibility established.",
+  "status": "B2-F1 and B2-M3 approvals exhausted. M3 timed out at 899.861s with 99/100 rows; Inconclusive / Hold; no readability target or B3 eligibility established. B2-R2 is proposed and pending owner approval; it supersedes the unapproved, unexecuted B2-R1 proposal. No R2 execution is authorized.",
   "approvedAtUtcDate": "2026-10-06",
   "approvalScope": "One ordinary private Node.js 20 Actor candidate and a three-row smoke run; only if the smoke gate passes, use the same build for the full 100-row acceptance run under the TID route.",
   "actorId": "JIogcgdHyCqAMHQ1P",
@@ -356,5 +356,60 @@
     "memoryEvidence": "memory-snapshots-b2-m3.json",
     "stageEvidence": "sanitized-stage-evidence-b2-m3.json",
     "actualUsageUsd": 0.025723639751517115
+  },
+  "b2R1Proposal": {
+    "status": "Superseded 2026-10-07; never approved or executed.",
+    "proposal": "One local Node 20 / bundled Undici loopback abort/read-settlement check.",
+    "supersededBy": "b2R2Proposal",
+    "executionAuthority": "None. Do not create or run the local test."
+  },
+  "b2R2Proposal": {
+    "status": "Proposed 2026-10-07; pending explicit owner approval. Documentation rescope only; no source change, build, publisher request, or hosted run authorized.",
+    "supersedes": "The unapproved and unexecuted primitive-only B2-R1 proposal.",
+    "question": "For the prior missing row q3-us-01, after abort in the actual hosted path, does the body read or stream settle, or does later handling prevent a row outcome? Other rows in the frozen 100-row run provide supporting context only.",
+    "scope": "One instrumentation-only candidate build and one hosted run on Actor JIogcgdHyCqAMHQ1P using existing version 0.10 and a unique next patch/tag. Preserve every prior version, build, and tag mapping; delete none. Preserve actor/helper, dependencies, schema, fixture, request and body-read behavior, parser, cleanup, and output semantics. Before building, verify a source-only observational diff and protected-file hash manifest. Before any publisher request, verify exact build identity, source hash, and embedded 512-MiB / 900-second settings, then pin the run to that exact build; mismatch stops without a run.",
+    "bounds": {
+      "memoryMiBMinDefaultMax": 512,
+      "timeoutSeconds": 900,
+      "concurrency": 4,
+      "rowHttpChainTimeoutMs": 10000,
+      "responseBodyMaxBytes": 2097152,
+      "redirectsAfterInitialRequest": 5,
+      "maximumPlannedPublisherGets": 600,
+      "inputFile": "input-acceptance.json",
+      "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+      "rowCount": 100,
+      "uniqueRowIds": 100,
+      "uniquePublisherUrls": 95,
+      "duplicatePublisherUrlOccurrences": 5,
+      "addedMarkersPerRowMax": 24,
+      "reservedDecisiveMarkersPerRow": 16,
+      "optionalMarkersPerRowMax": 8,
+      "workerJoinMarkersMax": 4,
+      "runSummaryMarkersMax": 1,
+      "totalAddedMarkerMax": 2405,
+      "postAbortObservationMsMax": 2000
+    },
+    "observations": "At reader acquisition, attach fulfillment and rejection observers to reader.closed and handle the observer promise. Track the existing read index, in-flight state and current phase without changing the awaited read. Record signal creation/fire times, read/stream settlement, cleanup, extraction/result and dataset-write stages. One unref'ed nonthrowing post-abort snapshot per row is cancelled if that row finishes first. Capture exact Node and Undici versions in the existing run_start event.",
+    "reservedMarkerPolicy": "Reserve one slot each for signal_created, body_reader_acquired, body_read_entered, body_read_completed, abort_fired, reader_closed_settled, post_abort_snapshot, post_abort_inflight_read_settled, first post_abort_cancel_enter, first post_abort_cancel_settled, cleanup_enter, cleanup_settled, catch, fetch_result, row_write, and row_terminal. Deduplicate within each type; optional events cannot displace reserved slots. The remaining eight per-row slots take the first eight redirect/response/pre-abort-cancel transitions in occurrence order; suppress later optional lines. Continue numeric state/counters in memory and include current values in reserved events. No per-read/chunk lines or effect on underlying operations.",
+    "logAllowlist": [
+      "rowId",
+      "stage",
+      "elapsedMs",
+      "signalCreationTime",
+      "abortFireTime",
+      "readIndex",
+      "readInFlight",
+      "currentPhase",
+      "readerClosedState",
+      "sanitizedErrorClass",
+      "sanitizedErrorCode"
+    ],
+    "redaction": "Never log URLs, headers, response bodies, article text, tokens, raw errors or other secrets. No polling or chunk logging.",
+    "interpretation": "Pending read and stream mean no observed settlement and unknown cause. Settled stream with in-flight read is distinct from read settlement; a later releaseLock-related rejection is not proof of a stream abort error. Settled read without row output localizes only a later observed cancel/cleanup/catch/fetch-result/write/worker-join phase. Missing snapshot while a row is active leaves timer/event-loop behavior uncertain. Signal creation-to-abort time is supporting Q2 context, not the primary R2 question. A matching abort/body-read stall on another row is a separate-row recurrence; report it independently and do not claim q3-us-01's historical cause was reproduced. Instrumentation may perturb timing; non-reproduction does not prove a fix.",
+    "stop": "Stop after the one run. Failure or incomplete execution remains Inconclusive / Hold and authorizes no fix, retry, resource change, or new diagnostic. A normal 100-row completion permits independent review of every counted text against the existing 50/100 target. B3 is not automatically eligible.",
+    "computeEstimate": "0.125 CU / about $0.025 for 900 seconds at the previously cited $0.20/CU standard rate; compute-only, not a guaranteed total or cap. Account, transfer, build, storage, and API charges may differ. Latest M3 usage was $0.025723639751517115 as context, not a cap.",
+    "approvalRequired": "Separate explicit owner approval is required before any source change, candidate build, publisher request, or hosted run.",
+    "executionStatus": "Not approved; no implementation or execution. Area B remains On Hold; overall Spike conclusion remains Pending."
   }
 }
