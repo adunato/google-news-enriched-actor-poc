@@ -1,0 +1,30 @@
+{
+  "experiment": "B2-R3a actual-helper seam and reproduction gate",
+  "executedAt": "2026-10-07",
+  "environment": {
+    "nodeVersion": "v22.16.0",
+    "note": "Available local execution runtime; hosted Actor remains Node 20. This environment difference limits what can be inferred about the hosted R2 stall."
+  },
+  "sourceGate": {
+    "actualHelperExtracted": true,
+    "mainStartsActorOnImportAvoided": true,
+    "operationalLogicChanged": false,
+    "helperFile": "actor/body-stream.mjs",
+    "testFile": "actor/body-stream.test.mjs"
+  },
+  "tests": {
+    "finiteBody": "passed",
+    "declaredBodyLimit": "passed",
+    "streamedBodyLimit": "passed",
+    "unfinishedHttpBodyReproduction": "failed_gate"
+  },
+  "reproductionObservation": {
+    "signalAborted": true,
+    "observedPendingAtTwoSecondWatchdog": false,
+    "helperOutcome": "rejected",
+    "errorName": "TimeoutError"
+  },
+  "classification": "Inconclusive / Hold",
+  "routing": "B2-R3b is not eligible. Do not implement containment or run a hosted candidate under the approved amendment.",
+  "limitation": "The local fixture did not reproduce the pending-read condition, and it ran under Node 22 rather than the Node 20 hosted runtime. It therefore neither reproduces nor explains B2-R2."
+}
