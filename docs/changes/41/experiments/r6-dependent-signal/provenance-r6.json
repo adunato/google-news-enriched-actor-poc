@@ -131,6 +131,6 @@
     "builds": 0,
     "runs": 0,
     "abortRequests": 0,
-    "additionalBuildApproval": "REQUIRED; not approved"
+    "additionalBuildApproval": "APPROVED 2026-10-07; actual monitor caller preflight review pending; attempt not started"
   }
 }
