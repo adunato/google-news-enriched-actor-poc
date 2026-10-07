@@ -562,3 +562,16 @@ Approve the B2-R3 amendment. It addresses the exact fail-soft property the produ
 **Approve the revised TID and continue / Keep Area B on Hold.**
 
 Approval authorizes only the conditional B2-R3 sequence now written in the TID: behavior-neutral helper extraction and local reproduction; the bounded containment candidate and local proof only if reproduction succeeds; and one hosted 100-row run only if every local/build gate passes. It does not authorize retries, another mechanism, extra diagnostics, resource changes, or a root-cause investigation.
+
+
+## B2-R3a execution result — actual-helper reproduction gate (2026-10-07)
+
+**Approval:** The owner approved the complete conditional B2-R3 amendment on 2026-10-07. That approval authorised the behavior-neutral helper extraction and local reproduction gate first; B2-R3b containment work was conditional on R3a reproducing the post-abort pending-read condition.
+
+**Source gate:** The existing `readBoundedBody()` and `cancelResponseBody()` logic was moved without operational change from `main.mjs` into side-effect-free `actor/body-stream.mjs`, and `main.mjs` now imports those helpers. No timeout, fetch, parser, dataset, resource, dependency or product behavior was changed. A focused `actor/body-stream.test.mjs` exercises the actual extracted helper.
+
+**Execution:** The available local runtime was Node `v22.16.0`. The finite-body, declared-length limit and streamed-body limit controls passed. In the controlled unfinished HTTP-response test, the `AbortSignal.timeout(250)` fired and the unchanged helper **settled by rejecting with `TimeoutError` before the two-second watchdog**. The reproduction gate therefore did not observe a pending read after abort. Concise evidence is retained in `experiments/b2-vanilla/results-b2-r3a.json`.
+
+**Interpretation:** R3a did **not** reproduce the specific hosted B2-R2 symptom at the actual helper seam in this local environment. The Node 22 versus hosted Node 20 runtime difference is a material limitation, so this result does not explain or disprove the hosted R2 observation. It also does not justify implementing the proposed containment change: the approved TID explicitly required reproduction before R3b.
+
+**Result:** **Inconclusive / Hold.** B2-R3b is not eligible. No containment source change, candidate build, hosted run, retry, new timeout, resource change or deeper stream diagnostic is authorised by the approved amendment. Area B remains unresolved and the overall Spike remains open.
