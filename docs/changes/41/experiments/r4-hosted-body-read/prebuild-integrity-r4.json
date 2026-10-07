@@ -1,6 +1,6 @@
 {
   "artifact": "Issue 41 B2-R4 prebuild integrity gate",
-  "status": "NOT_BUILD_READY_PENDING_INDEPENDENT_SEMANTICS_REVIEW; NOT_BUILT; NOT_RUN",
+  "status": "READY_FOR_APPROVED_OPERATOR_PROVENANCE_AND_BUILD_GATES; NOT_BUILT; NOT_RUN",
   "sourceCandidate": "docs/changes/41/experiments/r4-hosted-body-read/",
   "provenanceManifest": "provenance-r4.json",
   "approvedTidCommit": "0ffaa8521446045e5a7fc843348e3762cabb6dff",
@@ -60,10 +60,11 @@
     "offline R4 logger accounting: request-subcap and byte-cap overflow, lifecycle dedup, terminal and summary self-inclusive totals, console-failure guard",
     "apify validate-schema",
     "JSON/package-lock/input integrity checks",
-    "git diff --check"
+    "git diff --check",
+    "independent semantics review passed with no remaining prebuild blocker"
   ],
   "notYetChecked": [
-    "Independent semantics review",
+    "Operator verification of exact private Actor ID, preserved remote metadata and each allowlisted upload-source hash",
     "Actual build output/runtime and image digest",
     "Apify upload/build metadata effects"
   ],
@@ -85,5 +86,5 @@
     "postAbortObservationSecs": 120,
     "abortGuarantee": "best effort only; no hard build dollar cap"
   },
-  "route": "Review candidate first. Any provenance/semantic/configuration/runtime/evidence mismatch stops before the next publisher request/build/run under the approved TID."
+  "route": "Independent semantics review passed. The operator may proceed with approved TID provenance checks and, only if they pass, the single monitored build attempt. Any provenance/configuration/runtime/evidence mismatch stops before publisher requests or a hosted run."
 }

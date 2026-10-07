@@ -1,6 +1,6 @@
 {
   "artifact": "Issue 41 B2-R4 hosted body-read diagnostic candidate provenance",
-  "status": "PREPARED_FOR_INDEPENDENT_SEMANTICS_REVIEW; NOT_BUILT; NOT_RUN",
+  "status": "INDEPENDENT_SEMANTICS_REVIEW_PASSED; READY_FOR_APPROVED_OPERATOR_PROVENANCE_AND_BUILD_GATES; NOT_BUILT; NOT_RUN",
   "preparedAtUtcDate": "2026-10-07",
   "ownerApproval": {
     "approvedAtUtcDate": "2026-10-07",
@@ -187,9 +187,8 @@
     "hostedRunOrPublisherRequests": false
   },
   "remainingGates": [
-    "Independent semantics review of this frozen candidate.",
     "Operator verification of exact private Actor ID, preserved remote metadata, supported upload method and approved run API cap before any hosted build or run.",
     "The single monitored build guard, final-image runtime proof, source/input provenance and image identity gate before any publisher request.",
-    "No build or hosted run is authorized by this preparation artifact alone."
+    "The owner-approved TID authorizes only its stated one-build/conditional-one-run sequence; no build or hosted run has started."
   ]
 }
