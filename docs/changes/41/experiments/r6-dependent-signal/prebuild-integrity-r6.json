@@ -1,6 +1,13 @@
 {
   "artifact": "Issue 41 R6 prebuild integrity and preparation gate",
-  "status": "OWNER_APPROVED_R6_SEQUENCE; PREPARATION_AND_INDEPENDENT_REVIEW_PASSED; ONE_BUILD_ATTEMPT_ABORTED_BEFORE_FINAL_IMAGE; R6_INCONCLUSIVE_HOLD; ADDITIONAL_BUILD_NOT_APPROVED; EXACT_RUNTIME_GATE_NOT_EXECUTED; HOSTED_RUN_NOT_STARTED",
+  "status": "ORIGINAL_R6_BUILD_ABORTED_BEFORE_FINAL_IMAGE; R6_INCONCLUSIVE_HOLD; OWNER_APPROVED_ONE_ADDITIONAL_GUARDED_BUILD_AND_CONDITIONAL_RUN_2026-10-07; ACTUAL_MONITOR_CALLER_PREFLIGHT_REVIEW_PENDING; ADDITIONAL_ATTEMPT_NOT_BUILT_NOT_RUN",
+  "additionalAttemptApproval": {
+    "approvedAtUtcDate": "2026-10-07",
+    "exactOwnerReply": "Go ahead",
+    "scope": "Exactly one additional guarded build attempt using the existing uploaded, hash-verified R6 source and corrected monitor, with one conditional private run only if every original R6 gate passes.",
+    "preflightReviewPending": "Independent review of the actual monitor caller before remote action.",
+    "started": false
+  },
   "approvedTidCommit": "af1a080a64406babaf34fb3e057f9c59c6a2bd7d",
   "provenanceManifest": "provenance-r6.json",
   "uploadSourceRoot": "docs/changes/41/experiments/r6-dependent-signal/actor/",
@@ -132,7 +139,8 @@
     "hostedRunStarted": false,
     "publisherRequests": 0,
     "r6Classification": "INCONCLUSIVE / HOLD",
-    "additionalBuildAttempt": "NOT APPROVED; original one-build authority consumed",
+    "firstBuildAttemptAuthority": "CONSUMED by the aborted attempt",
+    "additionalBuildAttempt": "APPROVED 2026-10-07; preflight review pending; not started",
     "operatorEvidence": "r6-operator-evidence.json"
   },
   "offlineCorrectedMonitorCheck": {
@@ -162,7 +170,7 @@
   "notYetPerformed": [
     "Exact Node v20.20.2 / Undici 6.24.1 final-image runtime and offline benchmark gate; no final image was produced",
     "Apify schema validation in R6 candidate",
-    "Any hosted Actor run or publisher request; no run POST was attempted and publisher request count is zero"
+    "The conditional hosted Actor run remains unstarted; it may occur only if the approved additional build and every original gate pass. No run POST was attempted and publisher request count is zero."
   ],
   "guardedSequenceAfterReview": {
     "buildAttempts": 1,

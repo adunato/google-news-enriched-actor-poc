@@ -1,12 +1,19 @@
 {
   "artifact": "Issue 41 R6 dependent abort-signal diagnostic candidate provenance",
-  "status": "OWNER_APPROVED_R6_SEQUENCE; PREPARATION_AND_INDEPENDENT_REVIEW_PASSED; ONE_BUILD_ATTEMPT_ABORTED_BEFORE_FINAL_IMAGE; R6_INCONCLUSIVE_HOLD; ADDITIONAL_BUILD_NOT_APPROVED; EXACT_RUNTIME_GATE_NOT_EXECUTED; HOSTED_RUN_NOT_STARTED",
+  "status": "ORIGINAL_R6_BUILD_ABORTED_BEFORE_FINAL_IMAGE; R6_INCONCLUSIVE_HOLD; OWNER_APPROVED_ONE_ADDITIONAL_GUARDED_BUILD_AND_CONDITIONAL_RUN_2026-10-07; ACTUAL_MONITOR_CALLER_PREFLIGHT_REVIEW_PENDING; ADDITIONAL_ATTEMPT_NOT_BUILT_NOT_RUN",
   "preparedAtUtcDate": "2026-10-07",
   "ownerApproval": {
     "approvedAtUtcDate": "2026-10-07",
     "exactOwnerReply": "ok go ahead",
     "approvedTidCommit": "af1a080a64406babaf34fb3e057f9c59c6a2bd7d",
     "scope": "Prepare the approved R6 dependent Request.signal bridge observer and evidence gates. After independent semantics review, the operator may attempt the single guarded build; the private run remains conditional on all approved gates."
+  },
+  "additionalAttemptApproval": {
+    "approvedAtUtcDate": "2026-10-07",
+    "exactOwnerReply": "Go ahead",
+    "scope": "Exactly one additional guarded build attempt using the existing uploaded, hash-verified R6 source and corrected monitor, with one conditional private run only if every original R6 gate passes.",
+    "preflightReviewPending": "Independent review of the actual monitor caller before remote action.",
+    "started": false
   },
   "independentSemanticsReview": {
     "status": "PASSED",
@@ -107,7 +114,8 @@
     "offlineDataUrlGateExecuted": false,
     "publisherRequests": 0,
     "hostedRunPostAttempts": 0,
-    "additionalBuildAttempt": "NOT APPROVED; original one-build authority consumed",
+    "firstBuildAttemptAuthority": "CONSUMED by the aborted attempt",
+    "additionalBuildAttempt": "APPROVED 2026-10-07; preflight review pending; not started",
     "operatorEvidence": "r6-operator-evidence.json"
   },
   "correctedOfflineBuildMonitor": {
