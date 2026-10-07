@@ -519,3 +519,46 @@ Prepare only the B2-R3 design assessment described above. Preserve the R2 Inconc
 ## Decision requested
 
 **Current decision:** B2-R3 design work only; no experiment execution approval has been requested or received. A fresh session should reread Issue #41, the TID and Spike record, and the primary skills, then continue design only. First determine whether the safe actual-helper seam and bounded test can be designed. Return a complete executable TID amendment for a separate owner decision if feasible; otherwise stop and report the design limitation. The Spike remains Open, Area B remains On Hold, and Issues #4 and #5 remain blocked.
+
+
+## Owner checkpoint — B2-R3 executable containment amendment ready (2026-10-07)
+
+## Product and Issue context
+
+The POC is intended to return structured Google News results, resolve them to publisher pages, and optionally return readable article text without allowing one bad publisher page to fail the whole run. Publisher-link resolution is already supported on the fixed sample. The remaining blocked capability is optional full-text extraction: the downstream full-text Issue cannot proceed until the Spike establishes whether one normal lightweight Actor can complete the representative 100-row flow and produce readable text often enough.
+
+## Why this Spike exists
+
+Live publisher behaviour cannot be established from repository-only tests. The investigation therefore has to prove that the normal hosted HTTP path can fetch publisher pages, extract text, isolate failures per row, and finish the complete sample. The latest hosted attempt did not finish: two rows were still waiting on response-body reads after their HTTP timeout had fired, so the run timed out with 98 of 100 rows. That leaves the product target unresolved.
+
+## What we have learned so far
+
+The publisher-link capability itself is not the blocker: the fixed sample resolved 100/100 Google News links to publisher URLs. The full-text flow also appears promising rather than fundamentally blocked: the latest partial run produced 76 eligible HTML responses and 75 extraction-success candidates among the 98 rows that completed. Those counts are not yet a readability result.
+
+The important new evidence is narrower. On two separate rows, the Actor's normal stream reader remained pending after the existing request timeout fired. The code review confirms this wait occurs inside the real body-reading helper used by the product-like flow. The helper can be isolated for testing without introducing another runtime or service. Web Streams also provides a standard containment mechanism: releasing a reader lock forces a pending read request to settle, allowing the row timeout to regain control. This would contain the symptom; it would not claim to explain why those publisher responses stalled.
+
+## What we propose to do next
+
+Revise the approved investigation with one bounded containment sequence, internally labelled B2-R3.
+
+First, move the real body-reading helper into a side-effect-free module **without changing its behaviour** and use a controlled local unfinished HTTP response to prove that this exact helper can reproduce the post-timeout pending-read condition. If it does not reproduce, stop.
+
+Only if that gate passes, make one small candidate change: when the existing 10-second HTTP timeout wins while a body read is pending, release that reader so the read settles, discard partial bytes, request best-effort stream cancellation without waiting indefinitely for cleanup, and return the row as the same ordinary timeout status already understood by the flow. Focused local tests must show that a timed-out row returns control, a following healthy row still succeeds, normal/body-limit behaviour is unchanged, and no late promise becomes an unhandled rejection.
+
+Only if those tests pass would the sequence allow one new hosted build and one frozen 100-row acceptance run. The original 50/100 readable-text target and all existing production bounds remain unchanged. The previous comparable hosted run cost about $0.026 in total platform usage.
+
+## Direction and complexity check
+
+This remains directly tied to the original product requirement that publisher failures are isolated per row. It requires a TID revision because the containment experiment was not part of the previously approved sequence, but it introduces no new architecture, infrastructure, external dependency, runtime, security mechanism, proxy/browser service, credentials, publisher-specific logic, or broader product scope. The only source-structure change is extracting the existing helper so the actual code can be tested without importing and starting the Actor.
+
+The local unfinished-response fixture is deliberately bounded and is used only to prove containment at the real helper seam. It is not a substitute for the hosted acceptance run and will not be used to claim a root cause for the earlier stalls.
+
+## Recommendation
+
+Approve the B2-R3 amendment. It addresses the exact fail-soft property the product needs, uses the production-relevant helper rather than a diagnostic replica, and has a strict reproduction gate that prevents us from implementing a fix against a synthetic problem. If the candidate cannot prove containment locally or the single hosted run still does not complete, stop rather than deepening the stream investigation.
+
+## Decision requested
+
+**Approve the revised TID and continue / Keep Area B on Hold.**
+
+Approval authorizes only the conditional B2-R3 sequence now written in the TID: behavior-neutral helper extraction and local reproduction; the bounded containment candidate and local proof only if reproduction succeeds; and one hosted 100-row run only if every local/build gate passes. It does not authorize retries, another mechanism, extra diagnostics, resource changes, or a root-cause investigation.
