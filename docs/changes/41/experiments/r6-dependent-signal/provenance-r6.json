@@ -1,0 +1,102 @@
+{
+  "artifact": "Issue 41 R6 dependent abort-signal diagnostic candidate provenance",
+  "status": "OWNER_APPROVED_PREPARATION_AND_INDEPENDENT_REVIEW_PASSED; READY_FOR_ONE_GUARDED_BUILD_GATE; EXACT_RUNTIME_GATE_PENDING; NOT_BUILT; NOT_RUN",
+  "preparedAtUtcDate": "2026-10-07",
+  "ownerApproval": {
+    "approvedAtUtcDate": "2026-10-07",
+    "exactOwnerReply": "ok go ahead",
+    "approvedTidCommit": "af1a080a64406babaf34fb3e057f9c59c6a2bd7d",
+    "scope": "Prepare the approved R6 dependent Request.signal bridge observer and evidence gates. After independent semantics review, the operator may attempt the single guarded build; the private run remains conditional on all approved gates."
+  },
+  "independentSemanticsReview": {
+    "status": "PASSED",
+    "completedAtUtcDate": "2026-10-07",
+    "findings": "No remaining blocker to the approved single bounded build gate; exact-runtime and hosted gates remain pending."
+  },
+  "historicalAndR4Baseline": {
+    "historicalR2SourceCommit": "2694b1162c90bf93a4e36db4fa3cb0d4e0800a7e",
+    "r4CandidatePrepCommit": "d967c8480c8e1d4ce39d37049975a3215fbee2f9",
+    "r4PublishedPrepCommit": "8add2cbe50f83dc158a92e6ca6f303698fffa860",
+    "r4MainMjsSha256": "f8996636fafa6dc4d662b5d7bfcf4c61e134e29d48363b7081689eba91c064a1",
+    "r4BuildId": "4fIEXQuafIexpToxV",
+    "r4BuildNumber": "0.10.4",
+    "r4BuildStatus": "SUCCEEDED",
+    "r4BuildImageSha256": "79cbddf7be1066a84ff2c156fe8a023f67d6ffb9d0c0668d5b977077174dd805",
+    "r4RunId": "XoTyJgwLo1x2KMa7g",
+    "r4RunStatus": "TIMED-OUT",
+    "r4RunDurationSeconds": 899.757,
+    "r4RunChargeUsd": 0.025707807603895665,
+    "r4InputPath": "docs/changes/41/experiments/r4-hosted-body-read/input-acceptance.json",
+    "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "inputBytes": 96589,
+    "inputRows": 100,
+    "uniqueRowIds": 100,
+    "uniquePublisherUrls": 95,
+    "expectedRuntime": {
+      "node": "v20.20.2",
+      "bundledUndici": "6.24.1"
+    },
+    "r4ObservedRuntime": {
+      "node": "v20.20.2",
+      "bundledUndici": "6.24.1"
+    },
+    "actorId": "JIogcgdHyCqAMHQ1P",
+    "actorVersion": "0.10",
+    "r6BuildTag": "issue41-b2-r6",
+    "r4RunSettings": {
+      "privacy": "RESTRICTED",
+      "memoryMiB": 512,
+      "timeoutSeconds": 900,
+      "concurrency": 4,
+      "rowHttpChainTimeoutMs": 10000,
+      "bodyMaxBytes": 2097152,
+      "redirectsAfterInitialRequest": 5,
+      "maximumGetsPerRow": 6,
+      "maximumPlannedGets": 600,
+      "runOnlyMaxTotalChargeUsd": 0.1
+    }
+  },
+  "candidate": {
+    "directory": "docs/changes/41/experiments/r6-dependent-signal/actor/",
+    "targetActorIdIsExplicit": true,
+    "actorMetadataDelta": [
+      "buildTag: issue41-b2-r4 -> issue41-b2-r6"
+    ],
+    "sourceBehaviorDelta": "Adds a descriptor-preserving Request.prototype.signal getter wrapper that forwards the original receiver/return/throw. Capture occurs only in a short reentrant frame around the existing synchronous global fetch call and returns the identical Promise. It stores at most 600 WeakRefs, samples only existing marker records, and restores the original descriptor. No extra fetch, read, cancel, listener, await, race, timer, or marker kind is added.",
+    "runtimeGate": "The final Docker image stage asserts Node v20.20.2 and bundled Undici 6.24.1, then runs the offline data:-URL observer/overhead check. This check has not run; local Node v20.19.0 / Undici 6.21.1 is not an eligible substitute.",
+    "files": {
+      ".actor/INPUT_SCHEMA.json": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833",
+      ".actor/actor.json": "334120b985ae0e147aae38fd5f8fcd9fcf6f5b4ded8c060444bfafb4c27c9893",
+      ".actorignore": "105447ac6fc214cfa804ce695baa1664d6c1c5ccd9804561bc87245558a8c4c8",
+      "Dockerfile": "fb39f8c6e9205f39bbf851f86393c61279aba2f7cc4df0b4179594377572600b",
+      "check-charset.mjs": "c4eb024fa5ff4d5c7e0bb55635b5f49068952237c29ecddaa57fad57e62391b1",
+      "dom-content-type.mjs": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+      "main.mjs": "c8050b3c919b23fe8a4217c8895b6fb1a033c7642886de0d1d10205d408b2ae5",
+      "package-lock.json": "ae27e007cac19131f53050c9be4688b6270f214ae1203c38ea8280f5533eed7a",
+      "package.json": "0a284a0555d300b0cc2df89e05bce1155210afeedfdc6f97e63fdcc2a9043194",
+      "r6-signal-bridge-observer.mjs": "3b9787ebb55cd8f4173ee3f368278be866f1351029790f3bf8fce41d4497ee20",
+      "r6-offline-check.mjs": "ab6ca79ef5dcc250c3858e6bfa02fadb7e0b3f5b90d9c15f6a6bf0abadbbed4c"
+    }
+  },
+  "evidenceOnlyFilesExcludedFromUpload": [
+    "docs/changes/41/experiments/r6-dependent-signal/input-acceptance.json",
+    "docs/changes/41/experiments/r6-dependent-signal/r6-observer-unit-check.mjs",
+    "docs/changes/41/experiments/r6-dependent-signal/r6-evidence-cap-check.mjs",
+    "docs/changes/41/experiments/r6-dependent-signal/provenance-r6.json",
+    "docs/changes/41/experiments/r6-dependent-signal/prebuild-integrity-r6.json"
+  ],
+  "expectedEvidenceLimits": {
+    "maximumRecords": 4006,
+    "maximumBytesPerRecordIncludingPrefixAndNewline": 768,
+    "maximumTotalBytes": 4194304,
+    "noAdditionalMarkerKinds": true
+  },
+  "remoteMetadataBoundary": "Explicitly target Actor ID JIogcgdHyCqAMHQ1P. Keep the existing remote Actor name, default run settings, visibility, pricing, version mappings, R2/R4 builds and tags unchanged. The R6 run, if all later gates pass, explicitly requests the approved private 512 MiB / 900 second settings.",
+  "externalActions": {
+    "publisherRequestsStarted": false,
+    "actorApiRequestsStarted": false,
+    "uploadStarted": false,
+    "buildStarted": false,
+    "hostedRunStarted": false
+  }
+}

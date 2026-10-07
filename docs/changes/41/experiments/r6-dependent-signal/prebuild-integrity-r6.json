@@ -1,0 +1,143 @@
+{
+  "artifact": "Issue 41 R6 prebuild integrity and preparation gate",
+  "status": "OWNER_APPROVED_PREPARATION_AND_INDEPENDENT_REVIEW_PASSED; READY_FOR_ONE_GUARDED_BUILD_GATE; EXACT_RUNTIME_GATE_PENDING; NOT_BUILT; NOT_RUN",
+  "approvedTidCommit": "af1a080a64406babaf34fb3e057f9c59c6a2bd7d",
+  "provenanceManifest": "provenance-r6.json",
+  "uploadSourceRoot": "docs/changes/41/experiments/r6-dependent-signal/actor/",
+  "targetActorId": "JIogcgdHyCqAMHQ1P",
+  "targetActorIdIsExplicit": true,
+  "uploadSourceFiles": {
+    ".actor/INPUT_SCHEMA.json": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833",
+    ".actor/actor.json": "334120b985ae0e147aae38fd5f8fcd9fcf6f5b4ded8c060444bfafb4c27c9893",
+    ".actorignore": "105447ac6fc214cfa804ce695baa1664d6c1c5ccd9804561bc87245558a8c4c8",
+    "Dockerfile": "fb39f8c6e9205f39bbf851f86393c61279aba2f7cc4df0b4179594377572600b",
+    "check-charset.mjs": "c4eb024fa5ff4d5c7e0bb55635b5f49068952237c29ecddaa57fad57e62391b1",
+    "dom-content-type.mjs": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+    "main.mjs": "c8050b3c919b23fe8a4217c8895b6fb1a033c7642886de0d1d10205d408b2ae5",
+    "package-lock.json": "ae27e007cac19131f53050c9be4688b6270f214ae1203c38ea8280f5533eed7a",
+    "package.json": "0a284a0555d300b0cc2df89e05bce1155210afeedfdc6f97e63fdcc2a9043194",
+    "r6-signal-bridge-observer.mjs": "3b9787ebb55cd8f4173ee3f368278be866f1351029790f3bf8fce41d4497ee20",
+    "r6-offline-check.mjs": "ab6ca79ef5dcc250c3858e6bfa02fadb7e0b3f5b90d9c15f6a6bf0abadbbed4c"
+  },
+  "evidenceOnlyFilesExcludedFromUpload": [
+    "docs/changes/41/experiments/r6-dependent-signal/input-acceptance.json",
+    "docs/changes/41/experiments/r6-dependent-signal/r6-observer-unit-check.mjs",
+    "docs/changes/41/experiments/r6-dependent-signal/r6-evidence-cap-check.mjs",
+    "docs/changes/41/experiments/r6-dependent-signal/provenance-r6.json",
+    "docs/changes/41/experiments/r6-dependent-signal/prebuild-integrity-r6.json"
+  ],
+  "candidateHashes": {
+    "mainMjsSha256": "c8050b3c919b23fe8a4217c8895b6fb1a033c7642886de0d1d10205d408b2ae5",
+    "helperSha256": "3b9787ebb55cd8f4173ee3f368278be866f1351029790f3bf8fce41d4497ee20",
+    "offlineCheckSha256": "ab6ca79ef5dcc250c3858e6bfa02fadb7e0b3f5b90d9c15f6a6bf0abadbbed4c",
+    "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "inputBytes": 96589
+  },
+  "independentSemanticsReview": {
+    "status": "PASSED",
+    "completedAtUtcDate": "2026-10-07",
+    "findings": "No remaining blocker to the approved single bounded build gate; exact-runtime and hosted gates remain pending."
+  },
+  "expectedRuntime": {
+    "node": "v20.20.2",
+    "bundledUndici": "6.24.1",
+    "gateLocation": "final Docker image build stage before any hosted publisher request"
+  },
+  "checksPerformed": {
+    "localRuntime": {
+      "node": "v20.19.0",
+      "bundledUndici": "6.21.1",
+      "eligibleForExactRuntimeGate": false
+    },
+    "syntax": {
+      "command": "node --check docs/changes/41/experiments/r6-dependent-signal/actor/main.mjs && node --check docs/changes/41/experiments/r6-dependent-signal/actor/r6-signal-bridge-observer.mjs && node --check docs/changes/41/experiments/r6-dependent-signal/actor/r6-offline-check.mjs",
+      "exitCode": 0,
+      "runtime": "Node v20.19.0 / Undici 6.21.1"
+    },
+    "offlineObserverUnitChecks": {
+      "command": "node docs/changes/41/experiments/r6-dependent-signal/r6-observer-unit-check.mjs",
+      "exitCode": 0,
+      "runtime": "Node v20.19.0 / Undici 6.21.1",
+      "cases": [
+        "descriptor preservation, getter receiver and return forwarding, Promise identity, capture, and restoration",
+        "one/two getter reads capture; zero reads are Unknown",
+        "non-unique dependent signal is Unknown",
+        "3+ saturating counter reports Unknown with separate overflow indication while forwarding every getter call",
+        "original getter throw identity and Unknown state",
+        "failed descriptor restoration sets a nonzero exit status",
+        "synchronous fetch throw identity and frame cleanup",
+        "reentrant frame restoration and no scope leakage",
+        "expired WeakRef maps to Unknown, not false",
+        "WeakRef retention cap and row-terminal release"
+      ],
+      "externalRequests": false
+    },
+    "exactRuntimeOfflineGate": {
+      "status": "PENDING; not run locally because Node v20.19.0 / Undici 6.21.1 does not match the required runtime",
+      "plannedInFinalImage": true,
+      "includesNativeRequestSignalInvalidReceiverForwardingCheck": true,
+      "includesDataUrlFetchOverheadBenchmark": true
+    },
+    "markerEnvelopeCheck": {
+      "command": "node docs/changes/41/experiments/r6-dependent-signal/r6-evidence-cap-check.mjs",
+      "exitCode": 0,
+      "runtime": "Node v20.19.0 / Undici 6.21.1",
+      "maximumRecordBytesIncludingPrefixAndNewline": 768,
+      "maximumRecords": 4006,
+      "maximumTotalBytes": 4194304,
+      "worstCaseAllRecordsBytes": 3076608,
+      "sampleRecordBytes": {
+        "request_attempt_end": 653,
+        "post_abort_snapshot_30000": 660,
+        "row_terminal": 706,
+        "run_summary": 431
+      },
+      "additionalMarkerKinds": 0
+    },
+    "frozenInput": {
+      "copiedFrom": "docs/changes/41/experiments/r4-hosted-body-read/input-acceptance.json",
+      "byteForByteMatch": true,
+      "sha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+      "bytes": 96589,
+      "rows": 100,
+      "uniqueRowIds": 100,
+      "uniquePublisherUrls": 95
+    },
+    "sourceInventory": {
+      "r4AllowlistCopied": 9,
+      "unchangedFiles": [
+        ".actor/INPUT_SCHEMA.json",
+        ".actorignore",
+        "check-charset.mjs",
+        "dom-content-type.mjs",
+        "package-lock.json",
+        "package.json"
+      ],
+      "approvedDeltas": [
+        ".actor/actor.json: buildTag changed from issue41-b2-r4 to issue41-b2-r6",
+        "Dockerfile: exact runtime assertion and offline observer gate added in final build stage",
+        "main.mjs: R6 observer capture wired into existing fetch and existing record sites; restore result is recorded in existing run-summary/run-failure status and invalidates exit on failure",
+        "r6-signal-bridge-observer.mjs: new bounded observer helper",
+        "r6-offline-check.mjs: exact-runtime data:-URL benchmark gate"
+      ],
+      "dependencyChanges": false
+    }
+  },
+  "notYetPerformed": [
+    "Exact Node v20.20.2 / Undici 6.24.1 final-image runtime and offline benchmark gate",
+    "Apify schema validation in R6 candidate",
+    "Hosted Actor upload or build",
+    "Hosted Actor run or publisher request"
+  ],
+  "guardedSequenceAfterReview": {
+    "buildAttempts": 1,
+    "pollIntervalSeconds": 10,
+    "preAbortGuardSeconds": 120,
+    "postAbortObservationSeconds": 120,
+    "abortGuarantee": "best effort; build charge has no hard cap",
+    "conditionalRunAttempts": 1,
+    "runOnlyMaxTotalChargeUsd": 0.1,
+    "runMemoryMiB": 512,
+    "runTimeoutSeconds": 900
+  }
+}
