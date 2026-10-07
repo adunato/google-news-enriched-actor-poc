@@ -1,6 +1,6 @@
 {
   "experiment": "B2 vanilla hosted fetch-extract-output",
-  "status": "B2-F1 and B2-M3 approvals exhausted. M3 timed out at 899.861s with 99/100 rows; Inconclusive / Hold; no readability target or B3 eligibility established. B2-R2 is proposed and pending owner approval; it supersedes the unapproved, unexecuted B2-R1 proposal. No R2 execution is authorized.",
+  "status": "B2-R2 was owner-approved on 2026-10-07 and executed once. Build GvJKHPRZBtQdnQhwS / 0.10.3 passed exact candidate/resource verification. Run kRbP0jJtLZtWuKxOh TIMED-OUT at 899.854s with 98/100 dataset rows; Inconclusive / Hold, original acceptance incomplete, no readability target or B3 eligibility established. All current approvals are exhausted; owner checkpoint required before any further experiment.",
   "approvedAtUtcDate": "2026-10-06",
   "approvalScope": "One ordinary private Node.js 20 Actor candidate and a three-row smoke run; only if the smoke gate passes, use the same build for the full 100-row acceptance run under the TID route.",
   "actorId": "JIogcgdHyCqAMHQ1P",
@@ -364,7 +364,7 @@
     "executionAuthority": "None. Do not create or run the local test."
   },
   "b2R2Proposal": {
-    "status": "Proposed 2026-10-07; pending explicit owner approval. Documentation rescope only; no source change, build, publisher request, or hosted run authorized.",
+    "status": "Completed 2026-10-07: build GvJKHPRZBtQdnQhwS / 0.10.3 and exact-build gate passed; run kRbP0jJtLZtWuKxOh TIMED-OUT at 899.854s with 98/100 rows and no run_summary. Inconclusive / Hold; approval exhausted.",
     "supersedes": "The unapproved and unexecuted primitive-only B2-R1 proposal.",
     "question": "For the prior missing row q3-us-01, after abort in the actual hosted path, does the body read or stream settle, or does later handling prevent a row outcome? Other rows in the frozen 100-row run provide supporting context only.",
     "scope": "One instrumentation-only candidate build and one hosted run on Actor JIogcgdHyCqAMHQ1P using existing version 0.10 and a unique next patch/tag. Preserve every prior version, build, and tag mapping; delete none. Preserve actor/helper, dependencies, schema, fixture, request and body-read behavior, parser, cleanup, and output semantics. Before building, verify a source-only observational diff and protected-file hash manifest. Before any publisher request, verify exact build identity, source hash, and embedded 512-MiB / 900-second settings, then pin the run to that exact build; mismatch stops without a run.",
@@ -390,7 +390,7 @@
       "totalAddedMarkerMax": 2405,
       "postAbortObservationMsMax": 2000
     },
-    "observations": "At reader acquisition, attach fulfillment and rejection observers to reader.closed and handle the observer promise. Track the existing read index, in-flight state and current phase without changing the awaited read. Record signal creation/fire times, read/stream settlement, cleanup, extraction/result and dataset-write stages. One unref'ed nonthrowing post-abort snapshot per row is cancelled if that row finishes first. Capture exact Node and Undici versions in the existing run_start event.",
+    "observations": "At reader acquisition, attach fulfillment and rejection observers to reader.closed and handle the observer promise. Track the existing read index, in-flight state and current phase without changing the awaited read. Record signal creation/fire times, read/stream settlement, cleanup, extraction/result and dataset-write stages. One unref'ed nonthrowing post-abort snapshot per row is cancelled if that row finishes first. Capture exact Node and Undici versions in the existing run_start event. If reader.closed access or observer attachment fails, keep readerClosedState absent and include the sanitized setup error only in body_reader_acquired; do not emit reader_closed_settled or infer stream settlement.",
     "reservedMarkerPolicy": "Reserve one slot each for signal_created, body_reader_acquired, body_read_entered, body_read_completed, abort_fired, reader_closed_settled, post_abort_snapshot, post_abort_inflight_read_settled, first post_abort_cancel_enter, first post_abort_cancel_settled, cleanup_enter, cleanup_settled, catch, fetch_result, row_write, and row_terminal. Deduplicate within each type; optional events cannot displace reserved slots. The remaining eight per-row slots take the first eight redirect/response/pre-abort-cancel transitions in occurrence order; suppress later optional lines. Continue numeric state/counters in memory and include current values in reserved events. No per-read/chunk lines or effect on underlying operations.",
     "logAllowlist": [
       "rowId",
@@ -407,9 +407,19 @@
     ],
     "redaction": "Never log URLs, headers, response bodies, article text, tokens, raw errors or other secrets. No polling or chunk logging.",
     "interpretation": "Pending read and stream mean no observed settlement and unknown cause. Settled stream with in-flight read is distinct from read settlement; a later releaseLock-related rejection is not proof of a stream abort error. Settled read without row output localizes only a later observed cancel/cleanup/catch/fetch-result/write/worker-join phase. Missing snapshot while a row is active leaves timer/event-loop behavior uncertain. Signal creation-to-abort time is supporting Q2 context, not the primary R2 question. A matching abort/body-read stall on another row is a separate-row recurrence; report it independently and do not claim q3-us-01's historical cause was reproduced. Instrumentation may perturb timing; non-reproduction does not prove a fix.",
-    "stop": "Stop after the one run. Failure or incomplete execution remains Inconclusive / Hold and authorizes no fix, retry, resource change, or new diagnostic. A normal 100-row completion permits independent review of every counted text against the existing 50/100 target. B3 is not automatically eligible.",
+    "stop": "The single approved B2-R2 build/run are complete and approval is exhausted. Stop; no retry, correction, resource change, further diagnostic, or B3 is authorized without a separately approved TID amendment.",
     "computeEstimate": "0.125 CU / about $0.025 for 900 seconds at the previously cited $0.20/CU standard rate; compute-only, not a guaranteed total or cap. Account, transfer, build, storage, and API charges may differ. Latest M3 usage was $0.025723639751517115 as context, not a cap.",
-    "approvalRequired": "Separate explicit owner approval is required before any source change, candidate build, publisher request, or hosted run.",
-    "executionStatus": "Not approved; no implementation or execution. Area B remains On Hold; overall Spike conclusion remains Pending."
+    "approvedAtUtcDate": "2026-10-07",
+    "userApproval": "The owner explicitly approved B2-R2 on 2026-10-07 for exactly one instrumentation-only build and one conditional hosted run, subject to local integrity and exact-build gates.",
+    "approvalRequired": "Approval received and fully consumed. No further build, run, correction, or diagnostic is authorized without a new owner-approved TID amendment.",
+    "executionStatus": "TIMED-OUT at 899.854s; actual 512 MiB/900s; 98/100 rows; two missing rows q3-us-02 and q4-gb-02; Inconclusive / Hold; approval exhausted; no retry or further diagnostic.",
+    "buildId": "GvJKHPRZBtQdnQhwS",
+    "buildNumber": "0.10.3",
+    "buildEvidence": "build-definition-b2-r2.json",
+    "runId": "kRbP0jJtLZtWuKxOh",
+    "runEvidence": "run-metadata-b2-r2.json; results-b2-r2.json; sanitized-stage-evidence-b2-r2.json; ignored same-run log and dataset under private/.",
+    "resultSummary": "Platform TIMED-OUT after 899.854s (platform exitCode null; CLI wait exit 1 separately). Default dataset ny0UTrCDUMfZb5CxB contains 98 rows; missing q3-us-02 and q4-gb-02. 76 eligible HTML, 16 HTTP denied, 5 timeouts, 1 request error; 75 extraction success candidates, 1 no-readable candidate, 22 not attempted. Dataset-observed publisher request sum 99; run-wide total unknown. Node v20.20.2 / Undici 6.24.1; platform peak 511270912 bytes; actual usageTotalUsd $0.025715634668674735.",
+    "diagnosticObservation": "The final log contains 1,049 R2 row markers, two worker joins and no run_summary. q3-us-02 and q4-gb-02 each reached a post-abort snapshot with readInFlight true and readerClosedState pending, then had no later marker or output. q3-us-01 had no reader acquisition; its pending readerClosedState is only an initialization placeholder. Snapshot currentPhase is overwritten with post_abort_observation, so underlying phase is unknown. No body-read settlement or causal termination mechanism is established.",
+    "classification": "Valid partial execution; Inconclusive / Hold. The 100-row acceptance is incomplete; no 50/100 result, below-target result, readability judgment, or B3 eligibility is established."
   }
 }

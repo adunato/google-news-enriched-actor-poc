@@ -1,0 +1,60 @@
+{
+  "experiment": "B2-R2 hosted body-read settlement observation",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "runId": "kRbP0jJtLZtWuKxOh",
+  "buildId": "GvJKHPRZBtQdnQhwS",
+  "buildNumber": "0.10.3",
+  "buildTag": "issue41-b2-r2",
+  "status": "TIMED-OUT",
+  "exitCode": null,
+  "startedAt": "2026-10-07T07:26:34.088Z",
+  "finishedAt": "2026-10-07T07:41:34.099Z",
+  "durationSecs": 899.854,
+  "options": {
+    "build": "0.10.3",
+    "memoryMbytes": 512,
+    "timeoutSecs": 900,
+    "diskMbytes": 1024
+  },
+  "defaultDatasetId": "ny0UTrCDUMfZb5CxB",
+  "datasetRows": 98,
+  "platformStats": {
+    "durationMillis": 899854,
+    "computeUnits": 0.12497972222222223,
+    "memMaxBytes": 511270912,
+    "memAvgBytes": 172675437.6365245,
+    "memCurrentBytes": 0,
+    "cpuAvgUsage": 3.818207027376872,
+    "cpuMaxUsage": 191.7991619047619,
+    "netRxBytes": 6138416,
+    "netTxBytes": 1103092
+  },
+  "usageTotalUsd": 0.025715634668674735,
+  "usage": {
+    "ACTOR_COMPUTE_UNITS": 0.12497972222222223,
+    "DATASET_READS": 0,
+    "DATASET_WRITES": 98,
+    "KEY_VALUE_STORE_READS": 1,
+    "KEY_VALUE_STORE_WRITES": 1,
+    "KEY_VALUE_STORE_LISTS": 0,
+    "REQUEST_QUEUE_READS": 0,
+    "REQUEST_QUEUE_WRITES": 0,
+    "DATA_TRANSFER_INTERNAL_GBYTES": 0.00042983517050743103,
+    "DATA_TRANSFER_EXTERNAL_GBYTES": 0.0007659923285245895,
+    "PROXY_RESIDENTIAL_TRANSFER_GBYTES": 0,
+    "PROXY_SERPS": 0,
+    "PROXY_UNBLOCKER_UNITS": 0
+  },
+  "input": {
+    "sampleId": "acceptance",
+    "sha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "rows": 100,
+    "uniqueRowIds": 100,
+    "uniquePublisherUrls": 95,
+    "duplicatePublisherUrlOccurrences": 5
+  },
+  "runSummaryPresent": false,
+  "cliWaitExitCode": 1,
+  "metadataSource": "Read-only final Apify run metadata for this run; account/user IDs and console/container URLs omitted. CLI wait exit 1 is reported separately from platform status/exitCode.",
+  "runtime": "Node v20.20.2; Undici 6.24.1 (from same-run run_start log marker)."
+}

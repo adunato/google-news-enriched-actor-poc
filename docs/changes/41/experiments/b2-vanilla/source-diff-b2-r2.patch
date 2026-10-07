@@ -1,0 +1,486 @@
+diff --git a/docs/changes/41/experiments/b2-vanilla/actor/main.mjs b/docs/changes/41/experiments/b2-vanilla/actor/main.mjs
+index 0ef417a..5a1fc28 100644
+--- a/docs/changes/41/experiments/b2-vanilla/actor/main.mjs
++++ b/docs/changes/41/experiments/b2-vanilla/actor/main.mjs
+@@ -10,9 +10,51 @@ const MAX_BODY_BYTES = 2 * 1024 * 1024;
+ const MAX_REDIRECTS = 5;
+ const ROW_HTTP_TIMEOUT_MS = 10_000;
+ const CONCURRENCY = 4;
++const R2_RESERVED_EVENTS = new Set([
++  "signal_created",
++  "body_reader_acquired",
++  "body_read_entered",
++  "body_read_completed",
++  "abort_fired",
++  "reader_closed_settled",
++  "post_abort_snapshot",
++  "post_abort_inflight_read_settled",
++  "post_abort_cancel_enter",
++  "post_abort_cancel_settled",
++  "cleanup_enter",
++  "cleanup_settled",
++  "catch",
++  "fetch_result",
++  "row_write",
++  "row_terminal",
++]);
++const R2_TRACE_BY_ROW = new Map();
++let r2WorkerJoins = 0;
++let r2RunSummaryLogged = false;
+ 
+ const sha256 = (value) => createHash("sha256").update(value).digest("hex");
+ 
++function logR2Global(stage) {
++  try {
++    if (stage === "worker_join") {
++      if (r2WorkerJoins >= CONCURRENCY) return;
++      r2WorkerJoins += 1;
++    } else if (stage === "run_summary") {
++      if (r2RunSummaryLogged) return;
++      r2RunSummaryLogged = true;
++    } else {
++      return;
++    }
++    console.log(
++      `ISSUE41_B2_R2 ${JSON.stringify({ stage, elapsedMs: Date.now() - r2RunStartedAt })}`,
++    );
++  } catch {
++    // R2 observation must never affect Actor execution.
++  }
++}
++
++let r2RunStartedAt = Date.now();
++
+ function safeError(error) {
+   const name =
+     error instanceof Error && /^[A-Za-z][A-Za-z0-9]{0,39}$/u.test(error.name)
+@@ -75,9 +117,164 @@ function logMemorySnapshot(rowId, rowStartedAt, stage) {
+   }
+ }
+ 
+-async function cancelResponseBody(response, logStage, phase) {
++function createR2Trace(rowId, rowStartedAt) {
++  const reserved = new Set();
++  let optionalEvents = 0;
++  let readIndex = 0;
++  let readInFlight = false;
++  let currentPhase = "row_start";
++  let signalCreationTime = null;
++  let abortFireTime = null;
++  let readerClosedState = "pending";
++  let postAbortTimer = null;
++  let postAbortSnapshotLogged = false;
++
++  const record = (stage, error = null) => {
++    try {
++      const isReserved = R2_RESERVED_EVENTS.has(stage);
++      if (isReserved) {
++        if (reserved.has(stage)) return;
++        reserved.add(stage);
++      } else {
++        if (optionalEvents >= 8) return;
++        optionalEvents += 1;
++      }
++      const safe = error ? safeError(error) : null;
++      console.log(
++        `ISSUE41_B2_R2 ${JSON.stringify({
++          rowId,
++          stage,
++          elapsedMs: Date.now() - rowStartedAt,
++          signalCreationTime,
++          abortFireTime,
++          readIndex,
++          readInFlight,
++          currentPhase,
++          readerClosedState,
++          sanitizedErrorClass: safe?.errorClass ?? "none",
++          sanitizedErrorCode: safe?.errorCode ?? "none",
++        })}`,
++      );
++    } catch {
++      // R2 observation must never affect row processing.
++    }
++  };
++
++  return {
++    record,
++    setPhase(phase) {
++      currentPhase = phase;
++    },
++    signalCreated() {
++      try {
++        signalCreationTime = Date.now() - rowStartedAt;
++        currentPhase = "fetch";
++        record("signal_created");
++      } catch {
++        // Signal metadata observation must not affect the request.
++      }
++    },
++    abortFired() {
++      try {
++        abortFireTime = Date.now() - rowStartedAt;
++        currentPhase = "abort_fired";
++        record("abort_fired");
++        if (postAbortTimer === null && !postAbortSnapshotLogged) {
++          postAbortTimer = setTimeout(() => {
++            postAbortTimer = null;
++            postAbortSnapshotLogged = true;
++            currentPhase = "post_abort_observation";
++            record("post_abort_snapshot");
++          }, 2_000);
++          postAbortTimer.unref?.();
++        }
++      } catch {
++        // Timer observation must never affect abort handling.
++      }
++    },
++    readerAcquired(reader) {
++      currentPhase = "body_reader_acquired";
++      let setupError = null;
++      let observerEnabled = false;
++      try {
++        const closed = reader.closed;
++        const observer = closed.then(
++          () => {
++            if (!observerEnabled) return;
++            readerClosedState = "fulfilled";
++            currentPhase = "reader_closed_settled";
++            record("reader_closed_settled");
++          },
++          (error) => {
++            if (!observerEnabled) return;
++            readerClosedState = "rejected";
++            currentPhase = "reader_closed_settled";
++            record("reader_closed_settled", error);
++          },
++        );
++        observer.catch(() => {});
++        observerEnabled = true;
++      } catch (error) {
++        readerClosedState = undefined;
++        currentPhase = "body_reader_observer_setup_failed";
++        setupError = error;
++      }
++      record("body_reader_acquired", setupError);
++    },
++    readEntered() {
++      readIndex += 1;
++      readInFlight = true;
++      currentPhase = "body_read_in_flight";
++      record("body_read_entered");
++    },
++    readSettled(error = null) {
++      const wasInFlightAfterAbort = abortFireTime !== null && readInFlight;
++      readInFlight = false;
++      currentPhase = error ? "body_read_rejected" : "body_read_settled";
++      if (wasInFlightAfterAbort) record("post_abort_inflight_read_settled", error);
++      if (error) record("catch", error);
++    },
++    bodyReadCompleted() {
++      currentPhase = "body_read_completed";
++      record("body_read_completed");
++    },
++    cancelEntered() {
++      currentPhase = "cancel_in_flight";
++      if (abortFireTime !== null) record("post_abort_cancel_enter");
++      else record("cancel_enter");
++    },
++    cancelSettled(error = null) {
++      currentPhase = error ? "cancel_rejected" : "cancel_settled";
++      if (abortFireTime !== null) record("post_abort_cancel_settled", error);
++      else record("cancel_settled", error);
++    },
++    terminal() {
++      const cancelledPostAbortSnapshot = postAbortTimer !== null;
++      try {
++        if (postAbortTimer !== null) clearTimeout(postAbortTimer);
++      } catch {
++        // Timer cleanup is observational and must not affect row completion.
++      }
++      postAbortTimer = null;
++      currentPhase =
++        abortFireTime !== null && cancelledPostAbortSnapshot
++          ? "row_terminal_post_abort_snapshot_cancelled"
++          : "row_terminal";
++      record("row_terminal");
++    },
++  };
++}
++
++async function cancelResponseBody(response, logStage, phase, r2Trace) {
++  r2Trace?.cancelEntered();
+   logStage("cancel", { phase: `${phase}_start` });
+-  await response.body?.cancel();
++  try {
++    await response.body?.cancel();
++    r2Trace?.cancelSettled();
++  } catch (error) {
++    r2Trace?.cancelSettled(error);
++    throw error;
++  }
+   logStage("cancel", { phase: `${phase}_complete` });
+ }
+ 
+@@ -125,31 +322,50 @@ function structuredArticleText(document) {
+   return candidates.sort((left, right) => right.length - left.length)[0] || null;
+ }
+ 
+-async function readBoundedBody(response, logStage) {
++async function readBoundedBody(response, logStage, r2Trace) {
+   logStage("body_read", { phase: "start" });
++  r2Trace?.setPhase("body_read_start");
+   const declaredLength = Number(response.headers.get("content-length") || 0);
+   if (declaredLength > MAX_BODY_BYTES) {
+-    await cancelResponseBody(response, logStage, "declared_limit");
++    await cancelResponseBody(response, logStage, "declared_limit", r2Trace);
+     throw Object.assign(new Error("Response exceeds the configured body bound"), {
+       code: "BODY_LIMIT",
+     });
+   }
+   if (!response.body) {
+     logStage("body_read", { phase: "complete", bodyBytes: 0 });
++    r2Trace?.bodyReadCompleted();
+     return Buffer.alloc(0);
+   }
+ 
+   const reader = response.body.getReader();
++  r2Trace?.readerAcquired(reader);
+   const chunks = [];
+   let byteLength = 0;
+   try {
+     while (true) {
+-      const { done, value } = await reader.read();
++      r2Trace?.readEntered();
++      let readResult;
++      try {
++        readResult = await reader.read();
++        r2Trace?.readSettled();
++      } catch (error) {
++        r2Trace?.readSettled(error);
++        throw error;
++      }
++      const { done, value } = readResult;
+       if (done) break;
+       byteLength += value.byteLength;
+       if (byteLength > MAX_BODY_BYTES) {
+         logStage("cancel", { phase: "stream_limit_start" });
+-        await reader.cancel();
++        r2Trace?.cancelEntered();
++        try {
++          await reader.cancel();
++          r2Trace?.cancelSettled();
++        } catch (error) {
++          r2Trace?.cancelSettled(error);
++          throw error;
++        }
+         logStage("cancel", { phase: "stream_limit_complete" });
+         throw Object.assign(new Error("Response exceeds the configured body bound"), {
+           code: "BODY_LIMIT",
+@@ -161,6 +377,7 @@ async function readBoundedBody(response, logStage) {
+     reader.releaseLock();
+   }
+   logStage("body_read", { phase: "complete", bodyBytes: byteLength });
++  r2Trace?.bodyReadCompleted();
+   return Buffer.concat(chunks, byteLength);
+ }
+ 
+@@ -191,9 +408,10 @@ function safeUrlDetails(value) {
+   };
+ }
+ 
+-async function fetchPublisher(row, rowStartedAt) {
++async function fetchPublisher(row, rowStartedAt, r2Trace) {
+   const startedAt = Date.now();
+   const signal = AbortSignal.timeout(ROW_HTTP_TIMEOUT_MS);
++  r2Trace?.signalCreated();
+   let currentUrl = row.publisherUrl;
+   let requestCount = 0;
+   let redirectCount = 0;
+@@ -206,7 +424,10 @@ async function fetchPublisher(row, rowStartedAt) {
+     bodyBytes: null,
+   };
+   const logStage = (stage, details) => logHttpStage(row.rowId, startedAt, state, stage, details);
+-  const abortObserver = () => logStage("abort_fired");
++  const abortObserver = () => {
++    logStage("abort_fired");
++    r2Trace?.abortFired();
++  };
+   let abortObserverAttached = false;
+ 
+   try {
+@@ -234,6 +455,7 @@ async function fetchPublisher(row, rowStartedAt) {
+       state.normalizedMime = "unknown";
+       state.bodyBytes = null;
+       logStage("request_start");
++      if (redirectIndex > 0) r2Trace?.record("redirect_request");
+       logMemorySnapshot(row.rowId, rowStartedAt, "fetch_before");
+       const pendingResponse = fetch(currentUrl, {
+         method: "GET",
+@@ -252,10 +474,12 @@ async function fetchPublisher(row, rowStartedAt) {
+       state.httpStatus = response.status;
+       state.normalizedMime = normalizedMime(response.headers.get("content-type"));
+       logStage("response");
++      r2Trace?.record("response");
+ 
+       if ([301, 302, 303, 307, 308].includes(response.status) && location) {
+         logStage("redirect");
+-        await cancelResponseBody(response, logStage, "redirect");
++        r2Trace?.record("redirect");
++        await cancelResponseBody(response, logStage, "redirect", r2Trace);
+         if (redirectIndex === MAX_REDIRECTS) {
+           return {
+             fetchStatus: "redirect_limit",
+@@ -288,7 +512,7 @@ async function fetchPublisher(row, rowStartedAt) {
+       const finalUrl = currentUrl;
+       const final = safeUrlDetails(finalUrl);
+       if (!response.ok) {
+-        await cancelResponseBody(response, logStage, "http_error");
++        await cancelResponseBody(response, logStage, "http_error", r2Trace);
+         return {
+           fetchStatus: [401, 403, 429].includes(response.status) ? "http_denied" : "http_error",
+           httpStatus: response.status,
+@@ -302,7 +526,7 @@ async function fetchPublisher(row, rowStartedAt) {
+         };
+       }
+       if (!html) {
+-        await cancelResponseBody(response, logStage, "non_html");
++        await cancelResponseBody(response, logStage, "non_html", r2Trace);
+         return {
+           fetchStatus: "non_html",
+           httpStatus: response.status,
+@@ -316,7 +540,7 @@ async function fetchPublisher(row, rowStartedAt) {
+         };
+       }
+ 
+-      const body = await readBoundedBody(response, logStage);
++      const body = await readBoundedBody(response, logStage, r2Trace);
+       state.bodyBytes = body.length;
+       if (body.length === 0) {
+         return {
+@@ -352,6 +576,7 @@ async function fetchPublisher(row, rowStartedAt) {
+   } catch (error) {
+     const safe = safeError(error);
+     logStage("catch", { error: safe });
++    r2Trace?.record("catch", error);
+     return {
+       fetchStatus:
+         error instanceof Error && ["TimeoutError", "AbortError"].includes(error.name)
+@@ -366,6 +591,8 @@ async function fetchPublisher(row, rowStartedAt) {
+       stages,
+     };
+   } finally {
++    r2Trace?.setPhase("cleanup_enter");
++    r2Trace?.record("cleanup_enter");
+     if (abortObserverAttached) {
+       try {
+         signal.removeEventListener("abort", abortObserver);
+@@ -374,6 +601,8 @@ async function fetchPublisher(row, rowStartedAt) {
+       }
+     }
+     logStage("cleanup");
++    r2Trace?.setPhase("cleanup_settled");
++    r2Trace?.record("cleanup_settled");
+   }
+ }
+ 
+@@ -425,9 +654,14 @@ function extractArticle(body, finalUrl, contentType, rowId, rowStartedAt) {
+ 
+ async function processRow(row, sampleId) {
+   const rowStart = Date.now();
++  const r2Trace = createR2Trace(row.rowId, rowStart);
++  R2_TRACE_BY_ROW.set(row.rowId, r2Trace);
++  r2Trace.setPhase("row_start");
+   logMemorySnapshot(row.rowId, rowStart, "row_start");
+   console.log(`ISSUE41_B2 sample=${sampleId} stage=row_start rowId=${row.rowId}`);
+-  const fetchResult = await fetchPublisher(row, rowStart);
++  const fetchResult = await fetchPublisher(row, rowStart, r2Trace);
++  r2Trace.setPhase("fetch_result");
++  r2Trace.record("fetch_result");
+   logMemorySnapshot(row.rowId, rowStart, "fetch_complete");
+   console.log(
+     `ISSUE41_B2 sample=${sampleId} stage=fetch_result rowId=${row.rowId} status=${fetchResult.fetchStatus} httpStatus=${fetchResult.httpStatus ?? "none"} requests=${fetchResult.requestCount} redirects=${fetchResult.redirectCount} elapsedMs=${fetchResult.fetchElapsedMs}`,
+@@ -441,6 +675,7 @@ async function processRow(row, sampleId) {
+   };
+   if (fetchResult.fetchStatus === "eligible_html") {
+     try {
++      r2Trace.setPhase("extraction");
+       extractionResult = extractArticle(
+         fetchResult.body,
+         fetchResult.finalUrl,
+@@ -451,7 +686,10 @@ async function processRow(row, sampleId) {
+       console.log(
+         `ISSUE41_B2 sample=${sampleId} stage=extraction_result rowId=${row.rowId} status=${extractionResult.fullTextStatus} method=${extractionResult.extractionMethod ?? "none"} wordCount=${extractionResult.wordCount} elapsedMs=${extractionResult.extractionElapsedMs ?? 0}`,
+       );
++      r2Trace.setPhase("extraction_result");
+     } catch (error) {
++      r2Trace.setPhase("extraction_error");
++      r2Trace.record("catch", error);
+       extractionResult = {
+         fullTextStatus: "extraction_error",
+         extractionMethod: null,
+@@ -464,6 +702,7 @@ async function processRow(row, sampleId) {
+       );
+     }
+   } else {
++    r2Trace.setPhase("extraction_not_attempted");
+     extractionResult.fullTextStatus = "not_attempted_fetch_ineligible";
+     console.log(
+       `ISSUE41_B2 sample=${sampleId} stage=extraction_result rowId=${row.rowId} status=not_attempted_fetch_ineligible wordCount=0`,
+@@ -535,8 +774,9 @@ try {
+   }
+ 
+   currentStage = "row_processing";
++  r2RunStartedAt = Date.now();
+   console.log(
+-    `ISSUE41_B2 stage=run_start sample=${input.sampleId} totalRows=${input.rows.length} uniqueRowIds=${new Set(rowIds).size} uniquePublisherUrls=${new Set(input.rows.map((row) => row.publisherUrl)).size} duplicatePublisherUrlOccurrences=${input.rows.length - new Set(input.rows.map((row) => row.publisherUrl)).size} memoryMbytes=${process.env.APIFY_MEMORY_MBYTES ?? "unknown"}`,
++    `ISSUE41_B2 stage=run_start sample=${input.sampleId} totalRows=${input.rows.length} uniqueRowIds=${new Set(rowIds).size} uniquePublisherUrls=${new Set(input.rows.map((row) => row.publisherUrl)).size} duplicatePublisherUrlOccurrences=${input.rows.length - new Set(input.rows.map((row) => row.publisherUrl)).size} memoryMbytes=${process.env.APIFY_MEMORY_MBYTES ?? "unknown"} nodeVersion=${process.version} undiciVersion=${process.versions.undici ?? "unknown"}`,
+   );
+   const fetchCounts = {};
+   const extractionCounts = {};
+@@ -548,7 +788,10 @@ try {
+     Array.from({ length: Math.min(CONCURRENCY, input.rows.length) }, async () => {
+       while (true) {
+         const index = nextIndex++;
+-        if (index >= input.rows.length) return;
++        if (index >= input.rows.length) {
++          logR2Global("worker_join");
++          return;
++        }
+         const row = input.rows[index];
+         let outcome;
+         try {
+@@ -589,17 +832,26 @@ try {
+             `ISSUE41_B2 sample=${input.sampleId} stage=row_write_start rowId=${outcome.rowId}`,
+           );
+           await Actor.pushData(outcome);
++          const r2Trace = R2_TRACE_BY_ROW.get(row.rowId);
++          r2Trace?.setPhase("row_write");
++          r2Trace?.record("row_write");
+           completedRows += 1;
+           console.log(
+             `ISSUE41_B2 sample=${input.sampleId} stage=row_write_result rowId=${outcome.rowId} status=written`,
+           );
+         } catch (error) {
++          const r2Trace = R2_TRACE_BY_ROW.get(row.rowId);
++          r2Trace?.setPhase("row_write_error");
++          r2Trace?.record("row_write", error);
+           writeFailures += 1;
+           const safe = safeError(error);
+           console.error(
+             `ISSUE41_B2 sample=${input.sampleId} stage=row_write_result rowId=${outcome.rowId} status=failed errorClass=${safe.errorClass} errorCode=${safe.errorCode ?? "none"}`,
+           );
+         }
++        const r2Trace = R2_TRACE_BY_ROW.get(row.rowId);
++        r2Trace?.terminal();
++        R2_TRACE_BY_ROW.delete(row.rowId);
+       }
+     }),
+   );
+@@ -608,6 +860,7 @@ try {
+   console.log(
+     `ISSUE41_B2 stage=run_summary sample=${input.sampleId} inputRows=${input.rows.length} rowsWritten=${completedRows} processingFailures=${processingFailures} datasetWriteFailures=${writeFailures} fetchCounts=${JSON.stringify(fetchCounts)} extractionCounts=${JSON.stringify(extractionCounts)}`,
+   );
++  logR2Global("run_summary");
+   if (processingFailures > 0 || writeFailures > 0) exitCode = 1;
+ } catch (error) {
+   const safe = safeError(error);

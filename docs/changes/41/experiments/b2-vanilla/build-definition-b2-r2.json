@@ -1,0 +1,26 @@
+{
+  "buildId": "GvJKHPRZBtQdnQhwS",
+  "buildNumber": "0.10.3",
+  "status": "SUCCEEDED",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "sourceType": "SOURCE_FILES",
+  "version": "0.10",
+  "buildTag": "issue41-b2-r2",
+  "candidateMainSha256": "b87e8635caf895181a406c4a103aaa57ab81193ce3a3f4477728ab568bffc47c",
+  "sourceMatchesReviewedCandidate": true,
+  "startedAt": "2026-10-07T07:24:12.385Z",
+  "finishedAt": "2026-10-07T07:24:25.968Z",
+  "durationMillis": 13446,
+  "buildComputeUnits": 0.01494,
+  "buildUsageUsd": 0.002988,
+  "actorDefinition": {
+    "version": "0.10",
+    "buildTag": "issue41-b2-r2",
+    "minMemoryMiB": 512,
+    "defaultMemoryMiB": 512,
+    "maxMemoryMiB": 512,
+    "timeoutSecs": 900
+  },
+  "cliBuildEnvironmentMemoryMiB": 4096,
+  "note": "Build CLI environment memory is distinct from Actor run resources; the embedded Actor definition is 512 MiB min/default/max and 900 seconds."
+}

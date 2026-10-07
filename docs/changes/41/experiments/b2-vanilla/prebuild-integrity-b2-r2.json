@@ -1,0 +1,73 @@
+{
+  "checks": {
+    "apifySchema": "passed with apify-cli/1.10.0",
+    "prettier": "passed for candidate and controlling records",
+    "approvalJson": "passed",
+    "nodeSyntax": "passed",
+    "gitDiffCheck": "passed",
+    "failureInjection": "passed: signalCreated/abortFired survived injected clock, timer, and logger failures",
+    "readerObserverFailureInjection": "passed: throwing reader.closed getter and then attachment emitted only body_reader_acquired with sanitized error and omitted readerClosedState",
+    "r2LogAllowlist": "passed: emitted R2 JSON keys are restricted to the approved logAllowlist, including sanitizedErrorClass/sanitizedErrorCode"
+  },
+  "artifact": "B2-R2 prebuild integrity",
+  "approvedDate": "2026-10-07",
+  "protectedFiles": [
+    {
+      "sha256": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833",
+      "path": "actor/.actor/INPUT_SCHEMA.json"
+    },
+    {
+      "sha256": "105447ac6fc214cfa804ce695baa1664d6c1c5ccd9804561bc87245558a8c4c8",
+      "path": "actor/.actorignore"
+    },
+    {
+      "sha256": "72f0dfb10a56e715395935531e0008fbd087fb806a307ebbea90426c111097fc",
+      "path": "actor/Dockerfile"
+    },
+    {
+      "sha256": "0a284a0555d300b0cc2df89e05bce1155210afeedfdc6f97e63fdcc2a9043194",
+      "path": "actor/package.json"
+    },
+    {
+      "sha256": "ae27e007cac19131f53050c9be4688b6270f214ae1203c38ea8280f5533eed7a",
+      "path": "actor/package-lock.json"
+    },
+    {
+      "sha256": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+      "path": "actor/dom-content-type.mjs"
+    },
+    {
+      "sha256": "c4eb024fa5ff4d5c7e0bb55635b5f49068952237c29ecddaa57fad57e62391b1",
+      "path": "actor/check-charset.mjs"
+    },
+    {
+      "sha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+      "path": "input-acceptance.json"
+    }
+  ],
+  "branch": "spike/41-google-news-resolution-full-text",
+  "candidateMainSha256": "b87e8635caf895181a406c4a103aaa57ab81193ce3a3f4477728ab568bffc47c",
+  "execution": "At pre-build capture, no build or hosted run had started and the independent candidate review remained required. Those gates subsequently passed: build GvJKHPRZBtQdnQhwS / 0.10.3 succeeded and run kRbP0jJtLZtWuKxOh completed as TIMED-OUT; see build-definition-b2-r2.json and run-metadata-b2-r2.json.",
+  "actorConfiguration": {
+    "version": "0.10",
+    "sha256": "114e8a09ad3a064f0d13f94369814428db657a457bb7955b83151e6dc41e063b",
+    "defaultMemoryMbytes": 512,
+    "maxMemoryMbytes": 512,
+    "minMemoryMbytes": 512,
+    "timeoutSecs": 900,
+    "buildTag": "issue41-b2-r2"
+  },
+  "candidateFiles": [
+    "actor/main.mjs (observational instrumentation only)",
+    "actor/.actor/actor.json (version/tag metadata only)"
+  ],
+  "baselineCommit": "ccdf6f2cab1ff841b70819b4e9e4eea17d6ca11a",
+  "input": {
+    "rows": 100,
+    "file": "input-acceptance.json",
+    "sha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "duplicatePublisherUrlOccurrences": 5,
+    "uniquePublisherUrls": 95,
+    "uniqueRowIds": 100
+  }
+}
