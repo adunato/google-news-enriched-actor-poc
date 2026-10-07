@@ -1,0 +1,195 @@
+{
+  "artifact": "Issue 41 B2-R4 hosted body-read diagnostic candidate provenance",
+  "status": "PREPARED_FOR_INDEPENDENT_SEMANTICS_REVIEW; NOT_BUILT; NOT_RUN",
+  "preparedAtUtcDate": "2026-10-07",
+  "ownerApproval": {
+    "approvedAtUtcDate": "2026-10-07",
+    "exactOwnerReply": "approved. go ahead",
+    "approvedTidCommit": "0ffaa8521446045e5a7fc843348e3762cabb6dff",
+    "scope": "Complete bounded R4 TID sequence, conditional one monitored build attempt and, only if all gates pass, one private hosted run with run-only maxTotalChargeUsd=0.10."
+  },
+  "historicalR2Baseline": {
+    "sourceCommit": "2694b1162c90bf93a4e36db4fa3cb0d4e0800a7e",
+    "actorSourceTree": {
+      ".actor/INPUT_SCHEMA.json": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833",
+      ".actor/actor.json": "114e8a09ad3a064f0d13f94369814428db657a457bb7955b83151e6dc41e063b",
+      ".actorignore": "105447ac6fc214cfa804ce695baa1664d6c1c5ccd9804561bc87245558a8c4c8",
+      "Dockerfile": "72f0dfb10a56e715395935531e0008fbd087fb806a307ebbea90426c111097fc",
+      "check-charset.mjs": "c4eb024fa5ff4d5c7e0bb55635b5f49068952237c29ecddaa57fad57e62391b1",
+      "dom-content-type.mjs": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+      "main.mjs": "b87e8635caf895181a406c4a103aaa57ab81193ce3a3f4477728ab568bffc47c",
+      "package-lock.json": "ae27e007cac19131f53050c9be4688b6270f214ae1203c38ea8280f5533eed7a",
+      "package.json": "0a284a0555d300b0cc2df89e05bce1155210afeedfdc6f97e63fdcc2a9043194"
+    },
+    "mainMjsSha256": "b87e8635caf895181a406c4a103aaa57ab81193ce3a3f4477728ab568bffc47c",
+    "actorDefinition": {
+      "actorSpecification": 1,
+      "name": "issue41-google-news-b2-vanilla-20261006",
+      "title": "Issue 41 B2 Vanilla Flow",
+      "description": "Private Issue 41 bounded same-run publisher fetch, full-text extraction and dataset-output experiment.",
+      "version": "0.10",
+      "buildTag": "issue41-b2-r2",
+      "dockerfile": "Dockerfile",
+      "input": "INPUT_SCHEMA.json",
+      "defaultRunOptions": {
+        "timeoutSecs": 900,
+        "memoryMbytes": 512
+      },
+      "minMemoryMbytes": 512,
+      "maxMemoryMbytes": 512
+    },
+    "inputFile": "input-acceptance.json",
+    "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "inputRows": 100,
+    "uniqueRowIds": 100,
+    "uniquePublisherUrls": 95,
+    "hostedActorId": "JIogcgdHyCqAMHQ1P",
+    "buildId": "GvJKHPRZBtQdnQhwS",
+    "buildVersion": "0.10.3",
+    "buildTag": "issue41-b2-r2",
+    "runId": "kRbP0jJtLZtWuKxOh",
+    "finalImageDigest": "8130c570d3b64cf5ef197ac69c6db66d3810d3173e9069510ffe95a3785af5da",
+    "runtime": {
+      "node": "20.20.2",
+      "bundledUndici": "6.24.1"
+    },
+    "resources": {
+      "memoryMbytes": 512,
+      "timeoutSecs": 900,
+      "concurrency": 4,
+      "rowHttpChainTimeoutMs": 10000,
+      "bodyMaxBytes": 2097152,
+      "redirectsAfterInitialRequest": 5,
+      "plannedGetMaximum": 600
+    }
+  },
+  "candidate": {
+    "directory": "docs/changes/41/experiments/r4-hosted-body-read/",
+    "files": {
+      ".actor/INPUT_SCHEMA.json": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833",
+      ".actor/actor.json": "84240fa54ae17c0ceffc9e8f632cdba77add3dbf8816c46f6da8bf8a7b8e1236",
+      ".actorignore": "105447ac6fc214cfa804ce695baa1664d6c1c5ccd9804561bc87245558a8c4c8",
+      "Dockerfile": "ba3c41dbd8d01419de54cebda89d18d52e0ab369e638f2001cf0f6268480a48a",
+      "check-charset.mjs": "c4eb024fa5ff4d5c7e0bb55635b5f49068952237c29ecddaa57fad57e62391b1",
+      "dom-content-type.mjs": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+      "main.mjs": "f8996636fafa6dc4d662b5d7bfcf4c61e134e29d48363b7081689eba91c064a1",
+      "package-lock.json": "ae27e007cac19131f53050c9be4688b6270f214ae1203c38ea8280f5533eed7a",
+      "package.json": "0a284a0555d300b0cc2df89e05bce1155210afeedfdc6f97e63fdcc2a9043194",
+      "input-acceptance.json": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01"
+    },
+    "actorDefinition": {
+      "actorSpecification": 1,
+      "name": "issue41-google-news-b2-vanilla-20261006",
+      "title": "Issue 41 B2 Vanilla Flow",
+      "description": "Private Issue 41 bounded same-run publisher fetch, full-text extraction and dataset-output experiment.",
+      "version": "0.10",
+      "buildTag": "issue41-b2-r4",
+      "dockerfile": "Dockerfile",
+      "input": "INPUT_SCHEMA.json",
+      "defaultRunOptions": {
+        "timeoutSecs": 900,
+        "memoryMbytes": 512
+      },
+      "minMemoryMbytes": 512,
+      "maxMemoryMbytes": 512
+    },
+    "actorDefinitionDelta": [
+      "buildTag: issue41-b2-r2 -> issue41-b2-r4"
+    ],
+    "actorDefinitionVersionPreserved": true,
+    "dependenciesAndLockPreserved": true,
+    "inputPreservedByteForByte": true,
+    "targetActorIdMustBeExplicitAtAnyFutureUpload": "JIogcgdHyCqAMHQ1P",
+    "targetActorPreflightFacts": {
+      "visibility": "private",
+      "currentRemoteName": "issue41-google-news-a1-access-probe-20261004",
+      "remoteDefaultRunOptions": {
+        "memoryMbytes": 4096,
+        "timeoutSecs": 3600
+      },
+      "source": "Read-only operator preflight report; no remote mutation performed."
+    },
+    "metadataBoundary": "Do not infer Actor identity from the copied local name. Preserve remote name, default memory/timeout, visibility, pricing, version mappings and historical R2 build/tag. Any future upload must explicitly target Actor ID JIogcgdHyCqAMHQ1P; the R4 run itself must explicitly request 512 MiB and 900 seconds through the approved API."
+  },
+  "uploadSourceRoot": "docs/changes/41/experiments/r4-hosted-body-read/",
+  "uploadSourceFiles": {
+    ".actor/INPUT_SCHEMA.json": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833",
+    ".actor/actor.json": "84240fa54ae17c0ceffc9e8f632cdba77add3dbf8816c46f6da8bf8a7b8e1236",
+    ".actorignore": "105447ac6fc214cfa804ce695baa1664d6c1c5ccd9804561bc87245558a8c4c8",
+    "Dockerfile": "ba3c41dbd8d01419de54cebda89d18d52e0ab369e638f2001cf0f6268480a48a",
+    "check-charset.mjs": "c4eb024fa5ff4d5c7e0bb55635b5f49068952237c29ecddaa57fad57e62391b1",
+    "dom-content-type.mjs": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+    "main.mjs": "f8996636fafa6dc4d662b5d7bfcf4c61e134e29d48363b7081689eba91c064a1",
+    "package-lock.json": "ae27e007cac19131f53050c9be4688b6270f214ae1203c38ea8280f5533eed7a",
+    "package.json": "0a284a0555d300b0cc2df89e05bce1155210afeedfdc6f97e63fdcc2a9043194"
+  },
+  "evidenceOnlyFilesExcludedFromUpload": [
+    "docs/changes/41/experiments/r4-hosted-body-read/input-acceptance.json",
+    "docs/changes/41/experiments/r4-hosted-body-read/prebuild-integrity-r4.json",
+    "docs/changes/41/experiments/r4-hosted-body-read/provenance-r4.json",
+    "docs/changes/41/r4-accounting-check.mjs"
+  ],
+  "offlineLoggerCheckArtifact": {
+    "executedCommand": "node docs/changes/41/experiments/r4-hosted-body-read/.r4-accounting-check.mjs",
+    "nodeVersion": "v20.19.0",
+    "exitCode": 0,
+    "output": "R4 offline logger checks passed: subcap/byte overflow, lifecycle dedup, terminal/summary totals, console-failure guard",
+    "testedMainMjsSha256": "f8996636fafa6dc4d662b5d7bfcf4c61e134e29d48363b7081689eba91c064a1",
+    "noNetwork": true,
+    "retainedArtifactPath": "docs/changes/41/r4-accounting-check.mjs",
+    "retainedArtifactSha256": "0a1637d1fdba5afc32ad0ca473475c18be3a6e155e689ffc2abc686b34459166",
+    "retention": "Reconstructed verbatim from the executed command source after execution; not rerun. Its relative main.mjs lookup targets the original R4 candidate-root path, so the retained file is not runnable at its relocated path."
+  },
+  "sourceDelta": {
+    "mainMjs": "Replaces prior R2/F1/M3 diagnostic emissions with bounded R4 marker accounting and stage state; adds attempt start/end records, sparse body-read lifecycle events, two post-abort snapshots and counters. Every attempted cap/record/byte loss emits one reserved row-overflow marker with reason and counters; intentional lifecycle dedup has a separate counter; terminal totals include the terminal record's own count and bytes. Existing request/read/cancel/parser/output behavior is retained; no new read/cancel/race/await/flush or failure policy.",
+    "dockerfile": "Adds a final-image build-stage Node/Undici runtime probe that makes no publisher request.",
+    "actorJson": "Changes only the build tag; source version 0.10 and all other local Actor-definition fields are preserved.",
+    "otherActorFiles": "Copied byte-for-byte from the historical R2 source commit."
+  },
+  "markerEnvelope": {
+    "plannedPerRow": {
+      "getAttempts": 6,
+      "requestAttemptStartEndMarkers": 12,
+      "lifecycleMarkersMaximum": 16,
+      "postAbortSnapshotsMaximum": 2,
+      "plannedMaximum": 30
+    },
+    "reservedPerRow": 10,
+    "maximumPerRow": 40,
+    "total": {
+      "rows": 100,
+      "rowMarkersMaximum": 4000,
+      "workerJoinMarkers": 4,
+      "runSummaryMarkers": 1,
+      "globalOverflowMarkers": 1,
+      "maximumMarkers": 4006
+    },
+    "maximumRecordBytesIncludingPrefixAndNewline": 768,
+    "maximumBytesAtRecordLimit": 3076608,
+    "sourceByteCap": 4194304,
+    "syntheticMaximumSnapshotRecordBytes": 549,
+    "syntheticSnapshotSizing": "Includes ISSUE41_R4 prefix/newline, 32-character row ID, long snapshot event/phase names, maximum-safe-integer byte count, bounded timer values, and all snapshot state flags.",
+    "overflowAndTerminal": "One once-only overflow marker and one row-terminal slot are reserved within each row maximum. Every genuine attempted marker loss routes through overflow with reason and counters. Intentional one-per-row lifecycle dedup is counted separately, outside attempted/dropped. Row terminal includes itself in attempted/emitted/byte totals; missing/overflowed required evidence routes to Inconclusive / Hold."
+  },
+  "staticChecks": {
+    "nodeCheck": "passed: node --check main.mjs",
+    "apifyInputSchema": "passed: apify validate-schema",
+    "json": "passed: Actor definition, input schema, package, package lock, and frozen input parse",
+    "packageLock": "passed: package/lock name and version agree; dependencies unchanged",
+    "frozenInput": "passed: SHA-256, 100 rows, 100 unique row IDs, 95 unique publisher URLs",
+    "lifecycleMarkerTypes": "passed: 16 declared lifecycle event names",
+    "syntheticSnapshotSize": "passed: 549 of 768 bytes",
+    "offlineLoggerAccounting": "passed, command `node docs/changes/41/experiments/r4-hosted-body-read/.r4-accounting-check.mjs`, Node v20.19.0, exit 0, output `R4 offline logger checks passed: subcap/byte overflow, lifecycle dedup, terminal/summary totals, console-failure guard`; harness was retained after execution, not rerun; no network; exercised tested main.mjs SHA-256 f8996636fafa6dc4d662b5d7bfcf4c61e134e29d48363b7081689eba91c064a1",
+    "diffCheck": "passed: git diff --check",
+    "actorExecutedLocally": false,
+    "localHttpFixtureOrR3aTestRun": false,
+    "apifyPushOrBuild": false,
+    "hostedRunOrPublisherRequests": false
+  },
+  "remainingGates": [
+    "Independent semantics review of this frozen candidate.",
+    "Operator verification of exact private Actor ID, preserved remote metadata, supported upload method and approved run API cap before any hosted build or run.",
+    "The single monitored build guard, final-image runtime proof, source/input provenance and image identity gate before any publisher request.",
+    "No build or hosted run is authorized by this preparation artifact alone."
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "artifact": "Issue 41 B2-R4 prebuild integrity gate",
+  "status": "NOT_BUILD_READY_PENDING_INDEPENDENT_SEMANTICS_REVIEW; NOT_BUILT; NOT_RUN",
+  "sourceCandidate": "docs/changes/41/experiments/r4-hosted-body-read/",
+  "provenanceManifest": "provenance-r4.json",
+  "approvedTidCommit": "0ffaa8521446045e5a7fc843348e3762cabb6dff",
+  "historicalSourceCommit": "2694b1162c90bf93a4e36db4fa3cb0d4e0800a7e",
+  "targetActorId": "JIogcgdHyCqAMHQ1P",
+  "targetActorIdIsExplicit": true,
+  "candidateMainMjsSha256": "f8996636fafa6dc4d662b5d7bfcf4c61e134e29d48363b7081689eba91c064a1",
+  "uploadSourceRoot": "docs/changes/41/experiments/r4-hosted-body-read/",
+  "uploadSourceFiles": {
+    ".actor/INPUT_SCHEMA.json": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833",
+    ".actor/actor.json": "84240fa54ae17c0ceffc9e8f632cdba77add3dbf8816c46f6da8bf8a7b8e1236",
+    ".actorignore": "105447ac6fc214cfa804ce695baa1664d6c1c5ccd9804561bc87245558a8c4c8",
+    "Dockerfile": "ba3c41dbd8d01419de54cebda89d18d52e0ab369e638f2001cf0f6268480a48a",
+    "check-charset.mjs": "c4eb024fa5ff4d5c7e0bb55635b5f49068952237c29ecddaa57fad57e62391b1",
+    "dom-content-type.mjs": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+    "main.mjs": "f8996636fafa6dc4d662b5d7bfcf4c61e134e29d48363b7081689eba91c064a1",
+    "package-lock.json": "ae27e007cac19131f53050c9be4688b6270f214ae1203c38ea8280f5533eed7a",
+    "package.json": "0a284a0555d300b0cc2df89e05bce1155210afeedfdc6f97e63fdcc2a9043194"
+  },
+  "evidenceOnlyFilesExcludedFromUpload": [
+    "docs/changes/41/experiments/r4-hosted-body-read/input-acceptance.json",
+    "docs/changes/41/experiments/r4-hosted-body-read/prebuild-integrity-r4.json",
+    "docs/changes/41/experiments/r4-hosted-body-read/provenance-r4.json",
+    "docs/changes/41/r4-accounting-check.mjs"
+  ],
+  "offlineLoggerCheck": {
+    "command": "node docs/changes/41/experiments/r4-hosted-body-read/.r4-accounting-check.mjs",
+    "nodeVersion": "v20.19.0",
+    "exitCode": 0,
+    "output": "R4 offline logger checks passed: subcap/byte overflow, lifecycle dedup, terminal/summary totals, console-failure guard",
+    "testedMainMjsSha256": "f8996636fafa6dc4d662b5d7bfcf4c61e134e29d48363b7081689eba91c064a1",
+    "noNetwork": true,
+    "harnessArtifactPath": "docs/changes/41/r4-accounting-check.mjs",
+    "harnessArtifactSha256": "0a1637d1fdba5afc32ad0ca473475c18be3a6e155e689ffc2abc686b34459166",
+    "harnessRetentionNote": "Reconstructed verbatim from the executed command source after execution; not rerun. Its relative main.mjs lookup is for the original candidate-root location, so the retained path is an audit artifact and is not runnable in place.",
+    "cases": [
+      "Request-attempt subcap loss emits one row overflow with reason/counters; terminal totals include terminal and dropped event.",
+      "900-character marker triggers record/byte overflow and one global overflow.",
+      "Repeated lifecycle marker is emitted once and counted separately as deduplicated.",
+      "Run summary includes itself in attempted/emitted/byte totals.",
+      "Console logging failure attempts one reserved overflow without recursive overflow."
+    ]
+  },
+  "expectedRuntime": {
+    "node": "20.20.2",
+    "bundledUndici": "6.24.1"
+  },
+  "expectedBuildMetadata": {
+    "actorVersion": "0.10",
+    "buildTag": "issue41-b2-r4"
+  },
+  "publisherRequestsStarted": false,
+  "buildStarted": false,
+  "hostedRunStarted": false,
+  "passedStaticChecks": [
+    "node --check main.mjs",
+    "offline R4 logger accounting: request-subcap and byte-cap overflow, lifecycle dedup, terminal and summary self-inclusive totals, console-failure guard",
+    "apify validate-schema",
+    "JSON/package-lock/input integrity checks",
+    "git diff --check"
+  ],
+  "notYetChecked": [
+    "Independent semantics review",
+    "Actual build output/runtime and image digest",
+    "Apify upload/build metadata effects"
+  ],
+  "runLimitsIfFutureGatesPass": {
+    "private": true,
+    "maxTotalChargeUsd": 0.1,
+    "memoryMbytes": 512,
+    "timeoutSecs": 900,
+    "concurrency": 4,
+    "rowHttpChainTimeoutMs": 10000,
+    "bodyMaxBytes": 2097152,
+    "redirectsAfterInitialRequest": 5,
+    "plannedGetMaximum": 600
+  },
+  "buildGuardIfFutureGatesPass": {
+    "attempts": 1,
+    "pollIntervalSecs": 10,
+    "preAbortGuardSecs": 120,
+    "postAbortObservationSecs": 120,
+    "abortGuarantee": "best effort only; no hard build dollar cap"
+  },
+  "route": "Review candidate first. Any provenance/semantic/configuration/runtime/evidence mismatch stops before the next publisher request/build/run under the approved TID."
+}
