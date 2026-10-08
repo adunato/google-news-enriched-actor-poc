@@ -424,7 +424,7 @@ The offline-only build-monitor guard passed its PowerShell regression checks. Se
 
 The original R6 TID and the subsequent additional-build/conditional-run approval are both consumed. The second build and its conditional run have completed with the outcomes above. The only proposed next step is one further run-only attempt on the exact verified 0.10.6 build, after the documented generalAccess=RESTRICTED payload and same-run-ID readback gate passes. No new build, upload, source/input change, or run is currently authorized.
 
-The proposed run-only attempt would use the same verified build and frozen input; it is DRAFT / NOT APPROVED / NOT EXECUTED. It remains subject to exact same-ID RESTRICTED readback before any publisher request, 512 MiB / 900 seconds, concurrency four, 10-second HTTP-chain timeout, 2 MiB body cap, the existing redirect/GET limits, and the $0.10 run-only charge cap. Any mismatch stops at Hold.
+The proposed run-only attempt would use the same verified build and frozen input; it is DRAFT / NOT APPROVED / NOT EXECUTED. It requires an exact same-ID RESTRICTED readback before normal operator polling, 512 MiB / 900 seconds, concurrency four, 10-second HTTP-chain timeout, 2 MiB body cap, the existing redirect/GET limits, and the $0.10 run-only charge cap. A mismatch means abort that same run and Hold without retry. The Actor has no in-process access gate, so it may start processing and issue publisher requests before the PUT/readback completes; zero requests during that handoff cannot be guaranteed.
 
 ## Direction and complexity check
 
@@ -432,7 +432,7 @@ The proposed additional activity is limited to one run using the existing verifi
 
 ## Recommendation
 
-Keep R6 Inconclusive / Hold. Request explicit owner approval before one further run-only attempt on the already verified 0.10.6 image; only proceed if same-ID readback confirms generalAccess=RESTRICTED. On any mismatch or error, stop without publisher requests or retry. Do not rebuild or broaden the diagnostic.
+Keep R6 Inconclusive / Hold. Request explicit owner approval before one further run-only attempt on the already verified 0.10.6 image; apply the RESTRICTED PUT and same-run-ID GET immediately after run creation and before normal operator polling. On any mismatch or error, abort that same run and Hold without retry. The Actor may issue publisher requests before access verification completes, so zero requests during the handoff cannot be promised. Do not rebuild or broaden the diagnostic.
 
 ## Decision requested
 
@@ -456,7 +456,7 @@ The run-access helper in experiments/r6-dependent-signal/r6-run-access-gate.psm1
 
 ## What would need to change
 
-The original R6 approval and the later additional build/run approval are both consumed. One further run-only attempt could use the exact verified build jTISNSBR4pHb0R70e / 0.10.6 and frozen input, with no rebuild, upload, source change, or input change. Before run creation, use generalAccess=RESTRICTED and verify a GET for the same run ID returns exactly RESTRICTED; any mismatch or error means Hold and no publisher request. If that gate passes, preserve the existing private run limits: 512 MiB, 900 seconds, concurrency four, 10-second HTTP-chain timeout, 2 MiB body cap, at most five redirects after the first, at most six GET attempts per row / 600 planned GETs, and run-only maxTotalChargeUsd=0.10.
+The original R6 approval and the later additional build/run approval are both consumed. One further run-only attempt could use the exact verified build jTISNSBR4pHb0R70e / 0.10.6 and frozen input, with no rebuild, upload, source change, or input change. After creating exactly one run, immediately PUT generalAccess=RESTRICTED and GET that same run ID before normal operator polling. Continue only if data.generalAccess is exactly RESTRICTED; any error or mismatch means abort that same run and Hold without retry. The Actor has no in-process access gate, so it may begin processing and issue publisher requests before the PUT/readback completes; zero requests during this handoff cannot be guaranteed. If that gate passes, preserve the existing private run limits: 512 MiB, 900 seconds, concurrency four, 10-second HTTP-chain timeout, 2 MiB body cap, at most five redirects after the first, at most six GET attempts per row / 600 planned GETs, and run-only maxTotalChargeUsd=0.10.
 
 ## Direction and complexity check
 
