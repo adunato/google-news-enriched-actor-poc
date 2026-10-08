@@ -1,0 +1,170 @@
+{
+  "artifact": "Issue 41 R6 additional guarded build post-build evidence",
+  "recordedAtUtc": "2026-10-07T20:54:30.8271738Z",
+  "result": "BUILD_SUCCEEDED; CONDITIONAL_HOSTED_RUN_NOT_STARTED_PENDING_REVIEW",
+  "build": {
+    "id": "jTISNSBR4pHb0R70e",
+    "number": "0.10.6",
+    "status": "SUCCEEDED",
+    "exitCode": 0,
+    "startedAt": "2026-10-07T20:51:23.433Z",
+    "finishedAt": "2026-10-07T20:51:34.665Z",
+    "durationMillis": 11162,
+    "runTimeSecs": 11.162,
+    "usageTotalUsd": 0.002480444444444445,
+    "computeUnits": 0.012402222222222222,
+    "imageSizeBytes": 569570816,
+    "imageDigest": "fa0cfbe0c74d6f9caa50fe75bff78de5b6a40a8c14510cae617c6b56ea6457ff",
+    "abortRequests": 0,
+    "buildPostCount": 1,
+    "version": "0.10",
+    "buildTag": "issue41-b2-r6",
+    "sourceType": "SOURCE_FILES"
+  },
+  "sourceProof": {
+    "manifest": "prebuild-integrity-r6.json#/uploadSourceFiles",
+    "buildMetadata": "GET /v2/actor-builds/jTISNSBR4pHb0R70e#/data/actVersion/sourceFiles",
+    "fileCount": 11,
+    "expectedFileCount": 11,
+    "hashMismatches": [],
+    "extraPaths": [],
+    "sourceFiles": [
+      {
+        "path": ".actor/INPUT_SCHEMA.json",
+        "sha256": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833",
+        "matchedInBuildActorDefinition": true
+      },
+      {
+        "path": ".actor/actor.json",
+        "sha256": "334120b985ae0e147aae38fd5f8fcd9fcf6f5b4ded8c060444bfafb4c27c9893",
+        "matchedInBuildActorDefinition": true
+      },
+      {
+        "path": ".actorignore",
+        "sha256": "105447ac6fc214cfa804ce695baa1664d6c1c5ccd9804561bc87245558a8c4c8",
+        "matchedInBuildActorDefinition": true
+      },
+      {
+        "path": "Dockerfile",
+        "sha256": "fb39f8c6e9205f39bbf851f86393c61279aba2f7cc4df0b4179594377572600b",
+        "matchedInBuildActorDefinition": true
+      },
+      {
+        "path": "check-charset.mjs",
+        "sha256": "c4eb024fa5ff4d5c7e0bb55635b5f49068952237c29ecddaa57fad57e62391b1",
+        "matchedInBuildActorDefinition": true
+      },
+      {
+        "path": "dom-content-type.mjs",
+        "sha256": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+        "matchedInBuildActorDefinition": true
+      },
+      {
+        "path": "main.mjs",
+        "sha256": "c8050b3c919b23fe8a4217c8895b6fb1a033c7642886de0d1d10205d408b2ae5",
+        "matchedInBuildActorDefinition": true
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "ae27e007cac19131f53050c9be4688b6270f214ae1203c38ea8280f5533eed7a",
+        "matchedInBuildActorDefinition": true
+      },
+      {
+        "path": "package.json",
+        "sha256": "0a284a0555d300b0cc2df89e05bce1155210afeedfdc6f97e63fdcc2a9043194",
+        "matchedInBuildActorDefinition": true
+      },
+      {
+        "path": "r6-signal-bridge-observer.mjs",
+        "sha256": "3b9787ebb55cd8f4173ee3f368278be866f1351029790f3bf8fce41d4497ee20",
+        "matchedInBuildActorDefinition": true
+      },
+      {
+        "path": "r6-offline-check.mjs",
+        "sha256": "ab6ca79ef5dcc250c3858e6bfa02fadb7e0b3f5b90d9c15f6a6bf0abadbbed4c",
+        "matchedInBuildActorDefinition": true
+      }
+    ]
+  },
+  "inputProof": {
+    "path": "input-acceptance.json",
+    "sha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "bytes": 96589,
+    "rows": 100,
+    "uniqueRowIds": 100,
+    "uniquePublisherUrls": 95,
+    "matchesPrebuildManifest": true
+  },
+  "actorBaseline": {
+    "id": "JIogcgdHyCqAMHQ1P",
+    "name": "issue41-google-news-a1-access-probe-20261004",
+    "isPublic": false,
+    "defaultRunOptions": {
+      "build": "latest",
+      "timeoutSecs": 3600,
+      "memoryMbytes": 4096
+    },
+    "r2TagPresent": true,
+    "r4TagPresent": true
+  },
+  "runtimeGate": {
+    "source": "actual captured final-image build stdout",
+    "probe": "ISSUE41_R6_RUNTIME_PROBE {\"node\":\"v20.20.2\",\"undici\":\"6.24.1\"}",
+    "node": "v20.20.2",
+    "bundledUndici": "6.24.1",
+    "passed": true
+  },
+  "observerResult": {
+    "source": "actual R6_OFFLINE_OBSERVER_RESULT stdout record",
+    "recordCount": 1,
+    "node": "v20.20.2",
+    "bundledUndici": "6.24.1",
+    "networkMode": "data: only; no publisher or external requests",
+    "warmupCallsPerVariant": 100,
+    "measuredCallsPerVariant": 1000,
+    "pairedAlternatingBatches": 10,
+    "getterReadDistribution": {
+      "0": 0,
+      "1": 0,
+      "2": 1100,
+      "3+": 0
+    },
+    "maximumGetterReads": 2,
+    "nativeInvalidReceiver": {
+      "forwardedType": "TypeError",
+      "forwardedMessage": "Illegal invocation",
+      "matchesUnwrappedShape": true
+    },
+    "addedSynchronousFetchCallMs": {
+      "p95": 0.05515500000001339,
+      "p99": 0.11160399999999981,
+      "mean": 0.03799472999999803,
+      "sum": 37.99472999999803,
+      "maximum": 69.105076
+    },
+    "grossScreenPass": true,
+    "interpretation": "Percentiles are a gross overhead screen only; they do not bound the maximum, live row/run tail, or 10-second timeout perturbation."
+  },
+  "rawLog": {
+    "retained": false,
+    "privateTempPath": "C:\\Users\\danie\\AppData\\Local\\Temp\\r6-build-log-jTISNSBR4pHb0R70e.txt",
+    "bytes": 5552,
+    "sha256": "c768e9fe53cca485d31f64646b7f582f963706844711b190569166b308c3c827",
+    "embedded": false,
+    "secretsEmbedded": false
+  },
+  "hostedRun": {
+    "started": false,
+    "runPostCount": 0,
+    "effectiveOptions": null,
+    "datasetReadability": null,
+    "status": "NOT STARTED pending independent post-build gate review"
+  },
+  "jsonPointers": {
+    "buildMetadata": "/build",
+    "sourceHashes": "/sourceProof/sourceFiles",
+    "runtimeProbe": "/runtimeGate",
+    "observerRecord": "/observerResult",
+    "runNotStartedAndOptions": "/hostedRun"
+  }
+}

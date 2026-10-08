@@ -1,6 +1,6 @@
 {
   "artifact": "Issue 41 R6 dependent abort-signal diagnostic candidate provenance",
-  "status": "ORIGINAL_R6_BUILD_ABORTED_BEFORE_FINAL_IMAGE; R6_INCONCLUSIVE_HOLD; OWNER_APPROVED_ONE_ADDITIONAL_GUARDED_BUILD_AND_CONDITIONAL_RUN_2026-10-07; ACTUAL_MONITOR_CALLER_PREFLIGHT_REVIEW_PENDING; ADDITIONAL_ATTEMPT_NOT_BUILT_NOT_RUN",
+  "status": "ORIGINAL_R6_BUILD_ATTEMPT_ABORTED; OWNER_APPROVED_ADDITIONAL_BUILD_AND_CONDITIONAL_RUN_EXECUTED; BUILD_0.10.6_SUCCEEDED_RUNTIME_AND_OFFLINE_GATE_PASS; CONDITIONAL_RUN_ABORTED_PRIVACY_GATE_FAILED; R6_INCONCLUSIVE_HOLD; FURTHER_RUN_ONLY_PROPOSAL_NOT_APPROVED",
   "preparedAtUtcDate": "2026-10-07",
   "ownerApproval": {
     "approvedAtUtcDate": "2026-10-07",
@@ -12,13 +12,20 @@
     "approvedAtUtcDate": "2026-10-07",
     "exactOwnerReply": "Go ahead",
     "scope": "Exactly one additional guarded build attempt using the existing uploaded, hash-verified R6 source and corrected monitor, with one conditional private run only if every original R6 gate passes.",
-    "preflightReviewPending": "Independent review of the actual monitor caller before remote action.",
-    "started": false
+    "preflightReviewPending": "Passed before the additional build and conditional run; no further R6 execution approval remains.",
+    "started": true,
+    "buildId": "jTISNSBR4pHb0R70e",
+    "buildStatus": "SUCCEEDED",
+    "runId": "b66C26fuXBDubmxM2",
+    "runStatus": "ABORTED",
+    "runAccessInitialGatePassed": false,
+    "sequenceConsumed": true,
+    "furtherRunOnlyProposal": "DRAFT / OWNER APPROVAL REQUIRED / NOT EXECUTED"
   },
   "independentSemanticsReview": {
     "status": "PASSED",
     "completedAtUtcDate": "2026-10-07",
-    "findings": "No remaining blocker to the approved single bounded build gate; exact-runtime and hosted gates remain pending."
+    "findings": "Candidate review passed before the approved additional attempt; later build exact-runtime/offline observer gates passed and the conditional run was aborted at initial access verification."
   },
   "historicalAndR4Baseline": {
     "historicalR2SourceCommit": "2694b1162c90bf93a4e36db4fa3cb0d4e0800a7e",
@@ -70,7 +77,7 @@
       "buildTag: issue41-b2-r4 -> issue41-b2-r6"
     ],
     "sourceBehaviorDelta": "Adds a descriptor-preserving Request.prototype.signal getter wrapper that forwards the original receiver/return/throw. Capture occurs only in a short reentrant frame around the existing synchronous global fetch call and returns the identical Promise. It stores at most 600 WeakRefs, samples only existing marker records, and restores the original descriptor. No extra fetch, read, cancel, listener, await, race, timer, or marker kind is added.",
-    "runtimeGate": "The final Docker image stage asserts Node v20.20.2 and bundled Undici 6.24.1, then runs the offline data:-URL observer/overhead check. This check has not run; local Node v20.19.0 / Undici 6.21.1 is not an eligible substitute.",
+    "runtimeGate": "Final Docker image stage verified Node v20.20.2 and bundled Undici 6.24.1; offline data:-URL observer/overhead gate passed in the successful 0.10.6 build.",
     "files": {
       ".actor/INPUT_SCHEMA.json": "6609e11a67ab50d0cfcec35d6636082ff6d8cbd21b82d1deb88305999ac59833",
       ".actor/actor.json": "334120b985ae0e147aae38fd5f8fcd9fcf6f5b4ded8c060444bfafb4c27c9893",
@@ -104,19 +111,45 @@
     "actorApiRequestsStarted": true,
     "uploadStarted": true,
     "buildStarted": true,
-    "hostedRunStarted": false
+    "hostedRunStarted": true
   },
   "latestOperationalOutcome": {
-    "buildId": "FkSA4NwJQrud5GPAe",
-    "buildStatus": "ABORTED",
-    "finalImageProduced": false,
-    "runtimeGateExecuted": false,
-    "offlineDataUrlGateExecuted": false,
-    "publisherRequests": 0,
-    "hostedRunPostAttempts": 0,
-    "firstBuildAttemptAuthority": "CONSUMED by the aborted attempt",
-    "additionalBuildAttempt": "APPROVED 2026-10-07; preflight review pending; not started",
-    "operatorEvidence": "r6-operator-evidence.json"
+    "runMemoryMiB": 512,
+    "firstBuildAttemptId": "FkSA4NwJQrud5GPAe",
+    "publisherDiagnosticRequests": "No marker-backed publisher request evidence; total request count is not inferred",
+    "runtimeGate": "PASS",
+    "datasetItems": 0,
+    "runId": "b66C26fuXBDubmxM2",
+    "runChargeUsd": 8.055555555555556E-05,
+    "runTimeoutSeconds": 900,
+    "initialPrivacyPayload": "{\"isPublic\":false}",
+    "initialPrivacyReadback": "FOLLOW_USER_SETTING",
+    "furtherRunOnlyProposal": "DRAFT / OWNER APPROVAL REQUIRED / NOT EXECUTED; exact build only; no rebuild/source/input changes",
+    "inputByteDiscrepancy": "Unexplained serialization/stat difference; no semantic row/URL drift observed",
+    "buildChargeUsd": 0.002480444444444445,
+    "frozenInputSemanticMatch": true,
+    "buildEvidence": "r6-build-evidence-0.10.6.json",
+    "runStatus": "ABORTED",
+    "buildNumber": "0.10.6",
+    "initialPrivacyGatePassed": false,
+    "correctedRunPrivacyAfterTerminal": "RESTRICTED; same run ID; not an initial gate pass",
+    "runMaxTotalChargeUsd": 0.1,
+    "abortAfterPrivacyGateFailure": true,
+    "runtimeUndici": "6.24.1",
+    "buildStatus": "SUCCEEDED",
+    "offlineObserverGate": "PASS",
+    "firstBuildAttemptStatus": "ABORTED before final image",
+    "classification": "INCONCLUSIVE / HOLD",
+    "runDurationSeconds": 1.1,
+    "serverReportedInputBodyLen": 84264,
+    "buildImageDigest": "fa0cfbe0c74d6f9caa50fe75bff78de5b6a40a8c14510cae617c6b56ea6457ff",
+    "buildId": "jTISNSBR4pHb0R70e",
+    "runtimeNode": "v20.20.2",
+    "runEvidence": "r6-run-evidence-b66C26fuXBDubmxM2.json",
+    "markerRecords": 0,
+    "frozenInputClientBytes": 96589,
+    "initialPrivacyPutHttpStatus": 200,
+    "storedInputBytes": 84364
   },
   "correctedOfflineBuildMonitor": {
     "module": "r6-build-monitor.psm1",
@@ -131,6 +164,32 @@
     "builds": 0,
     "runs": 0,
     "abortRequests": 0,
-    "additionalBuildApproval": "APPROVED 2026-10-07; actual monitor caller preflight review pending; attempt not started"
-  }
+    "additionalBuildApproval": "APPROVED 2026-10-07; additional build and conditional run executed; sequence consumed"
+  },
+  "runAccessHelper": {
+    "runs": 0,
+    "command": "pwsh -NoProfile -File docs/changes/41/experiments/r6-dependent-signal/r6-run-access-gate-check.ps1",
+    "module": "r6-run-access-gate.psm1",
+    "moduleSha256": "16f53407eaf7dc398e3b0161f6fb5ed88279e2eb522a6d0cf0e16bd014814932",
+    "networkRequests": 0,
+    "result": "PASS",
+    "actorApiRequests": 0,
+    "checkScript": "r6-run-access-gate-check.ps1",
+    "checkScriptSha256": "928a46e4976bd677d3b787549a86048f931e946158ebf1d9cc1f2570436d3fa1",
+    "cases": [
+      "correct generalAccess=RESTRICTED payload",
+      "same run ID plus exact RESTRICTED readback passes",
+      "FOLLOW_USER_SETTING fails",
+      "missing generalAccess fails",
+      "isPublic-only response fails",
+      "wrong run ID fails",
+      "malformed JSON fails",
+      "non-string generalAccess fails"
+    ],
+    "runtime": "PowerShell 7.6.5 Core / en-GB"
+  },
+  "notYetPerformed": [
+    "The R6 body-read diagnostic did not execute: the sole conditional run was aborted at initial access verification before any publisher request or marker evidence.",
+    "A further run-only attempt on the exact verified 0.10.6 build is a draft requiring explicit owner approval."
+  ]
 }
