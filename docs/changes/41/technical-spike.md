@@ -6,9 +6,9 @@
 **Status:** `Open`  
 **Owner:** `Project owner`  
 **Created:** `2026-10-04`  
-**Updated:** `2026-10-07`
+**Updated:** `2026-10-09`
 **GitHub Spike Issue:** `Prove Google News publisher resolution and full-text viability (#41)`  
-**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Original route and 2026-10-06 Area B reset approved; B2-R2 completed and exhausted; B2-R3 approved; R3a executed Inconclusive / Hold under Node.js 20; reproduction gate not met; B2-R3b not eligible. B2-R4 was explicitly approved by the owner on 2026-10-07; its single approved hosted run TIMED-OUT and is Inconclusive / Hold, with the one-build/one-run authority exhausted. Earlier B2-D1/B2-S1/B2-P1 routes are superseded historical evidence; B2-R1 was never approved or executed.**
+**Technical Investigation Design:** `docs/changes/41/technical-investigation-design.md` / `tid-41-google-news-resolution-full-text` — **Owner-approved 2026-10-09 B2-I parent/child isolation experiment is the sole current execution route (I1 → gated I2 → gated I3). R6 and the unapproved replay are superseded; earlier investigations are retained as evidence, not authority.**
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
 
@@ -54,19 +54,17 @@ If the normal flow fails, evidence must identify the actual business-flow stage:
 
 ## 3. Current Investigation Position
 
-**Investigation Area:** `B — Retrieve readable publisher article text`
+**Area A: Supported.** A4 resolved 100/100 publisher URLs on the frozen representative sample.
 
-**Active route:** `B2 — vanilla hosted fetch → extract → row output; currently On Hold`
+**Area B: Unresolved / ready for new approved investigation.** Previous hosted samples demonstrated that dozens of articles can produce candidate text, but a publisher HTML body-read sometimes does not return a row outcome after its abort signal fires. This can prevent the main Actor from completing. R4 observed 97/100 completed rows and missing results after the configured 10-second abort; exact HTTP-library root cause remains unproved. R6's attempted additional internal-HTTP diagnostics yielded no hosted publisher evidence after an access-gate failure. Its proposed replay and all further internal abort tracing are superseded. Preserve historical evidence without reopening it.
 
-**Route status:** `The vanilla smoke gate passed. The original 256-MiB acceptance run was Inconclusive after partial processing. B2-M1 was Invalid-bound / Inconclusive because it used 256 MiB; its 512-MiB hypothesis was not tested. B2-M2 timed out at 899.778 seconds after 99 rows. B2-F1 ended after 48/100 rows and did not reproduce the earlier missing-row condition. B2-M3 timed out at 899.861 seconds after 99 rows; its missing-row cause remains unknown. B2-R1 was never approved or run. B2-R2 passed its exact build/resource gate, then timed out at 899.854 seconds after 98/100 rows with no run summary. The two missing rows, q3-us-02 and q4-gb-02, each had a post-abort snapshot with a read in flight and readerClosedState pending, without later settlement or row-output markers; q3-us-01 did not acquire a reader. These observations do not establish a causal mechanism or reproduce q3-us-01 history. The run is Inconclusive / Hold. The 50/100 target remains unassessed; no below-target result or B3 eligibility is established. R2 approval is exhausted; Area B remains On Hold and an owner checkpoint is required before any further experiment.`
+**Owner decision 2026-10-09:** Investigate process isolation using standard Node.js child processes within the **one** hosted Apify Actor. The parent enforces each child's wall-clock limit, forcibly terminates/reaps it on expiry, writes an explicit per-row timeout and proceeds. Child performs the actual publisher fetch **and** Readability extraction. This is a limited feasibility approval only, not a final architecture amendment.
 
-Area A remains supported. B1 remains useful historical evidence that 53/100 rows were fetchable, but its retained HTML cache is no longer an input to B2.
-
-The previous B2 cache-replay candidate and B2-D1/B2-S1/B2-P1 diagnostics are **Historical / Superseded**. Their evidence remains retained for traceability, but no further work should attempt to solve their cross-run KVS permission behaviour.
-
-The three-row smoke sample (`q1-gb-01`, `q1-gb-02`, `q1-gb-05`) passed independent review. The original 256-MiB acceptance run was Inconclusive after partial processing; no termination cause is established. The user subsequently approved exactly one B2-M1 run using the same build and fixture with 512 MiB requested. That single call occurred, but actual resources were 256 MiB / 900 seconds. Read-only metadata confirms the exact deployed build's max memory was 256 MiB; component handling of the request remains unknown. The approved 512-MiB hypothesis was not tested. B2-M1 allows no further run, rebuild or correction. The user separately approved B2-M2 for one configuration-only build and a conditional run after exact-build metadata verification.
+**Current authorised experiment:** **B2-I1 local forced-deadline control → I2 hosted three-publisher-plus-one-synthetic-timeout smoke → I3 same-build 100-row acceptance**, conditional on prior gates. Complete mechanics, allowed modifications, resource limits, scoring and stops are defined once in the approved TID's [current B2-I section](technical-investigation-design.md#current-area-b-experiment--enforce-per-article-completion-with-a-child-process-b2-i). No build or execution under B2-I has happened yet. Issues #4 and #5 remain blocked.
 
 ## 4. Current Experiment Execution
+
+**Controlling execution authority (2026-10-09):** The revised TID approves B2-I1 → I2 → I3, with automatic gate-based progression. Begin at **I1**. One isolated candidate build and at most two hosted runs are authorised; resource/cost and stop rules are specified in the TID. Neither local controlled failure, hosted smoke nor 100-row acceptance has been run under B2-I yet. Stop if the candidate cannot force/reap a stuck child or violates process/memory/cost limits; do not resume R6, build bespoke harnessing or request an extra replay without a new boundary decision. The previous experiments and their approvals below are historical.
 
 **TID authorisation:** `tid-41-google-news-resolution-full-text — Approved; Area B mainstream-flow reset and B2 smoke → conditional acceptance route approved 2026-10-06`
 
@@ -379,6 +377,8 @@ The compute estimate is 0.125 CU / about `$0.025` for 900 seconds at the previou
 
 ## Completion
 
+**Updated current route (2026-10-09):** B2-I approved for gated I1 → I2 → I3 execution. No B2-I output yet. The R6 run-only proposal is superseded, not authorised. This current-route statement overrides older "next action" language retained below as historical reporting. Area B and the Spike remain open / pending until a completed representative 100-row run and independent readability assessment support a conclusion.
+
 **Spike state:** `Open`  
 **Area A:** `Supported` — A4 resolved 100/100 sample rows.
 
@@ -440,7 +440,7 @@ Historical approval: the owner replied “Go ahead” on 2026-10-07, authorizing
 
 **Troubleshooting boundary:** `If the vanilla flow fails, diagnose only the normal stage that failed. Do not resume the cross-run KVS/permission route or introduce special hosted harnessing merely to make the experiment run.`
 
-## Current owner checkpoint: one further R6 run-only attempt — DRAFT / OWNER APPROVAL REQUIRED / NOT EXECUTED
+## Historical owner checkpoint: further R6 run-only attempt — SUPERSEDED / NOT APPROVED / NOT EXECUTED
 
 ## Product and Issue context
 
@@ -715,3 +715,16 @@ For `q4-gb-02`, both post-abort snapshots showed phase `body_read_in_flight`, `s
 ## B2-R5 owner approval and completed assessment
 
 The owner approved the TID's bounded B2-R5 exact-runtime abort/body-settlement source assessment on 2026-10-07. It began at **16:58:39 UTC**, was interrupted and resumed at **17:36:42 UTC**, and ended at **17:45:07 UTC**, before the resumed-window hard stop. Since active time before interruption was unknown, 15 minutes were conservatively charged to the maximum; 8 minutes 25 seconds elapsed after resumption, totaling **23 minutes 25 seconds** charged against the approved 30-minute maximum. The interruption gap is excluded. Status is **APPROVED / COMPLETED VALIDLY / MECHANISM UNRESOLVED / INCONCLUSIVE-HOLD**. This was the same assessment, not a reset or new experiment. Its exact-version source trace is summarized in [`experiments/r5-runtime-abort-assessment/evidence-r5-source-trace.md`](experiments/r5-runtime-abort-assessment/evidence-r5-source-trace.md). Conditional source behavior and R4's finite app-observed markers do not reveal Undici's private controller/listener/body state or application promise-reaction ordering. The locked-cancel hypothesis remains a possible source pathway, not an observed R4 cause; no Node/Undici defect or persistence to run end is established. No public passive discriminator was verified. The assessment involved no build, hosted run, local reproduction, experiment API/Actor operation, publisher request, source edit, fix or paid replay. No hosted follow-up is authorized; it requires a new bounded TID and owner approval. See [the R5 owner checkpoint in the TID](technical-investigation-design.md#b2-r5-owner-checkpoint--exact-runtime-abortbody-settlement-source-assessment).
+
+
+## Owner-approved design reset — B2-I process isolation (2026-10-09)
+
+**Decision:** Continue controlling Spike #41 rather than close it or create another Spike. The owner chose the standard Node.js child-process approach instead of more internal HTTP/Undici diagnosis. The R6 run-only replay proposal is withdrawn/superseded; the original R6 run produced no publisher evidence. The prior trials' results are preserved and do not constitute a supported 100-row full-text result.
+
+**Plain-language purpose:** A publisher HTML request can become unresponsive after the normal HTTP timeout signal. Instead of needing that internal request to fail cooperatively, the normal parent Actor will start each publisher fetch **and** text extraction in a separate child OS process. If it does not report back, the parent kills/reaps that child, writes a timeout result for the affected article, and continues with the other rows. No additional deployed Actor, service or alternate HTTP access infrastructure is permitted. This is approval to **test** the architecture, not to permanently adopt it.
+
+**Execution route:** The approved revised TID's **B2-I1 → B2-I2 → B2-I3** is the single next path, including controlled local kill/reap evidence, one hosted smoke with a synthetic hanging child and three real publishers, and only then one same-build hosted 100-row acceptance run. The exact TID contains the one-build/two-run limit, 12-second child deadline, 2-second kill confirmation, two concurrent children, 512 MiB Actor, 900-second Actor timeout, 10-second child HTTP chain, 2 MiB body limit, redirect cap, $0.10 per hosted run, privacy caution, extraction readability scoring and stop conditions.
+
+**Current evidence:** None executed on this new approach yet. Record I1 checks and candidate identity before build; if eligible, attach hosted build/run metadata, sanitized status breakdown, child-kill confirmations, memory/cost, full 100-row accounting and independently reviewed article readability. Keep full text/HTML only in private or ignored evidence. Do not create diagnostic cache tooling, continue R6 or expand the architecture automatically.
+
+**Downstream:** #4 and #5 remain on Hold pending #41 conclusion. If the approach proves feasible, carry its supported process boundaries into #5's production HLD/implementation plan and a durable Architecture Definition decision; do not implement the production feature as part of this Spike.
