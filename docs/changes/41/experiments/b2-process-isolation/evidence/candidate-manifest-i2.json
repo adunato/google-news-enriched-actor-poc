@@ -1,0 +1,46 @@
+{
+  "issue": 41,
+  "experiment": "B2-I2 hosted smoke candidate with CLI packaging correction",
+  "sourceCommit": "dc23691814c82bae7722fefc8117f2e71e35b781",
+  "candidateDirectory": "docs/changes/41/experiments/b2-process-isolation/actor",
+  "candidateFileCount": 11,
+  "candidateFilesSha256": {
+    ".actor/actor.json": "43faaa930abfc9f524bb9fd8a9ff6d053afef438a4429ef845ccceb2f50a5328",
+    ".actorignore": "105447ac6fc214cfa804ce695baa1664d6c1c5ccd9804561bc87245558a8c4c8",
+    "body-stream.mjs": "40505db4afebd8d5125f596864dc98807252a9e3923b3a70284dea39ee10ee14",
+    "Dockerfile": "72f0dfb10a56e715395935531e0008fbd087fb806a307ebbea90426c111097fc",
+    "dom-content-type.mjs": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+    "i1-control.mjs": "e9405cc322292273325c3c17b872027e0155d2066bf7acaa474b0203532b8437",
+    "main.mjs": "61e61dcdf19b74b9d24b915c9eec1818fbb21589616a23ece0444bdb718f3c7c",
+    "package-lock.json": "da162aec3a8a04224a0b9bb8787df980067d2433141e0c0c0808e6bc506d91da",
+    "package.json": "5dd8a6e3c3a8bbae5dc60beddd541914674d808142a14ed927cc86de19a36bc9",
+    "parent.mjs": "b6cbe8533ac32a55acaae74e2aef7a7db01dfeedda713d04057007936787eeaa",
+    "worker.mjs": "49456e727d2f80ac3fbb2352fa49fb3cdbda4a08357efa385e3e72e509b0e6db"
+  },
+  "localEvidenceFilesSha256": {
+    "input-smoke-i2.json": "18cd90ba7cff9b637e982c06047147abcecc9b4b67ecafc482fb391029ab7333",
+    "prebuild-controls-i2.mjs": "c9c3baac5a55fa133fc83727da52d2b594793c2181554fc634924815d392fa87",
+    "i1-local-result.json": "b348c5d61372fdcca6266e91f8830ba4afc5b9710f3a67e657ef47c2049d7b2b"
+  },
+  "smokeInput": {
+    "path": "docs/changes/41/experiments/b2-process-isolation/evidence/input-smoke-i2.json",
+    "sha256": "18cd90ba7cff9b637e982c06047147abcecc9b4b67ecafc482fb391029ab7333",
+    "sourceThreeRowInputSha256": "ff90a06c2e45bb2ef3cd2ce06e3d8ba6b7993b106ed5b13897ab10992bf83128",
+    "rowIds": [
+      "q1-gb-01",
+      "q1-gb-02",
+      "q1-gb-05",
+      "i2-synthetic-hang"
+    ],
+    "rowCount": 4,
+    "uniqueRowIds": 4,
+    "syntheticControl": "hang; .invalid URL; worker enters control before any fetch; synthetic=true excluded from product scoring"
+  },
+  "dependencies": {
+    "apify": "3.7.2",
+    "readability": "0.6.0",
+    "jsdom": "29.0.1",
+    "nodeTarget": "20"
+  },
+  "hostedExecution": "Not performed; identifies the prepared candidate and input for one conditional I2 build/run."
+}

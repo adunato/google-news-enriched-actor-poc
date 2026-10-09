@@ -1,0 +1,86 @@
+{
+  "issue": 41,
+  "tidArea": "B2-I",
+  "experiment": "I1 — forced-deadline control (local)",
+  "classification": "Supported",
+  "execution": {
+    "startedAtUtc": "2026-10-09T08:54:38.354Z",
+    "completedAtUtc": "2026-10-09T08:54:51.996Z",
+    "totalElapsedMs": 13642,
+    "nodeVersion": "v20.19.0",
+    "npmVersion": "10.8.2",
+    "os": "Windows 11 local worktree; Node standard child_process.fork and IPC",
+    "actorHostedCall": false,
+    "externalPublisherRequest": false,
+    "localHttpServer": "127.0.0.1 loopback only",
+    "rowWriteCount": 3,
+    "parentExit": "normal, exit code 0",
+    "configuredDeadlineMs": 12000,
+    "configuredKillConfirmationMs": 2000,
+    "deadlineTimerSchedulingMarginMs": 100,
+    "maxIpcBytes": 2162688,
+    "concurrency": 1
+  },
+  "cases": [
+    {
+      "rowId": "i1-hang",
+      "childPid": 28996,
+      "outcome": "child_timeout",
+      "childSignal": "SIGKILL",
+      "childReaped": true,
+      "spawnToKillMs": 11918,
+      "killToConfirmedExitMs": 8,
+      "googleNewsUrlPreserved": true,
+      "publisherUrlPreserved": true,
+      "networkRequestMade": false
+    },
+    {
+      "rowId": "i1-success",
+      "childPid": 6216,
+      "outcome": "eligible_html",
+      "extractionStatus": "success",
+      "wordCount": 452,
+      "childExitCode": 0,
+      "childReaped": true,
+      "spawnToExitMs": 945,
+      "googleNewsUrlPreserved": true,
+      "publisherUrlPreserved": true,
+      "requestDestination": "127.0.0.1 loopback"
+    },
+    {
+      "rowId": "i1-error",
+      "childPid": 45756,
+      "outcome": "child_error",
+      "errorClass": "Error",
+      "errorCode": "I1_CONTROLLED_ERROR",
+      "childExitCode": 1,
+      "childReaped": true,
+      "spawnToExitMs": 777,
+      "googleNewsUrlPreserved": true,
+      "publisherUrlPreserved": true
+    }
+  ],
+  "evidence": {
+    "sourceCommit": "dc23691814c82bae7722fefc8117f2e71e35b781",
+    "sourceProvenance": "Candidate package/dependencies and bounded body-stream/dom content-type helper copied from docs/changes/41/experiments/b2-vanilla/actor. Candidate implements actual parent fork/IPC/deadline path; child owns bounded fetch and Readability extraction; only parent writes outcomes.",
+    "candidateSha256": {
+      "main": "1DE7B0B71E8087594255FA8A7E80E95CFA20C91FD83CF4C23B4B943F24ABFC34",
+      "parent": "3699EC80ECA8BA0981F23100DD3AC564AB24281120ACF26B8974C0718CCBEF7E",
+      "worker": "49456E727D2F80AC3FBB2352FA49FB3CDBDA4A08357EFA385E3E72E509B0E6DB",
+      "i1Control": "E9405CC322292273325C3C17B872027E0155D2066BF7ACAA474B0203532B8437",
+      "packageLock": "DA162AEC3A8A04224A0B9BB8787DF980067D2433141E0C0C0808E6BC506D91DA"
+    },
+    "dependencies": {
+      "apify": "3.7.2",
+      "readability": "0.6.0",
+      "jsdom": "29.0.1"
+    },
+    "earlierControlIterations": [
+      "The initial synthetic hang used an unresolved Promise only; Node exited code 0 because no referenced event-loop handle remained. Corrected the controlled hang to keep a timer handle active until the parent kills it.",
+      "The next harness run reached all three rows but its success assertion exposed a parent/child result-field mapping gap (worker fetchStatus was not surfaced as publisherFetchStatus). Corrected the mapping before subsequent I1 runs."
+    ]
+  },
+  "outcome": "All three controlled cases passed in the final run. The hanging child was killed and reaped within the deadline bounds; parent wrote one outcome per row and continued through success and child error. No HTTP promise was used for the hanging child and parent did not await it.",
+  "limitations": "Local Node v20.19.0 process behavior only. Does not establish hosted Apify packaging/runtime behavior, resource use under hosted load, or the 100-row readable-text target.",
+  "nextStep": "I2 is conditionally eligible under the approved TID after independent validation of I1 evidence; no I2 call/build/run occurred in this record."
+}

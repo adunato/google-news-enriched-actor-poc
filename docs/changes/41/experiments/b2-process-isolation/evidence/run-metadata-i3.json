@@ -1,0 +1,104 @@
+{
+  "id": "GbY172gVZ9J6tB5RV",
+  "url": "https://console.apify.com/actors/JIogcgdHyCqAMHQ1P/runs/GbY172gVZ9J6tB5RV",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "status": "SUCCEEDED",
+  "exitCode": 0,
+  "buildId": "qQpl8xm7m3fwYjPUP",
+  "buildNumber": "0.10.7",
+  "startedAt": "2026-10-09T09:34:08.231Z",
+  "finishedAt": "2026-10-09T09:43:53.519Z",
+  "durationSecs": 585.127,
+  "generalAccess": "RESTRICTED",
+  "accessGate": {
+    "put": "RESTRICTED",
+    "getReadback": "RESTRICTED",
+    "sameRunId": "GbY172gVZ9J6tB5RV",
+    "beforePolling": true
+  },
+  "options": {
+    "build": "0.10.7",
+    "timeoutSecs": 900,
+    "memoryMbytes": 512,
+    "maxTotalChargeUsd": 0.1,
+    "restartOnError": false,
+    "isMaxTotalChargeUsdSetByUser": true,
+    "diskMbytes": 1024
+  },
+  "usageTotalUsd": 0.016903476533354986,
+  "usageUsd": {
+    "ACTOR_COMPUTE_UNITS": 0.016253527777777776,
+    "DATASET_READS": 0,
+    "DATASET_WRITES": 0.0005,
+    "KEY_VALUE_STORE_READS": 5E-06,
+    "KEY_VALUE_STORE_WRITES": 5E-05,
+    "KEY_VALUE_STORE_LISTS": 0,
+    "REQUEST_QUEUE_READS": 0,
+    "REQUEST_QUEUE_WRITES": 0,
+    "DATA_TRANSFER_INTERNAL_GBYTES": 1.5416787937283517E-05,
+    "DATA_TRANSFER_EXTERNAL_GBYTES": 7.95319676399231E-05,
+    "PROXY_RESIDENTIAL_TRANSFER_GBYTES": 0,
+    "PROXY_SERPS": 0,
+    "PROXY_UNBLOCKER_UNITS": 0
+  },
+  "usage": {
+    "ACTOR_COMPUTE_UNITS": 0.08126763888888888,
+    "DATASET_READS": 0,
+    "DATASET_WRITES": 100,
+    "KEY_VALUE_STORE_READS": 1,
+    "KEY_VALUE_STORE_WRITES": 1,
+    "KEY_VALUE_STORE_LISTS": 0,
+    "REQUEST_QUEUE_READS": 0,
+    "REQUEST_QUEUE_WRITES": 0,
+    "DATA_TRANSFER_INTERNAL_GBYTES": 0.0003083357587456703,
+    "DATA_TRANSFER_EXTERNAL_GBYTES": 0.0003976598381996155,
+    "PROXY_RESIDENTIAL_TRANSFER_GBYTES": 0,
+    "PROXY_SERPS": 0,
+    "PROXY_UNBLOCKER_UNITS": 0
+  },
+  "stats": {
+    "memAvgBytes": 95892123.9377858,
+    "memMaxBytes": 212533248,
+    "computeUnits": 0.08126763888888888,
+    "netRxBytes": 1649010,
+    "netTxBytes": 563039
+  },
+  "runtime": {
+    "nodeVersion": "v20.20.2",
+    "apifyVersion": "3.7.2",
+    "undiciVersion": "6.24.1",
+    "concurrency": 2
+  },
+  "datasetId": "jfRv7LywOAMksPSzq",
+  "candidate": {
+    "buildId": "qQpl8xm7m3fwYjPUP",
+    "buildNumber": "0.10.7",
+    "tag": "issue41-b2-i2",
+    "version": "0.10",
+    "sourceManifest": "docs/changes/41/experiments/b2-process-isolation/evidence/candidate-manifest-i2.json",
+    "imageDigest": "3f84f6bf14b7e8eaf406b8ba703b2fb733ee89ed4c70cc52642de164dbc8afd8"
+  },
+  "input": {
+    "path": "docs\\changes\\41\\experiments\\b2-vanilla\\input-acceptance.json",
+    "sha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "rowCount": 100,
+    "uniqueRowIds": 100,
+    "uniquePublisherUrls": 95,
+    "duplicatePublisherUrlOccurrences": 5,
+    "deduplication": "disabled"
+  },
+  "actorDefaultsReadAfterRun": {
+    "isPublic": false,
+    "defaultVersionNumber": null,
+    "defaultRunOptions": {
+      "build": "latest",
+      "timeoutSecs": 3600,
+      "memoryMbytes": 4096
+    },
+    "r6BuildId": "jTISNSBR4pHb0R70e",
+    "r6BuildNumber": "0.10.6",
+    "i2BuildId": "qQpl8xm7m3fwYjPUP",
+    "i2BuildNumber": "0.10.7"
+  },
+  "runCreationNote": "Two CLI attempts failed before the executable/API request due PowerShell wrapper output-capture and command-line-length errors; a read-only run list confirmed no I3 run. One successful POST streamed the unchanged fixture through stdin and created this run."
+}

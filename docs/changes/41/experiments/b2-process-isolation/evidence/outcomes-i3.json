@@ -1,0 +1,786 @@
+{
+  "issue": 41,
+  "experiment": "B2-I3 same-build acceptance",
+  "runId": "GbY172gVZ9J6tB5RV",
+  "input": {
+    "path": "docs\\changes\\41\\experiments\\b2-vanilla\\input-acceptance.json",
+    "sha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "rowCount": 100,
+    "uniqueRowIds": 100,
+    "uniquePublisherUrls": 95,
+    "repeatedUrlOccurrences": 5,
+    "syntheticRows": 0
+  },
+  "dataset": {
+    "rowCount": 100,
+    "uniqueRowIds": 100,
+    "missingRowIds": [],
+    "provenanceMismatches": [],
+    "repeatedUrlMultisetMismatches": [],
+    "publisherFetchStatusCounts": {
+      "eligible_html": 5,
+      "child_error": 2,
+      "child_timeout": 93
+    },
+    "fullTextStatusCounts": {
+      "not_attempted_child_timeout": 93,
+      "not_attempted_child_error": 2,
+      "success": 5
+    },
+    "observedKnownRequestCount": 5.0,
+    "rowsWithoutRequestCount": 95,
+    "perRowHttpChainMax": 6,
+    "maxTotalRequestBound": 600,
+    "maxKnownRequestsPerRow": 1.0,
+    "maxKnownRedirects": 0.0,
+    "childTimeoutCount": 93,
+    "childErrorCount": 2,
+    "rowsWritten": 100,
+    "allRowsReachedTerminalChildHandling": true,
+    "confirmedReapGate": "processRows checks childReaped before writing each outcome; run succeeded with all 100 writes. See parent.mjs lines 263-264."
+  },
+  "readability": {
+    "method": "For all nonempty extracted texts, inspect opening, roughly one-third, two-thirds, and ending passages for coherent topical prose and page contamination; separately check navigation, login, cookie, challenge, subscription, and error-page markers. Empty text is not counted readable. No minimum word count used.",
+    "targetReadableRows": 50,
+    "readableRows": 5,
+    "totalRows": 100,
+    "rows": [
+      {
+        "rowId": "q1-gb-02",
+        "articleTextSha256": "dae1441939e8f62c346f8183145fa7384765a80675d39acb24687d81923b3059",
+        "readable": true,
+        "reason": "Opening, central passages and ending form a coherent reported account of Houthi control and weapons shipments. An image-credit marker is fused to the opening, but the article prose remains readable.",
+        "pageArtifactChecks": {
+          "navigation": false,
+          "login": false,
+          "cookie": false,
+          "challenge": false,
+          "subscription": false,
+          "errorPage": false
+        }
+      },
+      {
+        "rowId": "q1-gb-01",
+        "articleTextSha256": "e5f9a74c7d7c57b589349bcc4a2005a82128e2fa67e524dd9c7c63c25f9dd5bf",
+        "readable": true,
+        "reason": "Opening, central passages and ending form coherent explanatory reporting prose about World News Day and changes in the media landscape.",
+        "pageArtifactChecks": {
+          "navigation": false,
+          "login": false,
+          "cookie": false,
+          "challenge": false,
+          "subscription": false,
+          "errorPage": false
+        }
+      },
+      {
+        "rowId": "q1-gb-03",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_error, fullTextStatus=not_attempted_child_error.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-gb-04",
+        "articleTextSha256": "1fd937d922f9ea73295730c91036968cdfb82c6cdd6d0349b6cfa669f10d549f",
+        "readable": true,
+        "reason": "Passages remain coherent technical and policy prose about European industrial energy projects, district heating and market design.",
+        "pageArtifactChecks": {
+          "navigation": false,
+          "login": false,
+          "cookie": false,
+          "challenge": false,
+          "subscription": false,
+          "errorPage": false
+        }
+      },
+      {
+        "rowId": "q1-gb-05",
+        "articleTextSha256": "3c7d10d154c28e67c83e3afe6aabdf77623bada9f2e87d17e5f0353a3170b267",
+        "readable": true,
+        "reason": "Passages form a coherent career profile about a scientist and semiconductor work. A short Commercial view label is stray at the opening but does not dominate the article.",
+        "pageArtifactChecks": {
+          "navigation": false,
+          "login": false,
+          "cookie": false,
+          "challenge": false,
+          "subscription": false,
+          "errorPage": false
+        }
+      },
+      {
+        "rowId": "q1-gb-06",
+        "articleTextSha256": "e7f5540a4cdda465c62b3951cb6e9845289b7df7ac83b0e4faf6ea8b0b1def68",
+        "readable": true,
+        "reason": "The text is a structured news brief with readable, connected updates on conflict and humanitarian and legal issues rather than page navigation or an access challenge.",
+        "pageArtifactChecks": {
+          "navigation": false,
+          "login": false,
+          "cookie": false,
+          "challenge": false,
+          "subscription": false,
+          "errorPage": false
+        }
+      },
+      {
+        "rowId": "q1-gb-07",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_error, fullTextStatus=not_attempted_child_error.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-gb-08",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-gb-09",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-gb-10",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-us-01",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-us-02",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-us-03",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-us-04",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-us-05",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-us-06",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-us-07",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-us-08",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-us-09",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q1-us-10",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-gb-01",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-gb-02",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-gb-03",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-gb-04",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-gb-05",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-gb-06",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-gb-07",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-gb-08",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-gb-09",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-gb-10",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-us-01",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-us-02",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-us-03",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-us-04",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-us-05",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-us-06",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-us-07",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-us-08",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-us-09",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-gb-01",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q2-us-10",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-gb-02",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-gb-03",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-gb-04",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-gb-05",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-gb-06",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-gb-07",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-gb-08",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-gb-09",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-gb-10",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-us-01",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-us-02",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-us-03",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-us-04",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-us-05",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-us-06",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-us-07",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-us-08",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-us-09",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q3-us-10",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-gb-01",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-gb-02",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-gb-03",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-gb-04",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-gb-05",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-gb-06",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-gb-07",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-gb-08",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-gb-09",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-gb-10",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-us-01",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-us-02",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-us-03",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-us-04",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-us-05",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-us-06",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-us-07",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-us-08",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-us-09",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q4-us-10",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-gb-01",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-gb-02",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-gb-03",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-gb-05",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-gb-04",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-gb-07",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-gb-06",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-gb-08",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-gb-09",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-gb-10",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-us-01",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-us-02",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-us-03",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-us-05",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-us-04",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-us-06",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-us-07",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-us-08",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-us-09",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      },
+      {
+        "rowId": "q5-us-10",
+        "articleTextSha256": null,
+        "readable": false,
+        "reason": "No article text was emitted; publisherFetchStatus=child_timeout, fullTextStatus=not_attempted_child_timeout.",
+        "pageArtifactChecks": null
+      }
+    ]
+  },
+  "classification": "Rejected: completed run fails the required readability target; 5/100 reviewed texts are readable, below 50/100."
+}
