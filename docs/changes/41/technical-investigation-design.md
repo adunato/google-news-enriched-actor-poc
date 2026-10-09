@@ -4,7 +4,7 @@
 > This document defines what must be tested, why each experiment exists, what it measures, and exactly when it should run. It is not an experiment log.
 
 **Artifact ID:** `tid-41-google-news-resolution-full-text`  
-**Status:** **Approved for B2-I1 → B2-I2 → B2-I3 bounded child-process investigation (owner direction 2026-10-09).** Area A supported; Area B remains unresolved. All earlier B2 diagnostic work including R6 and its unapproved replay is historical/superseded.
+**Status:** **Approved for one controlled R2-baseline/subprocess experiment (owner direction 2026-10-09).** B2-I1/I2/I3 and all earlier diagnostic work are completed historical evidence. The unexecuted D0–D2 diagnostic draft later in this document is superseded and grants no authority.
 **Owner:** `Project owner`  
 **Created:** `2026-10-04`  
 **Updated:** `2026-10-09`
@@ -12,7 +12,7 @@
 **Spike branch:** `spike/41-google-news-resolution-full-text`  
 **Blocked downstream Issues:** `Resolve Google News links to publisher URLs with fail-soft status (#4)`; `Add optional best-effort article full-text extraction (#5)`
 
-**Current design decision:** **Stop R6.** A failed hosted publisher-body read is known to leave the article without a terminal outcome, preventing normal Actor completion. Owner authorises investigating ordinary child-process isolation as the *production-like candidate mechanism* instead of inspecting Node/Undici's internal abort propagation. **The single controlling next route is [B2-I](#current-area-b-experiment--enforce-per-article-completion-with-a-child-process-b2-i): local forced-deadline I1 → hosted smoke I2 → 100-row acceptance I3.** This is investigation approval, not permanent product architecture approval. No previously proposed R6 replay is authorised.
+**Current design decision:** **Use the exact R2 publisher HTTP and extraction implementation behind a standard Node child-process boundary.** The previous B2-I3 run rejected its tested process-isolation candidate (5/100 independently readable), but did not establish why 93 rows timed out. The owner has approved a controlled baseline comparison that preserves R2 request, body, and extraction behavior, adds only IPC and process timing, and uses a 24-second parent deadline with confirmed child cleanup. This is investigation approval, not permanent product architecture approval. The next route is the [B2-controlled-process experiment](#approved-baseline-controlled-process-experiment-b2-controlled-process).
 
 ## 1. What this investigation is trying to achieve
 
@@ -348,9 +348,9 @@ The cache-replay B2 candidate and the B2-D1, B2-S1 and B2-P1 investigations are 
 
 No further work on that cross-run cache/permission route is authorized by this TID.
 
-### Current Area B experiment — enforce per-article completion with a child process (B2-I)
+### Historical Area B experiment — enforce per-article completion with a child process (B2-I, completed)
 
-**Owner decision (2026-10-09): Approved as the next bounded investigation route.** The owner's direction is to stop debugging the internal HTTP abort propagation and test ordinary Node.js process isolation. This authorises the three conditional experiments I1–I3 below, with one candidate build and at most two hosted runs if their gates pass. It does **not** approve permanent product architecture, production implementation, an unrelated second runtime/service, or further HTTP-internal diagnostics.
+**Historical owner decision (2026-10-09; authority exhausted):** The owner approved testing ordinary Node.js process isolation through I1–I3. This approval authorized one candidate build and up to two hosted runs if their gates passed. It did **not** approve permanent product architecture, production implementation, an unrelated second runtime/service, or further HTTP-internal diagnostics. The subsequent I3 outcome is recorded in the Spike history; this is no longer the current route.
 
 **Product question in plain English:** Can one troublesome publisher page be forcibly stopped and recorded as a failed article, so the remaining articles and the overall Apify Actor finish normally? The previous one-process method sometimes registered a 10-second timeout but left the HTML body-reading operation awaiting completion. R4 produced 97/100 rows with three incomplete; previous near-complete runs produced candidate article text but no valid 100-row acceptance and independent quality count. The exact internal HTTP fault is not needed to test whether process isolation solves the product reliability requirement.
 
@@ -451,7 +451,7 @@ The current vanilla Area B question and conditional route were approved and have
 
 ## 8. Review and approval
 
-**Current decision (2026-10-09): APPROVE B2-I1 → I2 → I3.** The owner asked to update Issue #41 and this TID so Codex can carry out the new experiment after explicitly choosing this direction. Within one existing Apify Actor, Node child processes are approved for the bounded feasibility test; permanent architecture/Issue #5 implementation is not. Exactly one build and up to two hosted runs are permitted, with conditional gates and stops in the B2-I section. Prior approvals/results remain historical; no R6 replay is authorised. The owner need not approve each successful transition separately.
+**Historical decision (2026-10-09): APPROVE B2-I1 → I2 → I3.** Within one existing Apify Actor, Node child processes were approved for the bounded feasibility test; permanent architecture/Issue #5 implementation was not. The one build and two hosted runs were exercised. Prior approvals/results remain historical; no R6 replay is authorised. The owner did not need to approve each successful transition separately.
 
 **Earlier approvals (historical; not execution authority for the new route):**
 
@@ -936,9 +936,9 @@ Primary evidence: `experiments/r5-runtime-abort-assessment/evidence-r5-source-tr
 
 ---
 
-## Proposed diagnostic extension — DRAFT / UNAPPROVED / NO EXECUTION AUTHORITY
+## Superseded diagnostic extension — DRAFT / UNAPPROVED / NEVER EXECUTED
 
-**Status:** Draft for owner review only. This supplemental proposal does not revise the executed and exhausted B2-I1 → I2 → I3 sequence or its evidence. I1 and I2 were Supported; I3 was Rejected at 5/100 independently readable texts. This draft proposes only a bounded investigation of the proximate stage at which I3's 93 child timeouts stop making progress. It does not authorize candidate preparation, experiments, a build or hosted run. Any such work requires explicit owner approval of this extension and the pre-build exposure conditions below. The Spike remains open; this draft establishes neither broad feasibility nor infeasibility.
+**Status:** This was a draft for owner review and was never executed. It is superseded by the separately owner-approved baseline-controlled process experiment below. Its D0–D2 sequence, telemetry proposal, and owner-review questions do not control the current work and grant no execution authority.
 
 ### Objective and rationale
 
@@ -1006,3 +1006,47 @@ If either ID is absent/mismatched, any API call/readback fails, the anonymous re
 The existing I3 result remains **Rejected under its tested boundary**. The static logger defect is a possible explanation for some child errors, but is unconfirmed at row level and does not explain the 93 timeouts. D0–D2 propose only a bounded proximate-stage diagnosis; no root cause or broad feasibility conclusion is presumed. Issues #4 and #5 remain blocked pending this diagnostic and a later owner decision.
 
 Owner review fields (pending): Decision Pending (Approve | Hold | Reject). Before any execution, the owner must approve: (1) D0–D2 scope, unchanged I3 behavior, telemetry fields/caps and the proposed 240 ms observer-overhead tolerance; (2) one uncapped build-charge exposure, estimated at approximately `$0.0025` from the prior `$0.00248` build, or an enforceable alternative; (3) separate run and default-dataset RESTRICTED updates, authenticated readbacks and token-free direct 401/403 check within 60 seconds; (4) named-operator dataset access and the seven-day deletion rule; and (5) the post-create startup/propagation race and uncertain effect on already-issued signed URLs, unless a documented verified atomic alternative closes them. Any unresolved Actor version/tag/default preflight returns for review before build. This draft grants no D0/D1 experiment, candidate edit/preparation, build or run authority. The previously approved B2-I sequence is recorded as executed and exhausted.
+
+## Approved baseline-controlled process experiment (B2-controlled-process)
+
+**Status:** Owner approved this bounded route on 2026-10-09 after B2-I3 was rejected. The approved work includes candidate preparation and local parity checks, then one candidate build and one frozen 100-row hosted run only if the candidate passes the independent pre-build gate. This experiment does not approve a product architecture change, another corrective experiment, or a second build/run.
+
+### Objective and causal boundary
+
+Compare a child-process implementation that executes the R2 publisher fetch and extraction code against the same R2 code called directly. The key timing is parent-monotonic elapsed time from immediately before `fork()` (T0) to the first publisher HTTP request. Record child-ready, body-read, extraction, terminal-result receipt, process exit, IPC close, and confirmed reap where observable. This tests whether the serialization/process boundary adds startup latency or changes the HTTP/extraction result. It does not explain historical I3 timeouts by itself or prove a cause for any hosted failure.
+
+Context: the frozen input is unchanged (SHA-256 `ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01`, 100 ordered row IDs, 95 distinct publisher URLs). R2 recorded 98 output rows and 75 extraction-success candidates; those candidates were not independently reviewed for readability here. I3 recorded 5 independently readable texts, with 93 `child_timeout` and 2 `child_error`. Among R2's 75 extraction-success candidates, I3 had 5 readable, 69 timeouts, and 1 error. These differing measures are not interchangeable. No root cause is established.
+
+### Candidate and behavior invariants
+
+Prepare a new candidate under `experiments/b2-controlled-process/actor/`. Copy the actual R2 vanilla `fetchPublisher` and extraction implementation from `experiments/b2-vanilla/actor/main.mjs` (including its helper behavior) into a shared baseline module. Keep the direct-call path and child path invoking that same implementation. The only runtime changes permitted around it are timing callbacks that cannot affect outcomes and the parent/child message boundary. Preserve the original Google News and publisher URL fields on every row.
+
+Preserve R2 behavior exactly: Node global `fetch`; GET; `Accept: text/html,application/xhtml+xml`; user agent `Mozilla/5.0 issue-41-b2-vanilla/1.0`; manual redirects up to five (six GETs maximum); a single 10-second `AbortSignal.timeout` for the HTTP chain; the original response cancellation logger/phase/trace calls; the 2 MiB bounded reader; Buffer input to JSDOM using the response charset; JSON-LD article-body extraction before Readability fallback; normalized text, word/hash measures, DOM cleanup, and existing fetch/extraction error classes. Use pinned R2 dependencies: Apify 3.7.2, Mozilla Readability 0.6.0, and JSDOM 29.0.1. Preserve the R2 Dockerfile/runtime base. Immediately after run creation and the required privacy readbacks, inspect the candidate's `run_start` marker and record Node/Undici. If either is missing or differs from Node `20.20.2` / Undici `6.24.1`, abort the same run and Hold without retry; do not claim runtime comparability. The Actor may begin publisher requests before the operator receives this marker, so this operational check does not guarantee that no publisher request precedes verification.
+
+The parent owns Actor input/output and dataset writes. It starts at most two children and does not release a slot until the child is confirmed exited and reaped. Each child's parent wall-clock timer is set to 24 seconds from T0; timer delivery can be delayed by event-loop scheduling, so retain the measured kill-request time and require confirmed exit/close/reap within two seconds of that request. Do not claim the kill occurred by exactly 24.000 seconds when the recorded clock shows scheduler delay. An unresolved HTTP promise must never block the parent. The parent emits exactly one row failure on timeout and continues with later rows. Child timings are measured only against that child's own monotonic clock; parent-received deltas are upper bounds because IPC delivery adds delay. Do not subtract child and parent clocks or claim a cross-process ordering from them. Use ordinary fork environment inheritance so TLS, proxy, Node options, and other request-affecting settings match the parent; do not log environment values or include them in evidence. The local startup control may override only its explicit test flag.
+
+The R2 direct baseline used concurrency four; the controlled process candidate uses two simultaneous child rows to stay within the approved memory/process bound. That is a known throughput difference from R2 and means this local parity experiment is not a concurrency/throughput equivalence test. It does not support historical causal attribution by itself.
+
+### Ordered local gates
+
+1. **Source and dependency lineage.** Record original R2 source references and hashes, candidate hashes, dependency/lock hashes, fixture hash and Node executable/runtime version. Confirm candidate `body-stream.mjs`, `dom-content-type.mjs`, package dependency versions and Dockerfile match the R2 source. Review the visible baseline-module diff so only exports/timing hooks and removal of the Actor top-level runner differ from its copied R2 implementation.
+2. **Deterministic HTTP and extraction parity.** Against a loopback server, run each case once directly and once through the child boundary using the same row and exact server behavior: manual redirect to HTML; non-2xx; non-HTML; chunked HTML; declared body over 2 MiB; a stalled response body that reaches the unchanged 10-second HTTP abort; Windows-1252 charset decoding; JSON-LD-first extraction and Readability fallback; and abrupt request failure. Compare sanitized outcome fields and the complete per-request method/path/Accept/user-agent/redirect trace. Require exact result/status/hash/count and HTTP-trace parity for every case. Exclude timing fields from equality and report direct and child timings separately.
+3. **Deadline and cleanup control.** A deterministic child that never signals ready or issues a request must be killed when the 24-second T0 timer fires and be confirmed exited, closed and reaped no later than two seconds after the recorded kill request. Record PID and parent monotonic timings. For normal completion, verify result receipt, child exit and reap happen before the parent timer, and verify two simultaneous rows never exceed two live children. Any parity difference, failure to reap, incorrect timeout classification, missing row provenance, or uncontrolled child count is a failed gate. Stop and return to the owner; do not alter fetch/extraction behavior to obtain a pass.
+
+For local tests, use the installed Node 20.19.0 runtime for both direct and child execution and identify this as local parity evidence only. It is not a substitute for the hosted runtime check. The only local network activity is the loopback fixture server; do not access real publishers or Google News.
+
+### Conditional hosted preparation and one-run limits
+
+After local gates pass, prepare exactly one source candidate in Actor `JIogcgdHyCqAMHQ1P`, existing version `0.10`, with a new unique build tag `issue41-b2-controlled`. Preserve Actor-level defaults and historical build tags. Before the build, read back version/tag availability and verify exact hashes for every uploaded file plus the frozen 100-row input. Use no input other than that fixture. One build is permitted; no rebuild if its identity/result is ambiguous or a gate fails.
+
+If the single build completes and its Actor/version/tag, full source identity, image and Node/Undici checks all match, run exactly one 100-row acceptance sample on that same build. Set run timeout to 1500 seconds, memory to 512 MiB, and `maxTotalChargeUsd` to `$0.10`. Bound execution to concurrency two; the 10-second HTTP chain, 2 MiB body, maximum six GETs per row and 600 total GETs remain unchanged; child limit is 24 seconds plus at most two seconds to reap. No smoke run, new publisher sample, rerun, or build is included.
+
+Immediately after run creation, set that run's general access to RESTRICTED and independently read back the same run ID. Also set the run's default dataset to RESTRICTED and verify it; make a token-free direct dataset-items request with redirects disabled and require a direct 401/403. If either access gate fails, abort the same run and stop without normal polling or an I2/I3-style success claim. This retains the known post-create access race; it is not solved by the experiment.
+
+### Measures, classification and stops
+
+For each row, retain the row outcome, publisher status and HTTP status, request and redirect counts, body size/hash, extraction status/method/word count/text hash, child PID, reap confirmation, parent T0-to-spawn/ready/first-request/terminal-receipt/exit/close/reap times, and child-local stage durations. A timeout outcome must retain the complete input row provenance and the last timings already received by the parent. Keep full article text only in the restricted hosted dataset for independent readability review; commit sanitized aggregate outcomes and hashes only.
+
+The local parity gate is Supported only if all specified direct/child outputs and request traces match and every child lifecycle gate passes. A hosted run is supported for this sample only if it succeeds with 100 distinct terminal dataset rows, confirmed cleanup for all child processes, all resource/request/cost bounds respected, and at least 50 independently reviewed coherent readable texts. A completed run below 50 readable texts rejects this tested candidate under its stated limits. A failed/incomplete run, missing/ambiguous telemetry, access/cost/identity failure, or unconfirmed reap is Inconclusive/Hold. No outcome identifies the historic I3 root cause without specific evidence, and no further experiment is authorized by this TID.
+
+**Owner decision:** Approved 2026-10-09. The owner directed the exact R2 baseline behavior behind a standard Node child process, a 24-second parent deadline plus two-second reap allowance, and confirmed the one frozen 100-row run's 1500-second timeout and `$0.10` cap. This approval includes one build and one conditional hosted run after independent pre-build validation. The single build succeeded as `avU2E2IHAe5wlAWS1` / `0.10.8`. The remaining single run will check Node `20.20.2` / Undici `6.24.1` from its startup marker as soon as the run and dataset privacy readbacks complete; startup requests may precede that observation, which is a stated limitation. A mismatch or absent marker means abort and Hold, with no retry or new build.

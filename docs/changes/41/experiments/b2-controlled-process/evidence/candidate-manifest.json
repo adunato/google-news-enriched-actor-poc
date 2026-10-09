@@ -1,0 +1,145 @@
+{
+  "experiment": "Issue 41 B2 controlled process",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "actorVersion": "0.10",
+  "buildTag": "issue41-b2-controlled",
+  "hostedBuildOrRunPerformed": true,
+  "candidateFiles": [
+    {
+      "path": ".actor/actor.json",
+      "sha256": "d04982772cd9ae5e96fe855b639ff2367314f4b36f22092ecf847377a2477b3a",
+      "uploaded": true
+    },
+    {
+      "path": ".actorignore",
+      "sha256": "79281f2f15967ae0eba065f0c9fb339ff02e81286096a3e0e2cc41a0d96bd923",
+      "uploaded": true
+    },
+    {
+      "path": "Dockerfile",
+      "sha256": "72f0dfb10a56e715395935531e0008fbd087fb806a307ebbea90426c111097fc",
+      "uploaded": true
+    },
+    {
+      "path": "baseline.mjs",
+      "sha256": "3acb3c1e77b2065141393deda1011ccc1fad105162370751afa50264eb4e14f6",
+      "uploaded": true
+    },
+    {
+      "path": "body-stream.mjs",
+      "sha256": "40505db4afebd8d5125f596864dc98807252a9e3923b3a70284dea39ee10ee14",
+      "uploaded": true
+    },
+    {
+      "path": "dom-content-type.mjs",
+      "sha256": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+      "uploaded": true
+    },
+    {
+      "path": "main.mjs",
+      "sha256": "d2391090cc0483831a168477abf0188cb21352bf54726dfa22a9925206a055d1",
+      "uploaded": true
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "cbd7b96df68f877a2df327964ea62fe60d28b1a1614ef49e47c95d4357e8f743",
+      "uploaded": true
+    },
+    {
+      "path": "package.json",
+      "sha256": "bbbc1083d0c41f11fdf0fcc2a26421f6fc0024ef725bf7239f73006714a79d03",
+      "uploaded": true
+    },
+    {
+      "path": "parent.mjs",
+      "sha256": "aeb4b5700aef4c4a902ac5e406807242e0cf13dc1e75aec0bc3ee44e967464c0",
+      "uploaded": true
+    },
+    {
+      "path": "worker.mjs",
+      "sha256": "6bcbf3c23f27a2dd054b67563249ca6d1e6894bb0f51904a30915cd5ab2fb582",
+      "uploaded": true
+    }
+  ],
+  "frozenAcceptanceInput": {
+    "path": "docs/changes/41/experiments/b2-vanilla/input-acceptance.json",
+    "sha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "rowCount": 100
+  },
+  "packages": {
+    "apify": "3.7.2",
+    "readability": "0.6.0",
+    "jsdom": "29.0.1"
+  },
+  "baselineSources": {
+    "main": {
+      "path": "docs/changes/41/experiments/b2-vanilla/actor/main.mjs",
+      "sha256": "16855f367514e00c5837193c6c7929b768cbc2dab8c232292d69da845c6f3ef4"
+    },
+    "bodyStreamExactMatch": true,
+    "domContentTypeExactMatch": true,
+    "dockerfileExactMatch": true
+  },
+  "localTestFiles": [
+    {
+      "path": "local-parity-results.json",
+      "sha256": "34588a1219cddf1c21e3b14f3b3ae76e936467b2d50ddb5dce026eed8078cb2b"
+    },
+    {
+      "path": "local-parity-inherited-env.tap",
+      "sha256": "60517dd1f2ccad84a60c60cda677db75208ffb3fe3482ce4d90b6bccf1492e11"
+    }
+  ],
+  "testSource": {
+    "path": "actor/baseline-parity.test.mjs",
+    "sha256": "dae3ba70d6f9b5066eba2e1da7d4d3615fa5c567a78b3c64d9aa7f58de5aa7aa"
+  },
+  "localRuntime": {
+    "node": "v20.19.0",
+    "undici": "6.21.1"
+  },
+  "hostedRuntimeGate": {
+    "node": "v20.20.2",
+    "undici": "6.24.1",
+    "requiredBeforePublisherRequests": true
+  },
+  "actorIgnoreExcludes": [
+    "node_modules",
+    "*.test.mjs",
+    "prepare-candidate.ps1"
+  ],
+  "hostedBuild": {
+    "actorId": "JIogcgdHyCqAMHQ1P",
+    "version": "0.10",
+    "buildNumber": "0.10.8",
+    "buildTag": "issue41-b2-controlled",
+    "buildId": "avU2E2IHAe5wlAWS1",
+    "status": "SUCCEEDED",
+    "startedAt": "2026-10-09T15:11:37.739Z",
+    "finishedAt": "2026-10-09T15:11:47.32Z",
+    "imageDigest": "60c95d076e1344f3411d1fc732b51f5b97710f55b97f3ebce78e095e00d0a68d",
+    "remoteSourceHashMatches": 11,
+    "runtimeAttestation": "Observed in the single run_start marker: Node v20.20.2, Undici 6.24.1; marker read after privacy readbacks, but strict pre-request ordering is not observable",
+    "publisherRunStarted": true
+  },
+  "hostedRun": {
+    "runId": "8Y49Z8FgdH8XS3C5b",
+    "datasetId": "oS68zBD3k82fX84OM",
+    "status": "SUCCEEDED",
+    "runTimeSecs": 1130.443,
+    "inputRows": 100,
+    "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "outcomes": {
+      "eligible_html": 8,
+      "http_denied": 1,
+      "child_timeout": 91
+    },
+    "usageTotalUsd": 0.03182645542874768,
+    "memoryMbytes": 512,
+    "maxTotalChargeUsd": 0.1,
+    "generalAccess": "RESTRICTED",
+    "datasetGeneralAccess": "RESTRICTED",
+    "anonymousItemsStatus": 403,
+    "readabilityReview": "Pending independent validation; preserve restricted dataset"
+  }
+}

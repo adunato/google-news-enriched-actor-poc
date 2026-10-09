@@ -1,0 +1,91 @@
+{
+  "experiment": "Issue 41 B2 controlled process",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "actorVersion": "0.10",
+  "buildTag": "issue41-b2-controlled",
+  "buildNumber": "0.10.8",
+  "buildId": "avU2E2IHAe5wlAWS1",
+  "imageDigest": "60c95d076e1344f3411d1fc732b51f5b97710f55b97f3ebce78e095e00d0a68d",
+  "runId": "8Y49Z8FgdH8XS3C5b",
+  "datasetId": "oS68zBD3k82fX84OM",
+  "status": "SUCCEEDED",
+  "startedAt": "2026-10-09T15:19:05.909Z",
+  "runTimeSecs": 1130.443,
+  "inputPath": "docs/changes/41/experiments/b2-vanilla/input-acceptance.json",
+  "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+  "inputRows": 100,
+  "rowOutcomes": {
+    "eligible_html": 8,
+    "http_denied": 1,
+    "child_timeout": 91
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "undici": "6.24.1",
+    "source": "candidate run_start log marker",
+    "observedAfterPrivacyReadbacks": true,
+    "limitation": "Actor startup may issue publisher requests before operator observes the marker; runtime equality is observed but strict pre-request order is unverified"
+  },
+  "limits": {
+    "timeoutSecs": 1500,
+    "memoryMbytes": 512,
+    "maxTotalChargeUsd": 0.1,
+    "restartOnError": false,
+    "maxConcurrentChildren": 2,
+    "httpChainTimeoutSecs": 10,
+    "maxBodyBytes": 2097152,
+    "maxRedirects": 5,
+    "maxGetsPerRow": 6,
+    "maxGetsRun": 600,
+    "parentDeadlineMs": 24000,
+    "reapAllowanceMs": 2000
+  },
+  "privacy": {
+    "runGeneralAccess": "RESTRICTED",
+    "datasetGeneralAccess": "RESTRICTED",
+    "anonymousItemsRequestStatus": 403,
+    "redirects": "disabled",
+    "readbackSameRunId": true,
+    "readbackSameDatasetId": true
+  },
+  "resourceStats": {
+    "usageTotalUsd": 0.03182645542874768,
+    "memAvgBytes": 105036289.72482994,
+    "memMaxBytes": 207319040,
+    "cpuAvgUsage": 9.96155995277294,
+    "cpuMaxUsage": 351.2721689059501,
+    "restartCount": 0
+  },
+  "childLifecycle": {
+    "datasetRows": 100,
+    "actorRunStatus": "SUCCEEDED",
+    "candidateExitsWithErrorWhenAnyRowChildReapedFalse": true,
+    "interpretation": "Run success plus candidate exit guard supports all emitted rows passing the child-reaped check; independent validation pending"
+  },
+  "requestAccounting": {
+    "actualAggregateGetCount": "not observable for child_timeout rows",
+    "candidateBound": "At most six GET attempts per row, hence at most 600 for 100 rows",
+    "observedAttribution": "No total observed GET count recorded"
+  },
+  "interimTimeoutPhaseSnapshot": {
+    "datasetRowsAtSnapshot": 28,
+    "childTimeoutRows": 19,
+    "withAnyChildStageEvent": 1,
+    "lastReceivedStageForThatRow": "extract_start",
+    "withReadyAndHttpStart": 1,
+    "readyMs": 755.947369,
+    "httpStartReceiptMs": 759.650148,
+    "killRequestMs": 24000.564425,
+    "reapMs": 24124.324208,
+    "otherTimeoutRowsWithoutAnyChildEvent": 18,
+    "meaning": "Last phase unknown before first parent-received IPC event; snapshot is interim, not final-run timeout-phase distribution"
+  },
+  "readabilityReview": {
+    "status": "PENDING_INDEPENDENT_VALIDATION",
+    "datasetRetainedRestricted": true,
+    "fullArticleTextInGit": false,
+    "nextAction": "Independently review all 100 rows for coherent readable article text; report count/rationale only"
+  },
+  "deletion": "Do not delete dataset before independent validation",
+  "decision": "Pending independent validation; do not claim supported feasibility"
+}
