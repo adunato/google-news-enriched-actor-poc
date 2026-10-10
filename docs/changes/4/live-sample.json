@@ -1,0 +1,1982 @@
+{
+  "issue": 4,
+  "status": "hold",
+  "collectedAtUtc": "2026-09-28T06:57:21.690Z",
+  "commitSha": "7c8780ec1686bfb5c250ca98d7f69a1c54032208",
+  "workingTreeDirty": false,
+  "nodeVersion": "v24.15.0",
+  "configuration": {
+    "queries": ["world news", "politics", "business", "technology", "health"],
+    "editions": [
+      {
+        "id": "GB",
+        "language": "en-GB",
+        "country": "GB"
+      },
+      {
+        "id": "US",
+        "language": "en-US",
+        "country": "US"
+      }
+    ],
+    "maxItemsPerQuery": 10,
+    "dateRange": "7d",
+    "dedupe": false,
+    "resolvePublisherUrls": true,
+    "includeFullText": false,
+    "expectedCells": 10,
+    "rowsPerCell": 10,
+    "denominator": 100,
+    "requiredDenominator": 100,
+    "minimumSuccesses": 95
+  },
+  "denominator": 100,
+  "resolvedDenominator": 100,
+  "retainedRows": 100,
+  "successfulRows": 0,
+  "failuresByCategory": {
+    "consent_or_interstitial": 100
+  },
+  "cells": [
+    {
+      "query": "world news",
+      "edition": "GB",
+      "language": "en-GB",
+      "country": "GB",
+      "retainedCount": 10,
+      "successCount": 0,
+      "failureCount": 10,
+      "failuresByCategory": {
+        "consent_or_interstitial": 10
+      },
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "82aeb3e5dd5ae7880fe5",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 42,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "cee93dbd6fa64601a5e1",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 43,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "f22e99d9286801978f23",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 79,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "befd558e49ae357c3e87",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 89,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "0351082857ad72918a5e",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 137,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "dd4c540980450111cdaa",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 39,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "397504a4bf45e0571988",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 35,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "7c5ae324e8725504ccfb",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 35,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "5e3814fd60400c108f70",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 35,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "840a72a48642eef94b15",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 40,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "world news",
+      "edition": "US",
+      "language": "en-US",
+      "country": "US",
+      "retainedCount": 10,
+      "successCount": 0,
+      "failureCount": 10,
+      "failuresByCategory": {
+        "consent_or_interstitial": 10
+      },
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "dc4a3d0a50399131be73",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 32,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "136cb2057a2b6ef77c0b",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 34,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "11540b7072d5e2db6574",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 29,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "b51631275ebd3822e145",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 33,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "0351082857ad72918a5e",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 34,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "db78446aff6f860332d3",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 37,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "986fb25535c95ecf01c9",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 41,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "a32dd1a22ce3689241ec",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 31,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "700a1ae93e85131f0fee",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 41,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "3234120480db5976be92",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 40,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "politics",
+      "edition": "GB",
+      "language": "en-GB",
+      "country": "GB",
+      "retainedCount": 10,
+      "successCount": 0,
+      "failureCount": 10,
+      "failuresByCategory": {
+        "consent_or_interstitial": 10
+      },
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "d85bf44a0b11137b0ad7",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 38,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "cb9b8cbc9748ef7f71f9",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 41,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "822fcba52299a2b4c3a9",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 40,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "cf14764e332e8b957e90",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 38,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "4c87a8774ac961aacce0",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 37,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "67bf9628b59d45936411",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 39,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "c3a13ea2894146f14468",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 51,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "e6994f0a5fe914e4b710",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 34,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "f5f451a8d2b03ac386ed",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 39,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "8f39a3b4b16b81f9162d",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 43,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "politics",
+      "edition": "US",
+      "language": "en-US",
+      "country": "US",
+      "retainedCount": 10,
+      "successCount": 0,
+      "failureCount": 10,
+      "failuresByCategory": {
+        "consent_or_interstitial": 10
+      },
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "171dcdf33c4304f14a7f",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 36,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "98636144683627c1790e",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 36,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "630ba5b4c5e200cd9a23",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 35,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "8e51a4b4736a64035f0c",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 43,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "30ba5edbd25f11e549e9",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 45,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "52994d59a15b11e6b2fa",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 39,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "0a3061bfb53106abd85b",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 35,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "cb9b8cbc9748ef7f71f9",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 39,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "a45592013f21e4444773",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 35,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "0ae4f517a41649dadd0f",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 36,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "business",
+      "edition": "GB",
+      "language": "en-GB",
+      "country": "GB",
+      "retainedCount": 10,
+      "successCount": 0,
+      "failureCount": 10,
+      "failuresByCategory": {
+        "consent_or_interstitial": 10
+      },
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "83ff02e3c4175a81f5a0",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 49,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "f191f78dd335b6adc0d8",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 35,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "6922cc1d5cb28fb4e7cc",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 40,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "14a63dc312006a980f4f",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 37,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "42e7a0d6f3fbc6112aae",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 28,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "125644c9d2743aab745b",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 36,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "09e55e03437fc9120a13",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 39,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "86af45b5120fc2160655",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 40,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "126679b9255da2ac3f9f",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 37,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "5bf2ad8791cd18e9ffd6",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 34,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "business",
+      "edition": "US",
+      "language": "en-US",
+      "country": "US",
+      "retainedCount": 10,
+      "successCount": 0,
+      "failureCount": 10,
+      "failuresByCategory": {
+        "consent_or_interstitial": 10
+      },
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "4feb756219298d4cf561",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 35,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "f59b3c0e5da1c3fc3bd7",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 36,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "12d3a0a19c73176768c1",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 34,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "532fea87e6828df4dbed",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 44,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "3800a4d854536248aee3",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 44,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "cefa9738a215c4321216",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 66,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "5bb2130010fe1a0dacdc",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 44,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "01f25bd6f65977df195a",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 33,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "6703cefee3d7fac199a9",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 34,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "f2d6a116e86e7bfd3f1b",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 49,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "technology",
+      "edition": "GB",
+      "language": "en-GB",
+      "country": "GB",
+      "retainedCount": 10,
+      "successCount": 0,
+      "failureCount": 10,
+      "failuresByCategory": {
+        "consent_or_interstitial": 10
+      },
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "9400e46fc9dda54f5a3f",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 43,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "8fc62ae90aaaf1773fb4",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 34,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "bacd5a68cf4bfeebedc5",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 54,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "9cf9982d10ceefbf409c",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 33,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "ed15ccf4f7c823857173",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 38,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "eaf7b87f669067cf1dbc",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 37,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "c5193a7b286b0decbefc",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 44,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "f6371f69bd0312d29968",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 36,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "65eacbe2d99ab1cc18d4",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 40,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "51a16aaa8af355d36668",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 36,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "technology",
+      "edition": "US",
+      "language": "en-US",
+      "country": "US",
+      "retainedCount": 10,
+      "successCount": 0,
+      "failureCount": 10,
+      "failuresByCategory": {
+        "consent_or_interstitial": 10
+      },
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "0f859cc4f52a49b24621",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 34,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "40c671d4f39461107cc5",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 50,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "9cf9982d10ceefbf409c",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 40,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "bacd5a68cf4bfeebedc5",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 37,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "f5f91d542384ba57c077",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 37,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "c3b2edcd5f53c82fb819",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 52,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "411c064063b4a6d4c110",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 43,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "a65552f9ad8a42152764",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 44,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "4d1d107fcb8cd8d53100",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 34,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "a37fca3c0380f9d77e8f",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 36,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "health",
+      "edition": "GB",
+      "language": "en-GB",
+      "country": "GB",
+      "retainedCount": 10,
+      "successCount": 0,
+      "failureCount": 10,
+      "failuresByCategory": {
+        "consent_or_interstitial": 10
+      },
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "4952d2798fe8802ccd99",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 40,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "0d7b5bb5a608044fc088",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 40,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "76f779734c432f7a4e8a",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 42,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "4c800fd8a05856fa8759",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 50,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "d3aac363dde791b7afb0",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 37,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "8d9435aa60bd5cc45474",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 38,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "686399cb1738d5b96d14",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 51,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "f28cf2a4bfe2489dbce4",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 37,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "7272e21efaa10db8a283",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 32,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "786c5e706ba6634f5d25",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 33,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "query": "health",
+      "edition": "US",
+      "language": "en-US",
+      "country": "US",
+      "retainedCount": 10,
+      "successCount": 0,
+      "failureCount": 10,
+      "failuresByCategory": {
+        "consent_or_interstitial": 10
+      },
+      "rows": [
+        {
+          "ordinal": 1,
+          "sourceHash": "fea3fb03b542389520ee",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 46,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 2,
+          "sourceHash": "0571a17c0ce6a650a816",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 41,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 3,
+          "sourceHash": "17bb212c94c31f6c338f",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 39,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 4,
+          "sourceHash": "7e9f8335559f05326357",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 79,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 5,
+          "sourceHash": "ebf99b605833b3d666b4",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 35,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 6,
+          "sourceHash": "ebddd7bb1c35f06dee94",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 39,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 7,
+          "sourceHash": "6a74f1958f264acd5275",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 33,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 8,
+          "sourceHash": "32f94ad8523a5d3443d3",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 28,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 9,
+          "sourceHash": "8dd176a5f1d32f80393d",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 40,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        },
+        {
+          "ordinal": 10,
+          "sourceHash": "cd4ed0761549166902af",
+          "outcome": "failure",
+          "validSuccess": false,
+          "failureCategory": "consent_or_interstitial",
+          "publisherHostClass": "interstitial",
+          "elapsedMs": 45,
+          "requests": [
+            {
+              "stage": "google_page",
+              "hostClass": "google",
+              "status": 302,
+              "declaredBytes": 0,
+              "responseBytes": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

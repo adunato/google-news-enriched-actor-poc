@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "start": "node dist/index.js",
-    "format:check": "prettier --check README.md AGENTS.md docs .github .codex package.json tsconfig.json eslint.config.js src",
+    "format:check": "prettier --check README.md AGENTS.md docs .github .codex package.json tsconfig.json eslint.config.js src scripts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "build": "tsc",
-    "validate": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build"
+    "validate": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build",
+    "sample:publisher-resolution": "npm run build && node scripts/sample-publisher-resolution.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
