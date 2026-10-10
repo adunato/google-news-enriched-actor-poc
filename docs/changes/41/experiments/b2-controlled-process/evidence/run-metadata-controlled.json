@@ -24,7 +24,7 @@
     "undici": "6.24.1",
     "source": "candidate run_start log marker",
     "observedAfterPrivacyReadbacks": true,
-    "limitation": "Actor startup may issue publisher requests before operator observes the marker; runtime equality is observed but strict pre-request order is unverified"
+    "limitation": "The marker was emitted before child work began; the operator read it after privacy readbacks, and publisher requests may have started before those access readbacks completed"
   },
   "limits": {
     "timeoutSecs": 1500,
@@ -60,7 +60,7 @@
     "datasetRows": 100,
     "actorRunStatus": "SUCCEEDED",
     "candidateExitsWithErrorWhenAnyRowChildReapedFalse": true,
-    "interpretation": "Run success plus candidate exit guard supports all emitted rows passing the child-reaped check; independent validation pending"
+    "interpretation": "Independent validation confirmed that all 100 emitted rows have childReaped=true"
   },
   "requestAccounting": {
     "actualAggregateGetCount": "not observable for child_timeout rows",
@@ -81,11 +81,15 @@
     "meaning": "Last phase unknown before first parent-received IPC event; snapshot is interim, not final-run timeout-phase distribution"
   },
   "readabilityReview": {
-    "status": "PENDING_INDEPENDENT_VALIDATION",
+    "status": "COMPLETED_BELOW_TARGET",
+    "readableTexts": 8,
+    "rowsReviewed": 100,
+    "emptyArticleTextRows": 92,
+    "validationEvidence": "validation-controlled.json",
     "datasetRetainedRestricted": true,
     "fullArticleTextInGit": false,
-    "nextAction": "Independently review all 100 rows for coherent readable article text; report count/rationale only"
+    "nextAction": "No further readability review required; candidate rejected against 50/100 target"
   },
-  "deletion": "Do not delete dataset before independent validation",
-  "decision": "Pending independent validation; do not claim supported feasibility"
+  "deletion": "Dataset remains RESTRICTED and retained; cleanup is outside current authorized scope",
+  "decision": "Rejected for this candidate: 8/100 independently readable texts, below 50/100; original Spike question remains unresolved"
 }

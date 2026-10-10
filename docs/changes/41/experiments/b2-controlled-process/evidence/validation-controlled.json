@@ -1,0 +1,122 @@
+{
+  "issue": 41,
+  "scope": "Technical Spike experiment validation",
+  "result": "Hold - Spike remains open",
+  "validatedAt": "2026-10-10",
+  "run": {
+    "datasetRows": 100,
+    "uniqueDatasetRowIds": 100,
+    "frozenRows": 100,
+    "uniqueFrozenRowIds": 100,
+    "sameRowIdSet": true,
+    "publisherFetchCounts": "child_timeout=91; eligible_html=8; http_denied=1",
+    "fullTextCounts": "not_attempted_child_failure=91; not_attempted_fetch_ineligible=1; success=8",
+    "timeoutRows": 91,
+    "timeoutRowsWithAnyStageEvent": 2,
+    "timeoutRowsWithoutAnyReceivedStageEvent": 89,
+    "timeoutLastReceivedStageCounts": "extract_start=2",
+    "allChildrenReaped": true,
+    "allSuccessfulTextHashesMatch": true,
+    "manifestFileCount": 11,
+    "manifestFilesAllMatch": true,
+    "inputHash": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "sampleT0ToReadyMs": {
+      "n": 11,
+      "min": 749.181,
+      "max": 15978.45,
+      "median": 804.117
+    },
+    "sampleT0ToHttpMs": {
+      "n": 11,
+      "min": 752.505,
+      "max": 16368.831,
+      "median": 808.518
+    },
+    "finalTimeoutPhaseSummary": {
+      "timeoutRows": 91,
+      "noParentReceivedChildStageEvent": 89,
+      "lastStageExtractStart": 2,
+      "allTimedOutChildrenReaped": true,
+      "interpretation": "For 89 rows the last phase before timeout is unknown because no child-stage event reached the parent. Two reached extract_start. This does not establish why the other children timed out."
+    },
+    "t0Timing": {
+      "definition": "Parent monotonic time immediately before fork; parent-received child markers are upper bounds including IPC.",
+      "childReady": {
+        "n": 11,
+        "minMs": 749.181,
+        "medianMs": 804.117,
+        "p95Ms": 15978.45,
+        "maxMs": 15978.45
+      },
+      "firstHttpRequest": {
+        "n": 11,
+        "minMs": 752.505,
+        "medianMs": 808.518,
+        "p95Ms": 16368.831,
+        "maxMs": 16368.831
+      },
+      "timedOutBeforeAnyStageEvent": 89
+    }
+  },
+  "hostedRun": {
+    "observedMaximumMemoryBytes": 207319040,
+    "memoryLimitMbytes": 512,
+    "runtime": {
+      "node": "v20.20.2",
+      "undici": "6.24.1",
+      "source": "candidate run_start log marker",
+      "observedAfterPrivacyReadbacks": true,
+      "limitation": "Actor startup may issue publisher requests before operator observes the marker; runtime equality is observed but strict pre-request order is unverified",
+      "verifiedBeforeFirstPublisherRequest": true,
+      "orderingEvidence": "Observed run_start marker gives Node v20.20.2 / Undici 6.24.1; main.mjs emits it before calling mapWithConcurrency, which starts child work."
+    },
+    "observedMaximumCpu": 351.2721689059501,
+    "observedAverageCpu": 9.96155995277294,
+    "restartCount": 0,
+    "observedAverageMemoryBytes": 105036289.72482994,
+    "maxChargeUsd": 0.1,
+    "durationSeconds": 1130.443,
+    "status": "SUCCEEDED",
+    "chargeUsd": 0.03182645542874768
+  },
+  "readability": {
+    "eligibleExtractions": 8,
+    "independentSemanticReadabilityCount": 8,
+    "readableRowCount": 8,
+    "denominator": 100,
+    "criteria": "Readable article or news-roundup prose, independent of a word-count threshold; reject navigation/error/challenge/login/subscription-only text",
+    "method": "Private content inspection of all non-empty articleText values in the restricted run dataset; none of the other 92 rows contains text",
+    "assessedRowIds": [
+      "q1-gb-02",
+      "q1-gb-01",
+      "q1-gb-04",
+      "q1-gb-05",
+      "q1-gb-06",
+      "q1-gb-07",
+      "q1-gb-08",
+      "q1-gb-10"
+    ],
+    "allCandidateTextHashesMatch": true,
+    "conclusion": "8/100 readable, below the 50/100 required outcome",
+    "nonSuccessRowsWithArticleText": 0
+  },
+  "constraints": {
+    "actualGetCount": "Not observable for timed out children",
+    "actualGetCountUpperBound": 600,
+    "configuredRunTimeoutSecs": 1500,
+    "configuredHttpChainTimeoutSecs": 10,
+    "configuredMaxTotalChargeUsd": 0.1,
+    "configuredReapAllowanceMs": 2000,
+    "configuredParentDeadlineMs": 24000,
+    "configuredMaxConcurrentChildren": 2
+  },
+  "locality": {
+    "candidateSourceHashes": "All 11 manifest candidate file hashes match",
+    "frozenAcceptanceHashMatches": true,
+    "localTestHashMatches": true,
+    "articleTextStoredInGit": false,
+    "artifactSecretPatternMatches": 0,
+    "localParityTestCount": 11
+  },
+  "decision": "Area B result: rejected for the tested candidate; 8/100 readable against the required 50/100. This result does not establish why 91 children timed out; the original Technical Question remains unresolved."
+}
