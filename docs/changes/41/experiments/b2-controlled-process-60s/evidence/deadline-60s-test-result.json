@@ -1,0 +1,33 @@
+{
+  "experiment": "Issue 41 B2 controlled process 60-second child deadline",
+  "test": "startup hang is killed and reaped at the 60-second parent deadline",
+  "testFile": "actor/baseline-parity.test.mjs",
+  "runMode": "node --test with the focused test-name filter; unchanged HTTP parity and scheduler tests were skipped",
+  "runtime": {
+    "node": "v20.19.0",
+    "publisherRequestsSent": false
+  },
+  "result": {
+    "passed": true,
+    "testsPassed": 1,
+    "testsSkippedByFilter": 2,
+    "testsFailed": 0,
+    "childPid": 1328,
+    "reaped": true,
+    "timingMs": {
+      "t0ToSpawn": 34.3491,
+      "t0ToChildReady": null,
+      "t0ToHttpRequest": null,
+      "t0ToTerminalReceipt": null,
+      "t0ToExit": 60022.8648,
+      "t0ToClose": 60022.9038,
+      "t0ToReap": 60022.9038,
+      "killRequestElapsed": 60010.2241,
+      "killToReap": 12.6797,
+      "parentElapsed": 60023.0621,
+      "childExitCode": null,
+      "childExitSignal": "SIGKILL"
+    }
+  },
+  "interpretation": "The default outer deadline fired at 60,010.224 ms from T0 due to timer scheduling delay; the child exited and IPC closed 12.680 ms after the kill request, within the two-second reap allowance. This verifies timeout/reap behavior only and does not run or evaluate the publisher HTTP path."
+}

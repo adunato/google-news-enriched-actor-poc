@@ -1,0 +1,335 @@
+{
+  "schemaVersion": 1,
+  "experiment": "b2-controlled-process-60s",
+  "validationScope": "Technical Spike experiment",
+  "result": "Hold",
+  "conclusion": "Run aborted after confirmed dataset output-integrity gate failure. No valid 100-row readability denominator; broader Spike remains open.",
+  "run": {
+    "runId": "j41jHejubNuGJyzAa",
+    "status": "ABORTED",
+    "completedAtUtc": "2026-10-10T07:24:12.726Z",
+    "durationSeconds": 2477.827,
+    "datasetId": "FQyCxhX8UDjkPZf4h",
+    "buildId": "m3ulCqbSZjQNzpMLD",
+    "buildVersion": "0.10.9",
+    "options": {
+      "timeoutSecs": 3300,
+      "memoryMbytes": 512,
+      "maxTotalChargeUsd": 0.1,
+      "restartOnError": false
+    },
+    "runtime": {
+      "node": "v20.20.2",
+      "undici": "6.24.1",
+      "rowsConfigured": 100,
+      "concurrency": 2
+    },
+    "usageUsd": 0.0697875,
+    "restartCount": 0,
+    "averageRssBytes": 146328999.7,
+    "maximumRssBytes": 260575232
+  },
+  "provenance": {
+    "candidateManifestPath": "evidence/candidate-manifest.json",
+    "candidateManifestSha256": "8f822d3e4fe2f4d96830d5459fe0ca5550219f828f4b15e37115be5283e900b3",
+    "candidateFiles": [
+      {
+        "path": ".actor/actor.json",
+        "manifestSha256": "d6535cf7c894051f204cd9c65c58c08b9b7b1c6f13fcfee674142921dc5daa14",
+        "localSha256": "d6535cf7c894051f204cd9c65c58c08b9b7b1c6f13fcfee674142921dc5daa14",
+        "matches": true,
+        "uploaded": true
+      },
+      {
+        "path": ".actorignore",
+        "manifestSha256": "79281f2f15967ae0eba065f0c9fb339ff02e81286096a3e0e2cc41a0d96bd923",
+        "localSha256": "79281f2f15967ae0eba065f0c9fb339ff02e81286096a3e0e2cc41a0d96bd923",
+        "matches": true,
+        "uploaded": false
+      },
+      {
+        "path": "Dockerfile",
+        "manifestSha256": "72f0dfb10a56e715395935531e0008fbd087fb806a307ebbea90426c111097fc",
+        "localSha256": "72f0dfb10a56e715395935531e0008fbd087fb806a307ebbea90426c111097fc",
+        "matches": true,
+        "uploaded": true
+      },
+      {
+        "path": "baseline.mjs",
+        "manifestSha256": "3acb3c1e77b2065141393deda1011ccc1fad105162370751afa50264eb4e14f6",
+        "localSha256": "3acb3c1e77b2065141393deda1011ccc1fad105162370751afa50264eb4e14f6",
+        "matches": true,
+        "uploaded": true
+      },
+      {
+        "path": "body-stream.mjs",
+        "manifestSha256": "40505db4afebd8d5125f596864dc98807252a9e3923b3a70284dea39ee10ee14",
+        "localSha256": "40505db4afebd8d5125f596864dc98807252a9e3923b3a70284dea39ee10ee14",
+        "matches": true,
+        "uploaded": true
+      },
+      {
+        "path": "dom-content-type.mjs",
+        "manifestSha256": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+        "localSha256": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+        "matches": true,
+        "uploaded": true
+      },
+      {
+        "path": "main.mjs",
+        "manifestSha256": "d2391090cc0483831a168477abf0188cb21352bf54726dfa22a9925206a055d1",
+        "localSha256": "d2391090cc0483831a168477abf0188cb21352bf54726dfa22a9925206a055d1",
+        "matches": true,
+        "uploaded": true
+      },
+      {
+        "path": "package-lock.json",
+        "manifestSha256": "cbd7b96df68f877a2df327964ea62fe60d28b1a1614ef49e47c95d4357e8f743",
+        "localSha256": "cbd7b96df68f877a2df327964ea62fe60d28b1a1614ef49e47c95d4357e8f743",
+        "matches": true,
+        "uploaded": true
+      },
+      {
+        "path": "package.json",
+        "manifestSha256": "bbbc1083d0c41f11fdf0fcc2a26421f6fc0024ef725bf7239f73006714a79d03",
+        "localSha256": "bbbc1083d0c41f11fdf0fcc2a26421f6fc0024ef725bf7239f73006714a79d03",
+        "matches": true,
+        "uploaded": true
+      },
+      {
+        "path": "parent.mjs",
+        "manifestSha256": "ea9df537f3f3b5ba8e91f51eab77704cf717321a9a6af687deb8b4c257ecd2fb",
+        "localSha256": "ea9df537f3f3b5ba8e91f51eab77704cf717321a9a6af687deb8b4c257ecd2fb",
+        "matches": true,
+        "uploaded": true
+      },
+      {
+        "path": "worker.mjs",
+        "manifestSha256": "6bcbf3c23f27a2dd054b67563249ca6d1e6894bb0f51904a30915cd5ab2fb582",
+        "localSha256": "6bcbf3c23f27a2dd054b67563249ca6d1e6894bb0f51904a30915cd5ab2fb582",
+        "matches": true,
+        "uploaded": true
+      }
+    ],
+    "allCandidateFilesMatch": true,
+    "frozenFixturePath": "../b2-vanilla/input-acceptance.json",
+    "frozenFixtureSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "fixtureRows": 100,
+    "fixtureUniqueRowIds": 100,
+    "datasetItemsReturned": 105,
+    "datasetUniqueRowIds": 88,
+    "missingExpectedRowIds": [
+      "q5-gb-09",
+      "q5-gb-10",
+      "q5-us-01",
+      "q5-us-02",
+      "q5-us-03",
+      "q5-us-04",
+      "q5-us-05",
+      "q5-us-06",
+      "q5-us-07",
+      "q5-us-08",
+      "q5-us-09",
+      "q5-us-10"
+    ],
+    "unknownRowIds": [],
+    "duplicateRowIds": [
+      {
+        "rowId": "q1-gb-01",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-gb-02",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-gb-03",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-gb-04",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-gb-05",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-gb-06",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-gb-07",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-gb-08",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-gb-09",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-gb-10",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-us-01",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-us-02",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-us-03",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-us-04",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-us-05",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-us-06",
+        "occurrences": 2
+      },
+      {
+        "rowId": "q1-us-08",
+        "occurrences": 2
+      }
+    ]
+  },
+  "outcomes": {
+    "statusCounts": [
+      {
+        "status": "child_timeout",
+        "count": 45
+      },
+      {
+        "status": "eligible_html",
+        "count": 41
+      },
+      {
+        "status": "http_denied",
+        "count": 19
+      }
+    ],
+    "childReapedCount": 105,
+    "childTimeoutCount": 45,
+    "timeoutsWithLastStageResultReceived": 2,
+    "timeoutsByLastReceivedStage": [
+      {
+        "lastStage": "extract_start",
+        "count": 43
+      },
+      {
+        "lastStage": "result_received",
+        "count": 2
+      }
+    ],
+    "timeoutsWithResultReceivedRemainSemanticallyUnknown": true
+  },
+  "readability": {
+    "nonemptyTextOccurrencesReviewed": 41,
+    "readableOccurrences": 40,
+    "unreadableOccurrences": 1,
+    "uniqueRowIdsWithNonemptyText": 33,
+    "uniqueReadableRowIds": 32,
+    "nonemptyRepeatedOccurrences": 8,
+    "valid100RowAcceptanceRate": null,
+    "denominatorStatus": "invalid: 105 occurrences, 88 unique IDs, 17 duplicated IDs, 12 missing fixture IDs"
+  },
+  "timing": {
+    "t0ToChildReady": {
+      "n": 105,
+      "medianMs": 29244.84627099987,
+      "p95Ms": 37103.45467400004,
+      "maxMs": 45956.732523999875
+    },
+    "t0ToChildReadyBuckets": {
+      "le24s": 21,
+      "gt24s": 84,
+      "missing": 0
+    },
+    "t0ToHttpRequest": {
+      "n": 105,
+      "medianMs": 29445.878935999935,
+      "p95Ms": 37399.53617199999,
+      "maxMs": 46559.750420999946
+    },
+    "t0ToHttpRequestBuckets": {
+      "le24s": 20,
+      "gt24s": 85,
+      "missing": 0
+    },
+    "parentReceiptTimesAreUpperBoundsDueToIpc": true,
+    "completedChildLocalDurationGroups": [
+      {
+        "status": "eligible_html",
+        "occurrences": 41,
+        "childFetchStartToTerminal": {
+          "n": 41,
+          "medianMs": 19202.641899000002,
+          "p95Ms": 29000.759008999998,
+          "maxMs": 29793.683798
+        },
+        "httpRequestToBodyReadEnd": {
+          "n": 41,
+          "medianMs": 2601.0299989999985,
+          "p95Ms": 4906.711535000002,
+          "maxMs": 5697.881887999996
+        },
+        "extractionStartToEnd": {
+          "n": 41,
+          "medianMs": 16705.610467,
+          "p95Ms": 23898.149515,
+          "maxMs": 26093.711773000003
+        },
+        "timeoutRowsCensoredAndExcluded": 45
+      },
+      {
+        "status": "http_denied",
+        "occurrences": 19,
+        "childFetchStartToTerminal": {
+          "n": 19,
+          "medianMs": 2303.5278499999986,
+          "p95Ms": 3696.508993000003,
+          "maxMs": 3696.508993000003
+        },
+        "httpRequestToBodyReadEnd": {
+          "n": 0,
+          "medianMs": null,
+          "p95Ms": null,
+          "maxMs": null
+        },
+        "extractionStartToEnd": {
+          "n": 0,
+          "medianMs": null,
+          "p95Ms": null,
+          "maxMs": null
+        },
+        "timeoutRowsCensoredAndExcluded": 45
+      }
+    ],
+    "censoredChildTimeoutRows": 45,
+    "timeoutInterpretation": "Last received stage recorded; timeout alone does not prove extraction hang. result_received timeouts remain unknown/discarded."
+  },
+  "privacy": {
+    "articleTextSaved": false,
+    "articleTextForwarded": false,
+    "rawArticleTextInValidationArtifacts": false,
+    "urlsAndCredentialMetadataIncluded": false,
+    "privateSemanticReviewPerformed": true
+  },
+  "limitations": [
+    "Dataset item count differed between worker and validator snapshots: worker reported 104/88; validator terminal snapshot projection contains 105/88. This record is pinned to the 105-item snapshot.",
+    "Child PID is not included in validator projection; timing vectors and outcome/hash fields are included per occurrence.",
+    "The 60-second experiment cannot be treated as a valid 100-row acceptance sample due output-integrity mismatch."
+  ],
+  "decision": "Hold; no valid acceptance rate; Spike remains open."
+}

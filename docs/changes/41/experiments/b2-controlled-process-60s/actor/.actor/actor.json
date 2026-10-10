@@ -1,0 +1,6 @@
+{
+  "actorSpecification": 1,
+  "name": "issue41-google-news-b2-controlled-process-20261009",
+  "version": "0.10",
+  "buildTag": "issue41-b2-controlled-60s"
+}

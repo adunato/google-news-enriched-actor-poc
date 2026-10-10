@@ -1,0 +1,296 @@
+{
+  "experiment": "Issue 41 B2 controlled process 60-second child deadline",
+  "actorId": "JIogcgdHyCqAMHQ1P",
+  "actorVersion": "0.10",
+  "buildTag": "issue41-b2-controlled-60s",
+  "hostedBuildOrRunPerformed": true,
+  "userAuthorizedOneBuildAndRun": true,
+  "rootExecutionGatePassed": true,
+  "candidateFiles": [
+    {
+      "path": ".actor/actor.json",
+      "sha256": "d6535cf7c894051f204cd9c65c58c08b9b7b1c6f13fcfee674142921dc5daa14",
+      "uploaded": true
+    },
+    {
+      "path": ".actorignore",
+      "sha256": "79281f2f15967ae0eba065f0c9fb339ff02e81286096a3e0e2cc41a0d96bd923",
+      "uploaded": false
+    },
+    {
+      "path": "Dockerfile",
+      "sha256": "72f0dfb10a56e715395935531e0008fbd087fb806a307ebbea90426c111097fc",
+      "uploaded": true
+    },
+    {
+      "path": "baseline.mjs",
+      "sha256": "3acb3c1e77b2065141393deda1011ccc1fad105162370751afa50264eb4e14f6",
+      "uploaded": true
+    },
+    {
+      "path": "body-stream.mjs",
+      "sha256": "40505db4afebd8d5125f596864dc98807252a9e3923b3a70284dea39ee10ee14",
+      "uploaded": true
+    },
+    {
+      "path": "dom-content-type.mjs",
+      "sha256": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+      "uploaded": true
+    },
+    {
+      "path": "main.mjs",
+      "sha256": "d2391090cc0483831a168477abf0188cb21352bf54726dfa22a9925206a055d1",
+      "uploaded": true
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "cbd7b96df68f877a2df327964ea62fe60d28b1a1614ef49e47c95d4357e8f743",
+      "uploaded": true
+    },
+    {
+      "path": "package.json",
+      "sha256": "bbbc1083d0c41f11fdf0fcc2a26421f6fc0024ef725bf7239f73006714a79d03",
+      "uploaded": true
+    },
+    {
+      "path": "parent.mjs",
+      "sha256": "ea9df537f3f3b5ba8e91f51eab77704cf717321a9a6af687deb8b4c257ecd2fb",
+      "uploaded": true
+    },
+    {
+      "path": "worker.mjs",
+      "sha256": "6bcbf3c23f27a2dd054b67563249ca6d1e6894bb0f51904a30915cd5ab2fb582",
+      "uploaded": true
+    }
+  ],
+  "previousCandidate": {
+    "manifest": "docs/changes/41/experiments/b2-controlled-process/evidence/candidate-manifest.json",
+    "buildTag": "issue41-b2-controlled",
+    "actorVersion": "0.10"
+  },
+  "sourceComparisonToPreviousCandidate": [
+    {
+      "path": ".actor/actor.json",
+      "previousSha256": "d04982772cd9ae5e96fe855b639ff2367314f4b36f22092ecf847377a2477b3a",
+      "candidateSha256": "d6535cf7c894051f204cd9c65c58c08b9b7b1c6f13fcfee674142921dc5daa14",
+      "unchanged": false
+    },
+    {
+      "path": ".actorignore",
+      "previousSha256": "79281f2f15967ae0eba065f0c9fb339ff02e81286096a3e0e2cc41a0d96bd923",
+      "candidateSha256": "79281f2f15967ae0eba065f0c9fb339ff02e81286096a3e0e2cc41a0d96bd923",
+      "unchanged": true
+    },
+    {
+      "path": "Dockerfile",
+      "previousSha256": "72f0dfb10a56e715395935531e0008fbd087fb806a307ebbea90426c111097fc",
+      "candidateSha256": "72f0dfb10a56e715395935531e0008fbd087fb806a307ebbea90426c111097fc",
+      "unchanged": true
+    },
+    {
+      "path": "baseline.mjs",
+      "previousSha256": "3acb3c1e77b2065141393deda1011ccc1fad105162370751afa50264eb4e14f6",
+      "candidateSha256": "3acb3c1e77b2065141393deda1011ccc1fad105162370751afa50264eb4e14f6",
+      "unchanged": true
+    },
+    {
+      "path": "body-stream.mjs",
+      "previousSha256": "40505db4afebd8d5125f596864dc98807252a9e3923b3a70284dea39ee10ee14",
+      "candidateSha256": "40505db4afebd8d5125f596864dc98807252a9e3923b3a70284dea39ee10ee14",
+      "unchanged": true
+    },
+    {
+      "path": "dom-content-type.mjs",
+      "previousSha256": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+      "candidateSha256": "bbd01cc6c1b59b399e4e61b25efa2154cb5f90f88afb3e79c39e5005d3f45d9d",
+      "unchanged": true
+    },
+    {
+      "path": "main.mjs",
+      "previousSha256": "d2391090cc0483831a168477abf0188cb21352bf54726dfa22a9925206a055d1",
+      "candidateSha256": "d2391090cc0483831a168477abf0188cb21352bf54726dfa22a9925206a055d1",
+      "unchanged": true
+    },
+    {
+      "path": "package-lock.json",
+      "previousSha256": "cbd7b96df68f877a2df327964ea62fe60d28b1a1614ef49e47c95d4357e8f743",
+      "candidateSha256": "cbd7b96df68f877a2df327964ea62fe60d28b1a1614ef49e47c95d4357e8f743",
+      "unchanged": true
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "bbbc1083d0c41f11fdf0fcc2a26421f6fc0024ef725bf7239f73006714a79d03",
+      "candidateSha256": "bbbc1083d0c41f11fdf0fcc2a26421f6fc0024ef725bf7239f73006714a79d03",
+      "unchanged": true
+    },
+    {
+      "path": "parent.mjs",
+      "previousSha256": "aeb4b5700aef4c4a902ac5e406807242e0cf13dc1e75aec0bc3ee44e967464c0",
+      "candidateSha256": "ea9df537f3f3b5ba8e91f51eab77704cf717321a9a6af687deb8b4c257ecd2fb",
+      "unchanged": false
+    },
+    {
+      "path": "worker.mjs",
+      "previousSha256": "6bcbf3c23f27a2dd054b67563249ca6d1e6894bb0f51904a30915cd5ab2fb582",
+      "candidateSha256": "6bcbf3c23f27a2dd054b67563249ca6d1e6894bb0f51904a30915cd5ab2fb582",
+      "unchanged": true
+    }
+  ],
+  "previousTestSourceSha256": "dae3ba70d6f9b5066eba2e1da7d4d3615fa5c567a78b3c64d9aa7f58de5aa7aa",
+  "candidateTestSourceSha256": "2a80286b8876219200d68eca59a4855a95bc5d696934285485fb6f2885c96522",
+  "testSourceChangedOnlyForDeadline": true,
+  "expectedRuntimeSourceChange": "parent.mjs deadlineMs default only: 24000 to 60000",
+  "expectedNonRuntimeChanges": [
+    "actor/.actor/actor.json buildTag only",
+    "baseline-parity.test.mjs deadline test title and 60000/62000 bounds"
+  ],
+  "frozenAcceptanceInput": {
+    "path": "docs/changes/41/experiments/b2-vanilla/input-acceptance.json",
+    "sha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "rowCount": 100
+  },
+  "packages": {
+    "apify": "3.7.2",
+    "readability": "0.6.0",
+    "jsdom": "29.0.1"
+  },
+  "baselineSources": {
+    "main": {
+      "path": "docs/changes/41/experiments/b2-vanilla/actor/main.mjs",
+      "sha256": "16855f367514e00c5837193c6c7929b768cbc2dab8c232292d69da845c6f3ef4"
+    },
+    "bodyStreamExactMatch": true,
+    "domContentTypeExactMatch": true,
+    "dockerfileExactMatch": true
+  },
+  "localTestFiles": [
+    {
+      "path": "deadline-60s-test-result.json",
+      "sha256": "537a8e88ce2047263e55c62df779bf6df3e69405ed1e980d265ea205461c6c48"
+    }
+  ],
+  "testSource": {
+    "path": "actor/baseline-parity.test.mjs",
+    "sha256": "2a80286b8876219200d68eca59a4855a95bc5d696934285485fb6f2885c96522"
+  },
+  "localRuntime": {
+    "node": "v20.19.0",
+    "undici": "6.21.1"
+  },
+  "hostedRuntimeGate": {
+    "node": "v20.20.2",
+    "undici": "6.24.1",
+    "requiredBeforePublisherRequests": true
+  },
+  "limits": {
+    "parentDeadlineMs": 60000,
+    "reapAllowanceMs": 2000,
+    "httpChainTimeoutMs": 10000,
+    "maxConcurrentChildren": 2,
+    "memoryMbytes": 512,
+    "runTimeoutSecs": 3300,
+    "restartOnError": false,
+    "runChargeCapUsd": 0.1,
+    "hostedBuildOrRunAuthorized": true,
+    "rootExecutionGatePassed": false
+  },
+  "actorIgnoreExcludes": [
+    "node_modules",
+    "*.test.mjs",
+    "prepare-candidate.ps1"
+  ],
+  "hostedBuild": {
+    "id": "m3ulCqbSZjQNzpMLD",
+    "buildNumber": "0.10.9",
+    "status": "SUCCEEDED",
+    "actorId": "JIogcgdHyCqAMHQ1P",
+    "actorVersion": "0.10",
+    "buildTag": "issue41-b2-controlled-60s",
+    "imageDigest": "ebb2db92a4ec5ba0a7e5b03ffa21ac294465fba56c4b1dbe997bcc318903ed60",
+    "uploadedSourceFiles": 10,
+    "sourceHashMismatches": 0
+  },
+  "hostedRun": {
+    "id": "j41jHejubNuGJyzAa",
+    "datasetId": "FQyCxhX8UDjkPZf4h",
+    "buildId": "m3ulCqbSZjQNzpMLD",
+    "buildNumber": "0.10.9",
+    "status": "ABORTED",
+    "startedAt": "2026-10-10T06:42:54.645Z",
+    "finishedAt": "2026-10-10T07:24:12.726Z",
+    "durationSecs": 2477.827,
+    "options": {
+      "timeoutSecs": 3300,
+      "memoryMbytes": 512,
+      "maxTotalChargeUsd": 0.1,
+      "restartOnError": false,
+      "inputSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01"
+    },
+    "usageTotalUsd": 0.06978753300047086,
+    "runtime": {
+      "nodeVersion": "v20.20.2",
+      "undiciVersion": "6.24.1",
+      "rows": 100,
+      "concurrency": 2,
+      "markerBeforeChildScheduling": true
+    },
+    "privacy": {
+      "runGeneralAccess": "RESTRICTED",
+      "datasetGeneralAccess": "RESTRICTED",
+      "anonymousNoFollowItemsStatus": 403
+    },
+    "resources": {
+      "restartCount": 0,
+      "memoryAverageBytes": 146328999.7076893,
+      "memoryMaximumBytes": 260575232
+    },
+    "outputIntegrity": {
+      "reason": "output exceeded 100 rows and contained duplicate/missing fixture row IDs; same run aborted",
+      "itemCountAtAbortSnapshot": 104,
+      "laterPostTerminalItemCount": 105,
+      "uniqueRowIdCount": 88,
+      "duplicateRowIdCount": 17,
+      "duplicateRowIds": [
+        "q1-gb-01",
+        "q1-gb-02",
+        "q1-gb-03",
+        "q1-gb-04",
+        "q1-gb-05",
+        "q1-gb-06",
+        "q1-gb-07",
+        "q1-gb-08",
+        "q1-gb-09",
+        "q1-gb-10",
+        "q1-us-01",
+        "q1-us-02",
+        "q1-us-03",
+        "q1-us-04",
+        "q1-us-05",
+        "q1-us-06",
+        "q1-us-08"
+      ],
+      "missingFixtureRowIds": [
+        "q5-gb-09",
+        "q5-gb-10",
+        "q5-us-01",
+        "q5-us-02",
+        "q5-us-03",
+        "q5-us-04",
+        "q5-us-05",
+        "q5-us-06",
+        "q5-us-07",
+        "q5-us-08",
+        "q5-us-09",
+        "q5-us-10"
+      ],
+      "unknownRowIds": 0,
+      "occurrenceStatusCounts": {
+        "eligibleHtml": 41,
+        "httpDenied": 19,
+        "childTimeout": 45
+      },
+      "allChildReaped": true,
+      "valid100RowAcceptanceDenominator": false
+    }
+  }
+}

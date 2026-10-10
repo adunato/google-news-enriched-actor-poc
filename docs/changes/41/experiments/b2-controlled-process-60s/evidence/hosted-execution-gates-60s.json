@@ -1,0 +1,71 @@
+{
+  "experiment": "B2 controlled-process 60-second iteration",
+  "sourceCandidate": "experiments/b2-controlled-process-60s/actor",
+  "sourceRuntimeChange": "parent.mjs default deadline 24000ms to 60000ms only",
+  "httpBehavior": "unchanged 10000ms HTTP chain; same baseline fetch/extraction sources",
+  "build": {
+    "actorId": "JIogcgdHyCqAMHQ1P",
+    "version": "0.10",
+    "tag": "issue41-b2-controlled-60s",
+    "id": "m3ulCqbSZjQNzpMLD",
+    "number": "0.10.9",
+    "status": "SUCCEEDED",
+    "imageDigest": "ebb2db92a4ec5ba0a7e5b03ffa21ac294465fba56c4b1dbe997bcc318903ed60",
+    "uploadedFiles": 10,
+    "hashMismatches": 0
+  },
+  "run": {
+    "id": "j41jHejubNuGJyzAa",
+    "datasetId": "FQyCxhX8UDjkPZf4h",
+    "status": "ABORTED",
+    "startedAt": "2026-10-10T06:42:54.645Z",
+    "finishedAt": "2026-10-10T07:24:12.726Z",
+    "durationSeconds": 2477.827,
+    "exitCode": null,
+    "fixtureSha256": "ef5ea88082dcb7403f961828441cb477bd577711b9d8db8e86a146907eb17b01",
+    "runTimeoutSeconds": 3300,
+    "memoryMbytes": 512,
+    "maxTotalChargeUsd": 0.1,
+    "restartOnError": false,
+    "reportedUsageTotalUsd": 0.06978753300047086,
+    "privacy": {
+      "run": "RESTRICTED",
+      "dataset": "RESTRICTED",
+      "anonymousNoFollowItemsStatus": 403
+    },
+    "runtime": {
+      "node": "v20.20.2",
+      "undici": "6.24.1",
+      "rows": 100,
+      "concurrency": 2,
+      "markerObservedBeforeChildScheduling": true
+    },
+    "operational": {
+      "restartCount": 0,
+      "averageMemoryBytes": 146328999.7076893,
+      "peakMemoryBytes": 260575232
+    },
+    "outputIntegrity": {
+      "itemCountAtAbortRead": 104,
+      "postTerminalValidatorRead": 105,
+      "uniqueRowIds": 88,
+      "duplicateRowIds": 17,
+      "missingFixtureRowIds": 12,
+      "unknownRowIds": 0,
+      "occurrenceStatusCounts": {
+        "eligibleHtml": 41,
+        "httpDenied": 19,
+        "childTimeout": 45
+      },
+      "allChildReaped": true,
+      "classification": "Hold / Inconclusive: invalid output integrity, no valid 100-row success-rate denominator",
+      "datasetDeletion": "not authorized; retained restricted"
+    }
+  },
+  "references": {
+    "candidateManifest": "candidate-manifest.json",
+    "focusedLocalTest": "deadline-60s-test-result.json",
+    "independentProjection": "validated-row-projection.json",
+    "independentValidation": "validation-controlled.json"
+  }
+}
